@@ -1,0 +1,29 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/Master.cs" type="Script" id=3]
+
+[node name="Game" type="Node2D"]
+script = ExtResource( 3 )
+NodePathLabelPlayerHealth = NodePath("CanvasLayer/PanelContainer/HBoxContainer/Label")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -28.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/PanelContainer"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 1017.0
+margin_bottom = 21.0
+
+[node name="Label" type="Label" parent="CanvasLayer/PanelContainer/HBoxContainer"]
+margin_right = 74.0
+margin_bottom = 14.0
+text = "Health: 100"
