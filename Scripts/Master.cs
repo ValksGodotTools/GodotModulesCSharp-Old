@@ -1,5 +1,9 @@
 using Godot;
 using System;
+using System.IO;
+
+using Path = System.IO.Path;
+using Directory = System.IO.Directory;
 
 namespace Game
 {
@@ -9,23 +13,36 @@ namespace Game
         private static Master Instance { get; set; }
 
         [Export] public readonly NodePath NodePathLabelPlayerHealth;
-        private Label LabelPlayerHealth;
+        private static Label LabelPlayerHealth;
 
         public override void _Ready()
         {
             Instance = this;
-            CreatePlayer();
+            InitNodes();
 
-            LabelPlayerHealth = GetNode<Label>(NodePathLabelPlayerHealth);
-            LabelPlayerHealth.Text = $"Health: {Player.Health}";
+            ModLoader.Load();
+
+            InitPlayer();
+
+            SetupGUI();
         }
 
-        private static void CreatePlayer()
+        private static void InitNodes()
+        {
+            LabelPlayerHealth = Instance.GetNode<Label>(Instance.NodePathLabelPlayerHealth);
+        }
+
+        private static void InitPlayer()
         {
             var playerPrefab = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/Player.tscn");
             Player = playerPrefab.Instance<Player>();
             Player.Position = OS.WindowSize / 2;
             Instance.AddChild(Player);
+        }
+
+        private static void SetupGUI()
+        {
+            LabelPlayerHealth.Text = $"Health: {Player.Health}";
         }
     }
 

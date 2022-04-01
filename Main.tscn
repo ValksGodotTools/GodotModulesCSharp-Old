@@ -1,9 +1,9 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://Scripts/Master.cs" type="Script" id=3]
+[ext_resource path="res://Scripts/Master.cs" type="Script" id=1]
 
 [node name="Game" type="Node2D"]
-script = ExtResource( 3 )
+script = ExtResource( 1 )
 NodePathLabelPlayerHealth = NodePath("CanvasLayer/PanelContainer/HBoxContainer/Label")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]

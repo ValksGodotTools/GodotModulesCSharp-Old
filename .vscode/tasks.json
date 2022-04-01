@@ -1,0 +1,42 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "command": "C:/Users/VALK-DESKTOP/Downloads/Godot_v3.4.2-stable_mono_win64/Godot_v3.4.2-stable_mono_win64.exe\r",
+            "type": "process",
+            "args": [
+                "--build-solutions",
+                "--path",
+                "${workspaceRoot}",
+                "--no-window",
+                "-q"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "publish",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "${workspaceFolder}/LuaModdingTest.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "watch",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/LuaModdingTest.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}
