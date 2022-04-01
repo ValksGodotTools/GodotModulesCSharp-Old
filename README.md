@@ -7,7 +7,7 @@ https://www.moonsharp.org/getting_started.html
 - [ ] Do not add mod if lua scripts did not compile and give some kind of feedback in console about this
 - [ ] Do not add mod if info.json does not exist
 - [ ] Add a game menu and list all mods / add stuff to manage / reload mods
-- [ ] Figure out how to lua and how to mod lua and how to lua mod lua mod lua
+- [ ] Fully implement lua modding 😺
 
 ## Setup
 Inside the mods directory create a new folder for your mod, e.g. `ModTest` and inside that folder create `info.json` and `script.lua`.
