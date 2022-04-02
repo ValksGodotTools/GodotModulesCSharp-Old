@@ -20,6 +20,7 @@ namespace Game
             Instance = this;
             InitNodes();
 
+            ModLoader.InitModScript();
             ModLoader.Load();
 
             InitPlayer();
@@ -37,6 +38,7 @@ namespace Game
             var playerPrefab = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/Player.tscn");
             Player = playerPrefab.Instance<Player>();
             Player.Position = OS.WindowSize / 2;
+            Player.Name = "Player";
             Instance.AddChild(Player);
         }
 

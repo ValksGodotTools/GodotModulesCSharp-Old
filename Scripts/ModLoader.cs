@@ -2,13 +2,37 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 using MoonSharp.Interpreter;
+using MoonSharp.VsCodeDebugger;
 
-namespace Game 
+namespace Game
 {
-    public class ModLoader 
+    public class ModLoader
     {
         public static List<ModInfo> Mods = new List<ModInfo>();
+
+        private static Script ModScript { get; set; } // the script every mod will use
+
         private static char Separator = Path.DirectorySeparatorChar;
+
+        public static void InitModScript()
+        {
+            // Debug server
+            var server = new MoonSharpVsCodeDebugServer();
+            server.Start();
+
+            ModScript = new Script();
+
+            server.AttachToScript(ModScript, "ModScript");
+
+            UserData.RegisterType<Player>();
+            UserData.RegisterType<Master>();
+
+            var master = new Master();
+
+            ModScript.Globals["Master"] = master;
+
+            master.QueueFree();
+        }
 
         public static void Load()
         {
@@ -38,17 +62,25 @@ namespace Game
                         Mods.Add(modInfo);
                     }
 
-                    if (fileName == "script.lua") 
+                    if (fileName == "script.lua")
                     {
-                        DynValue res = Script.RunFile(file);
-                        Godot.GD.Print(res.Number);
+                        try
+                        {
+                            var res = ModScript.DoFile(file);
+                            Godot.GD.Print(res.Number);
+                        }
+                        catch (ScriptRuntimeException e)
+                        {
+                            Godot.GD.Print(e.DecoratedMessage);
+                        }
+
                     }
                 }
             }
         }
     }
 
-    public struct ModInfo 
+    public struct ModInfo
     {
         public string Name { get; set; }
         public string Author { get; set; }
