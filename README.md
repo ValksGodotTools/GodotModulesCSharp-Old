@@ -2,6 +2,7 @@
 This project was created to better understand MoonSharp (Lua) for implementing modding into a game.
 
 https://www.moonsharp.org/getting_started.html  
+https://www.tutorialspoint.com/lua/lua_basic_syntax.htm  
 
 ## Todo
 - [ ] Do not add mod if lua scripts did not compile and give some kind of feedback in console about this
