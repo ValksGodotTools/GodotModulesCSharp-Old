@@ -16,7 +16,7 @@ namespace Game
 
         public static void InitModScript()
         {
-            // Debug server
+            // Debug server - not sure how this works?
             var server = new MoonSharpVsCodeDebugServer();
             server.Start();
 
