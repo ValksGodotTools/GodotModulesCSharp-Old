@@ -30,6 +30,8 @@ VSCode is a UI friendly text editor for developers
 3. Launch Godot through VSCode by hitting `F1` to open up VSCode command and run `godot tools: open workspace with godot editor` (to debug the game launch it through vscode by pressing `F5`)
 
 ### Lua
+The mods directory is in `C:/Mods` for when the game is run through the editor (non-exported release)
+
 Inside the mods directory create a new folder for your mod, e.g. `ModTest` and inside that folder create `info.json` and `script.lua`.
 
 Something like below.
