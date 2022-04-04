@@ -8,6 +8,11 @@ namespace Game
         [Export] public float Speed = 250f;
         public int Health = 100;
 
+        public Player() 
+        {
+            SetHealth(100);
+        }
+
         public override void _Process(float delta)
         {
             HandleMovement(delta);
@@ -27,6 +32,11 @@ namespace Game
                 dir.y += 1;
 
             Position += dir * Speed * delta;
+        }
+
+        public void SetHealth(int v)
+        {
+            Master.LabelPlayerHealth.Text = $"Health: {v}";
         }
     }
 

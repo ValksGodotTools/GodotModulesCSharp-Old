@@ -13,19 +13,16 @@ namespace Game
         private static Master Instance { get; set; }
 
         [Export] public readonly NodePath NodePathLabelPlayerHealth;
-        private static Label LabelPlayerHealth;
+        public static Label LabelPlayerHealth;
 
         public override void _Ready()
         {
             Instance = this;
             InitNodes();
-
-            ModLoader.InitModScript();
-            ModLoader.Load();
-
             InitPlayer();
 
-            SetupGUI();
+            ModLoader.Init();
+
         }
 
         private static void InitNodes()
@@ -41,11 +38,5 @@ namespace Game
             Player.Name = "Player";
             Instance.AddChild(Player);
         }
-
-        private static void SetupGUI()
-        {
-            LabelPlayerHealth.Text = $"Health: {Player.Health}";
-        }
     }
-
 }

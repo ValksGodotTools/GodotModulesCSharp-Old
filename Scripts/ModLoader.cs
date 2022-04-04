@@ -14,37 +14,35 @@ namespace Game
 
         private static char Separator = Path.DirectorySeparatorChar;
 
-        public static void InitModScript()
+        public static void Init()
         {
+            string pathExeDir;
+
+            if (Godot.OS.HasFeature("standalone")) // check if game is exported
+                // set to exported release dir
+                pathExeDir = $"{Directory.GetParent(Godot.OS.GetExecutablePath()).FullName}";
+            else
+                // set to project dir
+                pathExeDir = Godot.ProjectSettings.GlobalizePath("res://");;
+
+            
             // Debug server - not sure how this works?
             var server = new MoonSharpVsCodeDebugServer();
             server.Start();
 
             ModScript = new Script();
 
+            string pathMods = Path.Combine(pathExeDir, "Mods");
+
+            var luaPlayer = new Godot.File();
+            luaPlayer.Open("res://Scripts/Lua/Player.lua", Godot.File.ModeFlags.Read);
+
+            ModScript.DoString(luaPlayer.GetAsText());
+
             server.AttachToScript(ModScript, "ModScript");
 
-            UserData.RegisterType<Player>();
-            UserData.RegisterType<Master>();
 
-            var master = new Master();
-
-            ModScript.Globals["Master"] = master;
-
-            master.QueueFree();
-        }
-
-        public static void Load()
-        {
-            string pathMods;
-
-            if (Godot.OS.HasFeature("standalone")) // check if game is running in an exported release
-                pathMods = $"{Directory.GetParent(Godot.OS.GetExecutablePath()).FullName}{Separator}Mods";
-            else
-                pathMods = $"C:{Separator}Mods"; // for testing so do not have to export game on every test
-
-            if (!Directory.Exists(pathMods))
-                Directory.CreateDirectory(pathMods);
+            Directory.CreateDirectory(pathMods);
 
             var mods = Directory.GetDirectories(pathMods);
 
@@ -66,8 +64,17 @@ namespace Game
                     {
                         try
                         {
-                            var res = ModScript.DoFile(file);
-                            Godot.GD.Print(res.Number);
+                            ModScript.DoFile(file);
+
+                            DynValue resPlayer = ModScript.Globals.Get("Player");
+                            if (resPlayer != null)
+                            {
+                                var player = resPlayer.Table;
+                                var resHealth = player.Get("health");
+
+                                if (resHealth != null)
+                                    Master.Player.SetHealth((int)resHealth.Number);
+                            }
                         }
                         catch (ScriptRuntimeException e)
                         {
