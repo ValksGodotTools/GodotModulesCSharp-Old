@@ -8,13 +8,32 @@ namespace Game
 {
     public class ModLoader
     {
-        public static List<ModInfo> Mods = new List<ModInfo>();
+        private static Dictionary<string, Mod> Mods = new Dictionary<string, Mod>();
+        private static MoonSharpVsCodeDebugServer DebugServer { get; set; }
+        private static string PathMods { get; set; }
 
-        private static Script ModScript { get; set; } // the script every mod will use
-
-        private static char Separator = Path.DirectorySeparatorChar;
 
         public static void Init()
+        {
+            FindModsPath();
+            
+            DebugServer = new MoonSharpVsCodeDebugServer(); // how does this work in action?
+            DebugServer.Start();
+        }
+
+        private static Script GetModScriptTemplate()
+        {
+            var script = new Script();
+
+            var luaPlayer = new Godot.File();
+            luaPlayer.Open("res://Scripts/Lua/Player.lua", Godot.File.ModeFlags.Read);
+
+            script.DoString(luaPlayer.GetAsText());
+
+            return script;
+        }
+
+        private static void FindModsPath()
         {
             string pathExeDir;
 
@@ -23,68 +42,67 @@ namespace Game
                 pathExeDir = $"{Directory.GetParent(Godot.OS.GetExecutablePath()).FullName}";
             else
                 // set to project dir
-                pathExeDir = Godot.ProjectSettings.GlobalizePath("res://");;
+                pathExeDir = Godot.ProjectSettings.GlobalizePath("res://");
 
-            
-            // Debug server - not sure how this works?
-            var server = new MoonSharpVsCodeDebugServer();
-            server.Start();
+            PathMods = Path.Combine(pathExeDir, "Mods");
+        }
 
-            ModScript = new Script();
+        public static void LoadAll()
+        {
+            Directory.CreateDirectory(PathMods);
 
-            string pathMods = Path.Combine(pathExeDir, "Mods");
-
-            var luaPlayer = new Godot.File();
-            luaPlayer.Open("res://Scripts/Lua/Player.lua", Godot.File.ModeFlags.Read);
-
-            ModScript.DoString(luaPlayer.GetAsText());
-
-            server.AttachToScript(ModScript, "ModScript");
-
-
-            Directory.CreateDirectory(pathMods);
-
-            var mods = Directory.GetDirectories(pathMods);
+            var mods = Directory.GetDirectories(PathMods);
 
             foreach (var mod in mods)
             {
+                var modScript = GetModScriptTemplate();
                 var files = Directory.GetFiles(mod);
 
-                foreach (var file in files)
+                var pathInfo = $"{mod}/info.json";
+                var pathScript = $"{mod}/script.lua";
+                if (!File.Exists(pathInfo) || !File.Exists(pathScript))
+                    continue;
+
+                var modInfo = JsonConvert.DeserializeObject<ModInfo>(File.ReadAllText(pathInfo));
+
+                try
                 {
-                    var fileName = Path.GetFileName(file);
+                    modScript.DoFile(pathScript);
 
-                    if (fileName == "info.json")
-                    {
-                        var modInfo = JsonConvert.DeserializeObject<ModInfo>(File.ReadAllText(file));
-                        Mods.Add(modInfo);
-                    }
+                    UpdatePlayer(modScript);
 
-                    if (fileName == "script.lua")
-                    {
-                        try
-                        {
-                            ModScript.DoFile(file);
+                    Mods.Add(modInfo.Name, new Mod {
+                        ModInfo = modInfo,
+                        Script = modScript
+                    });
 
-                            DynValue resPlayer = ModScript.Globals.Get("Player");
-                            if (resPlayer != null)
-                            {
-                                var player = resPlayer.Table;
-                                var resHealth = player.Get("health");
-
-                                if (resHealth != null)
-                                    Master.Player.SetHealth((int)resHealth.Number);
-                            }
-                        }
-                        catch (ScriptRuntimeException e)
-                        {
-                            Godot.GD.Print(e.DecoratedMessage);
-                        }
-
-                    }
+                    DebugServer.AttachToScript(modScript, modInfo.Name);
+                }
+                catch (ScriptRuntimeException e)
+                {
+                    Godot.GD.Print(e.DecoratedMessage);
                 }
             }
         }
+
+        private static void UpdatePlayer(Script script)
+        {
+            var resPlayer = script.Globals.Get("Player");
+            if (resPlayer != null)
+            {
+                var player = resPlayer.Table;
+                var resHealth = player.Get("health");
+
+                if (resHealth != null)
+                    Master.Player.SetHealth((int)resHealth.Number);
+            }
+        }
+    }
+
+    public struct Mod 
+    {
+        public ModInfo ModInfo { get; set; }
+        public Script Script { get; set; }
     }
 
     public struct ModInfo

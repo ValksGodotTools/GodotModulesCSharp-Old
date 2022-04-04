@@ -22,7 +22,7 @@ namespace Game
             InitPlayer();
 
             ModLoader.Init();
-
+            ModLoader.LoadAll();
         }
 
         private static void InitNodes()
