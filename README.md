@@ -9,7 +9,7 @@ https://www.tutorialspoint.com/lua/lua_basic_syntax.htm
 - [ ] Do not add mod if info.json does not exist
 - [ ] Add a game menu and list all mods / add stuff to manage / reload mods
 - [ ] Figure out how to use Lua debugger
-- [ ] Figure out how to do something like `player:setHealth(x)` from Lua
+- [x] Figure out how to do something like `player:setHealth(x)` from Lua
 - [ ] Figure out how to add something like Godots `_process(float delta)` in Lua so modders can call a function every frame if so desired
 
 ## Setup
@@ -33,12 +33,17 @@ VSCode is a UI friendly text editor for developers
 3. Launch Godot through VSCode by hitting `F1` to open up VSCode command and run `godot tools: open workspace with godot editor` (to debug the game launch it through vscode by pressing `F5`)
 
 ### Lua
-The mods directory is in `C:/Mods` for when the game is run through the editor (non-exported release)
+For non-exported; Mods folder is created in project folder. For exported; Mods folder is created next to game executable.
 
-Inside the mods directory create a new folder for your mod, e.g. `ModTest` and inside that folder create `info.json` and `script.lua`.
+Create the following inside Mods folder.
+```
+|-Mods
+|--ModTest
+|---info.json
+|---script.lua
+```
 
-Something like below.
-
+info.json
 ```json
 {
     "name": "ModTest",
@@ -47,20 +52,10 @@ Something like below.
 }
 ```
 
+script.lua
 ```lua
--- defines a factorial function
-function fact (n)
-	if (n == 0) then
-		return 1
-	else
-		return n*fact(n - 1)
-	end
-end
-
-return fact(5)
+Player = Player:new{id = 1}
+Player.health = Player.health - 10
 ```
 
-Then run the game and watch the result of the factorio function get printed to console.
-
-### Note to non-windows users
-Since I'm on Windows 10 I'm going to be lazy and use `C:/Mods`. If you're not using Windows and you would like to contribute feel free to change the code to write to the directory `LuaModdingTest.csproj` is in. These paths are just for debugging anyways, the main path is next to the exported Godot build exe.
+Notice how player health is set to 90 on game start.
