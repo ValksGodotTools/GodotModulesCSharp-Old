@@ -30,7 +30,7 @@ VSCode is a UI friendly text editor for developers
     - [C# Tools for Godot](https://marketplace.visualstudio.com/items?itemName=neikeq.godot-csharp-vscode)
     - [godot-tools](https://marketplace.visualstudio.com/items?itemName=geequlim.godot-tools)
     - [Mono Debug](https://marketplace.visualstudio.com/items?itemName=ms-vscode.mono-debug)
-3. Launch Godot through VSCode by hitting `F1` to open up VSCode command and run `godot tools: open workspace with godot editor` (to debug the game launch it through vscode by pressing `F5`)
+3. Launch Godot through VSCode by hitting `F1` to open up VSCode command and run `godot tools: open workspace with godot editor` or simply click the `Open Godot Editor` button bottom right
 
 ### Lua
 For non-exported; Mods folder is created in project folder. For exported; Mods folder is created next to game executable.
@@ -59,3 +59,18 @@ Player.health = Player.health - 10
 ```
 
 Notice how player health is set to 90 on game start.
+
+### Debugging
+1. In `VSCode`, go to `Run and Debug` tab > `Create a launch.json file` > `C# Godot`
+2. Add the following to configurations in `launch.json`
+```json
+{
+    "name": "MoonSharp Attach",
+    "type": "moonsharp-debug",
+    "request": "attach",
+    "debugServer": 41912
+}
+```
+3. Launch the configuration `Play in Editor` (if configuration is set to this already then just press `F5`)
+4. Launch the configuration `MoonSharp Attach`
+5. Place a debug point anywhere in Lua or C# script to start debugging
