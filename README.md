@@ -1,8 +1,8 @@
 # GodotLuaModdingTest
 This project was created to better understand MoonSharp (Lua) for implementing modding into a game.
 
-https://www.moonsharp.org/getting_started.html  
-https://www.tutorialspoint.com/lua/lua_basic_syntax.htm  
+Learn Lua: https://www.lua.org/pil/contents.html  
+Learn MoonSharp: https://www.moonsharp.org/getting_started.html  
 
 ## Todo
 - [x] Figure out how to do something like `player:setHealth(x)` from Lua
