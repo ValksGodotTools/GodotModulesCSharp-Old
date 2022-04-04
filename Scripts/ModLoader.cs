@@ -21,32 +21,6 @@ namespace Game
             DebugServer.Start();
         }
 
-        private static Script GetModScriptTemplate()
-        {
-            var script = new Script();
-
-            var luaPlayer = new Godot.File();
-            luaPlayer.Open("res://Scripts/Lua/Player.lua", Godot.File.ModeFlags.Read);
-
-            script.DoString(luaPlayer.GetAsText());
-
-            return script;
-        }
-
-        private static void FindModsPath()
-        {
-            string pathExeDir;
-
-            if (Godot.OS.HasFeature("standalone")) // check if game is exported
-                // set to exported release dir
-                pathExeDir = $"{Directory.GetParent(Godot.OS.GetExecutablePath()).FullName}";
-            else
-                // set to project dir
-                pathExeDir = Godot.ProjectSettings.GlobalizePath("res://");
-
-            PathMods = Path.Combine(pathExeDir, "Mods");
-        }
-
         public static void LoadAll()
         {
             Directory.CreateDirectory(PathMods);
@@ -83,6 +57,42 @@ namespace Game
                     Godot.GD.Print(e.DecoratedMessage);
                 }
             }
+        }
+
+        public static void Hook(string v, params object[] args)
+        {
+            foreach (var mod in Mods.Values)
+                mod.Script.Call(mod.Script.Globals[v], args);
+        }
+
+        private static Script GetModScriptTemplate()
+        {
+            var script = new Script();
+
+            var luaPlayer = new Godot.File();
+            luaPlayer.Open("res://Scripts/Lua/Player.lua", Godot.File.ModeFlags.Read);
+
+            var luaGame = new Godot.File();
+            luaGame.Open("res://Scripts/Lua/Game.lua", Godot.File.ModeFlags.Read);
+
+            script.DoString(luaPlayer.GetAsText());
+            script.DoString(luaGame.GetAsText());
+
+            return script;
+        }
+
+        private static void FindModsPath()
+        {
+            string pathExeDir;
+
+            if (Godot.OS.HasFeature("standalone")) // check if game is exported
+                // set to exported release dir
+                pathExeDir = $"{Directory.GetParent(Godot.OS.GetExecutablePath()).FullName}";
+            else
+                // set to project dir
+                pathExeDir = Godot.ProjectSettings.GlobalizePath("res://");
+
+            PathMods = Path.Combine(pathExeDir, "Mods");
         }
 
         private static void UpdatePlayer(Script script)

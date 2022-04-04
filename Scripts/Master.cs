@@ -25,6 +25,11 @@ namespace Game
             ModLoader.LoadAll();
         }
 
+        public override void _Process(float delta)
+        {
+            ModLoader.Hook("_Process");
+        }
+
         private static void InitNodes()
         {
             LabelPlayerHealth = Instance.GetNode<Label>(Instance.NodePathLabelPlayerHealth);
