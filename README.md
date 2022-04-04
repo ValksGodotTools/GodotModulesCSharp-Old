@@ -9,7 +9,7 @@ https://www.tutorialspoint.com/lua/lua_basic_syntax.htm
 - [ ] Do not add mod if info.json does not exist
 - [ ] Add a game menu and list all mods / add stuff to manage / reload mods
 - [ ] Figure out how to use Lua debugger
-- [ ] Figure out how to do something like `player:setHealth(x)` from Lua
+- [x] Figure out how to do something like `player:setHealth(x)` from Lua
 - [ ] Figure out how to add something like Godots `_process(float delta)` in Lua so modders can call a function every frame if so desired
 
 ## Setup
