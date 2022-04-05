@@ -33,7 +33,7 @@ namespace Game
             Script.Globals["Player", "setHealth"] = (Action<int>)Master.Player.SetHealth;
         }
 
-        public static void LoadAll()
+        public static void FindAllMods()
         {
             Directory.CreateDirectory(PathMods);
 

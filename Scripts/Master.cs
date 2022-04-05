@@ -22,14 +22,14 @@ namespace Game
             InitPlayer();
 
             ModLoader.Init();
-            ModLoader.LoadAll();
+            ModLoader.FindAllMods();
             ModLoader.Hook("OnGameInit");
 
         }
 
         public override void _Process(float delta)
         {
-            ModLoader.Hook("OnGameUpdate");
+            ModLoader.Hook("OnGameUpdate", delta);
         }
 
         private static void InitNodes()
