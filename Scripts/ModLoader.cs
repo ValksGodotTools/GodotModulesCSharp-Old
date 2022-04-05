@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System;
 using Newtonsoft.Json;
 using MoonSharp.Interpreter;
@@ -10,6 +11,7 @@ namespace Game
     public class ModLoader
     {
         private static Dictionary<string, Mod> Mods = new Dictionary<string, Mod>();
+        private static Dictionary<string, Mod> OrderedMods = new Dictionary<string, Mod>();
         private static MoonSharpVsCodeDebugServer DebugServer { get; set; }
         private static string PathMods { get; set; }
         private static Script Script { get; set; }
@@ -56,22 +58,38 @@ namespace Game
                 if (Mods.ContainsKey(modInfo.Name))
                     continue;
 
-                try
-                {
-                    Script.DoFile(pathScript);
-                }
-                catch (ScriptRuntimeException e)
-                {
-                    // Mod script did not run right
-                    Godot.GD.Print(e.DecoratedMessage);
-                    continue;
-                }
-
                 Mods.Add(modInfo.Name, new Mod
                 {
-                    ModInfo = modInfo
+                    ModInfo = modInfo,
+                    PathScript = pathScript
                 });
             }
+        }
+
+        public static void SortMods()
+        {
+            foreach (var mod in Mods.Values)
+            {
+                foreach (var dependency in mod.ModInfo.Dependencies)
+                {
+                    if (!OrderedMods.ContainsKey(dependency))
+                    {
+                        if (!Mods.ContainsKey(dependency))
+                        {
+                            Godot.GD.Print($"{mod.ModInfo.Name} is missing dependency {dependency}");
+                            continue;
+                        }
+
+                        OrderedMods.Add(dependency, Mods[dependency]);
+                    }
+                }
+
+                if (!OrderedMods.ContainsKey(mod.ModInfo.Name))
+                    OrderedMods.Add(mod.ModInfo.Name, mod);
+            }
+
+            foreach (var mod in OrderedMods)
+                Godot.GD.Print($"{mod.Key}");
         }
 
         public static void Hook(string v, params object[] args) 
@@ -104,6 +122,7 @@ namespace Game
     public struct Mod
     {
         public ModInfo ModInfo { get; set; }
+        public string PathScript { get; set; }
     }
 
     public struct ModInfo
@@ -111,5 +130,6 @@ namespace Game
         public string Name { get; set; }
         public string Author { get; set; }
         public string Version { get; set; }
+        public string[] Dependencies { get; set; }
     }
 }

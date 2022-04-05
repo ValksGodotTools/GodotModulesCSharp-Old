@@ -23,8 +23,8 @@ namespace Game
 
             ModLoader.Init();
             ModLoader.FindAllMods();
+            ModLoader.SortMods();
             ModLoader.Hook("OnGameInit");
-
         }
 
         public override void _Process(float delta)

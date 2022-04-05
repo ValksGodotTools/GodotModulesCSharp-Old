@@ -16,10 +16,10 @@ function RegisterCallback(funcname, precallback, postcallback)
         --- call any prehook (this can change arguments but not return values)
         if precallback ~= nil then precallback(self, table.unpack(arg)) end
         --- call the original function save the result
-        local ret = originalFunction(self, table.unpack(arg))
+        local result = originalFunction(self, table.unpack(arg))
         --- call any post hook, this can return a new result
         if postcallback ~= nil then postcallback(self, table.unpack(arg)) end
         -- return result
-        return ret
+        return result
     end
 end
