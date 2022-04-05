@@ -9,8 +9,9 @@ Learn MoonSharp: https://www.moonsharp.org/getting_started.html
 - [x] Figure out how to add something like Godots `_process(float delta)` in Lua so modders can call a function every frame if so desired
 - [x] Do not add mod if lua scripts did not compile and give some kind of feedback in console about this
 - [x] Do not add mod if info.json does not exist
-- [x] Figure out how to use Lua debugger
+- [x] Lua debugger
 - [x] Allow mods to interact with each other without overwriting one another
+- [x] Callbacks with params
 - [ ] Figure out mod load order
 - [ ] Figure out mod dependencies
 - [ ] Add a game menu and list all mods / add stuff to manage / reload mods
