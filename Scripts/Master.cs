@@ -22,8 +22,12 @@ namespace Game
             InitPlayer();
 
             ModLoader.Init();
-            ModLoader.FindAllMods();
             ModLoader.SortMods();
+            foreach (var mod in ModLoader.Mods)
+                Godot.GD.Print(mod.ModInfo.Name);
+            Godot.GD.Print("------");
+            ModLoader.LoadMods();
+
             ModLoader.Hook("OnGameInit");
         }
 

@@ -1,7 +1,6 @@
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System;
+using System.IO;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using MoonSharp.Interpreter;
 using MoonSharp.VsCodeDebugger;
@@ -10,8 +9,7 @@ namespace Game
 {
     public class ModLoader
     {
-        private static Dictionary<string, Mod> Mods = new Dictionary<string, Mod>();
-        private static Dictionary<string, Mod> OrderedMods = new Dictionary<string, Mod>();
+        public static List<Mod> Mods = new List<Mod>();
         private static MoonSharpVsCodeDebugServer DebugServer { get; set; }
         private static string PathMods { get; set; }
         private static Script Script { get; set; }
@@ -35,18 +33,74 @@ namespace Game
             Script.Globals["Player", "setHealth"] = (Action<int>)Master.Player.SetHealth;
         }
 
-        public static void FindAllMods()
+        public static void SortMods()
         {
+            var foundMods = FindAllMods();
+
+            foreach (var mod in foundMods.Values)
+            {
+                if (!Mods.Contains(mod))
+                    Mods.Add(mod);
+
+                var modIndex = Mods.IndexOf(mod);
+
+                foreach (var dependency in mod.ModInfo.Dependencies)
+                {
+                    if (!foundMods.ContainsKey(dependency))
+                    {
+                        Godot.GD.Print($"{mod.ModInfo.Name} is missing the dependency: {dependency}");
+                        continue;
+                    }
+
+                    if (!Mods.Contains(foundMods[dependency]))
+                        Mods.Insert(modIndex, foundMods[dependency]);
+                }
+            }
+        }
+
+        public static void LoadMods()
+        {
+            foreach (var mod in Mods)
+            {
+                try
+                {
+                    Script.DoFile(mod.PathScript);
+                }
+                catch (ScriptRuntimeException e)
+                {
+                    // Mod script did not run right
+                    Godot.GD.Print(e.DecoratedMessage);
+                    continue;
+                }
+            }
+        }
+
+        public static void Hook(string v, params object[] args)
+        {
+            try
+            {
+                Script.Call(Script.Globals[v], args);
+            }
+            catch (ScriptRuntimeException e)
+            {
+                Godot.GD.Print(e.DecoratedMessage);
+            }
+        }
+
+        private static Dictionary<string, Mod> FindAllMods()
+        {
+            var mods = new Dictionary<string, Mod>();
+
             Directory.CreateDirectory(PathMods);
 
-            var mods = Directory.GetDirectories(PathMods);
+            var modFolders = Directory.GetDirectories(PathMods);
 
-            foreach (var mod in mods)
+            foreach (var modFolder in modFolders)
             {
-                var files = Directory.GetFiles(mod);
+                var files = Directory.GetFiles(modFolder);
 
-                var pathInfo = $"{mod}/info.json";
-                var pathScript = $"{mod}/script.lua";
+                var pathInfo = $"{modFolder}/info.json";
+                var pathScript = $"{modFolder}/script.lua";
 
                 // info.json or script.lua does not exist
                 if (!File.Exists(pathInfo) || !File.Exists(pathScript))
@@ -55,53 +109,17 @@ namespace Game
                 var modInfo = JsonConvert.DeserializeObject<ModInfo>(File.ReadAllText(pathInfo));
 
                 // Mod with this name exists already
-                if (Mods.ContainsKey(modInfo.Name))
+                if (mods.ContainsKey(modInfo.Name))
                     continue;
 
-                Mods.Add(modInfo.Name, new Mod
+                mods.Add(modInfo.Name, new Mod
                 {
                     ModInfo = modInfo,
                     PathScript = pathScript
                 });
             }
-        }
 
-        public static void SortMods()
-        {
-            foreach (var mod in Mods.Values)
-            {
-                foreach (var dependency in mod.ModInfo.Dependencies)
-                {
-                    if (!OrderedMods.ContainsKey(dependency))
-                    {
-                        if (!Mods.ContainsKey(dependency))
-                        {
-                            Godot.GD.Print($"{mod.ModInfo.Name} is missing dependency {dependency}");
-                            continue;
-                        }
-
-                        OrderedMods.Add(dependency, Mods[dependency]);
-                    }
-                }
-
-                if (!OrderedMods.ContainsKey(mod.ModInfo.Name))
-                    OrderedMods.Add(mod.ModInfo.Name, mod);
-            }
-
-            foreach (var mod in OrderedMods)
-                Godot.GD.Print($"{mod.Key}");
-        }
-
-        public static void Hook(string v, params object[] args) 
-        {
-            try 
-            {
-                Script.Call(Script.Globals[v], args);
-            }
-            catch (ScriptRuntimeException e)
-            {
-                Godot.GD.Print(e.DecoratedMessage);
-            }
+            return mods;
         }
 
         private static void FindModsPath()
