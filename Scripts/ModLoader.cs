@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System;
 using Newtonsoft.Json;
 using MoonSharp.Interpreter;
 using MoonSharp.VsCodeDebugger;
@@ -43,8 +44,6 @@ namespace Game
                 {
                     modScript.DoFile(pathScript);
 
-                    UpdatePlayer(modScript);
-
                     Mods.Add(modInfo.Name, new Mod {
                         ModInfo = modInfo,
                         Script = modScript
@@ -72,11 +71,9 @@ namespace Game
             var luaPlayer = new Godot.File();
             luaPlayer.Open("res://Scripts/Lua/Player.lua", Godot.File.ModeFlags.Read);
 
-            var luaGame = new Godot.File();
-            luaGame.Open("res://Scripts/Lua/Game.lua", Godot.File.ModeFlags.Read);
-
             script.DoString(luaPlayer.GetAsText());
-            script.DoString(luaGame.GetAsText());
+
+            script.Globals["Player", "setHealth"] = (Action<int>)Master.Player.SetHealth;
 
             return script;
         }
@@ -95,16 +92,21 @@ namespace Game
             PathMods = Path.Combine(pathExeDir, "Mods");
         }
 
-        private static void UpdatePlayer(Script script)
-        {
-            var resPlayer = script.Globals.Get("Player");
-            if (resPlayer != null)
-            {
-                var player = resPlayer.Table;
-                var resHealth = player.Get("health");
+        public static DynValue resPlayer;
 
-                if (resHealth != null)
-                    Master.Player.SetHealth((int)resHealth.Number);
+        public static void UpdatePlayer()
+        {
+            foreach (var modName in Mods.Keys)
+            {
+                resPlayer = Mods[modName].Script.Globals.Get("Player");
+                if (resPlayer != null)
+                {
+                    var player = resPlayer.Table;
+                    var resHealth = player.Get("health");
+
+                    if (resHealth != null)
+                        Master.Player.SetHealth((int)resHealth.Number);
+                }
             }
         }
     }

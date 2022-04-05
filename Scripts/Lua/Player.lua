@@ -1,4 +1,4 @@
-Player = { id = 0, health = 100 }
+Player = { health = 100 }
 
 function Player:new(o)
 	o = o or {}
@@ -7,6 +7,6 @@ function Player:new(o)
 	return o
 end
 
-function Player:setHealth(id, v)
+function Player:setHealth(v)
 	self.health = v
 end

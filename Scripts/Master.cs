@@ -23,11 +23,13 @@ namespace Game
 
             ModLoader.Init();
             ModLoader.LoadAll();
+            ModLoader.Hook("OnGameInit");
+
         }
 
         public override void _Process(float delta)
         {
-            ModLoader.Hook("_Process");
+            ModLoader.Hook("OnGameUpdate");
         }
 
         private static void InitNodes()

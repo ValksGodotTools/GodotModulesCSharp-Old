@@ -3,13 +3,12 @@
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
-    "debugServer": 41912,
     "configurations": [
         {
             "name": "MoonSharp Attach",
             "type": "moonsharp-debug",
             "request": "attach",
-            "HELP": "Please set 'debugServer':41912 (or whatever port you ar connecting to) right after the 'version' field in this json."
+            "debugServer": 41912
         },
         {
             "name": "Play in Editor",
