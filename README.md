@@ -54,8 +54,18 @@ info.json
 
 script.lua
 ```lua
-Player = Player:new{id = 1}
-Player.health = Player.health - 10
+local i = 0
+
+function OnGameInit()
+	print("Ready")
+	Player:setHealth(12)
+end
+
+function OnGameUpdate()
+	--print(i)
+	Player:setHealth(i)
+	i = i + 1
+end
 ```
 
 Notice how player health is set to 90 on game start.
