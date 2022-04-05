@@ -10,6 +10,8 @@ Learn MoonSharp: https://www.moonsharp.org/getting_started.html
 - [x] Do not add mod if lua scripts did not compile and give some kind of feedback in console about this
 - [x] Do not add mod if info.json does not exist
 - [x] Figure out how to use Lua debugger
+- [ ] Allow mods to interact with each other without overwriting one another
+- [ ] Figure out mod dependencies
 - [ ] Add a game menu and list all mods / add stuff to manage / reload mods
 
 ## Setup
@@ -30,6 +32,7 @@ VSCode is a UI friendly text editor for developers
     - [C# Tools for Godot](https://marketplace.visualstudio.com/items?itemName=neikeq.godot-csharp-vscode)
     - [godot-tools](https://marketplace.visualstudio.com/items?itemName=geequlim.godot-tools)
     - [Mono Debug](https://marketplace.visualstudio.com/items?itemName=ms-vscode.mono-debug)
+    - [MoonSharp Debug](https://marketplace.visualstudio.com/items?itemName=xanathar.moonsharp-debug)
 3. Launch Godot through VSCode by hitting `F1` to open up VSCode command and run `godot tools: open workspace with godot editor` or simply click the `Open Godot Editor` button bottom right
 
 ### Lua
@@ -54,23 +57,23 @@ info.json
 
 script.lua
 ```lua
-Player = Player:new{id = 1}
-Player.health = Player.health - 10
+local i = 0
+
+function OnGameInit()
+	print("Ready")
+	Player:setHealth(12)
+end
+
+function OnGameUpdate()
+	--print(i)
+	Player:setHealth(i)
+	i = i + 1
+end
 ```
 
 Notice how player health is set to 90 on game start.
 
 ### Debugging
-1. In `VSCode`, go to `Run and Debug` tab > `Create a launch.json file` > `C# Godot`
-2. Add the following to configurations in `launch.json`
-```json
-{
-    "name": "MoonSharp Attach",
-    "type": "moonsharp-debug",
-    "request": "attach",
-    "debugServer": 41912
-}
-```
-3. Launch the configuration `Play in Editor` (if configuration is set to this already then just press `F5`)
-4. Launch the configuration `MoonSharp Attach`
-5. Place a debug point anywhere in Lua or C# script to start debugging
+1. Launch the VSCode configuration `Play in Editor` (if configuration is set to this already then just press `F5`)
+2. While the debugger is running in the editor and if you want to debug Lua scripts as well launch the VSCode configuration `MoonSharp Attach`
+3. Place a debug point anywhere in Lua or C# script to start debugging
