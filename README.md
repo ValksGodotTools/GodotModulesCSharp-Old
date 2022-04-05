@@ -12,9 +12,13 @@ Learn MoonSharp: https://www.moonsharp.org/getting_started.html
 - [x] Lua debugger
 - [x] Allow mods to interact with each other without overwriting one another
 - [x] Callbacks with params
-- [ ] Figure out mod load order
-- [ ] Figure out mod dependencies
-- [ ] Add a game menu and list all mods / add stuff to manage / reload mods
+- [x] Figure out mod load order
+- [x] Figure out mod dependencies
+- [x] Display mods in menu
+- [x] Add button to load mods
+- [ ] Add buttons to disable/enable individual mods
+- [ ] Add button to toggle debug server
+- [ ] Add click drag functionality to manually sort mods
 
 ## Setup
 ### Godot Mono (C#)
