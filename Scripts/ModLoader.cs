@@ -18,16 +18,17 @@ namespace Game
         public static void Init()
         {
             FindModsPath();
-            
+
             DebugServer = new MoonSharpVsCodeDebugServer(); // how does this work in action?
             DebugServer.Start();
 
             Script = new Script();
+            DebugServer.AttachToScript(Script, "Debug");
 
-            var luaPlayer = new Godot.File();
-            luaPlayer.Open("res://Scripts/Lua/Player.lua", Godot.File.ModeFlags.Read);
+            var luaGame = new Godot.File();
+            luaGame.Open("res://Scripts/Lua/Game.lua", Godot.File.ModeFlags.Read);
 
-            Script.DoString(luaPlayer.GetAsText());
+            Script.DoString(luaGame.GetAsText());
 
             Script.Globals["Player", "setHealth"] = (Action<int>)Master.Player.SetHealth;
         }
@@ -44,31 +45,45 @@ namespace Game
 
                 var pathInfo = $"{mod}/info.json";
                 var pathScript = $"{mod}/script.lua";
+
+                // info.json or script.lua does not exist
                 if (!File.Exists(pathInfo) || !File.Exists(pathScript))
                     continue;
 
                 var modInfo = JsonConvert.DeserializeObject<ModInfo>(File.ReadAllText(pathInfo));
 
+                // Mod with this name exists already
+                if (Mods.ContainsKey(modInfo.Name))
+                    continue;
+
                 try
                 {
                     Script.DoFile(pathScript);
-
-                    Mods.Add(modInfo.Name, new Mod {
-                        ModInfo = modInfo
-                    });
-
-                    DebugServer.AttachToScript(Script, modInfo.Name);
                 }
                 catch (ScriptRuntimeException e)
                 {
+                    // Mod script did not run right
                     Godot.GD.Print(e.DecoratedMessage);
+                    continue;
                 }
+
+                Mods.Add(modInfo.Name, new Mod
+                {
+                    ModInfo = modInfo
+                });
             }
         }
 
-        public static void Hook(string v, params object[] args)
+        public static void Hook(string v, params object[] args) 
         {
-            Script.Call(Script.Globals[v], args);
+            try 
+            {
+                Script.Call(Script.Globals[v], args);
+            }
+            catch (ScriptRuntimeException e)
+            {
+                Godot.GD.Print(e.DecoratedMessage);
+            }
         }
 
         private static void FindModsPath()
@@ -84,30 +99,11 @@ namespace Game
 
             PathMods = Path.Combine(pathExeDir, "Mods");
         }
-
-        public static DynValue resPlayer;
-
-        public static void UpdatePlayer()
-        {
-            foreach (var modName in Mods.Keys)
-            {
-                resPlayer = Mods[modName].Script.Globals.Get("Player");
-                if (resPlayer != null)
-                {
-                    var player = resPlayer.Table;
-                    var resHealth = player.Get("health");
-
-                    if (resHealth != null)
-                        Master.Player.SetHealth((int)resHealth.Number);
-                }
-            }
-        }
     }
 
-    public struct Mod 
+    public struct Mod
     {
         public ModInfo ModInfo { get; set; }
-        public Script Script { get; set; }
     }
 
     public struct ModInfo
