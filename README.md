@@ -10,6 +10,7 @@ Learn MoonSharp: https://www.moonsharp.org/getting_started.html
 - [x] Do not add mod if lua scripts did not compile and give some kind of feedback in console about this
 - [x] Do not add mod if info.json does not exist
 - [x] Figure out how to use Lua debugger
+- [ ] Allow mods to interact with each other without overwriting one another
 - [ ] Add a game menu and list all mods / add stuff to manage / reload mods
 
 ## Setup
