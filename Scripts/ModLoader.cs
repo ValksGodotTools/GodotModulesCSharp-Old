@@ -12,6 +12,7 @@ namespace Game
         private static Dictionary<string, Mod> Mods = new Dictionary<string, Mod>();
         private static MoonSharpVsCodeDebugServer DebugServer { get; set; }
         private static string PathMods { get; set; }
+        private static Script Script { get; set; }
 
 
         public static void Init()
@@ -20,6 +21,15 @@ namespace Game
             
             DebugServer = new MoonSharpVsCodeDebugServer(); // how does this work in action?
             DebugServer.Start();
+
+            Script = new Script();
+
+            var luaPlayer = new Godot.File();
+            luaPlayer.Open("res://Scripts/Lua/Player.lua", Godot.File.ModeFlags.Read);
+
+            Script.DoString(luaPlayer.GetAsText());
+
+            Script.Globals["Player", "setHealth"] = (Action<int>)Master.Player.SetHealth;
         }
 
         public static void LoadAll()
@@ -30,7 +40,6 @@ namespace Game
 
             foreach (var mod in mods)
             {
-                var modScript = GetModScriptTemplate();
                 var files = Directory.GetFiles(mod);
 
                 var pathInfo = $"{mod}/info.json";
@@ -42,14 +51,13 @@ namespace Game
 
                 try
                 {
-                    modScript.DoFile(pathScript);
+                    Script.DoFile(pathScript);
 
                     Mods.Add(modInfo.Name, new Mod {
-                        ModInfo = modInfo,
-                        Script = modScript
+                        ModInfo = modInfo
                     });
 
-                    DebugServer.AttachToScript(modScript, modInfo.Name);
+                    DebugServer.AttachToScript(Script, modInfo.Name);
                 }
                 catch (ScriptRuntimeException e)
                 {
@@ -60,22 +68,7 @@ namespace Game
 
         public static void Hook(string v, params object[] args)
         {
-            foreach (var mod in Mods.Values)
-                mod.Script.Call(mod.Script.Globals[v], args);
-        }
-
-        private static Script GetModScriptTemplate()
-        {
-            var script = new Script();
-
-            var luaPlayer = new Godot.File();
-            luaPlayer.Open("res://Scripts/Lua/Player.lua", Godot.File.ModeFlags.Read);
-
-            script.DoString(luaPlayer.GetAsText());
-
-            script.Globals["Player", "setHealth"] = (Action<int>)Master.Player.SetHealth;
-
-            return script;
+            Script.Call(Script.Globals[v], args);
         }
 
         private static void FindModsPath()
