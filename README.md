@@ -63,8 +63,6 @@ RegisterCallback('OnGameInit', nil, function()
 end)
 ```
 
-Notice how player health is set to 90 on game start.
-
 ### Debugging
 1. Launch the VSCode configuration `Play in Editor` (if configuration is set to this already then just press `F5`)
 2. While the debugger is running in the editor and if you want to debug Lua scripts as well launch the VSCode configuration `MoonSharp Attach`
