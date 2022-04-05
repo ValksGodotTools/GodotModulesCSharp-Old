@@ -5,7 +5,7 @@ using System.IO;
 using Path = System.IO.Path;
 using Directory = System.IO.Directory;
 
-namespace Game
+namespace ModLoader
 {
     public class Master : Node
     {
@@ -20,20 +20,13 @@ namespace Game
             Instance = this;
             InitNodes();
             InitPlayer();
-
-            ModLoader.Init();
-            ModLoader.SortMods();
-            foreach (var mod in ModLoader.Mods)
-                Godot.GD.Print(mod.ModInfo.Name);
-            Godot.GD.Print("------");
-            ModLoader.LoadMods();
-
-            ModLoader.Hook("OnGameInit");
+            ModLoader.LoadGameDefs();
+            ModLoader.Call("OnGameInit");
         }
 
         public override void _Process(float delta)
         {
-            ModLoader.Hook("OnGameUpdate", delta);
+            ModLoader.Call("OnGameUpdate", delta);
         }
 
         private static void InitNodes()

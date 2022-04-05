@@ -1,0 +1,41 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/UI/UIModInfo.cs" type="Script" id=1]
+
+[node name="ModInfo" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -1024.0
+margin_bottom = -600.0
+rect_min_size = Vector2( 150, 35 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+NodePathLabelModName = NodePath("PanelContainer/HBoxContainer/Label")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 143.0
+margin_bottom = 28.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="PanelContainer/HBoxContainer"]
+margin_top = 3.0
+margin_right = 66.0
+margin_bottom = 17.0
+text = "ModName"
+
+[node name="Button" type="Button" parent="PanelContainer/HBoxContainer"]
+margin_left = 70.0
+margin_right = 98.0
+margin_bottom = 21.0
+text = "[X]"
+flat = true

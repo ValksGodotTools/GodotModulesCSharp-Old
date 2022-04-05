@@ -1,0 +1,41 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scenes/Prefabs/ModLoader.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Scripts/Menu.cs" type="Script" id=3]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ModLoader" parent="PanelContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 817.0
+margin_top = 175.0
+margin_right = 1017.0
+margin_bottom = 425.0
+rect_min_size = Vector2( 200, 250 )
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="Play" type="Button" parent="PanelContainer"]
+margin_left = 7.0
+margin_top = 290.0
+margin_right = 45.0
+margin_bottom = 310.0
+size_flags_horizontal = 0
+size_flags_vertical = 4
+text = "Play"
+
+[connection signal="pressed" from="PanelContainer/Play" to="." method="_on_Play_pressed"]

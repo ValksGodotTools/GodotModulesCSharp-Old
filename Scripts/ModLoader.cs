@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using MoonSharp.Interpreter;
 using MoonSharp.VsCodeDebugger;
 
-namespace Game
+namespace ModLoader
 {
     public class ModLoader
     {
@@ -19,17 +19,12 @@ namespace Game
         {
             FindModsPath();
 
-            DebugServer = new MoonSharpVsCodeDebugServer(); // how does this work in action?
+            DebugServer = new MoonSharpVsCodeDebugServer();
             DebugServer.Start();
+        }
 
-            Script = new Script();
-            DebugServer.AttachToScript(Script, "Debug");
-
-            var luaGame = new Godot.File();
-            luaGame.Open("res://Scripts/Lua/Game.lua", Godot.File.ModeFlags.Read);
-
-            Script.DoString(luaGame.GetAsText());
-
+        public static void LoadGameDefs()
+        {
             Script.Globals["Player", "setHealth"] = (Action<int>)Master.Player.SetHealth;
         }
 
@@ -60,6 +55,17 @@ namespace Game
 
         public static void LoadMods()
         {
+            if (Script != null) 
+                DebugServer.Detach(Script);
+
+            Script = new Script();
+            DebugServer.AttachToScript(Script, "Debug");
+
+            var luaGame = new Godot.File();
+            luaGame.Open("res://Scripts/Lua/Game.lua", Godot.File.ModeFlags.Read);
+
+            Script.DoString(luaGame.GetAsText());
+            
             foreach (var mod in Mods)
             {
                 try
@@ -75,7 +81,7 @@ namespace Game
             }
         }
 
-        public static void Hook(string v, params object[] args)
+        public static void Call(string v, params object[] args)
         {
             try
             {

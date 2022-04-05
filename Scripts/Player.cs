@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-namespace Game
+namespace ModLoader
 {
     public class Player : Sprite
     {
