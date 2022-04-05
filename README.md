@@ -10,7 +10,8 @@ Learn MoonSharp: https://www.moonsharp.org/getting_started.html
 - [x] Do not add mod if lua scripts did not compile and give some kind of feedback in console about this
 - [x] Do not add mod if info.json does not exist
 - [x] Figure out how to use Lua debugger
-- [ ] Allow mods to interact with each other without overwriting one another
+- [x] Allow mods to interact with each other without overwriting one another
+- [ ] Figure out mod load order
 - [ ] Figure out mod dependencies
 - [ ] Add a game menu and list all mods / add stuff to manage / reload mods
 
@@ -57,18 +58,9 @@ info.json
 
 script.lua
 ```lua
-local i = 0
-
-function OnGameInit()
-	print("Ready")
-	Player:setHealth(12)
-end
-
-function OnGameUpdate()
-	--print(i)
-	Player:setHealth(i)
-	i = i + 1
-end
+RegisterCallback('OnGameInit', nil, function()
+	print 'Hello1'
+end)
 ```
 
 Notice how player health is set to 90 on game start.
