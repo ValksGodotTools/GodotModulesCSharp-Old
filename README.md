@@ -14,7 +14,11 @@ Learn MoonSharp: https://www.moonsharp.org/getting_started.html
 - [x] Callbacks with params
 - [x] Figure out mod load order
 - [x] Figure out mod dependencies
-- [ ] Add a game menu and list all mods / add stuff to manage / reload mods
+- [x] Display mods in menu
+- [x] Add button to load mods
+- [ ] Add buttons to disable/enable individual mods
+- [ ] Add button to toggle debug server
+- [ ] Add click drag functionality to manually sort mods
 
 ## Setup
 ### Godot Mono (C#)
