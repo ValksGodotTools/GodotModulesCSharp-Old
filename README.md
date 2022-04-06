@@ -81,7 +81,14 @@ info.json
 script.lua
 ```lua
 RegisterCallback('OnGameInit', nil, function()
-	print 'Hello1'
+	print 'Start'
+end)
+
+local x = 0
+
+RegisterCallBack('OnGameUpdate', nil, function(delta)
+	Player:setHealth(x)
+	x = x + 1
 end)
 ```
 
