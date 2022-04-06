@@ -114,6 +114,16 @@ namespace ModLoader
 
                 var modInfo = JsonConvert.DeserializeObject<ModInfo>(File.ReadAllText(pathInfo));
 
+                // info.json does not have a name field
+                if (modInfo.Name == null)
+                    continue;
+
+                if (modInfo.Version == null)
+                    modInfo.Version = "0.0.1";
+
+                if (modInfo.Author == null)
+                    modInfo.Author = "Not specified";
+
                 // Mod with this name exists already
                 if (mods.ContainsKey(modInfo.Name))
                     continue;
@@ -155,5 +165,6 @@ namespace ModLoader
         public string Author { get; set; }
         public string Version { get; set; }
         public string[] Dependencies { get; set; }
+        public bool Enabled { get; set; }
     }
 }
