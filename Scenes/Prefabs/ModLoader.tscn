@@ -28,12 +28,23 @@ size_flags_vertical = 3
 
 [node name="Mods" type="VBoxContainer" parent="VBoxContainer/ScrollContainer"]
 
-[node name="Load Mods" type="Button" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 216.0
-margin_right = 81.0
+margin_right = 186.0
 margin_bottom = 236.0
+
+[node name="Refresh" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_right = 60.0
+margin_bottom = 20.0
+text = "Refresh"
+
+[node name="Load Mods" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 64.0
+margin_right = 145.0
+margin_bottom = 20.0
 size_flags_horizontal = 0
 size_flags_vertical = 8
 text = "Load Mods"
 
-[connection signal="pressed" from="VBoxContainer/Load Mods" to="." method="_on_Load_Mods_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Refresh" to="." method="_on_Refresh_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Load Mods" to="." method="_on_Load_Mods_pressed"]
