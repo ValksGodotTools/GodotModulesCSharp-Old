@@ -25,9 +25,8 @@ namespace ModLoader
 
         private void _on_Enabled_pressed()
         {
-            BtnModEnabled.Pressed = !BtnModEnabled.Pressed;
-            BtnModEnabled.Text = BtnModEnabled.Pressed ? "[x]" : "[ ]";
-            ModLoader.ModsEnabled[LabelModName.Text] = BtnModEnabled.Pressed;
+            BtnModEnabled.Text = !BtnModEnabled.Pressed ? "[x]" : "[ ]";
+            ModLoader.ModsEnabled[LabelModName.Text] = !BtnModEnabled.Pressed;
         }
     }
 }
