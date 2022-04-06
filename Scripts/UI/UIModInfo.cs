@@ -20,6 +20,7 @@ namespace ModLoader
         public void SetModEnabled(bool enabled)
         {
             BtnModEnabled = GetNode<Button>(NodePathBtnModEnabled);
+            BtnModEnabled.Pressed = !enabled; // not sure why but it works
             BtnModEnabled.Text = enabled ? "[x]" : "[ ]";
         }
 
