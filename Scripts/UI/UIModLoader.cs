@@ -33,6 +33,17 @@ namespace ModLoader
             }
         }
 
+        private void _on_Refresh_pressed()
+        {
+            ModLoader.SetModsEnabled();
+
+            foreach (Node node in ModList.GetChildren())
+                node.QueueFree();
+
+            ModLoader.SortMods();
+            UIModLoader.DisplayMods();
+        }
+
         private void _on_Load_Mods_pressed()
         {
             ModLoader.SetModsEnabled();
