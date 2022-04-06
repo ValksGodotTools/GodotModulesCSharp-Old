@@ -4,6 +4,17 @@ This project was created to better understand MoonSharp (Lua) for implementing m
 Learn Lua: https://www.lua.org/pil/contents.html  
 Learn MoonSharp: https://www.moonsharp.org/getting_started.html  
 
+## Features
+- Mods all share one Lua environment
+- Mods can register callbacks without overwriting other mod callbacks
+- Callbacks support params
+- ModLoader can register function hooks anywhere
+- Mods can see objects like Player and do stuff like Player:setHealth(x)
+- Lua Debugger support
+- Safety null checks to see if all properties were filled out in mod info.json
+- Individual mods can be enabled or disabled
+- Mod name, description, author, version, game versions, dependencies displayed in UI
+
 ## Todo
 - [x] Figure out how to do something like `player:setHealth(x)` from Lua
 - [x] Figure out how to add something like Godots `_process(float delta)` in Lua so modders can call a function every frame if so desired
