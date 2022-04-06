@@ -14,6 +14,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 NodePathModList = NodePath("HBoxContainer/Mod List/Mod List/MarginContainer/PanelContainer/ScrollContainer/Mods")
+NodePathModName = NodePath("HBoxContainer/Mod Info/Mod Information/Mod Name")
+NodePathModGameVersions = NodePath("HBoxContainer/Mod Info/Mod Information/MarginContainer2/VBoxContainer/Game Versions")
+NodePathModDependencies = NodePath("HBoxContainer/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer/VBoxContainer/PanelContainer/VBoxContainer/Dependencies")
+NodePathModDescription = NodePath("HBoxContainer/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer/VBoxContainer/MarginContainer/Description")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 margin_left = 7.0
@@ -98,50 +102,71 @@ margin_bottom = 14.0
 text = "Mod Name"
 align = 1
 
-[node name="Game Versions" type="Label" parent="HBoxContainer/Mod Info/Mod Information"]
+[node name="MarginContainer2" type="MarginContainer" parent="HBoxContainer/Mod Info/Mod Information"]
 margin_top = 18.0
-margin_right = 224.0
-margin_bottom = 32.0
-text = "Game Version(s): 0.02, 0.01"
-
-[node name="MarginContainer" type="ScrollContainer" parent="HBoxContainer/Mod Info/Mod Information"]
-margin_top = 36.0
 margin_right = 224.0
 margin_bottom = 226.0
 size_flags_vertical = 3
+custom_constants/margin_top = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Mod Info/Mod Information/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Mod Info/Mod Information/MarginContainer2"]
+margin_top = 5.0
 margin_right = 224.0
-margin_bottom = 169.0
+margin_bottom = 208.0
+size_flags_vertical = 3
+
+[node name="Game Versions" type="Label" parent="HBoxContainer/Mod Info/Mod Information/MarginContainer2/VBoxContainer"]
+margin_right = 224.0
+margin_bottom = 14.0
+text = "Game Version(s): 0.02, 0.01"
+
+[node name="MarginContainer" type="ScrollContainer" parent="HBoxContainer/Mod Info/Mod Information/MarginContainer2/VBoxContainer"]
+margin_top = 18.0
+margin_right = 224.0
+margin_bottom = 203.0
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer"]
+margin_right = 212.0
+margin_bottom = 191.0
 size_flags_horizontal = 3
 
-[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer/Mod Info/Mod Information/MarginContainer/VBoxContainer"]
-margin_right = 224.0
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer/VBoxContainer"]
+margin_right = 212.0
 margin_bottom = 32.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Mod Info/Mod Information/MarginContainer/VBoxContainer/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer/VBoxContainer/PanelContainer"]
 margin_left = 7.0
 margin_top = 7.0
-margin_right = 217.0
+margin_right = 205.0
 margin_bottom = 25.0
 
-[node name="Label Dependencies" type="Label" parent="HBoxContainer/Mod Info/Mod Information/MarginContainer/VBoxContainer/PanelContainer/VBoxContainer"]
-margin_right = 210.0
+[node name="Label Dependencies" type="Label" parent="HBoxContainer/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer/VBoxContainer/PanelContainer/VBoxContainer"]
+margin_right = 198.0
 margin_bottom = 14.0
 text = "Dependencies"
 
-[node name="Dependencies" type="VBoxContainer" parent="HBoxContainer/Mod Info/Mod Information/MarginContainer/VBoxContainer/PanelContainer/VBoxContainer"]
+[node name="Dependencies" type="VBoxContainer" parent="HBoxContainer/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer/VBoxContainer/PanelContainer/VBoxContainer"]
 margin_top = 18.0
-margin_right = 210.0
+margin_right = 198.0
 margin_bottom = 18.0
 
-[node name="Description" type="Label" parent="HBoxContainer/Mod Info/Mod Information/MarginContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer/VBoxContainer"]
 margin_top = 36.0
-margin_right = 224.0
-margin_bottom = 169.0
+margin_right = 212.0
+margin_bottom = 191.0
+custom_constants/margin_right = 0
+custom_constants/margin_top = 5
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="Description" type="Label" parent="HBoxContainer/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer/VBoxContainer/MarginContainer"]
+margin_top = 5.0
+margin_right = 212.0
+margin_bottom = 155.0
 text = "A super long description of the mod will go here. A super long description of the mod will go here. A super long description of the mod will go here. A super long description of the mod will go here. A super long description of the mod will go here. "
 autowrap = true
 

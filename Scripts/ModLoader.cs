@@ -9,7 +9,8 @@ namespace ModLoader
 {
     public class ModLoader
     {
-        public static List<Mod> Mods = new List<Mod>();
+        public static List<Mod> LoadedMods = new List<Mod>();
+        public static Dictionary<string, Mod> ModInfo = new Dictionary<string, Mod>();
         public static Dictionary<string, bool> ModsEnabled = new Dictionary<string, bool>();
         private static MoonSharpVsCodeDebugServer DebugServer { get; set; }
         public static string PathModsEnabled { get; set; }
@@ -36,26 +37,26 @@ namespace ModLoader
 
         public static void SortMods()
         {
-            Mods.Clear();
-            var foundMods = FindAllMods();
+            LoadedMods.Clear();
+            ModInfo = FindAllMods();
 
-            foreach (var mod in foundMods.Values)
+            foreach (var mod in ModInfo.Values)
             {
-                if (!Mods.Contains(mod))
-                    Mods.Add(mod);
+                if (!LoadedMods.Contains(mod))
+                    LoadedMods.Add(mod);
 
-                var modIndex = Mods.IndexOf(mod);
+                var modIndex = LoadedMods.IndexOf(mod);
 
                 foreach (var dependency in mod.ModInfo.Dependencies)
                 {
-                    if (!foundMods.ContainsKey(dependency))
+                    if (!ModInfo.ContainsKey(dependency))
                     {
                         Godot.GD.Print($"{mod.ModInfo.Name} is missing the dependency: {dependency}");
                         continue;
                     }
 
-                    if (!Mods.Contains(foundMods[dependency]))
-                        Mods.Insert(modIndex, foundMods[dependency]);
+                    if (!LoadedMods.Contains(ModInfo[dependency]))
+                        LoadedMods.Insert(modIndex, ModInfo[dependency]);
                 }
             }
         }
@@ -75,7 +76,7 @@ namespace ModLoader
 
             var modsEnabled = ModLoader.ModsEnabled;
             
-            foreach (var mod in Mods)
+            foreach (var mod in LoadedMods)
             {
                 if (!modsEnabled[mod.ModInfo.Name])
                     continue;

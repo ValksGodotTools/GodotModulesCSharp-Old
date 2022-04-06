@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Linq;
 
 namespace ModLoader 
 {
@@ -9,10 +10,8 @@ namespace ModLoader
         {
             ModLoader.Init();
             ModLoader.SortMods();
-            foreach (var mod in ModLoader.Mods)
-                Godot.GD.Print(mod.ModInfo.Name);
-            Godot.GD.Print("------");
             UIModLoader.DisplayMods();
+            UIModLoader.UpdateModInfo(((UIModInfo)UIModLoader.ModList.GetChild(0)).LabelModName.Text); // set to first mod in list
             ModLoader.LoadMods();
         }
 

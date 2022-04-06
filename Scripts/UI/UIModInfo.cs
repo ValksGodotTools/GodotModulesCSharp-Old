@@ -29,5 +29,11 @@ namespace ModLoader
             BtnModEnabled.Text = !BtnModEnabled.Pressed ? "[x]" : "[ ]";
             ModLoader.ModsEnabled[LabelModName.Text] = !BtnModEnabled.Pressed;
         }
+
+        private void _on_PanelContainer_gui_input(InputEvent e)
+        {
+            if (Input.IsActionPressed("ui_left_click"))
+                UIModLoader.UpdateModInfo(LabelModName.Text);
+        }
     }
 }

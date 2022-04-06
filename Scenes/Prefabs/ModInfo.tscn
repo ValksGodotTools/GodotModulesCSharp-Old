@@ -19,6 +19,9 @@ NodePathBtnModEnabled = NodePath("PanelContainer/HBoxContainer/Enabled")
 anchor_right = 1.0
 anchor_bottom = 1.0
 hint_tooltip = "Test"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer"]
 margin_left = 7.0
@@ -36,11 +39,13 @@ margin_bottom = 17.0
 text = "ModName"
 
 [node name="Enabled" type="Button" parent="PanelContainer/HBoxContainer"]
-margin_left = 70.0
-margin_right = 98.0
+margin_left = 108.0
+margin_right = 136.0
 margin_bottom = 21.0
+size_flags_horizontal = 10
 toggle_mode = true
 text = "[X]"
 flat = true
 
+[connection signal="gui_input" from="PanelContainer" to="." method="_on_PanelContainer_gui_input"]
 [connection signal="pressed" from="PanelContainer/HBoxContainer/Enabled" to="." method="_on_Enabled_pressed"]
