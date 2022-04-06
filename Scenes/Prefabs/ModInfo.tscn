@@ -12,7 +12,8 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-NodePathLabelModName = NodePath("PanelContainer/HBoxContainer/Label")
+NodePathLabelModName = NodePath("PanelContainer/HBoxContainer/ModName")
+NodePathBtnModEnabled = NodePath("PanelContainer/HBoxContainer/Enabled")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 anchor_right = 1.0
@@ -27,15 +28,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="PanelContainer/HBoxContainer"]
+[node name="ModName" type="Label" parent="PanelContainer/HBoxContainer"]
 margin_top = 3.0
 margin_right = 66.0
 margin_bottom = 17.0
 text = "ModName"
 
-[node name="Button" type="Button" parent="PanelContainer/HBoxContainer"]
+[node name="Enabled" type="Button" parent="PanelContainer/HBoxContainer"]
 margin_left = 70.0
 margin_right = 98.0
 margin_bottom = 21.0
 text = "[X]"
 flat = true
+
+[connection signal="pressed" from="PanelContainer/HBoxContainer/Enabled" to="." method="_on_Enabled_pressed"]

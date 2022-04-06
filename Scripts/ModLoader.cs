@@ -10,14 +10,20 @@ namespace ModLoader
     public class ModLoader
     {
         public static List<Mod> Mods = new List<Mod>();
+        public static Dictionary<string, bool> ModsEnabled = new Dictionary<string, bool>();
         private static MoonSharpVsCodeDebugServer DebugServer { get; set; }
+        public static string PathModsEnabled { get; set; }
         private static string PathMods { get; set; }
         private static Script Script { get; set; }
 
 
         public static void Init()
         {
-            FindModsPath();
+            PathMods = FindModsPath();
+            PathModsEnabled = Path.Combine(PathMods, "enabled.json");
+
+            SetupModsEnabled();
+            GetModsEnabled();
 
             DebugServer = new MoonSharpVsCodeDebugServer();
             DebugServer.Start();
@@ -93,6 +99,27 @@ namespace ModLoader
             }
         }
 
+        public static void SetModsEnabled()
+        {
+            File.WriteAllText(PathModsEnabled, JsonConvert.SerializeObject(ModsEnabled, Formatting.Indented));
+        }
+
+        public static void GetModsEnabled() 
+        {
+            if (!File.Exists(PathModsEnabled))
+                return;
+            
+            ModsEnabled = JsonConvert.DeserializeObject<Dictionary<string, bool>>(File.ReadAllText(PathModsEnabled));
+        }
+
+        private static void SetupModsEnabled()
+        {
+            if (File.Exists(PathModsEnabled))
+                return;
+
+            File.WriteAllText(PathModsEnabled, "{}");
+        }
+
         private static Dictionary<string, Mod> FindAllMods()
         {
             var mods = new Dictionary<string, Mod>();
@@ -138,7 +165,7 @@ namespace ModLoader
             return mods;
         }
 
-        private static void FindModsPath()
+        private static string FindModsPath()
         {
             string pathExeDir;
 
@@ -149,7 +176,7 @@ namespace ModLoader
                 // set to project dir
                 pathExeDir = Godot.ProjectSettings.GlobalizePath("res://");
 
-            PathMods = Path.Combine(pathExeDir, "Mods");
+            return Path.Combine(pathExeDir, "Mods");
         }
     }
 
@@ -165,6 +192,5 @@ namespace ModLoader
         public string Author { get; set; }
         public string Version { get; set; }
         public string[] Dependencies { get; set; }
-        public bool Enabled { get; set; }
     }
 }

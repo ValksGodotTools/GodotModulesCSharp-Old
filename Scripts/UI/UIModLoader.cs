@@ -16,17 +16,26 @@ namespace ModLoader
 
         public static void DisplayMods()
         {
+            var modsEnabled = ModLoader.ModsEnabled;
             var modInfoPrefab = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/ModInfo.tscn");
             foreach (var mod in ModLoader.Mods)
             {
                 var instance = modInfoPrefab.Instance<UIModInfo>();
-                instance.SetModName(mod.ModInfo.Name);
+                var modName = mod.ModInfo.Name;
+                instance.SetModName(modName);
+
+                if (modsEnabled.ContainsKey(modName))
+                    instance.SetModEnabled(modsEnabled[modName]);
+                else
+                    instance.SetModEnabled(false);
+                
                 ModList.AddChild(instance);
             }
         }
 
         private void _on_Load_Mods_pressed()
         {
+            ModLoader.SetModsEnabled();
             ModLoader.LoadMods();
         }
     }
