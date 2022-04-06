@@ -36,6 +36,7 @@ namespace ModLoader
 
         public static void SortMods()
         {
+            Mods.Clear();
             var foundMods = FindAllMods();
 
             foreach (var mod in foundMods.Values)
