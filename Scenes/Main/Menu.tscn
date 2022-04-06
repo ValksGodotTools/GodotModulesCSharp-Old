@@ -21,11 +21,11 @@ __meta__ = {
 [node name="ModLoader" parent="PanelContainer" instance=ExtResource( 1 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 817.0
+margin_left = 617.0
 margin_top = 175.0
 margin_right = 1017.0
 margin_bottom = 425.0
-rect_min_size = Vector2( 200, 250 )
+rect_min_size = Vector2( 400, 250 )
 size_flags_horizontal = 8
 size_flags_vertical = 4
 
