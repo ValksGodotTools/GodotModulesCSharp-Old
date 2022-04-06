@@ -74,7 +74,10 @@ info.json
 {
     "name": "ModTest",
     "version": "0.0.1",
-    "author": "valkyrienyanko"
+    "author": "valkyrienyanko",
+    "dependencies": [],
+    "description": "",
+    "gameVersions": []
 }
 ```
 
