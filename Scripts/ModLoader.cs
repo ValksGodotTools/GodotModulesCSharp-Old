@@ -71,9 +71,14 @@ namespace ModLoader
             luaGame.Open("res://Scripts/Lua/Game.lua", Godot.File.ModeFlags.Read);
 
             Script.DoString(luaGame.GetAsText());
+
+            var modsEnabled = ModLoader.ModsEnabled;
             
             foreach (var mod in Mods)
             {
+                if (!modsEnabled[mod.ModInfo.Name])
+                    continue;
+
                 try
                 {
                     Script.DoFile(mod.PathScript);
