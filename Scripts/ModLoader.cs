@@ -155,7 +155,10 @@ namespace ModLoader
                     modInfo.Version = "0.0.1";
 
                 if (modInfo.Author == null)
-                    modInfo.Author = "Not specified";
+                    modInfo.Author = "";
+
+                if (modInfo.Description == null)
+                    modInfo.Description = "";
 
                 // Mod with this name exists already
                 if (mods.ContainsKey(modInfo.Name))
