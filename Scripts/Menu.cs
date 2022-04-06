@@ -13,6 +13,7 @@ namespace ModLoader
                 Godot.GD.Print(mod.ModInfo.Name);
             Godot.GD.Print("------");
             UIModLoader.DisplayMods();
+            ModLoader.LoadMods();
         }
 
         private void _on_Play_pressed()
