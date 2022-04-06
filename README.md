@@ -16,9 +16,12 @@ Learn MoonSharp: https://www.moonsharp.org/getting_started.html
 - [x] Figure out mod dependencies
 - [x] Display mods in menu
 - [x] Add button to load mods
-- [ ] Add buttons to disable/enable individual mods
+- [x] Add buttons to disable/enable individual mods
+- [ ] Give better feedback about mod dependencies / dependants
 - [ ] Add button to toggle debug server
-- [ ] Add click drag functionality to manually sort mods
+
+![image](https://user-images.githubusercontent.com/6277739/162067076-b1173a2c-8f1c-4554-b9f5-680ff247b73d.png)
+![image](https://user-images.githubusercontent.com/6277739/162067113-30d3f5f1-d627-42bb-89ff-a7bdae87cc54.png)
 
 ## Setup
 ### Godot Mono (C#)
