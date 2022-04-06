@@ -38,6 +38,7 @@ text = "ModName"
 margin_left = 70.0
 margin_right = 98.0
 margin_bottom = 21.0
+toggle_mode = true
 text = "[X]"
 flat = true
 
