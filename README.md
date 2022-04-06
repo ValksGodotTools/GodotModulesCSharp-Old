@@ -1,5 +1,5 @@
 # GodotLuaModdingTest
-This project was created to better understand MoonSharp (Lua) for implementing modding into a game.
+This project was created to better understand MoonSharp (Lua) for implementing modding into a game. This project has evolved into a template to be used in other Godot C# games to add Lua modding support.
 
 Learn Lua: https://www.lua.org/pil/contents.html  
 Learn MoonSharp: https://www.moonsharp.org/getting_started.html  
