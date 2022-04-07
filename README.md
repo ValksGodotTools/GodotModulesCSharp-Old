@@ -1,4 +1,6 @@
 # GodotLuaModdingTest
+Just found out that this is a thing https://docs.godotengine.org/en/3.4/tutorials/export/exporting_pcks.html so use this. There is no point to using Lua over that.
+
 This project was created to better understand MoonSharp (Lua) for implementing modding into a game. The project has evolved into a template to be used in other Godot C# games to add Lua modding support.
 
 Learn Lua: https://www.lua.org/pil/contents.html  
