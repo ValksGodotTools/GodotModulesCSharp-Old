@@ -1,6 +1,8 @@
 # GodotLuaModdingTest
+## Note
 Just found out that this is a thing https://docs.godotengine.org/en/3.4/tutorials/export/exporting_pcks.html although as of writing this it will not work with C# projects because of this issue https://github.com/godotengine/godot/issues/36828. If your project is 100% GDScript then by all means use PCK files instead of this.
 
+## About
 This project was created to better understand MoonSharp (Lua) for implementing modding into a game. The project has evolved into a template to be used in other Godot C# games to add Lua modding support.
 
 Learn Lua: https://www.lua.org/pil/contents.html  
