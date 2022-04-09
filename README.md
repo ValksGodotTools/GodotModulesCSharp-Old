@@ -1,8 +1,23 @@
 # GodotLuaModdingTest
-This project was created to better understand MoonSharp (Lua) for implementing modding into a game.
+## Note
+Just found out that this is a thing https://docs.godotengine.org/en/3.4/tutorials/export/exporting_pcks.html although as of writing this it will not work with C# projects because of this issue https://github.com/godotengine/godot/issues/36828. If your project is 100% GDScript then by all means use PCK files instead of this.
+
+## About
+This project was created to better understand MoonSharp (Lua) for implementing modding into a game. The project has evolved into a template to be used in other Godot C# games to add Lua modding support.
 
 Learn Lua: https://www.lua.org/pil/contents.html  
 Learn MoonSharp: https://www.moonsharp.org/getting_started.html  
+
+## Features
+- Mods all share one Lua environment
+- Mods can register callbacks without overwriting other mod callbacks
+- Callbacks support params
+- ModLoader can register function hooks anywhere
+- Mods can see objects like Player and do stuff like Player:setHealth(x)
+- Lua Debugger support
+- Safety null checks to see if all properties were filled out in mod info.json
+- Individual mods can be enabled or disabled
+- Mod name, description, author, version, game versions, dependencies displayed in UI
 
 ## Todo
 - [x] Figure out how to do something like `player:setHealth(x)` from Lua
@@ -17,11 +32,14 @@ Learn MoonSharp: https://www.moonsharp.org/getting_started.html
 - [x] Display mods in menu
 - [x] Add button to load mods
 - [x] Add buttons to disable/enable individual mods
-- [ ] Give better feedback about mod dependencies / dependants
+- [x] Give better feedback about mod dependencies
+- [ ] Toggling mod dependency in mod info page should also toggle the mod dependency in the mod list (left side)
+- [ ] Rearrange project folder structure so it can easily be ported to another game
+- [ ] Add website for displaying user-defined Lua documentation
 - [ ] Add button to toggle debug server
 
-![image](https://user-images.githubusercontent.com/6277739/162067076-b1173a2c-8f1c-4554-b9f5-680ff247b73d.png)
-![image](https://user-images.githubusercontent.com/6277739/162067113-30d3f5f1-d627-42bb-89ff-a7bdae87cc54.png)
+![image](https://user-images.githubusercontent.com/6277739/162085875-b69e42d2-c7fe-46a3-a1fa-f96d0386336b.png)
+
 
 ## Setup
 ### Godot Mono (C#)
@@ -60,14 +78,24 @@ info.json
 {
     "name": "ModTest",
     "version": "0.0.1",
-    "author": "valkyrienyanko"
+    "author": "valkyrienyanko",
+    "dependencies": [],
+    "description": "",
+    "gameVersions": []
 }
 ```
 
 script.lua
 ```lua
 RegisterCallback('OnGameInit', nil, function()
-	print 'Hello1'
+	print 'Start'
+end)
+
+local x = 0
+
+RegisterCallBack('OnGameUpdate', nil, function(delta)
+	Player:setHealth(x)
+	x = x + 1
 end)
 ```
 
