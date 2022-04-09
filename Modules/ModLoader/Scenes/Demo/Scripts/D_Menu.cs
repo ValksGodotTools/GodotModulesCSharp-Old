@@ -1,13 +1,15 @@
 using Godot;
-using System;
-using System.Linq;
+using Valk.ModLoader;
 
-namespace ModLoader 
+namespace D_Game
 {
-    public class Menu : Node
+    // DEMO
+    public class D_Menu : Node
     {
         public override void _Ready()
         {
+            ModLoader.LuaScriptsPath = "Modules/ModLoader/Scripts/Lua";
+            ModLoader.ModsProjectPath = "Modules/ModLoader/Scenes/Demo";
             ModLoader.Init();
             ModLoader.SortMods();
             UIModLoader.DisplayMods();
@@ -17,7 +19,7 @@ namespace ModLoader
 
         private void _on_Play_pressed()
         {
-            GetTree().ChangeScene("res://Scenes/Main/Main.tscn");
+            GetTree().ChangeScene("res://Modules/ModLoader/Scenes/Demo/Scenes/D_Main.tscn");
         }
     }
 }

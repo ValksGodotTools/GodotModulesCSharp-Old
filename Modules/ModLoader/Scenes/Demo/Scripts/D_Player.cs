@@ -1,14 +1,13 @@
 using Godot;
-using System;
 
-namespace ModLoader
+namespace D_Game
 {
-    public class Player : Sprite
+    public class D_Player : Sprite
     {
         [Export] public float Speed = 250f;
         public int Health = 100;
 
-        public Player() 
+        public D_Player() 
         {
             SetHealth(100);
         }
@@ -36,7 +35,7 @@ namespace ModLoader
 
         public void SetHealth(int v)
         {
-            Master.LabelPlayerHealth.Text = $"Health: {v}";
+            D_Master.LabelPlayerHealth.Text = $"Health: {v}";
         }
     }
 

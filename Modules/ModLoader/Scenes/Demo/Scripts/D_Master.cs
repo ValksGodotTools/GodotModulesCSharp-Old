@@ -1,16 +1,14 @@
 using Godot;
 using System;
-using System.IO;
+using Valk.ModLoader;
 
-using Path = System.IO.Path;
-using Directory = System.IO.Directory;
-
-namespace ModLoader
+namespace D_Game
 {
-    public class Master : Node
+    // Master manages everything in the game (DEMO)
+    public class D_Master : Node
     {
-        public static Player Player { get; set; }
-        private static Master Instance { get; set; }
+        public static D_Player Player { get; set; }
+        private static D_Master Instance { get; set; }
 
         [Export] public readonly NodePath NodePathLabelPlayerHealth;
         public static Label LabelPlayerHealth;
@@ -20,7 +18,10 @@ namespace ModLoader
             Instance = this;
             InitNodes();
             InitPlayer();
-            ModLoader.LoadGameDefs();
+
+            // set game definitions
+            ModLoader.Script.Globals["Player", "setHealth"] = (Action<int>)D_Master.Player.SetHealth;
+            
             ModLoader.Call("OnGameInit");
         }
 
@@ -36,8 +37,8 @@ namespace ModLoader
 
         private static void InitPlayer()
         {
-            var playerPrefab = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/Player.tscn");
-            Player = playerPrefab.Instance<Player>();
+            var playerPrefab = ResourceLoader.Load<PackedScene>("res://Modules/ModLoader/Scenes/Prefabs/Player.tscn");
+            Player = playerPrefab.Instance<D_Player>();
             Player.Position = OS.WindowSize / 2;
             Player.Name = "Player";
             Instance.AddChild(Player);

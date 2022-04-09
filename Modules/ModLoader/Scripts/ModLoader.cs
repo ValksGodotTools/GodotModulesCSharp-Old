@@ -1,11 +1,10 @@
-using System;
 using System.IO;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using MoonSharp.Interpreter;
 using MoonSharp.VsCodeDebugger;
 
-namespace ModLoader
+namespace Valk.ModLoader
 {
     public class ModLoader
     {
@@ -15,7 +14,9 @@ namespace ModLoader
         private static MoonSharpVsCodeDebugServer DebugServer { get; set; }
         public static string PathModsEnabled { get; set; }
         private static string PathMods { get; set; }
-        private static Script Script { get; set; }
+        public static Script Script { get; set; }
+        public static string LuaScriptsPath { get; set; }
+        public static string ModsProjectPath { get; set; }
 
 
         public static void Init()
@@ -28,11 +29,6 @@ namespace ModLoader
 
             DebugServer = new MoonSharpVsCodeDebugServer();
             DebugServer.Start();
-        }
-
-        public static void LoadGameDefs()
-        {
-            Script.Globals["Player", "setHealth"] = (Action<int>)Master.Player.SetHealth;
         }
 
         public static void SortMods()
@@ -70,7 +66,7 @@ namespace ModLoader
             DebugServer.AttachToScript(Script, "Debug");
 
             var luaGame = new Godot.File();
-            luaGame.Open("res://Scripts/Lua/Game.lua", Godot.File.ModeFlags.Read);
+            luaGame.Open($"res://{LuaScriptsPath}/Game.lua", Godot.File.ModeFlags.Read);
 
             Script.DoString(luaGame.GetAsText());
 
@@ -184,7 +180,7 @@ namespace ModLoader
                 pathExeDir = $"{Directory.GetParent(Godot.OS.GetExecutablePath()).FullName}";
             else
                 // set to project dir
-                pathExeDir = Godot.ProjectSettings.GlobalizePath("res://");
+                pathExeDir = Godot.ProjectSettings.GlobalizePath("res://") + ModsProjectPath;
 
             return Path.Combine(pathExeDir, "Mods");
         }

@@ -1,7 +1,6 @@
 using Godot;
-using System;
 
-namespace ModLoader
+namespace Valk.ModLoader
 {
     public class UIModInfo : Control
     {

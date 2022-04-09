@@ -1,7 +1,6 @@
 using Godot;
-using System;
 
-namespace ModLoader 
+namespace Valk.ModLoader 
 {
     public class UIModLoader : Control
     {
@@ -46,7 +45,7 @@ namespace ModLoader
             ModDescription.Text = description;
             
             var modsEnabled = ModLoader.ModsEnabled;
-            var modInfoPrefab = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/ModInfo.tscn");
+            var modInfoPrefab = ResourceLoader.Load<PackedScene>("res://Modules/ModLoader/Scenes/Prefabs/ModInfo.tscn");
             
             foreach (var dependency in modInfo.Dependencies)
                 ModDependencies.AddChild(CreateModInfoInstance(dependency));
@@ -55,14 +54,14 @@ namespace ModLoader
         public static void DisplayMods()
         {
             var modsEnabled = ModLoader.ModsEnabled;
-            var modInfoPrefab = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/ModInfo.tscn");
+            var modInfoPrefab = ResourceLoader.Load<PackedScene>("res://Modules/ModLoader/Scenes/Prefabs/ModInfo.tscn");
             foreach (var mod in ModLoader.LoadedMods)
                 ModList.AddChild(CreateModInfoInstance(mod.ModInfo.Name));
         }
 
         private static UIModInfo CreateModInfoInstance(string modName)
         {
-            var modInfoPrefab = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/ModInfo.tscn");
+            var modInfoPrefab = ResourceLoader.Load<PackedScene>("res://Modules/ModLoader/Scenes/Prefabs/ModInfo.tscn");
             var instance = modInfoPrefab.Instance<UIModInfo>();
             instance.SetModName(modName);
 

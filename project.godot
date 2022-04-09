@@ -11,7 +11,7 @@ config_version=4
 [application]
 
 config/name="LuaModdingTest"
-run/main_scene="res://Scenes/Main/Menu.tscn"
+run/main_scene="res://Modules/ModLoader/Scenes/Demo/Scenes/D_Menu.tscn"
 config/icon="res://icon.png"
 
 [input]
