@@ -42,7 +42,6 @@ Learn MoonSharp: https://www.moonsharp.org/getting_started.html
 
 ## Setting Up ModLoader On Your Project
 ### Initial setup
-This setup will assume your game has 2 scenes `Game.tscn` and `Menu.tscn`
 1. Copy the `Modules/` directory to `res://` of your project
 2. Godot > Project > Tools > C# > Generate Solution
 3. Add the following to `.csproj`
@@ -55,6 +54,7 @@ This setup will assume your game has 2 scenes `Game.tscn` and `Menu.tscn`
 ```
 
 ### Setting up scenes and scripts
+This setup will assume your game has 2 scenes `Game.tscn` and `Menu.tscn`
 1. Add `Modules/ModLoader/Scenes/Prefabs/ModLoader.tscn` to `Menu.tscn`
 2. Add the following code to `Menu.tscn`
 ```cs
