@@ -40,29 +40,8 @@ Learn MoonSharp: https://www.moonsharp.org/getting_started.html
 
 ![image](https://user-images.githubusercontent.com/6277739/162085875-b69e42d2-c7fe-46a3-a1fa-f96d0386336b.png)
 
-
-## Setup
-### Godot Mono (C#)
-1. Install [Godot Mono 64 Bit](https://godotengine.org)
-2. Install [.NET SDK from this link](https://dotnet.microsoft.com/en-us/download)
-3. Install [.NET Framework 4.7.2](https://duckduckgo.com/?q=.net+framework+4.7.2)
-4. Launch Godot through [VSCode](#vscode)
-5. In Godot Editor > Editor Settings > Mono > Builds > Make sure `Build Tool` is set to `dotnet CLI`
-
-If the startup scene is the main menu, the [game server](https://github.com/Raccoons-Rise-Up/server/blob/main/.github/CONTRIBUTING.md#setup) and [web server](https://github.com/Raccoons-Rise-Up/website/blob/main/.github/CONTRIBUTING.md) will need to be running to get past the login screen to the main game scene, otherwise you can change the startup scene to the main game scene by going to `Godot > Project Settings > Application > Run > Main Scene`.
-
-### VSCode
-VSCode is a UI friendly text editor for developers
-1. Install [VSCode](https://code.visualstudio.com)
-2. Install the following extensions for VSCode
-    - [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
-    - [C# Tools for Godot](https://marketplace.visualstudio.com/items?itemName=neikeq.godot-csharp-vscode)
-    - [godot-tools](https://marketplace.visualstudio.com/items?itemName=geequlim.godot-tools)
-    - [Mono Debug](https://marketplace.visualstudio.com/items?itemName=ms-vscode.mono-debug)
-    - [MoonSharp Debug](https://marketplace.visualstudio.com/items?itemName=xanathar.moonsharp-debug)
-3. Launch Godot through VSCode by hitting `F1` to open up VSCode command and run `godot tools: open workspace with godot editor` or simply click the `Open Godot Editor` button bottom right
-
 ## Setting Up ModLoader On Your Project
+### Initial setup
 This setup will assume your game has 2 scenes `Game.tscn` and `Menu.tscn`
 1. Copy the `Modules/` directory to `res://` of your project
 2. Godot > Project > Tools > C# > Generate Solution
@@ -74,8 +53,10 @@ This setup will assume your game has 2 scenes `Game.tscn` and `Menu.tscn`
   <PackageReference Include="Newtonsoft.Json" Version="13.0.1" /> <!--This is used because net472 does not have System.Text.Json-->
 </ItemGroup>
 ```
-4. Add `Modules/ModLoader/Scenes/Prefabs/ModLoader.tscn` to `Menu.tscn`
-5. Add the following code to `Menu.tscn`
+
+### Setting up scenes and scripts
+1. Add `Modules/ModLoader/Scenes/Prefabs/ModLoader.tscn` to `Menu.tscn`
+2. Add the following code to `Menu.tscn`
 ```cs
 public override void _Ready()
 {
@@ -85,7 +66,7 @@ public override void _Ready()
     UIModLoader.DisplayMods();
 }
 ```
-6. In `Game.tscn`, hooks can be made through the mod loader now
+3. In `Game.tscn`, hooks can be made through the mod loader now
 ```cs
 public override void _Ready()
 {
@@ -100,8 +81,53 @@ public override void _Process(float delta)
     ModLoader.Call("OnGameUpdate", delta);
 }
 ```
-7. The following can be done from Lua now
+4. In `res://Scripts/Lua/*.lua` add all Lua game definitions here
 ```lua
+Player = {} -- if you have a player class
+
+function OnGameInit() end
+function OnGameUpdate(delta) end
+
+-- Modders need this so they won't overwrite functions their hooking into
+-- Callback
+function RegisterCallback(funcname, precallback, postcallback)
+    --- fetch the original function
+    local originalFunction = _G[funcname]
+    --- wrap it
+    _G[funcname] = function(self, ...)
+        local arg = {...}
+
+        --- call any prehook (this can change arguments but not return values)
+        if precallback ~= nil then precallback(self, table.unpack(arg)) end
+        --- call the original function save the result
+        local result = originalFunction(self, table.unpack(arg))
+        --- call any post hook, this can return a new result
+        if postcallback ~= nil then postcallback(self, table.unpack(arg)) end
+        -- return result
+        return result
+    end
+end
+```
+
+### Setting up the mods
+Every mod has `info.json` and `script.lua`
+
+info.json
+```json
+{
+    "name": "ModTest",
+    "version": "0.0.1",
+    "author": "Foo",
+    "dependencies": ["Bar"],
+    "description": "Example mod",
+    "gameVersions": []
+}
+```
+
+script.lua
+```lua
+-- example script of what you can do
+
 RegisterCallback('OnGameInit', nil, function()
     print('Game start')
 end)
@@ -115,6 +141,17 @@ RegisterCallback('OnGameUpdate', nil, function(delta)
 end)
 ```
 
+Mod file structure
+```
+|-Mods
+|--Foo
+|---info.json
+|---script.lua
+|--Bar
+|---info.json
+|---script.lua
+```
+
 Mods Directory Location
 - Exported Releases: `${GameExecutable}/Mods/...`
 - Non-Exported Releases: `res://Mods/...`
@@ -124,7 +161,5 @@ Lua Scripts Location
 
 Note that there is a demo scene you can play around with at `Modules/ModLoader/Scenes/Demo/D_Menu.tscn`
 
-### Debugging
-1. Launch the VSCode configuration `Play in Editor` (if configuration is set to this already then just press `F5`)
-2. While the debugger is running in the editor and if you want to debug Lua scripts as well launch the VSCode configuration `MoonSharp Attach`
-3. Place a debug point anywhere in Lua or C# script to start debugging
+## Contributing
+See [CONTRIBUTING.md](https://github.com/valkyrienyanko/GodotLuaModdingTest/blob/main/CONTRIBUTING.md)
