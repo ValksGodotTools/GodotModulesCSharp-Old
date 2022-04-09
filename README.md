@@ -62,42 +62,67 @@ VSCode is a UI friendly text editor for developers
     - [MoonSharp Debug](https://marketplace.visualstudio.com/items?itemName=xanathar.moonsharp-debug)
 3. Launch Godot through VSCode by hitting `F1` to open up VSCode command and run `godot tools: open workspace with godot editor` or simply click the `Open Godot Editor` button bottom right
 
-### Lua
-For non-exported; Mods folder is created in project folder. For exported; Mods folder is created next to game executable.
-
-Create the following inside Mods folder.
+## Setting Up ModLoader On Your Project
+This setup will assume your game has 2 scenes `Game.tscn` and `Menu.tscn`
+1. Copy the `Modules/` directory to `res://` of your project
+2. Godot > Project > Tools > C# > Generate Solution
+3. Add the following to `.csproj`
+```xml
+<ItemGroup>
+  <PackageReference Include="MoonSharp" Version="2.0.0" />
+  <PackageReference Include="MoonSharp.Debugger.VsCode" Version="2.0.0" />
+  <PackageReference Include="Newtonsoft.Json" Version="13.0.1" /> <!--This is used because net472 does not have System.Text.Json-->
+</ItemGroup>
 ```
-|-Mods
-|--ModTest
-|---info.json
-|---script.lua
-```
-
-info.json
-```json
+4. Add `Modules/ModLoader/Scenes/Prefabs/ModLoader.tscn` to `Menu.tscn`
+5. Add the following code to `Menu.tscn`
+```cs
+public override void _Ready()
 {
-    "name": "ModTest",
-    "version": "0.0.1",
-    "author": "valkyrienyanko",
-    "dependencies": [],
-    "description": "",
-    "gameVersions": []
+    ModLoader.Init();
+    ModLoader.LoadMods();
+
+    UIModLoader.DisplayMods();
 }
 ```
+6. In `Game.tscn`, hooks can be made through the mod loader now
+```cs
+public override void _Ready()
+{
+    // if we had a Player class defined with SetHealth function, this is how you would link that function with Lua
+    ModLoader.Script.Globals["Player", "setHealth"] = (Action<int>)D_Master.Player.SetHealth;
 
-script.lua
+    ModLoader.Call("OnGameInit");
+}
+
+public override void _Process(float delta)
+{
+    ModLoader.Call("OnGameUpdate", delta);
+}
+```
+7. The following can be done from Lua now
 ```lua
 RegisterCallback('OnGameInit', nil, function()
-	print 'Start'
+    print('Game start')
 end)
 
 local x = 0
 
-RegisterCallBack('OnGameUpdate', nil, function(delta)
-	Player:setHealth(x)
-	x = x + 1
+RegisterCallback('OnGameUpdate', nil, function(delta)
+    print('Delta', delta)
+    Player:setHealth(x)
+    x = x + 1
 end)
 ```
+
+Mods Directory Location
+- Exported Releases: `${GameExecutable}/Mods/...`
+- Non-Exported Releases: `res://Mods/...`
+
+Lua Scripts Location
+- `res://Scripts/Lua/...`
+
+Note that there is a demo scene you can play around with at `Modules/ModLoader/Scenes/Demo/D_Menu.tscn`
 
 ### Debugging
 1. Launch the VSCode configuration `Play in Editor` (if configuration is set to this already then just press `F5`)
