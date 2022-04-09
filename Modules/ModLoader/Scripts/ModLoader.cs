@@ -15,8 +15,8 @@ namespace Valk.ModLoader
         public static string PathModsEnabled { get; set; }
         private static string PathMods { get; set; }
         public static Script Script { get; set; }
-        public static string LuaScriptsPath { get; set; }
-        public static string ModsProjectPath { get; set; }
+        public static string LuaScriptsPath = "Scripts/Lua";
+        public static string ModsProjectPath = "";
 
 
         public static void Init()
@@ -29,6 +29,8 @@ namespace Valk.ModLoader
 
             DebugServer = new MoonSharpVsCodeDebugServer();
             DebugServer.Start();
+
+            SortMods();
         }
 
         public static void SortMods()
@@ -47,7 +49,7 @@ namespace Valk.ModLoader
                 {
                     if (!ModInfo.ContainsKey(dependency))
                     {
-                        Godot.GD.Print($"{mod.ModInfo.Name} is missing the dependency: {dependency}");
+                        Log($"{mod.ModInfo.Name} is missing the dependency: {dependency}");
                         continue;
                     }
 
@@ -65,10 +67,7 @@ namespace Valk.ModLoader
             Script = new Script();
             DebugServer.AttachToScript(Script, "Debug");
 
-            var luaGame = new Godot.File();
-            luaGame.Open($"res://{LuaScriptsPath}/Game.lua", Godot.File.ModeFlags.Read);
-
-            Script.DoString(luaGame.GetAsText());
+            LoadLuaScripts(LuaScriptsPath);
 
             var modsEnabled = ModLoader.ModsEnabled;
             
@@ -84,7 +83,7 @@ namespace Valk.ModLoader
                 catch (ScriptRuntimeException e)
                 {
                     // Mod script did not run right
-                    Godot.GD.Print(e.DecoratedMessage);
+                    LogErr(e.DecoratedMessage);
                     continue;
                 }
             }
@@ -98,7 +97,7 @@ namespace Valk.ModLoader
             }
             catch (ScriptRuntimeException e)
             {
-                Godot.GD.Print(e.DecoratedMessage);
+                LogErr(e.DecoratedMessage);
             }
         }
 
@@ -113,6 +112,41 @@ namespace Valk.ModLoader
                 return;
             
             ModsEnabled = JsonConvert.DeserializeObject<Dictionary<string, bool>>(File.ReadAllText(PathModsEnabled));
+        }
+
+        private static void Log(object obj) => Godot.GD.Print($"[ModLoader]: {obj}");
+        private static void LogErr(object obj) => Godot.GD.PrintErr($"[ModLoader]: {obj}");
+
+        private static void LoadLuaScripts(string directory)
+        {
+            var luaDir = new Godot.Directory();
+            if (luaDir.Open($"res://{directory}") != Godot.Error.Ok)
+            {
+                LogErr("Could not open lua directory");
+                return;
+            }
+
+            luaDir.ListDirBegin(true);
+            var fileName = luaDir.GetNext();
+            while (fileName != "")
+            {
+                var absolutePath = $"{directory}/{fileName}";
+
+                if (luaDir.CurrentIsDir())
+                    LoadLuaScripts(absolutePath);
+                else
+                {
+                    var luaScript = new Godot.File();
+                    var err = luaScript.Open(absolutePath, Godot.File.ModeFlags.Read);
+
+                    if (err == Godot.Error.Ok)
+                        Script.DoString(luaScript.GetAsText());
+                    else
+                        LogErr($"Could not open file: {absolutePath}");
+                }
+
+                fileName = luaDir.GetNext();
+            }
         }
 
         private static void SetupModsEnabled()

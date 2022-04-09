@@ -11,10 +11,9 @@ namespace D_Game
             ModLoader.LuaScriptsPath = "Modules/ModLoader/Scripts/Lua";
             ModLoader.ModsProjectPath = "Modules/ModLoader/Scenes/Demo";
             ModLoader.Init();
-            ModLoader.SortMods();
-            UIModLoader.DisplayMods();
-            UIModLoader.UpdateModInfo(((UIModInfo)UIModLoader.ModList.GetChild(0)).LabelModName.Text); // set to first mod in list
             ModLoader.LoadMods();
+
+            UIModLoader.DisplayMods();
         }
 
         private void _on_Play_pressed()

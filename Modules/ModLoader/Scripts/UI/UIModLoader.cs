@@ -30,7 +30,6 @@ namespace Valk.ModLoader
 
         public static void UpdateModInfo(string name)
         {
-
             foreach (Node node in ModDependencies.GetChildren())
                 node.QueueFree();
 
@@ -57,6 +56,8 @@ namespace Valk.ModLoader
             var modInfoPrefab = ResourceLoader.Load<PackedScene>("res://Modules/ModLoader/Scenes/Prefabs/ModInfo.tscn");
             foreach (var mod in ModLoader.LoadedMods)
                 ModList.AddChild(CreateModInfoInstance(mod.ModInfo.Name));
+
+            UIModLoader.UpdateModInfo(ModLoader.LoadedMods[0].ModInfo.Name);
         }
 
         private static UIModInfo CreateModInfoInstance(string modName)
