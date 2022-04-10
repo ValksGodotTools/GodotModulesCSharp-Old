@@ -10,6 +10,9 @@ namespace Valk.ModLoader
         public Label LabelModName { get; set; }
         public Button BtnModEnabled { get; set; }
 
+        // This mod info is displayed on the right side in the dependency mod list
+        public bool DisplayedInDependencies { get; set; } 
+
         public void SetModName(string text)
         {
             LabelModName = GetNode<Label>(NodePathLabelModName);
@@ -25,8 +28,17 @@ namespace Valk.ModLoader
 
         private void _on_Enabled_pressed()
         {
-            BtnModEnabled.Text = !BtnModEnabled.Pressed ? "[x]" : "[ ]";
-            ModLoader.ModsEnabled[LabelModName.Text] = !BtnModEnabled.Pressed;
+            var enabled = !BtnModEnabled.Pressed;
+            var modName = LabelModName.Text;
+
+            BtnModEnabled.Text = enabled ? "[x]" : "[ ]";
+            ModLoader.ModsEnabled[modName] = enabled;
+
+            if (DisplayedInDependencies)
+                UIModLoader.ModInfoList[modName].SetModEnabled(enabled);
+            else 
+                if (UIModLoader.ModInfoDependencyList.ContainsKey(modName))
+                    UIModLoader.ModInfoDependencyList[modName].SetModEnabled(enabled);
         }
 
         private void _on_PanelContainer_gui_input(InputEvent e)
