@@ -37,7 +37,7 @@ namespace D_Game
 
         private static void InitPlayer()
         {
-            var playerPrefab = ResourceLoader.Load<PackedScene>("res://Modules/ModLoader/Scenes/Prefabs/Player.tscn");
+            var playerPrefab = ResourceLoader.Load<PackedScene>("res://Modules/ModLoader/Scenes/Demo/Scenes/Prefabs/D_Player.tscn");
             Player = playerPrefab.Instance<D_Player>();
             Player.Position = OS.WindowSize / 2;
             Player.Name = "Player";
