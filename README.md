@@ -31,9 +31,9 @@ Learn MoonSharp: https://www.moonsharp.org/getting_started.html
 - [x] Add buttons to disable/enable individual mods
 - [x] Give better feedback about mod dependencies
 - [x] Rearrange project folder structure so it can easily be ported to another game
-- [ ] Toggling mod dependency in mod info page should also toggle the mod dependency in the mod list (left side)
-- [ ] Add website for displaying user-defined Lua documentation
+- [x] Toggling mod dependency in mod info page should also toggle the mod dependency in the mod list (left side) (and vice versa)
 - [ ] Add button to toggle debug server
+- [ ] Add website for displaying user-defined Lua documentation
 
 ![image](https://user-images.githubusercontent.com/6277739/162085875-b69e42d2-c7fe-46a3-a1fa-f96d0386336b.png)
 
