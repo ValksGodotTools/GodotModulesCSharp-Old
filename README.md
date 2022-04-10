@@ -32,6 +32,7 @@ Learn MoonSharp: https://www.moonsharp.org/getting_started.html
 - [x] Give better feedback about mod dependencies
 - [x] Rearrange project folder structure so it can easily be ported to another game
 - [x] Toggling mod dependency in mod info page should also toggle the mod dependency in the mod list (left side) (and vice versa)
+- [x] Add a ModLoader logger
 - [ ] Add button to toggle debug server
 - [ ] Add website for displaying user-defined Lua documentation
 
