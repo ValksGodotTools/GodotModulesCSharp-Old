@@ -26,6 +26,12 @@ namespace Valk.ModLoader
             BtnModEnabled.Text = enabled ? "[x]" : "[ ]";
         }
 
+        public void SetColor(Color color) 
+        {
+            LabelModName.AddColorOverride("font_color", color);
+            BtnModEnabled.AddColorOverride("font_color", color);
+        }
+
         private void _on_Enabled_pressed()
         {
             var enabled = !BtnModEnabled.Pressed;

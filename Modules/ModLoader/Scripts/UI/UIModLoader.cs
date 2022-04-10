@@ -10,6 +10,7 @@ namespace Valk.ModLoader
         [Export] public readonly NodePath NodePathModGameVersions;
         [Export] public readonly NodePath NodePathModDependencies;
         [Export] public readonly NodePath NodePathModDescription;
+        [Export] public readonly NodePath NodePathLogger;
 
         // mod list
         public static VBoxContainer ModList { get; set; } // where the ModInfo children are added
@@ -22,6 +23,9 @@ namespace Valk.ModLoader
         public static VBoxContainer ModDependencies { get; set; }
         public static Label ModDescription { get; set; }
 
+        // logger
+        private static RichTextLabel Logger { get; set; }
+
         public override void _Ready()
         {
             ModList = GetNode<VBoxContainer>(NodePathModList);
@@ -29,7 +33,12 @@ namespace Valk.ModLoader
             ModGameVersions = GetNode<Label>(NodePathModGameVersions);
             ModDependencies = GetNode<VBoxContainer>(NodePathModDependencies);
             ModDescription = GetNode<Label>(NodePathModDescription);
+            Logger = GetNode<RichTextLabel>(NodePathLogger);
+            Logger.Clear();
         }
+
+        public static void ClearLog() => Logger.Clear();
+        public static void Log(string text) => Logger.AddText($"{text}\n");
 
         public static void UpdateModInfo(string name)
         {

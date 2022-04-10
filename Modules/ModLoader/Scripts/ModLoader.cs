@@ -61,6 +61,8 @@ namespace Valk.ModLoader
 
         public static void LoadMods()
         {
+            UIModLoader.ClearLog();
+
             if (Script != null) 
                 DebugServer.Detach(Script);
 
@@ -70,15 +72,37 @@ namespace Valk.ModLoader
             LoadLuaScripts(LuaScriptsPath);
 
             var modsEnabled = ModLoader.ModsEnabled;
+            var modLoadedCount = 0;
             
             foreach (var mod in LoadedMods)
             {
+                // if mod is not enabled do not run it
                 if (!modsEnabled[mod.ModInfo.Name])
                     continue;
+
+                var allDependenciesEnabled = true;
+
+                // check if mods dependencies are enabled
+                foreach (var dependency in mod.ModInfo.Dependencies)
+                {
+                    if (!modsEnabled[dependency])
+                    {
+                        Log($"{mod.ModInfo.Name} requires dependency {dependency} to be enabled");
+                        allDependenciesEnabled = false;
+                    }
+                }
+
+                // do not load mod if not all dependencies are loaded
+                if (!allDependenciesEnabled)
+                    continue;
+
+                // load the mod
+                modLoadedCount++;
 
                 try
                 {
                     Script.DoFile(mod.PathScript);
+                    UIModLoader.Log($"Loaded {mod.ModInfo.Name}");
                 }
                 catch (ScriptRuntimeException e)
                 {
@@ -87,6 +111,8 @@ namespace Valk.ModLoader
                     continue;
                 }
             }
+
+            UIModLoader.Log($"{modLoadedCount} mods have loaded successfully");
         }
 
         public static void Call(string v, params object[] args)
@@ -114,8 +140,17 @@ namespace Valk.ModLoader
             ModsEnabled = JsonConvert.DeserializeObject<Dictionary<string, bool>>(File.ReadAllText(PathModsEnabled));
         }
 
-        private static void Log(object obj) => Godot.GD.Print($"[ModLoader]: {obj}");
-        private static void LogErr(object obj) => Godot.GD.PrintErr($"[ModLoader]: {obj}");
+        private static void Log(object obj) 
+        {
+            Godot.GD.Print($"[ModLoader]: {obj}");
+            UIModLoader.Log($"{obj}");
+        }
+
+        private static void LogErr(object obj) 
+        {
+            Godot.GD.PrintErr($"[ModLoader]: {obj}");
+            UIModLoader.Log($"{obj}");
+        }
 
         private static void LoadLuaScripts(string directory)
         {
