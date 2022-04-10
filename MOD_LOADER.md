@@ -53,17 +53,8 @@ Learn MoonSharp: https://www.moonsharp.org/getting_started.html
 ### Setting up scenes and scripts
 This setup will assume your game has 2 scenes `Game.tscn` and `Menu.tscn`
 1. Add `ui_left_click` mapped to left mouse click in `Project > Project Settings > Input Map`
-2. Add `Modules/ModLoader/Scenes/Prefabs/ModLoader.tscn` to `Menu.tscn`
-3. Add the following code to `Menu.tscn`
-```cs
-public override void _Ready()
-{
-    ModLoader.Init();
-    ModLoader.LoadMods();
-
-    UIModLoader.DisplayMods();
-}
-```
+2. Add `Modules/ModLoader/Scenes/Prefabs/ModLoader.tscn` (`ModLoader`) to `Menu.tscn`
+3. If the custom paths in `ModLoader` are set, clear them to set their defaults otherwise set your own custom paths
 4. In `Game.tscn`, hooks can be made through the mod loader now
 ```cs
 public override void _Ready()
