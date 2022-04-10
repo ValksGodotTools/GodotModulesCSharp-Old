@@ -52,8 +52,9 @@ Learn MoonSharp: https://www.moonsharp.org/getting_started.html
 
 ### Setting up scenes and scripts
 This setup will assume your game has 2 scenes `Game.tscn` and `Menu.tscn`
-1. Add `Modules/ModLoader/Scenes/Prefabs/ModLoader.tscn` to `Menu.tscn`
-2. Add the following code to `Menu.tscn`
+1. Add `ui_left_click` mapped to left mouse click in `Project > Project Settings > Input Map`
+2. Add `Modules/ModLoader/Scenes/Prefabs/ModLoader.tscn` to `Menu.tscn`
+3. Add the following code to `Menu.tscn`
 ```cs
 public override void _Ready()
 {
@@ -63,7 +64,7 @@ public override void _Ready()
     UIModLoader.DisplayMods();
 }
 ```
-3. In `Game.tscn`, hooks can be made through the mod loader now
+4. In `Game.tscn`, hooks can be made through the mod loader now
 ```cs
 public override void _Ready()
 {
@@ -78,7 +79,7 @@ public override void _Process(float delta)
     ModLoader.Call("OnGameUpdate", delta);
 }
 ```
-4. In `res://Scripts/Lua/*.lua` add all Lua game definitions here
+5. In `res://Scripts/Lua/*.lua` add all Lua game definitions here
 ```lua
 Player = {} -- if you have a player class
 
