@@ -1,4 +1,4 @@
-# Godot Lua Modding Template
+# Godot Modules
 ## About
 This project was created to better understand MoonSharp (Lua) for implementing modding into a game. The project has evolved into a template to be used in other Godot C# games to add Lua modding support.
 
