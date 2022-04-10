@@ -1,7 +1,7 @@
 using Godot;
 using System.Collections.Generic;
 
-namespace Valk.ModLoader 
+namespace Valk.Modules.ModLoader 
 {
     public class UIModLoader : Control
     {
@@ -11,6 +11,10 @@ namespace Valk.ModLoader
         [Export] public readonly NodePath NodePathModDependencies;
         [Export] public readonly NodePath NodePathModDescription;
         [Export] public readonly NodePath NodePathLogger;
+
+        // custom mod paths
+        [Export] public readonly string CustomLuaScriptsPath;
+        [Export] public readonly string CustomModsPath;
 
         // mod list
         public static VBoxContainer ModList { get; set; } // where the ModInfo children are added
@@ -34,7 +38,21 @@ namespace Valk.ModLoader
             ModDependencies = GetNode<VBoxContainer>(NodePathModDependencies);
             ModDescription = GetNode<Label>(NodePathModDescription);
             Logger = GetNode<RichTextLabel>(NodePathLogger);
+
+            ModName.Text = "";
+            ModGameVersions.Text = "";
+            ModDescription.Text = "";
             Logger.Clear();
+
+            if (!string.IsNullOrWhiteSpace(CustomModsPath))
+                ModLoader.ModsProjectPath = CustomModsPath;
+            if (!string.IsNullOrWhiteSpace(CustomLuaScriptsPath))
+                ModLoader.LuaScriptsPath = CustomLuaScriptsPath;
+
+            ModLoader.Init();
+            ModLoader.LoadMods();
+
+            DisplayMods();
         }
 
         public static void ClearLog() => Logger.Clear();
@@ -82,7 +100,8 @@ namespace Valk.ModLoader
                 ModInfoList[mod.ModInfo.Name] = modInfo;
             }
 
-            UIModLoader.UpdateModInfo(ModLoader.LoadedMods[0].ModInfo.Name);
+            if (ModLoader.LoadedMods.Count > 0)
+                UIModLoader.UpdateModInfo(ModLoader.LoadedMods[0].ModInfo.Name);
         }
 
         private static UIModInfo CreateModInfoInstance(string modName)

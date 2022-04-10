@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using MoonSharp.Interpreter;
 using MoonSharp.VsCodeDebugger;
 
-namespace Valk.ModLoader
+namespace Valk.Modules.ModLoader
 {
     public class ModLoader
     {
@@ -23,6 +23,9 @@ namespace Valk.ModLoader
         {
             PathMods = FindModsPath();
             PathModsEnabled = Path.Combine(PathMods, "enabled.json");
+
+            Directory.CreateDirectory(PathMods);
+            Directory.CreateDirectory(LuaScriptsPath);
 
             SetupModsEnabled();
             GetModsEnabled();
@@ -112,7 +115,8 @@ namespace Valk.ModLoader
                 }
             }
 
-            UIModLoader.Log($"{modLoadedCount} mods have loaded successfully");
+            if (modLoadedCount > 0)
+                UIModLoader.Log($"{modLoadedCount} mods have loaded successfully");
         }
 
         public static void Call(string v, params object[] args)
@@ -195,9 +199,6 @@ namespace Valk.ModLoader
         private static Dictionary<string, Mod> FindAllMods()
         {
             var mods = new Dictionary<string, Mod>();
-
-            Directory.CreateDirectory(PathMods);
-
             var modFolders = Directory.GetDirectories(PathMods);
 
             foreach (var modFolder in modFolders)

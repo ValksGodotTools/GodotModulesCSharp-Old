@@ -1,6 +1,6 @@
 using Godot;
 using System;
-using Valk.ModLoader;
+using Valk.Modules.ModLoader;
 
 namespace D_Game
 {

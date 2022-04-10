@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Modules/ModLoader/Scenes/Prefabs/ModLoader.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Modules/ModLoader/Scenes/Demo/Scripts/D_Menu.cs" type="Script" id=2]
+[ext_resource path="res://Modules/Options/Scenes/Prefabs/Options.tscn" type="PackedScene" id=3]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -28,14 +29,27 @@ margin_bottom = 500.0
 rect_min_size = Vector2( 600, 400 )
 size_flags_horizontal = 8
 size_flags_vertical = 4
+CustomLuaScriptsPath = "Modules/ModLoader/Scripts/Lua"
+CustomModsPath = "Modules/ModLoader/Scenes/Demo"
 
 [node name="Play" type="Button" parent="PanelContainer"]
 margin_left = 7.0
-margin_top = 290.0
+margin_top = 7.0
 margin_right = 45.0
-margin_bottom = 310.0
+margin_bottom = 27.0
 size_flags_horizontal = 0
-size_flags_vertical = 4
+size_flags_vertical = 0
 text = "Play"
+
+[node name="Options" parent="PanelContainer" instance=ExtResource( 3 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 7.0
+margin_top = 393.0
+margin_right = 307.0
+margin_bottom = 593.0
+rect_min_size = Vector2( 300, 200 )
+size_flags_horizontal = 0
+size_flags_vertical = 8
 
 [connection signal="pressed" from="PanelContainer/Play" to="." method="_on_Play_pressed"]
