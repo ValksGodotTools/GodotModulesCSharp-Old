@@ -1,12 +1,14 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Modules/ModLoader/Scenes/Prefabs/ModLoader.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Modules/ModLoader/Scenes/Demo/Scripts/D_Menu.cs" type="Script" id=2]
 [ext_resource path="res://Modules/Options/Scenes/Prefabs/Options.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Themes/Main.tres" type="Theme" id=4]
 
 [node name="Menu" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = ExtResource( 4 )
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -22,9 +24,9 @@ __meta__ = {
 [node name="ModLoader" parent="PanelContainer" instance=ExtResource( 1 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 417.0
+margin_left = 423.0
 margin_top = 100.0
-margin_right = 1017.0
+margin_right = 1023.0
 margin_bottom = 500.0
 rect_min_size = Vector2( 600, 400 )
 size_flags_horizontal = 8
@@ -35,33 +37,33 @@ CustomModsPath = "Modules/ModLoader/Scenes/Demo"
 [node name="Options" parent="PanelContainer" instance=ExtResource( 3 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 7.0
-margin_top = 393.0
-margin_right = 307.0
-margin_bottom = 593.0
+margin_left = 1.0
+margin_top = 399.0
+margin_right = 301.0
+margin_bottom = 599.0
 rect_min_size = Vector2( 300, 200 )
 size_flags_horizontal = 0
 size_flags_vertical = 8
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
-margin_left = 7.0
-margin_top = 7.0
-margin_right = 45.0
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 34.0
 margin_bottom = 51.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
 
 [node name="Play" type="Button" parent="PanelContainer/VBoxContainer"]
-margin_right = 38.0
-margin_bottom = 20.0
+margin_right = 33.0
+margin_bottom = 23.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "Play"
 
 [node name="Exit" type="Button" parent="PanelContainer/VBoxContainer"]
-margin_top = 24.0
-margin_right = 38.0
-margin_bottom = 44.0
+margin_top = 27.0
+margin_right = 33.0
+margin_bottom = 50.0
 text = "Exit"
 
 [connection signal="pressed" from="PanelContainer/VBoxContainer/Play" to="." method="_on_Play_pressed"]

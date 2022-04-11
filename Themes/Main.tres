@@ -1,0 +1,31 @@
+[gd_resource type="Theme" load_steps=9 format=2]
+
+[ext_resource path="res://Themes/Fonts/Roboto.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Themes/Button/Btn_Hover.tres" type="StyleBox" id=2]
+[ext_resource path="res://Themes/Button/Btn_Pressed.tres" type="StyleBox" id=3]
+[ext_resource path="res://Themes/Button/Btn_Disabled.tres" type="StyleBox" id=4]
+[ext_resource path="res://Themes/Button/Btn_Focus.tres" type="StyleBox" id=5]
+[ext_resource path="res://Themes/Button/Btn_Normal.tres" type="StyleBox" id=6]
+[ext_resource path="res://Themes/Slider/Slider_Grabber_Area.tres" type="StyleBox" id=7]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.188235, 0.188235, 0.188235, 1 )
+shadow_color = Color( 0.184314, 0.184314, 0.184314, 0.486275 )
+shadow_size = 3
+
+[resource]
+Button/fonts/font = ExtResource( 1 )
+Button/styles/disabled = ExtResource( 4 )
+Button/styles/focus = ExtResource( 5 )
+Button/styles/hover = ExtResource( 2 )
+Button/styles/normal = ExtResource( 6 )
+Button/styles/pressed = ExtResource( 3 )
+HSlider/styles/grabber_area = ExtResource( 7 )
+HSlider/styles/grabber_area_highlight = ExtResource( 7 )
+Label/fonts/font = ExtResource( 1 )
+PanelContainer/styles/panel = SubResource( 1 )

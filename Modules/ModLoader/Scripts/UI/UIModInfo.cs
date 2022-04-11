@@ -4,10 +4,10 @@ namespace Valk.Modules.ModLoader
 {
     public class UIModInfo : Control
     {
-        [Export] public readonly NodePath NodePathLabelModName;
+        [Export] public readonly NodePath NodePathBtnMod;
         [Export] public readonly NodePath NodePathBtnModEnabled;
 
-        public Label LabelModName { get; set; }
+        public Button BtnMod { get; set; }
         public Button BtnModEnabled { get; set; }
 
         // This mod info is displayed on the right side in the dependency mod list
@@ -15,8 +15,8 @@ namespace Valk.Modules.ModLoader
 
         public void SetModName(string text)
         {
-            LabelModName = GetNode<Label>(NodePathLabelModName);
-            LabelModName.Text = text;
+            BtnMod = GetNode<Button>(NodePathBtnMod);
+            BtnMod.Text = text;
         }
 
         public void SetModEnabled(bool enabled)
@@ -28,14 +28,14 @@ namespace Valk.Modules.ModLoader
 
         public void SetColor(Color color) 
         {
-            LabelModName.AddColorOverride("font_color", color);
+            BtnMod.AddColorOverride("font_color", color);
             BtnModEnabled.AddColorOverride("font_color", color);
         }
 
         private void _on_Enabled_pressed()
         {
             var enabled = !BtnModEnabled.Pressed;
-            var modName = LabelModName.Text;
+            var modName = BtnMod.Text;
 
             BtnModEnabled.Text = enabled ? "[x]" : "[ ]";
             ModLoader.ModsEnabled[modName] = enabled;
@@ -47,10 +47,9 @@ namespace Valk.Modules.ModLoader
                     UIModLoader.ModInfoDependencyList[modName].SetModEnabled(enabled);
         }
 
-        private void _on_PanelContainer_gui_input(InputEvent e)
+        private void _on_Mod_pressed()
         {
-            if (Input.IsActionPressed("ui_left_click"))
-                UIModLoader.UpdateModInfo(LabelModName.Text);
+            UIModLoader.UpdateModInfo(BtnMod.Text);
         }
     }
 }

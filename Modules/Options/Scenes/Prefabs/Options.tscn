@@ -1,72 +1,84 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Modules/Options/Scripts/UIOptions.cs" type="Script" id=1]
+[ext_resource path="res://Themes/Main.tres" type="Theme" id=2]
 
 [node name="Options" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = ExtResource( 2 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-NodePathFullscreenOptions = NodePath("PanelContainer/VBoxContainer/Fullscreen")
-NodePathSliderMusic = NodePath("PanelContainer/VBoxContainer/Music")
-NodePathVSync = NodePath("PanelContainer/VBoxContainer/VSync/VSync")
+NodePathFullscreenOptions = NodePath("PanelContainer/MarginContainer/VBoxContainer/Fullscreen")
+NodePathSliderMusic = NodePath("PanelContainer/MarginContainer/VBoxContainer/Music")
+NodePathVSync = NodePath("PanelContainer/MarginContainer/VBoxContainer/VSync/VSync")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
-margin_left = 7.0
-margin_top = 7.0
-margin_right = 1017.0
-margin_bottom = 593.0
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 1023.0
+margin_bottom = 599.0
+custom_constants/margin_right = 15
+custom_constants/margin_top = 15
+custom_constants/margin_left = 15
+custom_constants/margin_bottom = 15
 
-[node name="Label1" type="Label" parent="PanelContainer/VBoxContainer"]
-margin_right = 1010.0
-margin_bottom = 14.0
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
+margin_left = 15.0
+margin_top = 15.0
+margin_right = 1007.0
+margin_bottom = 583.0
+
+[node name="Label1" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer"]
+margin_right = 992.0
+margin_bottom = 17.0
 text = "Music"
 
-[node name="Music" type="HSlider" parent="PanelContainer/VBoxContainer"]
-margin_top = 18.0
-margin_right = 1010.0
-margin_bottom = 34.0
+[node name="Music" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer"]
+margin_top = 21.0
+margin_right = 992.0
+margin_bottom = 37.0
 min_value = -40.0
 max_value = 0.0
 
-[node name="Label2" type="Label" parent="PanelContainer/VBoxContainer"]
-margin_top = 38.0
-margin_right = 1010.0
-margin_bottom = 52.0
+[node name="Label2" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer"]
+margin_top = 41.0
+margin_right = 992.0
+margin_bottom = 58.0
 text = "SFX"
 
-[node name="SFX" type="HSlider" parent="PanelContainer/VBoxContainer"]
-margin_top = 56.0
-margin_right = 1010.0
-margin_bottom = 72.0
+[node name="SFX" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer"]
+margin_top = 62.0
+margin_right = 992.0
+margin_bottom = 78.0
 
-[node name="Fullscreen" type="OptionButton" parent="PanelContainer/VBoxContainer"]
-margin_top = 76.0
-margin_right = 1010.0
-margin_bottom = 96.0
+[node name="Fullscreen" type="OptionButton" parent="PanelContainer/MarginContainer/VBoxContainer"]
+margin_top = 82.0
+margin_right = 992.0
+margin_bottom = 105.0
 text = "Fullscreen Mode"
 
-[node name="VSync" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
-margin_top = 100.0
-margin_right = 1010.0
-margin_bottom = 124.0
+[node name="VSync" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
+margin_top = 109.0
+margin_right = 992.0
+margin_bottom = 132.0
 
-[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/VSync"]
-margin_top = 5.0
-margin_right = 37.0
-margin_bottom = 19.0
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/VSync"]
+margin_top = 3.0
+margin_right = 39.0
+margin_bottom = 20.0
 text = "VSync"
 
-[node name="VSync" type="CheckBox" parent="PanelContainer/VBoxContainer/VSync"]
-margin_left = 41.0
+[node name="VSync" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/VSync"]
+margin_left = 43.0
 margin_right = 65.0
-margin_bottom = 24.0
+margin_bottom = 23.0
 
-[connection signal="value_changed" from="PanelContainer/VBoxContainer/Music" to="." method="_on_Music_value_changed"]
-[connection signal="toggled" from="PanelContainer/VBoxContainer/VSync/VSync" to="." method="_on_VSync_toggled"]
+[connection signal="value_changed" from="PanelContainer/MarginContainer/VBoxContainer/Music" to="." method="_on_Music_value_changed"]
+[connection signal="toggled" from="PanelContainer/MarginContainer/VBoxContainer/VSync/VSync" to="." method="_on_VSync_toggled"]
