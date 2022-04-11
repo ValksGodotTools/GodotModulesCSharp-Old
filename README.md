@@ -5,10 +5,10 @@ Ideally you would clone this entire repository and use it as a template for your
 
 ## Modules
 ### [ModLoader](https://github.com/valkyrienyanko/GodotModules/blob/main/MOD_LOADER.md)  
-![image](https://user-images.githubusercontent.com/6277739/162646566-7d6e1b3c-444d-4ba3-8a13-03b5fe052b72.png)  
+![image](https://user-images.githubusercontent.com/6277739/162651881-b8f98aa5-da2a-4499-b4dd-737a64dec4a9.png)  
 
 ### [Options](https://github.com/valkyrienyanko/GodotModules/blob/main/OPTIONS.md)  
-![image](https://user-images.githubusercontent.com/6277739/162646516-2eb1bb73-c634-4afa-b334-44039ec335df.png)  
+![image](https://user-images.githubusercontent.com/6277739/162651901-f3df3cbd-df78-4bfa-814b-00b8e3ab2f6f.png)  
 
 ## Utils
 On top of all the modules there are also useful manager / utility scripts in `res://Global/` and `res://Scripts/`
