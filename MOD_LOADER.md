@@ -35,8 +35,6 @@ Learn MoonSharp: https://www.moonsharp.org/getting_started.html
 - [ ] Add button to toggle debug server
 - [ ] Add website for displaying user-defined Lua documentation
 
-![image](https://user-images.githubusercontent.com/6277739/162085875-b69e42d2-c7fe-46a3-a1fa-f96d0386336b.png)
-
 ## Setting Up ModLoader On Your Project
 ### Initial setup
 1. Copy the `Modules/` directory to `res://` of your project
