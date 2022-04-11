@@ -37,9 +37,6 @@ MusicManager.SetVolume(50) // value ranges from 0 to 100
 MusicManager.Pause();
 MusicManager.Resume();
 
-// Exit and do clean up
-GameManager.Exit();
-
 // FileManager
 FileManager.GetProjectPath(); // non-exported = "res://", exported = next to the game exe
 FileManager.GetConfig(path);
@@ -53,6 +50,9 @@ someValue.Remap(0, 100, -40, 80); //remap someValue from range 0-100 to range -4
 // Encryption (this is not meant to be secure, it's just another annoyance to add to make mischief slightly harder)
 var encryptedPassword = EncryptionHelper.Encrypt("epicPa55w0rd");
 var password = EncryptionHelper.Decrypt(encryptedPassword);
+
+// Exit and do clean up
+GameManager.Exit();
 ```
 
 ## Contributing
