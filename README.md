@@ -9,7 +9,7 @@ A collection of useful modules and scripts that can easily be ported into other 
 ![image](https://user-images.githubusercontent.com/6277739/162646516-2eb1bb73-c634-4afa-b334-44039ec335df.png)  
 
 ## Utils
-On top of all the modules there are also useful manager / utility scripts in `res://Global/`
+On top of all the modules there are also useful manager / utility scripts in `res://Global/` and `res://Scripts/`
 
 ## Contributing
 See [CONTRIBUTING.md](https://github.com/valkyrienyanko/GodotLuaModdingTest/blob/main/CONTRIBUTING.md)
