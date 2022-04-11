@@ -1,5 +1,5 @@
 ## Setup
-1. Copy `Modules/Options` to your project
+1. Copy `Modules/Options` and `Global` to your project
 2. Add the following to `.csproj` (if there is no `.csproj` generate one `Godot > Project > Tools > C# > Generate Solution`)
 ```xml
 <ItemGroup>
