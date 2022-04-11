@@ -16,6 +16,13 @@ In games usually when you press Esc a popup menu comes up asking if you want to 
 ### ENet-CSharp (coming soon)
 ENet-CSharp is a reliable UDP networking library. How this will be implemented I'm not sure. There is the full on MMORPG approach where there is a web server, game server and clients in their own separate repos. Or what's included could just be the game server and clients all packaged into the same repo. Game server would keep track of user ids and act sort of like a web auth server at the same time.
 
+Todo
+- [ ] Create manager to start, stop, restart server from within game (1 thread for client, 1 thread for server)
+- [ ] Test with ping pong example
+- [ ] Player auth (saved to JSON or maybe look into some kind of SQLite solution that doesn't require a whole separate server just to run the database)
+- [ ] Chat module
+- [ ] Cleanup code :)
+
 ## Utils
 On top of all the modules there are also useful manager / utility scripts in `res://Global/` and `res://Scripts/`
 
