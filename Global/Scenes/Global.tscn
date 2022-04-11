@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Global/Scripts/MusicManager.cs" type="Script" id=1]
+[ext_resource path="res://Global/Scripts/GameManager.cs" type="Script" id=2]
+
+[node name="Global" type="Node"]
+
+[node name="GameManager" type="Node" parent="."]
+script = ExtResource( 2 )
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+volume_db = -10.0
+script = ExtResource( 1 )

@@ -14,6 +14,10 @@ config/name="LuaModdingTest"
 run/main_scene="res://Modules/ModLoader/Scenes/Demo/Scenes/D_Menu.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+Global="*res://Global/Scenes/Global.tscn"
+
 [input]
 
 ui_left={

@@ -10,6 +10,8 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 NodePathFullscreenOptions = NodePath("PanelContainer/VBoxContainer/Fullscreen")
+NodePathSliderMusic = NodePath("PanelContainer/VBoxContainer/Music")
+NodePathVSync = NodePath("PanelContainer/VBoxContainer/VSync/VSync")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 anchor_right = 1.0
@@ -30,6 +32,8 @@ text = "Music"
 margin_top = 18.0
 margin_right = 1010.0
 margin_bottom = 34.0
+min_value = -40.0
+max_value = 0.0
 
 [node name="Label2" type="Label" parent="PanelContainer/VBoxContainer"]
 margin_top = 38.0
@@ -47,3 +51,22 @@ margin_top = 76.0
 margin_right = 1010.0
 margin_bottom = 96.0
 text = "Fullscreen Mode"
+
+[node name="VSync" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+margin_top = 100.0
+margin_right = 1010.0
+margin_bottom = 124.0
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/VSync"]
+margin_top = 5.0
+margin_right = 37.0
+margin_bottom = 19.0
+text = "VSync"
+
+[node name="VSync" type="CheckBox" parent="PanelContainer/VBoxContainer/VSync"]
+margin_left = 41.0
+margin_right = 65.0
+margin_bottom = 24.0
+
+[connection signal="value_changed" from="PanelContainer/VBoxContainer/Music" to="." method="_on_Music_value_changed"]
+[connection signal="toggled" from="PanelContainer/VBoxContainer/VSync/VSync" to="." method="_on_VSync_toggled"]
