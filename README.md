@@ -36,6 +36,10 @@ FileManager.WriteConfig(path, data);
 // Utils
 var someValue = 24f;
 someValue.Remap(0, 100, -40, 80); //remap someValue from range 0-100 to range -40-80
+
+// Encryption (this is not meant to be secure, it's just another annoyance to add to make mischief slightly harder)
+var encryptedPassword = EncryptionHelper.Encrypt("epicPa55w0rd");
+var password = EncryptionHelper.Decrypt(encryptedPassword);
 ```
 
 ## Contributing
