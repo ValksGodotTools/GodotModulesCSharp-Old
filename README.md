@@ -10,7 +10,10 @@ Ideally you would clone this entire repository and use it as a template for your
 ### [Options](https://github.com/valkyrienyanko/GodotModules/blob/main/OPTIONS.md)  
 ![image](https://user-images.githubusercontent.com/6277739/162651901-f3df3cbd-df78-4bfa-814b-00b8e3ab2f6f.png)  
 
-### ENet-CSharp (planned)
+### Popup Menu (coming soon)
+In games usually when you press Esc a popup menu comes up asking if you want to go back to the main menu or edit the options
+
+### ENet-CSharp (coming soon)
 ENet-CSharp is a reliable UDP networking library. How this will be implemented I'm not sure. There is the full on MMORPG approach where there is a web server, game server and clients in their own separate repos. Or what's included could just be the game server and clients all packaged into the same repo. Game server would keep track of user ids and act sort of like a web auth server at the same time.
 
 ## Utils
