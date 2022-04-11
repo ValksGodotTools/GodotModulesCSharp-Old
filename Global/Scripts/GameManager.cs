@@ -31,6 +31,9 @@ namespace Valk.Modules
         /// </summary>
         public static void Exit() => Instance.GetTree().Notification(MainLoop.NotificationWmQuitRequest);
 
+        /// <summary>
+        /// All cleanup should be done in here
+        /// </summary>
         private static void ExitCleanup()
         {
             UIOptions.SaveOptions();
