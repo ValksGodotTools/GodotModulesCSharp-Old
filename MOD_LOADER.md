@@ -35,27 +35,7 @@ Learn MoonSharp: https://www.moonsharp.org/getting_started.html
 - [ ] Add button to toggle debug server
 - [ ] Add website for displaying user-defined Lua documentation
 
-## Setting Up ModLoader On Your Project
-### Initial setup
-1. Copy the `Modules/` directory to `res://` of your project
-2. Godot > Project > Tools > C# > Generate Solution
-3. Add the following to `.csproj`
-```xml
-<ItemGroup>
-  <PackageReference Include="MoonSharp" Version="2.0.0" />
-  <PackageReference Include="MoonSharp.Debugger.VsCode" Version="2.0.0" />
-  <PackageReference Include="Newtonsoft.Json" Version="13.0.1" /> <!--This is used because net472 does not have System.Text.Json-->
-</ItemGroup>
-```
-
-### Setting up scenes and scripts
-This setup will assume your game has 2 scenes `Game.tscn` and `Menu.tscn`
-1. Add `ui_left_click` mapped to left mouse click in `Project > Project Settings > Input Map`
-2. Add `Modules/ModLoader/Scenes/Prefabs/ModLoader.tscn` (`ModLoader`) to `Menu.tscn`
-3. If the custom paths in `ModLoader` are set, clear them to set their defaults otherwise set your own custom paths
-
-### Hooks can be made now
-1. In `Game.tscn`, hooks can be made through the mod loader now
+## Hooks
 ```cs
 public override void _Ready()
 {
@@ -70,37 +50,8 @@ public override void _Process(float delta)
     ModLoader.Call("OnGameUpdate", delta);
 }
 ```
-2. In `res://Scripts/Lua/*.lua` add all Lua game definitions here
-```lua
-Player = {} -- if you have a player class
 
-function OnGameInit() end
-function OnGameUpdate(delta) end
-
--- Modders need this so they won't overwrite functions their hooking into
--- Callback
-function RegisterCallback(funcname, precallback, postcallback)
-    --- fetch the original function
-    local originalFunction = _G[funcname]
-    --- wrap it
-    _G[funcname] = function(self, ...)
-        local arg = {...}
-
-        --- call any prehook (this can change arguments but not return values)
-        if precallback ~= nil then precallback(self, table.unpack(arg)) end
-        --- call the original function save the result
-        local result = originalFunction(self, table.unpack(arg))
-        --- call any post hook, this can return a new result
-        if postcallback ~= nil then postcallback(self, table.unpack(arg)) end
-        -- return result
-        return result
-    end
-end
-```
-
-### Setting up the mods
-Every mod has `info.json` and `script.lua`
-
+## Mod Structure
 info.json
 ```json
 {
@@ -147,8 +98,6 @@ Mods Directory Location
 
 Lua Scripts Location
 - `res://Scripts/Lua/...`
-
-Note that there is a demo scene you can play around with at `Modules/ModLoader/Scenes/Demo/D_Menu.tscn`
 
 ## Note
 Just found out that this is a thing https://docs.godotengine.org/en/3.4/tutorials/export/exporting_pcks.html although as of writing this it will not work with C# projects because of this issue https://github.com/godotengine/godot/issues/36828. If your project is 100% GDScript then by all means use PCK files instead of this.
