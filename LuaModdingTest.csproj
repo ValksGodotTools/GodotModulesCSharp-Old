@@ -6,5 +6,8 @@
     <PackageReference Include="MoonSharp" Version="2.0.0" />
     <PackageReference Include="MoonSharp.Debugger.VsCode" Version="2.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" /> <!--This is used because net472 does not have System.Text.Json-->
+    <Reference Include="ENet-CSharp">
+        <HintPath>ENet-CSharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
