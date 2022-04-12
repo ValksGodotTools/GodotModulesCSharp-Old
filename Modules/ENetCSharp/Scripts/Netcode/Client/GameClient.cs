@@ -6,7 +6,7 @@ namespace Valk.Modules.Netcode.Client
     {
         public static string Username = "Unnamed";
 
-        public override void ProcessGodotCommands(GodotCmd cmd)
+        protected override void ProcessGodotCommands(GodotCmd cmd)
         {
             switch (cmd.Opcode)
             {
@@ -17,17 +17,17 @@ namespace Valk.Modules.Netcode.Client
             }
         }
 
-        public override void Connect(Event netEvent)
+        protected override void Connect(Event netEvent)
         {
             GDLog("Client connected to server");
         }
 
-        public override void Timeout(Event netEvent)
+        protected override void Timeout(Event netEvent)
         {
             GDLog("Client connection timeout");
         }
 
-        public override void Disconnect(Event netEvent)
+        protected override void Disconnect(Event netEvent)
         {
             GDLog("Client disconnected from server");
         }

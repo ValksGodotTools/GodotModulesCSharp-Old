@@ -2,12 +2,14 @@ using Godot;
 using System;
 using Valk.Modules.Settings;
 using Valk.Modules.Netcode.Client;
+using Valk.Modules.Netcode.Server;
 
 namespace Valk.Modules 
 {
     // GameManager is attached to Global.tscn which is in AutoLoad
     public class GameManager : Node
     {
+        public static GameServer GameServer { get; set; }
         public static GameClient GameClient { get; set; }
         private static GameManager Instance { get; set; }
         public static bool OptionsCreatedForFirstTime { get; set; }
@@ -15,8 +17,9 @@ namespace Valk.Modules
         public override void _Ready()
         {
             Instance = this;
-            CreateOptionsIfNotExists();
-            CreateGameClientInstance();
+            InitOptions();
+            InitClient();
+            InitServer();
         }
 
         public override void _Notification(int what)
@@ -28,7 +31,7 @@ namespace Valk.Modules
             }
         }
 
-        private static void CreateOptionsIfNotExists()
+        private static void InitOptions()
         {
             if (!System.IO.File.Exists(UIOptions.PathOptions)) 
             {
@@ -37,11 +40,18 @@ namespace Valk.Modules
             }
         }
 
-        private static void CreateGameClientInstance()
+        private static void InitClient()
         {
             GameClient = new GameClient();
             GameClient.Name = "Game Client";
             Instance.AddChild(GameClient);
+        }
+
+        private static void InitServer()
+        {
+            GameServer = new GameServer();
+            GameServer.Name = "Game Server";
+            Instance.AddChild(GameServer);
         }
 
         /// <summary>

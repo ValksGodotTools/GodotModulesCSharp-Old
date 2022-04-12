@@ -1,5 +1,3 @@
-using Version = Common.Netcode.Version;
-
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -10,50 +8,93 @@ using System.Threading;
 using System.Threading.Tasks;
 using Common.Netcode;
 using ENet;
+using Godot;
 using Common.Game;
 
 namespace Valk.Modules.Netcode.Server
 {
-    public class ENetServer
+    public abstract class ENetServer : Node
     {
-        public static Version Version { get; private set; }
         public static ConcurrentQueue<ENetCommand> ENetCmds { get; private set; }
+        public static ConcurrentQueue<GodotCmd> GodotCmds { get; private set; }
         public static ConcurrentQueue<ServerPacket> Outgoing { get; private set; }
-
-        //public static Dictionary<uint, ServerPlayer> Players { get; private set; }
-        public static Dictionary<uint, Channel> Channels { get; private set; }
-        public static uint ChannelId = 0;
+        public static bool Running { get; private set; }
 
         private static ConcurrentBag<Event> Incoming { get; set; }
         private static Dictionary<ENetOpcode, ENetCmd> ENetCmd { get; set; }
         private static Dictionary<ClientPacketOpcode, HandlePacket> HandlePacket { get; set; }
+        private static Dictionary<uint, Peer> Peers { get; set; }
+        private static bool QueueRestart { get; set; }
 
-        public static void ENetThreadWorker(ushort port, int maxClients)
+        public override void _Ready()
         {
-            Version = new Version() { Major = 0, Minor = 1, Patch = 0 };
             ENetCmds = new ConcurrentQueue<ENetCommand>();
+            GodotCmds = new ConcurrentQueue<GodotCmd>();
             Outgoing = new ConcurrentQueue<ServerPacket>();
-            //Players = new();
-            Channels = new Dictionary<uint, Channel>() {
-                { ChannelId++, new Channel { Name = "Global" } },
-                { ChannelId++, new Channel { Name = "Game"   } }
-            };
             Incoming = new ConcurrentBag<Event>();
-            ENetCmd = typeof(ENetCmd).Assembly
-                .GetTypes()
-                .Where(x => typeof(ENetCmd)
-                .IsAssignableFrom(x) && !x.IsAbstract)
-                .Select(Activator.CreateInstance)
-                .Cast<ENetCmd>()
-                .ToDictionary(x => x.Opcode, x => x);
+            ENetCmd = typeof(ENetCmd).Assembly.GetTypes().Where(x => typeof(ENetCmd).IsAssignableFrom(x) && !x.IsAbstract).Select(Activator.CreateInstance).Cast<ENetCmd>().ToDictionary(x => x.Opcode, x => x);
+            HandlePacket = typeof(HandlePacket).Assembly.GetTypes().Where(x => typeof(HandlePacket).IsAssignableFrom(x) && !x.IsAbstract).Select(Activator.CreateInstance).Cast<HandlePacket>().ToDictionary(x => x.Opcode, x => x);
+            Peers = new Dictionary<uint, Peer>();
+        }
 
-            HandlePacket = typeof(HandlePacket).Assembly
-                .GetTypes()
-                .Where(x => typeof(HandlePacket)
-                .IsAssignableFrom(x) && !x.IsAbstract)
-                .Select(Activator.CreateInstance)
-                .Cast<HandlePacket>()
-                .ToDictionary(x => x.Opcode, x => x);
+        public override void _Process(float delta)
+        {
+            while (GodotCmds.TryDequeue(out GodotCmd cmd)) 
+            {
+                switch (cmd.Opcode) 
+                {
+                    case GodotOpcode.LogMessage:
+                        GD.Print((string)cmd.Data[0]);
+                        return;
+                }
+            }
+        }
+
+        public void Start()
+        {
+            if (Running) 
+            {
+                GDLog("Server is running already");
+                return;
+            }
+
+            GDLog("Attempting to connect to server");
+            
+            Task.Run(() => ENetThreadWorker(25565, 100));
+        }
+
+        public void Stop()
+        {
+            if (!Running)
+            {
+                GDLog("Server has been stopped already");
+                return;
+            }
+
+            DisconnectAllPeers();
+
+            GDLog("Stopping server");
+            Running = false;
+        }
+
+        public void Restart()
+        {
+            if (!Running)
+            {
+                GDLog("Server has been stopped already");
+                return;
+            }
+
+            DisconnectAllPeers();
+
+            GDLog("Restarting server");
+            Running = false;
+            QueueRestart = true;
+        }
+
+        public void ENetThreadWorker(ushort port, int maxClients)
+        {
+            Running = true;
 
             Library.Initialize();
 
@@ -64,9 +105,9 @@ namespace Valk.Modules.Netcode.Server
                 address.Port = port;
                 server.Create(address, maxClients);
 
-                //Logger.Log($"Server listening on port {port}");
+                GDLog($"Server listening on port {port}");
 
-                while (!System.Console.KeyAvailable)
+                while (Running)
                 {
                     bool polled = false;
 
@@ -81,7 +122,7 @@ namespace Valk.Modules.Netcode.Server
                         var packetReader = new PacketReader(packet);
                         var opcode = (ClientPacketOpcode)packetReader.ReadByte();
 
-                        //Logger.Log($"Received New Client Packet: {opcode}");
+                        GDLog($"Received New Client Packet: {opcode}");
 
                         HandlePacket[opcode].Handle(netEvent.Peer, packetReader); // is ref needed for the packetReader param?
                         packetReader.Dispose(); // is this right?
@@ -113,7 +154,7 @@ namespace Valk.Modules.Netcode.Server
                             var packet = netEvent.Packet;
                             if (packet.Length > GamePacket.MaxSize)
                             {
-                                //Logger.LogWarning($"Tried to read packet from server of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
+                                GDLog($"Tried to read packet from server of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
                                 packet.Dispose();
                                 continue;
                             }
@@ -123,54 +164,55 @@ namespace Valk.Modules.Netcode.Server
                         else if (eventType == EventType.Connect)
                         {
                             // Connect
+                            Peers.Add(netEvent.Peer.ID, netEvent.Peer);
+                            Connect(netEvent);
                         }
                         else if (eventType == EventType.Disconnect)
                         {
                             // Disconnect
-                            //Logger.Log($"Player '{ENetServer.Players[peer.ID].Username}' disconnected");
-                            HandlePlayerLeftServerCleanup(peer.ID);
+                            Peers.Remove(netEvent.Peer.ID);
+                            Disconnect(netEvent);
                         }
                         else if (eventType == EventType.Timeout)
                         {
                             // Timeout
-                            //Logger.Log($"Player '{ENetServer.Players[peer.ID].Username}' timed out");
-                            HandlePlayerLeftServerCleanup(peer.ID);
+                            Peers.Remove(netEvent.Peer.ID);
+                            Timeout(netEvent);
                         }
                     }
                 }
 
                 server.Flush();
             }
-        }
 
-        private static void HandlePlayerLeftServerCleanup(uint peerId)
-        {
-            //Players[peerId].SaveConfig();
-            //Players.Remove(peerId);
-            //Channels[(uint)SpecialChannel.Global].Users.Remove(peerId);
-            /*Outgoing.Enqueue(new ServerPacket((byte)ServerPacketOpcode.PlayerJoinLeave, new WPacketPlayerJoinLeave
+            GDLog("Server stopped");
+
+            if (QueueRestart) 
             {
-                JoinLeaveOpcode = JoinLeaveOpcode.Leave,
-                PlayerId = peerId
-            }, GetOtherPeers(peerId)));*/
+                QueueRestart = false;
+                Start();
+            }
         }
 
-        /*private static Peer[] GetOtherPeers(uint peerId)
-        {
-            var peers = new List<Peer>();
-            foreach (var pair in ENetServer.Players)
-                if (pair.Key != peerId)
-                    peers.Add(pair.Value.Peer);
+        protected abstract void Connect(Event netEvent);
+        protected abstract void Disconnect(Event netEvent);
+        protected abstract void Timeout(Event netEvent);
+        protected static void GDLog(string text) => GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.LogMessage, Data = new List<object> { text }});
 
-            return peers.ToArray();
-        }*/
-
-        private static void Send(ServerPacket gamePacket, Peer peer)
+        private void Send(ServerPacket gamePacket, Peer peer)
         {
             var packet = default(Packet);
             packet.Create(gamePacket.Data, gamePacket.PacketFlags);
             byte channelID = 0;
             peer.Send(channelID, ref packet);
+        }
+
+        private void DisconnectAllPeers()
+        {
+            foreach (var peer in Peers.Values)
+                peer.DisconnectNow(0);
+
+            Peers.Clear();
         }
     }
 
@@ -189,5 +231,16 @@ namespace Valk.Modules.Netcode.Server
         PardonPlayer,
         ClearPlayerStats,
         SendPlayerData
+    }
+
+    public class GodotCmd 
+    {
+        public GodotOpcode Opcode { get; set; }
+        public List<object> Data { get; set; }
+    }
+
+    public enum GodotOpcode 
+    {
+        LogMessage
     }
 }

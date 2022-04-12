@@ -26,11 +26,6 @@ namespace Valk.Modules.Netcode.Client
 
         public static readonly Version Version = new Version { Major = 0, Minor = 1, Patch = 0 };
 
-        public abstract void ProcessGodotCommands(GodotCmd cmd);
-        public abstract void Connect(Event netEvent);
-        public abstract void Disconnect(Event netEvent);
-        public abstract void Timeout(Event netEvent);
-
         public override void _Process(float delta)
         {
             while (GodotCmds.TryDequeue(out GodotCmd cmd)) 
@@ -56,7 +51,7 @@ namespace Valk.Modules.Netcode.Client
             }
         }
 
-        public void Connect(string ip, ushort port, string jwt) 
+        public void Connect(string ip, ushort port) 
         {
             if (ENetThreadRunning) 
             {
@@ -65,13 +60,22 @@ namespace Valk.Modules.Netcode.Client
             }
             
             ENetThreadRunning = true;
-            Task.Run(() => ENetThreadWorker(ip, port, jwt));
+            Task.Run(() => ENetThreadWorker(ip, port));
         }
 
-        private void ENetThreadWorker(string ip, ushort port, string jwt)
+        public void Disconnect()
+        {
+            ENetCmds.Enqueue(new ENetCmd { Opcode = ENetOpcode.ClientWantsToDisconnect });
+        }
+
+        protected abstract void ProcessGodotCommands(GodotCmd cmd);
+        protected abstract void Connect(Event netEvent);
+        protected abstract void Disconnect(Event netEvent);
+        protected abstract void Timeout(Event netEvent);
+
+        private void ENetThreadWorker(string ip, ushort port)
         {
             Library.Initialize();
-            GDLog("ENet library initialized successfully");
             var wantsToExit = false;
             var wantsToDisconnect = false;
 

@@ -87,6 +87,11 @@ namespace Valk.Modules.Settings
             FullscreenOptions.AddItem("Exclusive Fullscreen");
         }
 
+        /// <summary>
+        /// Godot does not provide any functions to print the list of supported resolutions from Monitor[]
+        /// This gets the supported resolutions based off OS.GetScreenSize()
+        /// </summary>
+        /// <returns>The supported resolutions of the monitor</returns>
         private static Dictionary<int, Vector2> GetSupportedResolutions() 
         {
             var supportedResolutions = new Dictionary<int, Vector2>();
