@@ -1,0 +1,86 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Themes/Main.tres" type="Theme" id=1]
+[ext_resource path="res://Scripts/UI/UIServerManager.cs" type="Script" id=2]
+
+[node name="ServerManager" type="PanelContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -1839.0
+margin_bottom = -1055.0
+rect_min_size = Vector2( 350, 0 )
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme = ExtResource( 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+NodePathIp = NodePath("HBoxContainer/VBoxContainer/IP")
+NodePathLogger = NodePath("HBoxContainer/VBoxContainer/Logger")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 349.0
+margin_bottom = 264.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+margin_right = 244.0
+margin_bottom = 263.0
+size_flags_horizontal = 3
+
+[node name="Start" type="Button" parent="HBoxContainer/VBoxContainer"]
+margin_right = 244.0
+margin_bottom = 23.0
+text = "Start Server"
+
+[node name="Stop" type="Button" parent="HBoxContainer/VBoxContainer"]
+margin_top = 27.0
+margin_right = 244.0
+margin_bottom = 50.0
+text = "Stop Server"
+
+[node name="Restart" type="Button" parent="HBoxContainer/VBoxContainer"]
+margin_top = 54.0
+margin_right = 244.0
+margin_bottom = 77.0
+text = "Restart Server"
+
+[node name="Connect" type="Button" parent="HBoxContainer/VBoxContainer"]
+margin_top = 81.0
+margin_right = 244.0
+margin_bottom = 104.0
+text = "Connect"
+
+[node name="Disconnect" type="Button" parent="HBoxContainer/VBoxContainer"]
+margin_top = 108.0
+margin_right = 244.0
+margin_bottom = 131.0
+text = "Disconnect"
+
+[node name="IP" type="LineEdit" parent="HBoxContainer/VBoxContainer"]
+margin_top = 135.0
+margin_right = 244.0
+margin_bottom = 159.0
+text = "127.0.0.1"
+align = 1
+
+[node name="Logger" type="RichTextLabel" parent="HBoxContainer/VBoxContainer"]
+margin_top = 163.0
+margin_right = 244.0
+margin_bottom = 263.0
+rect_min_size = Vector2( 0, 100 )
+scroll_following = true
+
+[node name="Usernames go here" type="VBoxContainer" parent="HBoxContainer"]
+margin_left = 248.0
+margin_right = 348.0
+margin_bottom = 263.0
+rect_min_size = Vector2( 100, 0 )
+
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/Start" to="." method="_on_Start_pressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/Stop" to="." method="_on_Stop_pressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/Restart" to="." method="_on_Restart_pressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/Connect" to="." method="_on_Connect_pressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/Disconnect" to="." method="_on_Disconnect_pressed"]

@@ -1,0 +1,218 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scripts/UI/UIModLoader.cs" type="Script" id=1]
+[ext_resource path="res://Themes/Main.tres" type="Theme" id=3]
+
+[node name="PanelContainer" type="PanelContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -424.0
+margin_bottom = -100.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme = ExtResource( 3 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+NodePathModList = NodePath("VBoxContainer/Mod Loader Info/Mod List/Mod List/MarginContainer/PanelContainer/ScrollContainer/Mods")
+NodePathModName = NodePath("VBoxContainer/Mod Loader Info/Mod Info/Mod Information/Mod Name")
+NodePathModGameVersions = NodePath("VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2/VBoxContainer/Game Versions")
+NodePathModDependencies = NodePath("VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer/VBoxContainer/PanelContainer/VBoxContainer/Dependencies")
+NodePathModDescription = NodePath("VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer/VBoxContainer/MarginContainer/Description")
+NodePathLogger = NodePath("VBoxContainer/Logger Container/MarginContainer/Logger")
+CustomLuaScriptsPath = ""
+CustomModsPath = ""
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 1495.0
+margin_bottom = 979.0
+
+[node name="Mod Loader Info" type="HBoxContainer" parent="VBoxContainer"]
+margin_right = 1494.0
+margin_bottom = 695.0
+size_flags_vertical = 3
+
+[node name="Mod List" type="MarginContainer" parent="VBoxContainer/Mod Loader Info"]
+margin_right = 147.0
+margin_bottom = 695.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 3
+custom_constants/margin_left = 3
+custom_constants/margin_bottom = 3
+
+[node name="Mod List" type="VBoxContainer" parent="VBoxContainer/Mod Loader Info/Mod List"]
+margin_left = 3.0
+margin_top = 3.0
+margin_right = 137.0
+margin_bottom = 692.0
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Mod Loader Info/Mod List/Mod List"]
+margin_right = 134.0
+margin_bottom = 662.0
+size_flags_vertical = 3
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 5
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Mod Loader Info/Mod List/Mod List/MarginContainer"]
+margin_right = 134.0
+margin_bottom = 657.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/Mod Loader Info/Mod List/Mod List/MarginContainer/PanelContainer"]
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 133.0
+margin_bottom = 656.0
+size_flags_vertical = 3
+scroll_horizontal_enabled = false
+
+[node name="Mods" type="VBoxContainer" parent="VBoxContainer/Mod Loader Info/Mod List/Mod List/MarginContainer/PanelContainer/ScrollContainer"]
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Mod Loader Info/Mod List/Mod List"]
+margin_top = 666.0
+margin_right = 134.0
+margin_bottom = 689.0
+
+[node name="Refresh" type="Button" parent="VBoxContainer/Mod Loader Info/Mod List/Mod List/HBoxContainer"]
+margin_right = 54.0
+margin_bottom = 23.0
+text = "Refresh"
+
+[node name="Load Mods" type="Button" parent="VBoxContainer/Mod Loader Info/Mod List/Mod List/HBoxContainer"]
+margin_left = 58.0
+margin_right = 134.0
+margin_bottom = 23.0
+size_flags_horizontal = 0
+size_flags_vertical = 8
+text = "Load Mods"
+
+[node name="Mod Info" type="MarginContainer" parent="VBoxContainer/Mod Loader Info"]
+margin_left = 151.0
+margin_right = 1494.0
+margin_bottom = 695.0
+size_flags_horizontal = 3
+custom_constants/margin_right = 0
+custom_constants/margin_top = 5
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 5
+
+[node name="Mod Information" type="VBoxContainer" parent="VBoxContainer/Mod Loader Info/Mod Info"]
+margin_top = 5.0
+margin_right = 1343.0
+margin_bottom = 690.0
+size_flags_horizontal = 3
+
+[node name="Mod Name" type="Label" parent="VBoxContainer/Mod Loader Info/Mod Info/Mod Information"]
+margin_right = 1343.0
+margin_bottom = 17.0
+text = "Mod Name"
+align = 1
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/Mod Loader Info/Mod Info/Mod Information"]
+margin_top = 21.0
+margin_right = 1343.0
+margin_bottom = 685.0
+size_flags_vertical = 3
+custom_constants/margin_top = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2"]
+margin_top = 5.0
+margin_right = 1343.0
+margin_bottom = 664.0
+size_flags_vertical = 3
+
+[node name="Game Versions" type="Label" parent="VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2/VBoxContainer"]
+margin_right = 1343.0
+margin_bottom = 17.0
+text = "Game Version(s): 0.02, 0.01"
+
+[node name="MarginContainer" type="ScrollContainer" parent="VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2/VBoxContainer"]
+margin_top = 21.0
+margin_right = 1343.0
+margin_bottom = 659.0
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer"]
+margin_right = 1343.0
+margin_bottom = 54.0
+size_flags_horizontal = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer/VBoxContainer"]
+margin_right = 1343.0
+margin_bottom = 28.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer/VBoxContainer/PanelContainer"]
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 1342.0
+margin_bottom = 27.0
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer/VBoxContainer/PanelContainer/VBoxContainer"]
+margin_right = 1341.0
+margin_bottom = 22.0
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+
+[node name="Label Dependencies" type="Label" parent="VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer/VBoxContainer/PanelContainer/VBoxContainer/MarginContainer"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 1341.0
+margin_bottom = 22.0
+text = "Dependencies"
+
+[node name="Dependencies" type="VBoxContainer" parent="VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer/VBoxContainer/PanelContainer/VBoxContainer"]
+margin_top = 26.0
+margin_right = 1341.0
+margin_bottom = 26.0
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer/VBoxContainer"]
+margin_top = 32.0
+margin_right = 1343.0
+margin_bottom = 54.0
+custom_constants/margin_right = 0
+custom_constants/margin_top = 5
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="Description" type="Label" parent="VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer/VBoxContainer/MarginContainer"]
+margin_top = 5.0
+margin_right = 1343.0
+margin_bottom = 22.0
+text = "Mod description will go here"
+autowrap = true
+
+[node name="Logger Container" type="PanelContainer" parent="VBoxContainer"]
+margin_top = 699.0
+margin_right = 1494.0
+margin_bottom = 978.0
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.4
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Logger Container"]
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 1493.0
+margin_bottom = 278.0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+
+[node name="Logger" type="RichTextLabel" parent="VBoxContainer/Logger Container/MarginContainer"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 1487.0
+margin_bottom = 277.0
+focus_mode = 2
+text = "ModLoader will log useful information here"
+scroll_following = true
+selection_enabled = true
+
+[connection signal="pressed" from="VBoxContainer/Mod Loader Info/Mod List/Mod List/HBoxContainer/Refresh" to="." method="_on_Refresh_pressed"]
+[connection signal="pressed" from="VBoxContainer/Mod Loader Info/Mod List/Mod List/HBoxContainer/Load Mods" to="." method="_on_Load_Mods_pressed"]
