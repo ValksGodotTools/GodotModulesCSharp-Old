@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Scenes/Prefabs/ServerManager.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scenes/Prefabs/ModLoader.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scenes/Prefabs/Options.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Themes/Main.tres" type="Theme" id=4]
 [ext_resource path="res://Scripts/UI/UIMenu.cs" type="Script" id=5]
+[ext_resource path="res://Scenes/Prefabs/SetupOnlineProfile.tscn" type="PackedScene" id=6]
 
 [node name="Menu" type="Control"]
 anchor_right = 1.0
@@ -14,6 +15,7 @@ script = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+NodePathSetupOnlineUsernamePopup = NodePath("Set Online Username Popup")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 anchor_right = 1.0
@@ -45,7 +47,7 @@ anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 404.0
 margin_right = 804.0
-margin_bottom = 191.0
+margin_bottom = 219.0
 
 [node name="ServerManager" parent="PanelContainer/ScrollContainer/Grid" instance=ExtResource( 1 )]
 anchor_right = 0.0
@@ -79,6 +81,17 @@ margin_right = 75.0
 margin_bottom = 77.0
 text = "Exit"
 
+[node name="Set Online Username Popup" parent="." instance=ExtResource( 6 )]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -100.0
+margin_top = -50.0
+margin_right = 100.0
+margin_bottom = 50.0
+
 [connection signal="pressed" from="PanelContainer/VBoxContainer/Play" to="." method="_on_Play_pressed"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/Multiplayer" to="." method="_on_Multiplayer_pressed"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/Exit" to="." method="_on_Exit_pressed"]
+[connection signal="confirmed" from="Set Online Username Popup" to="." method="_on_Set_Online_Username_Popup_confirmed"]

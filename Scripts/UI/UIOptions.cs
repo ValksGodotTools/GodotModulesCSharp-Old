@@ -11,12 +11,14 @@ namespace Valk.Modules.Settings
         [Export] public readonly NodePath NodePathSliderMusic;
         [Export] public readonly NodePath NodePathSliderSFX;
         [Export] public readonly NodePath NodePathVSync;
+        [Export] public readonly NodePath NodePathInputOnlineUsername;
 
         public static HSlider SliderMusic { get; set; }
         public static HSlider SliderSFX { get; set; }
         private static OptionButton FullscreenOptions { get; set; }
         private static OptionButton ResolutionOptions { get; set; }
         private static CheckBox VSync { get; set; }
+        public static LineEdit InputUsername { get; set; }
         private static UIOptions Instance { get; set; }
         public static Options Options { get; set; }
         private static Dictionary<int, Vector2> SupportedResolutions { get; set; }
@@ -28,6 +30,7 @@ namespace Valk.Modules.Settings
             SliderMusic = GetNode<HSlider>(NodePathSliderMusic);
             SliderSFX = GetNode<HSlider>(NodePathSliderSFX);
             VSync = GetNode<CheckBox>(NodePathVSync);
+            InputUsername = GetNode<LineEdit>(NodePathInputOnlineUsername);
             SetupFullscreenOptions();
 
             SupportedResolutions = GetSupportedResolutions();
@@ -50,7 +53,8 @@ namespace Valk.Modules.Settings
                     FullscreenMode = 0,
                     VolumeMusic = -15,
                     VolumeSFX = -15,
-                    VSync = true
+                    VSync = true,
+                    OnlineUsername = ""
                 };
             }
 
@@ -61,6 +65,7 @@ namespace Valk.Modules.Settings
             SliderMusic.Value = Options.VolumeMusic;
             SliderSFX.Value = Options.VolumeSFX;
             VSync.Pressed = Options.VSync;
+            InputUsername.Text = Options.OnlineUsername;
                 
             // apply settings
             if (Options.FullscreenMode == FullscreenMode.Windowed) 
@@ -174,6 +179,11 @@ namespace Valk.Modules.Settings
             Options.VSync = enabled;
         }
 
+        private void _on_OnlineUsername_text_changed(string text)
+        {
+            Options.OnlineUsername = text;
+        }
+
         private static void CenterWindow() => OS.WindowPosition = OS.GetScreenSize() / 2 - OS.WindowSize / 2;
 
         private static void SetWindowedMode()
@@ -207,6 +217,6 @@ namespace Valk.Modules.Settings
         public float VolumeMusic { get; set; }
         public float VolumeSFX { get; set; }
         public bool VSync { get; set; }
-        public string OnlineName { get; set; }
+        public string OnlineUsername { get; set; }
     }
 }

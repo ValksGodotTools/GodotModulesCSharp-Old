@@ -21,12 +21,13 @@ NodePathResolutionOptions = NodePath("MarginContainer/VBoxContainer/Resolution")
 NodePathSliderMusic = NodePath("MarginContainer/VBoxContainer/Music")
 NodePathSliderSFX = NodePath("MarginContainer/VBoxContainer/SFX")
 NodePathVSync = NodePath("MarginContainer/VBoxContainer/VSync/VSync")
+NodePathInputOnlineUsername = NodePath("MarginContainer/VBoxContainer/Online Username/OnlineUsername")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 margin_left = 1.0
 margin_top = 1.0
 margin_right = 399.0
-margin_bottom = 190.0
+margin_bottom = 218.0
 custom_constants/margin_right = 15
 custom_constants/margin_top = 15
 custom_constants/margin_left = 15
@@ -36,7 +37,7 @@ custom_constants/margin_bottom = 15
 margin_left = 15.0
 margin_top = 15.0
 margin_right = 383.0
-margin_bottom = 174.0
+margin_bottom = 202.0
 
 [node name="Label1" type="Label" parent="MarginContainer/VBoxContainer"]
 margin_right = 368.0
@@ -91,8 +92,26 @@ margin_left = 43.0
 margin_right = 65.0
 margin_bottom = 23.0
 
+[node name="Online Username" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+margin_top = 163.0
+margin_right = 368.0
+margin_bottom = 187.0
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Online Username"]
+margin_top = 3.0
+margin_right = 111.0
+margin_bottom = 20.0
+text = "Online Username: "
+
+[node name="OnlineUsername" type="LineEdit" parent="MarginContainer/VBoxContainer/Online Username"]
+margin_left = 115.0
+margin_right = 368.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
 [connection signal="value_changed" from="MarginContainer/VBoxContainer/Music" to="." method="_on_Music_value_changed"]
 [connection signal="value_changed" from="MarginContainer/VBoxContainer/SFX" to="." method="_on_SFX_value_changed"]
 [connection signal="item_selected" from="MarginContainer/VBoxContainer/Resolution" to="." method="_on_Resolution_item_selected"]
 [connection signal="item_selected" from="MarginContainer/VBoxContainer/Fullscreen" to="." method="_on_Fullscreen_item_selected"]
 [connection signal="toggled" from="MarginContainer/VBoxContainer/VSync/VSync" to="." method="_on_VSync_toggled"]
+[connection signal="text_changed" from="MarginContainer/VBoxContainer/Online Username/OnlineUsername" to="." method="_on_OnlineUsername_text_changed"]
