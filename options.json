@@ -1,5 +1,7 @@
 {
-  "FullscreenMode": 1,
-  "MusicVolume": -40.0,
+  "FullscreenMode": 0,
+  "Resolution": 4,
+  "VolumeMusic": -15.0,
+  "VolumeSFX": -15.0,
   "VSync": true
 }

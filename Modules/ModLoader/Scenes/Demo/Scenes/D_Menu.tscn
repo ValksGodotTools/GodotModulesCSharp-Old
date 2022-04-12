@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Modules/ModLoader/Scenes/Prefabs/ModLoader.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Modules/ModLoader/Scenes/Demo/Scripts/D_Menu.cs" type="Script" id=2]
 [ext_resource path="res://Modules/Options/Scenes/Prefabs/Options.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Themes/Main.tres" type="Theme" id=4]
+[ext_resource path="res://Modules/ENetCSharp/Scenes/Prefabs/D_ServerManager.tscn" type="PackedScene" id=5]
 
 [node name="Menu" type="Control"]
 anchor_right = 1.0
@@ -21,50 +22,54 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ModLoader" parent="PanelContainer" instance=ExtResource( 1 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 423.0
-margin_top = 100.0
-margin_right = 1023.0
-margin_bottom = 500.0
-rect_min_size = Vector2( 600, 400 )
-size_flags_horizontal = 8
-size_flags_vertical = 4
-CustomLuaScriptsPath = "Modules/ModLoader/Scripts/Lua"
-CustomModsPath = "Modules/ModLoader/Scenes/Demo"
-
-[node name="Options" parent="PanelContainer" instance=ExtResource( 3 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 1.0
-margin_top = 399.0
-margin_right = 301.0
-margin_bottom = 599.0
-rect_min_size = Vector2( 300, 200 )
-size_flags_horizontal = 0
-size_flags_vertical = 8
-
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
 margin_left = 1.0
 margin_top = 1.0
-margin_right = 34.0
-margin_bottom = 51.0
+margin_right = 1919.0
+margin_bottom = 1079.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer"]
+margin_right = 33.0
+margin_bottom = 50.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
 
-[node name="Play" type="Button" parent="PanelContainer/VBoxContainer"]
+[node name="Play" type="Button" parent="PanelContainer/VBoxContainer/VBoxContainer"]
 margin_right = 33.0
 margin_bottom = 23.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "Play"
 
-[node name="Exit" type="Button" parent="PanelContainer/VBoxContainer"]
+[node name="Exit" type="Button" parent="PanelContainer/VBoxContainer/VBoxContainer"]
 margin_top = 27.0
 margin_right = 33.0
 margin_bottom = 50.0
 text = "Exit"
 
-[connection signal="pressed" from="PanelContainer/VBoxContainer/Play" to="." method="_on_Play_pressed"]
-[connection signal="pressed" from="PanelContainer/VBoxContainer/Exit" to="." method="_on_Exit_pressed"]
+[node name="Options" parent="PanelContainer/VBoxContainer" instance=ExtResource( 3 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 54.0
+margin_right = 400.0
+margin_bottom = 245.0
+
+[node name="ModLoader" parent="PanelContainer/VBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 249.0
+margin_right = 400.0
+margin_bottom = 549.0
+rect_min_size = Vector2( 400, 300 )
+CustomLuaScriptsPath = "Modules/ModLoader/Scripts/Lua"
+CustomModsPath = "Modules/ModLoader/Scenes/Demo"
+
+[node name="ServerManager" parent="PanelContainer/VBoxContainer" instance=ExtResource( 5 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 553.0
+margin_right = 350.0
+margin_bottom = 818.0
+
+[connection signal="pressed" from="PanelContainer/VBoxContainer/VBoxContainer/Play" to="." method="_on_Play_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/VBoxContainer/Exit" to="." method="_on_Exit_pressed"]

@@ -4,8 +4,6 @@
 [ext_resource path="res://Global/Scripts/GameManager.cs" type="Script" id=2]
 
 [node name="Global" type="Node"]
-
-[node name="GameManager" type="Node" parent="."]
 script = ExtResource( 2 )
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]

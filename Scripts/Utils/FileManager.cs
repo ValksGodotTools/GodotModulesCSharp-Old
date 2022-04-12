@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using Newtonsoft.Json;
+using Valk.Modules.Settings;
 
 namespace Valk.Modules
 {
@@ -32,16 +33,17 @@ namespace Valk.Modules
 
         public static T GetConfig<T>(string path)
         {
-            string contents;
-            try
-            {
-                contents = File.ReadAllText(path);
-                return JsonConvert.DeserializeObject<T>(contents);
-            }
-            catch (Exception)
-            {
+            if (!File.Exists(path))
                 return default(T);
-            }
+
+            string contents = File.ReadAllText(path);
+            return JsonConvert.DeserializeObject<T>(contents);
         }
+    }
+
+    public enum FileStatus 
+    {
+        DoesNotExist,
+        Exists
     }
 }

@@ -140,15 +140,6 @@ namespace Valk.Modules.Netcode.Client
                         switch (netEvent.Type)
                         {
                             case EventType.Connect:
-                                // Send login request
-                                Outgoing.Enqueue(new ClientPacket((byte)ClientPacketOpcode.Login, new WPacketLogin
-                                {
-                                    JsonWebToken = jwt,
-                                    VersionMajor = Version.Major,
-                                    VersionMinor = Version.Minor,
-                                    VersionPatch = Version.Patch
-                                }));
-
                                 Connect(netEvent);
                                 break;
                             case EventType.Receive:
