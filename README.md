@@ -6,23 +6,29 @@ A collection of useful modules and scripts that can easily be ported into other 
 ![image](https://user-images.githubusercontent.com/6277739/162651881-b8f98aa5-da2a-4499-b4dd-737a64dec4a9.png)  
 
 ### [Options](https://github.com/valkyrienyanko/GodotModules/blob/main/OPTIONS.md)  
-![image](https://user-images.githubusercontent.com/6277739/162651901-f3df3cbd-df78-4bfa-814b-00b8e3ab2f6f.png)  
+![image](https://user-images.githubusercontent.com/6277739/163117944-e350b70c-aaaa-426f-8719-3c28648d5747.png)  
+
+### ENet-CSharp (wip)
+Realtime client-side checks  
+![image](https://user-images.githubusercontent.com/6277739/163118366-42523efa-33ab-4b0e-939f-3fba74618c83.png)  
+Server browser  
+![image](https://user-images.githubusercontent.com/6277739/163118505-7f47f22e-94a8-44ab-ad56-18bafd44c149.png)  
+Lobby  
+![image](https://user-images.githubusercontent.com/6277739/163263124-ad230a6c-6253-4c89-914c-de1a40ef32e4.png)  
+
+Todo
+- [x] Thread safety, run client on one thread, server on another
+- [ ] Server list scene (wip)
+- [ ] Post created servers to web server / fetch all servers from web server
+- [ ] Ping servers
+- [ ] Lobby scene
+- [ ] Demo netcode for game scene
 
 ### Popup Menu (coming soon)
 In games usually when you press Esc a popup menu comes up asking if you want to go back to the main menu or edit the options
 
 ### Tech Tree (coming soon)
 Tech tree where nodes in tree are positioned automatically via script
-
-### ENet-CSharp (coming soon)
-ENet-CSharp is a reliable UDP networking library. How this will be implemented I'm not sure. There is the full on MMORPG approach where there is a web server, game server and clients in their own separate repos. Or what's included could just be the game server and clients all packaged into the same repo. Game server would keep track of user ids and act sort of like a web auth server at the same time.
-
-Todo
-- [ ] Create manager to start, stop, restart server from within game (1 thread for client, 1 thread for server)
-- [ ] Test with ping pong example
-- [ ] Player auth (saved to JSON or maybe look into some kind of SQLite solution that doesn't require a whole separate server just to run the database)
-- [ ] Chat module
-- [ ] Cleanup code :)
 
 ## Utils
 On top of all the modules there are also useful manager / utility scripts in `res://Global/` and `res://Scripts/`
