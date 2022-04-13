@@ -1,7 +1,10 @@
 # Godot Modules
+## About
 A collection of useful modules and scripts that can easily be ported into other C# Godot games.
 
 The goal of this project is to figure out all the tedious / not-so-obvious stuff in game development to make game development much easier.
+
+I was thinking to myself, I want to make a bullet hell game, but I'm also going to be making more then just one game in the future, so that's why I created this project, so I don't have to redo the same things over and over again. If I want multiplayer, I can just grab it from here. If I want a modloader, I can find it here. That is my motivation behind this project.
 
 ## Modules
 ### [ModLoader](https://github.com/valkyrienyanko/GodotModules/blob/main/MOD_LOADER.md)  
@@ -64,4 +67,4 @@ GameManager.Exit();
 ## Contributing
 See [CONTRIBUTING.md](https://github.com/valkyrienyanko/GodotLuaModdingTest/blob/main/CONTRIBUTING.md)
 
-Talk to me on Discord valk#9904 for more info
+A lot of this is overwhelming at times, just making a minor contribution here and there is a huge motivator for me. Talk to me through Discord valk#9904 if you need more info on something.
