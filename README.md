@@ -25,9 +25,9 @@ Todo
 - [x] Thread safety, run client on one thread, server on another
 - [ ] Server list scene (wip)
 - [ ] Lobby scene (wip)
-- [ ] Post created servers to web server / fetch all servers from web server
-- [ ] Ping servers
-- [ ] Demo netcode for game scene
+- [ ] Post created servers to NodeJS web server / fetch all servers from web server
+- [ ] Add packets for pinging servers
+- [ ] Demo netcode for game scene (playing around with syncing player positions, and perhaps other things)
 
 ### Popup Menu (coming soon)
 In games usually when you press Esc a popup menu comes up asking if you want to go back to the main menu or edit the options
