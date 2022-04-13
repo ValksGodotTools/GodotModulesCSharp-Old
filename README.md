@@ -13,6 +13,8 @@ Realtime client-side checks
 ![image](https://user-images.githubusercontent.com/6277739/163118366-42523efa-33ab-4b0e-939f-3fba74618c83.png)  
 Server browser  
 ![image](https://user-images.githubusercontent.com/6277739/163118505-7f47f22e-94a8-44ab-ad56-18bafd44c149.png)  
+Lobby  
+![image](https://user-images.githubusercontent.com/6277739/163263124-ad230a6c-6253-4c89-914c-de1a40ef32e4.png)  
 
 Todo
 - [x] Thread safety, run client on one thread, server on another
