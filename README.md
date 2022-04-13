@@ -12,6 +12,12 @@ A collection of useful modules and scripts that can easily be ported into other 
 ![image](https://user-images.githubusercontent.com/6277739/163118366-42523efa-33ab-4b0e-939f-3fba74618c83.png)  
 ![image](https://user-images.githubusercontent.com/6277739/163118505-7f47f22e-94a8-44ab-ad56-18bafd44c149.png)  
 
+Todo
+- [x] Thread safety, run client on one thread, server on another
+- [ ] Server list scene / post created servers to web server / fetch all servers from web server
+- [ ] Lobby scene
+- [ ] Generic game networking
+
 ### Popup Menu (coming soon)
 In games usually when you press Esc a popup menu comes up asking if you want to go back to the main menu or edit the options
 
