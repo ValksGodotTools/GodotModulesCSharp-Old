@@ -16,7 +16,7 @@ Server browser
 
 Todo
 - [x] Thread safety, run client on one thread, server on another
-- [ ] Server list scene
+- [ ] Server list scene (wip)
 - [ ] Post created servers to web server / fetch all servers from web server
 - [ ] Ping servers
 - [ ] Lobby scene
