@@ -9,7 +9,9 @@ A collection of useful modules and scripts that can easily be ported into other 
 ![image](https://user-images.githubusercontent.com/6277739/163117944-e350b70c-aaaa-426f-8719-3c28648d5747.png)  
 
 ### ENet-CSharp (wip)
+Realtime client-side checks  
 ![image](https://user-images.githubusercontent.com/6277739/163118366-42523efa-33ab-4b0e-939f-3fba74618c83.png)  
+Server browser  
 ![image](https://user-images.githubusercontent.com/6277739/163118505-7f47f22e-94a8-44ab-ad56-18bafd44c149.png)  
 
 Todo
