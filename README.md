@@ -61,3 +61,5 @@ GameManager.Exit();
 
 ## Contributing
 See [CONTRIBUTING.md](https://github.com/valkyrienyanko/GodotLuaModdingTest/blob/main/CONTRIBUTING.md)
+
+Talk to me on Discord valk#9904 for more info
