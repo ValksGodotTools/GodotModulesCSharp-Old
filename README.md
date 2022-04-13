@@ -1,6 +1,8 @@
 # Godot Modules
 A collection of useful modules and scripts that can easily be ported into other C# Godot games.
 
+The goal of this project is to figure out all the tedious / not-so-obvious stuff in game development to make game development much easier.
+
 ## Modules
 ### [ModLoader](https://github.com/valkyrienyanko/GodotModules/blob/main/MOD_LOADER.md)  
 ![image](https://user-images.githubusercontent.com/6277739/162651881-b8f98aa5-da2a-4499-b4dd-737a64dec4a9.png)  
