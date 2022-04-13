@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Valk.Modules.Settings;
 
 namespace Valk.Modules.Netcode
 {
@@ -115,14 +116,22 @@ namespace Valk.Modules.Netcode
 
             var lobby = lobbyPrefab.Instance<UILobbyListing>();
             lobby.Init();
-            lobby.SetTitle(InputTitle.Text.Trim());
-            lobby.SetAddress(externalIp, port);
-            lobby.SetDescription(InputDescription.Text.Trim());
-            lobby.SetMaxPlayerCount(int.Parse(InputMaxPlayerCount.Text.Trim()));
+            lobby.SetInfo(new LobbyListing {
+                Name = InputTitle.Text.Trim(),
+                Ip = externalIp,
+                Port = port,
+                Description = InputDescription.Text.Trim(),
+                MaxPlayerCount = int.Parse(InputMaxPlayerCount.Text.Trim()),
+                LobbyHost = UIOptions.Options.OnlineUsername
+            });
+
             UIGameServers.ServerList.AddChild(lobby);
 
             GameManager.GameServer.Start();
             GameManager.GameClient.Connect(externalIp, port);
+
+            UIGameServers.CurrentLobby = lobby.Info;
+            GetTree().ChangeScene("res://Scenes/Lobby.tscn");
 
             Hide();
         }

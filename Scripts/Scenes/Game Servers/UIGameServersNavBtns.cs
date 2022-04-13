@@ -25,16 +25,6 @@ namespace Valk.Modules.Netcode
             UIGameServers.ServerCreationPopup.PopupCentered();
         }
 
-        private void _on_Edit_pressed()
-        {
-
-        }
-
-        private void _on_Delete_pressed()
-        {
-
-        }
-
         private void _on_Refresh_pressed()
         {
 

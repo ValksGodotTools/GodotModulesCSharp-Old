@@ -1,8 +1,8 @@
 {
   "FullscreenMode": 0,
-  "Resolution": 2,
+  "Resolution": 3,
   "VolumeMusic": -40.0,
-  "VolumeSFX": -40.0,
+  "VolumeSFX": -33.0,
   "VSync": true,
   "OnlineUsername": "valk"
 }

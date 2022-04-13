@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=9 format=2]
+[gd_resource type="Theme" load_steps=13 format=2]
 
 [ext_resource path="res://Themes/Fonts/Roboto.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Themes/Button/Btn_Hover.tres" type="StyleBox" id=2]
@@ -7,6 +7,20 @@
 [ext_resource path="res://Themes/Button/Btn_Focus.tres" type="StyleBox" id=5]
 [ext_resource path="res://Themes/Button/Btn_Normal.tres" type="StyleBox" id=6]
 [ext_resource path="res://Themes/Slider/Slider_Grabber_Area.tres" type="StyleBox" id=7]
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 0.164706, 0.164706, 0.164706, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.121569, 0.121569, 0.121569, 1 )
+border_blend = true
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+shadow_size = 5
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0, 0, 0, 1 )
@@ -18,6 +32,25 @@ border_color = Color( 0.188235, 0.188235, 0.188235, 1 )
 shadow_color = Color( 0.184314, 0.184314, 0.184314, 0.486275 )
 shadow_size = 3
 
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 0.152941, 0.152941, 0.152941, 1 )
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.505882, 0.505882, 0.505882, 1 )
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id=3]
+border_width_left = 2
+border_color = Color( 0, 0, 0, 1 )
+
 [resource]
 Button/fonts/font = ExtResource( 1 )
 Button/styles/disabled = ExtResource( 4 )
@@ -28,4 +61,9 @@ Button/styles/pressed = ExtResource( 3 )
 HSlider/styles/grabber_area = ExtResource( 7 )
 HSlider/styles/grabber_area_highlight = ExtResource( 7 )
 Label/fonts/font = ExtResource( 1 )
+LineEdit/styles/normal = SubResource( 4 )
 PanelContainer/styles/panel = SubResource( 1 )
+RichTextLabel/constants/line_separation = 4
+TextEdit/styles/normal = SubResource( 5 )
+VScrollBar/styles/grabber = SubResource( 2 )
+VScrollBar/styles/scroll = SubResource( 3 )

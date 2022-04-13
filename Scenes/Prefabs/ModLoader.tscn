@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://Scripts/UI/UIModLoader.cs" type="Script" id=1]
+[ext_resource path="res://Scripts/Scenes/Menu/UIModLoader.cs" type="Script" id=1]
 [ext_resource path="res://Themes/Main.tres" type="Theme" id=3]
 
 [node name="PanelContainer" type="PanelContainer"]
