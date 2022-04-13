@@ -28,11 +28,6 @@ config/icon="res://icon.png"
 
 Global="*res://Global/Scenes/Global.tscn"
 
-[display]
-
-window/size/width=1920
-window/size/height=1080
-
 [input]
 
 ui_left={

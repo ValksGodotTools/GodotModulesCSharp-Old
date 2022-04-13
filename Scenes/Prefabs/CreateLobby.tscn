@@ -1,0 +1,148 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scripts/UI/UICreateLobby.cs" type="Script" id=1]
+[ext_resource path="res://Themes/Main.tres" type="Theme" id=2]
+
+[node name="CreateLobby" type="WindowDialog"]
+visible = true
+margin_left = 287.0
+margin_top = 175.0
+margin_right = 737.0
+margin_bottom = 425.0
+rect_min_size = Vector2( 550, 300 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource( 2 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+NodePathInputTitle = NodePath("PanelContainer/MarginContainer/VBox/Title/Title")
+NodePathInputPort = NodePath("PanelContainer/MarginContainer/VBox/Address/Port/Port")
+NodePathInputDescription = NodePath("PanelContainer/MarginContainer/VBox/Description")
+NodePathMaxPlayerCount = NodePath("PanelContainer/MarginContainer/VBox/HBox/Max Player")
+NodePathVBoxFeedback = NodePath("PanelContainer/MarginContainer/VBox/ScrollContainer/Feedback")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 549.0
+margin_bottom = 299.0
+custom_constants/margin_right = 20
+custom_constants/margin_top = 20
+custom_constants/margin_left = 20
+custom_constants/margin_bottom = 20
+
+[node name="Create" type="Button" parent="PanelContainer/MarginContainer"]
+margin_left = 229.0
+margin_top = 255.0
+margin_right = 318.0
+margin_bottom = 278.0
+size_flags_horizontal = 4
+size_flags_vertical = 8
+text = "Create Lobby"
+
+[node name="VBox" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 528.0
+margin_bottom = 227.0
+size_flags_vertical = 0
+
+[node name="Address" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBox"]
+margin_right = 508.0
+margin_bottom = 24.0
+
+[node name="Port" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBox/Address"]
+margin_right = 106.0
+margin_bottom = 24.0
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBox/Address/Port"]
+margin_top = 3.0
+margin_right = 27.0
+margin_bottom = 20.0
+text = "Port"
+
+[node name="Port" type="LineEdit" parent="PanelContainer/MarginContainer/VBox/Address/Port"]
+margin_left = 31.0
+margin_right = 106.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 75, 0 )
+text = "25565"
+max_length = 65535
+
+[node name="Title" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBox"]
+margin_top = 28.0
+margin_right = 508.0
+margin_bottom = 52.0
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBox/Title"]
+margin_top = 3.0
+margin_right = 37.0
+margin_bottom = 20.0
+text = "Name"
+
+[node name="Title" type="LineEdit" parent="PanelContainer/MarginContainer/VBox/Title"]
+margin_left = 41.0
+margin_right = 191.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 150, 0 )
+text = "Test"
+max_length = 15
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBox"]
+margin_top = 56.0
+margin_right = 508.0
+margin_bottom = 73.0
+text = "Description"
+
+[node name="Description" type="TextEdit" parent="PanelContainer/MarginContainer/VBox"]
+margin_top = 77.0
+margin_right = 508.0
+margin_bottom = 125.0
+rect_min_size = Vector2( 0, 48 )
+wrap_enabled = true
+
+[node name="HBox" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBox"]
+margin_top = 129.0
+margin_right = 508.0
+margin_bottom = 153.0
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBox/HBox"]
+margin_top = 3.0
+margin_right = 76.0
+margin_bottom = 20.0
+text = "Max Players"
+
+[node name="Max Player" type="LineEdit" parent="PanelContainer/MarginContainer/VBox/HBox"]
+margin_left = 80.0
+margin_right = 138.0
+margin_bottom = 24.0
+text = "10"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/MarginContainer/VBox"]
+margin_top = 157.0
+margin_right = 508.0
+margin_bottom = 207.0
+rect_min_size = Vector2( 0, 50 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Feedback" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBox/ScrollContainer"]
+margin_right = 508.0
+margin_bottom = 50.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[connection signal="pressed" from="PanelContainer/MarginContainer/Create" to="." method="_on_Create_pressed"]
+[connection signal="text_changed" from="PanelContainer/MarginContainer/VBox/Address/Port/Port" to="." method="_on_Port_text_changed"]
+[connection signal="text_changed" from="PanelContainer/MarginContainer/VBox/Title/Title" to="." method="_on_Title_text_changed"]
+[connection signal="text_changed" from="PanelContainer/MarginContainer/VBox/Description" to="." method="_on_Description_text_changed"]
+[connection signal="text_changed" from="PanelContainer/MarginContainer/VBox/HBox/Max Player" to="." method="_on_Max_Player_text_changed"]

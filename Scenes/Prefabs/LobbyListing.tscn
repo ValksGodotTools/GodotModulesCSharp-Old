@@ -1,0 +1,100 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/UI/UILobbyListing.cs" type="Script" id=1]
+
+[node name="Lobby" type="PanelContainer"]
+anchor_right = 1.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 0, 100 )
+size_flags_vertical = 0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+NodePathLabelTitle = NodePath("Padding/VBox Left/Name")
+NodePathLabelDescription = NodePath("Padding/VBox Left/Description")
+NodePathLabelAddress = NodePath("Padding/VBox Left/Address")
+NodePathLabelPing = NodePath("Padding/VBox Right/Ping")
+NodePathLabelPlayerCount = NodePath("Padding/VBox Right/Players")
+NodePathButtonLobby = NodePath("Btn")
+
+[node name="Btn" type="Button" parent="."]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 1017.0
+margin_bottom = 93.0
+
+[node name="Padding" type="MarginContainer" parent="."]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 1017.0
+margin_bottom = 93.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/margin_right = 15
+custom_constants/margin_top = 15
+custom_constants/margin_left = 15
+custom_constants/margin_bottom = 15
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBox Left" type="VBoxContainer" parent="Padding"]
+margin_left = 15.0
+margin_top = 15.0
+margin_right = 156.0
+margin_bottom = 65.0
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="Name" type="Label" parent="Padding/VBox Left"]
+margin_right = 141.0
+margin_bottom = 14.0
+text = "My Lobby"
+
+[node name="Description" type="Label" parent="Padding/VBox Left"]
+margin_top = 18.0
+margin_right = 141.0
+margin_bottom = 32.0
+text = "Epic lobby description"
+
+[node name="Address" type="Label" parent="Padding/VBox Left"]
+margin_top = 36.0
+margin_right = 141.0
+margin_bottom = 50.0
+text = "127.0.0.1:25565"
+
+[node name="VBox Right" type="VBoxContainer" parent="Padding"]
+margin_left = 955.0
+margin_top = 15.0
+margin_right = 995.0
+margin_bottom = 47.0
+mouse_filter = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+
+[node name="Ping" type="Label" parent="Padding/VBox Right"]
+margin_right = 40.0
+margin_bottom = 14.0
+text = "32 ms"
+align = 2
+
+[node name="Players" type="Label" parent="Padding/VBox Right"]
+margin_top = 18.0
+margin_right = 40.0
+margin_bottom = 32.0
+text = "1 / 4"
+align = 2
+
+[node name="Label" type="Label" parent="Padding"]
+margin_left = 448.0
+margin_top = 36.0
+margin_right = 562.0
+margin_bottom = 50.0
+size_flags_horizontal = 4
+text = "Can't reach server"
+
+[connection signal="focus_entered" from="Btn" to="." method="_on_Btn_focus_entered"]
+[connection signal="pressed" from="Btn" to="." method="_on_Btn_pressed"]

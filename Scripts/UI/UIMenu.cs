@@ -25,10 +25,14 @@ namespace Game
             var onlineUsername = UIOptions.Options.OnlineUsername;
 
             if (string.IsNullOrWhiteSpace(onlineUsername))
+            {
+                PopupOnlineUsername.InputUsername.Clear();
+                PopupOnlineUsername.LabelFeedback.Text = "";
                 PopupOnlineUsername.Popup_();
-
-            PopupOnlineUsername.InputUsername.Clear();
-            PopupOnlineUsername.LabelFeedback.Text = "";
+                return;
+            }
+                
+            GetTree().ChangeScene("res://Scenes/GameServers.tscn");
         }
         private void _on_Exit_pressed() => GameManager.Exit();
 
@@ -45,6 +49,8 @@ namespace Game
             UIOptions.InputUsername.Text = username;
             UIOptions.Options.OnlineUsername = username;
             PopupOnlineUsername.Hide();
+
+            GetTree().ChangeScene("res://Scenes/GameServers.tscn");
         }
     }
 }
