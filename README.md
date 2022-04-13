@@ -16,9 +16,11 @@ Server browser
 
 Todo
 - [x] Thread safety, run client on one thread, server on another
-- [ ] Server list scene / post created servers to web server / fetch all servers from web server
+- [ ] Server list scene
+- [ ] Post created servers to web server / fetch all servers from web server
+- [ ] Ping servers
 - [ ] Lobby scene
-- [ ] Generic game networking
+- [ ] Demo netcode for game scene
 
 ### Popup Menu (coming soon)
 In games usually when you press Esc a popup menu comes up asking if you want to go back to the main menu or edit the options
