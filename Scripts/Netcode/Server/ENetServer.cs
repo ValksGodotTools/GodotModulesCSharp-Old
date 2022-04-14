@@ -1,5 +1,8 @@
+using Timer = System.Timers.Timer; // ambitious reference between Godot.Timer and System.Timers.Timer
+
 using System;
 using System.IO;
+using System.Timers;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Linq;
@@ -25,6 +28,8 @@ namespace Valk.Modules.Netcode.Server
         private static Dictionary<ClientPacketOpcode, HandlePacket> HandlePacket { get; set; }
         private static Dictionary<uint, Peer> Peers { get; set; }
         private static bool QueueRestart { get; set; }
+        private static Timer TimerPing { get; set; }
+        private const int WEB_PING_INTERVAL = 10000;
 
         public override void _Ready()
         {
@@ -35,13 +40,20 @@ namespace Valk.Modules.Netcode.Server
             ENetCmd = typeof(ENetCmd).Assembly.GetTypes().Where(x => typeof(ENetCmd).IsAssignableFrom(x) && !x.IsAbstract).Select(Activator.CreateInstance).Cast<ENetCmd>().ToDictionary(x => x.Opcode, x => x);
             HandlePacket = typeof(HandlePacket).Assembly.GetTypes().Where(x => typeof(HandlePacket).IsAssignableFrom(x) && !x.IsAbstract).Select(Activator.CreateInstance).Cast<HandlePacket>().ToDictionary(x => x.Opcode, x => x);
             Peers = new Dictionary<uint, Peer>();
+            TimerPing = new Timer(WEB_PING_INTERVAL);
+            TimerPing.AutoReset = true;
+            TimerPing.Elapsed += new ElapsedEventHandler(OnTimerPingEvent);
         }
+
+        private void OnTimerPingEvent(System.Object source, ElapsedEventArgs e) => Ping();
+
+        private static async void Ping() => await WebClient.Post("localhost:4000/api/ping", new Dictionary<string, string> {{ "Name", UIGameServers.CurrentLobby.Name }});
 
         public override void _Process(float delta)
         {
-            while (GodotCmds.TryDequeue(out GodotCmd cmd)) 
+            while (GodotCmds.TryDequeue(out GodotCmd cmd))
             {
-                switch (cmd.Opcode) 
+                switch (cmd.Opcode)
                 {
                     case GodotOpcode.LogMessage:
                         GD.Print((string)cmd.Data[0]);
@@ -52,14 +64,14 @@ namespace Valk.Modules.Netcode.Server
 
         public void Start()
         {
-            if (Running) 
+            if (Running)
             {
                 GDLog("Server is running already");
                 return;
             }
 
             GDLog("Attempting to connect to server");
-            
+
             Task.Run(() => ENetThreadWorker(25565, 100));
         }
 
@@ -95,6 +107,7 @@ namespace Valk.Modules.Netcode.Server
         public void ENetThreadWorker(ushort port, int maxClients)
         {
             Running = true;
+            TimerPing.Start();
 
             Library.Initialize();
 
@@ -187,7 +200,7 @@ namespace Valk.Modules.Netcode.Server
 
             GDLog("Server stopped");
 
-            if (QueueRestart) 
+            if (QueueRestart)
             {
                 QueueRestart = false;
                 Start();
@@ -197,7 +210,7 @@ namespace Valk.Modules.Netcode.Server
         protected abstract void Connect(Event netEvent);
         protected abstract void Disconnect(Event netEvent);
         protected abstract void Timeout(Event netEvent);
-        protected static void GDLog(string text) => GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.LogMessage, Data = new List<object> { text }});
+        protected static void GDLog(string text) => GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.LogMessage, Data = new List<object> { text } });
 
         private void Send(ServerPacket gamePacket, Peer peer)
         {
@@ -222,7 +235,7 @@ namespace Valk.Modules.Netcode.Server
         public List<object> Data { get; set; }
     }
 
-    public enum ENetOpcode 
+    public enum ENetOpcode
     {
         GetOnlinePlayers,
         GetPlayerStats,
@@ -233,13 +246,13 @@ namespace Valk.Modules.Netcode.Server
         SendPlayerData
     }
 
-    public class GodotCmd 
+    public class GodotCmd
     {
         public GodotOpcode Opcode { get; set; }
         public List<object> Data { get; set; }
     }
 
-    public enum GodotOpcode 
+    public enum GodotOpcode
     {
         LogMessage
     }

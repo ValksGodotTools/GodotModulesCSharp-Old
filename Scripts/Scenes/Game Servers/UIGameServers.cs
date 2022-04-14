@@ -1,5 +1,7 @@
 using Godot;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Valk.Modules.Netcode
 {
@@ -17,6 +19,40 @@ namespace Valk.Modules.Netcode
         {
             ServerList = GetNode<VBoxContainer>(NodePathServerList);
             ServerCreationPopup = GetNode<UICreateLobby>(NodePathServerCreationPopup);
+            ListServers();
+        }
+
+        public static void AddServer(LobbyListing info)
+        {
+            var lobbyPrefab = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/LobbyListing.tscn");
+            var lobby = lobbyPrefab.Instance<UILobbyListing>();
+            lobby.Init();
+            lobby.SetInfo(info);
+            ServerList.AddChild(lobby);
+            PostServer(info);
+        }
+
+        private static async void ListServers() 
+        {
+            var servers = await WebClient.Get<LobbyListing[]>("localhost:4000/api/servers/get");
+
+            if (servers == null)
+                return;
+
+            foreach (var server in servers)
+                AddServer(server);
+        }
+
+        private static async void PostServer(LobbyListing info)
+        {
+            await WebClient.Post("localhost:4000/api/servers/post", new Dictionary<string, string>
+            {
+                { "Name", info.Name },
+                { "Ip", info.Ip },
+                { "Port", "" + info.Port },
+                { "Description", info.Description },
+                { "MaxPlayerCount", "" + info.MaxPlayerCount }
+            });
         }
 
         private void _on_Control_resized()

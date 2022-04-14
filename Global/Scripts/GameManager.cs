@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using Valk.Modules.Settings;
+using Valk.Modules.Netcode;
 using Valk.Modules.Netcode.Client;
 using Valk.Modules.Netcode.Server;
 
@@ -11,6 +12,7 @@ namespace Valk.Modules
     {
         public static GameServer GameServer { get; set; }
         public static GameClient GameClient { get; set; }
+        public static WebClient WebClient { get; set; }
         private static GameManager Instance { get; set; }
         public static bool OptionsCreatedForFirstTime { get; set; }
 
@@ -20,6 +22,7 @@ namespace Valk.Modules
             InitOptions();
             InitClient();
             InitServer();
+            InitWebClient();
         }
 
         public override void _Notification(int what)
@@ -54,6 +57,13 @@ namespace Valk.Modules
             Instance.AddChild(GameServer);
         }
 
+        private static void InitWebClient()
+        {
+            WebClient = new WebClient();
+            WebClient.Name = "Web Client";
+            Instance.AddChild(WebClient);
+        }
+
         /// <summary>
         /// This should be used instead of GetTree().Quit() has it will handle cleanup and saving options
         /// Note that if the console is closed directly then the cleanup will never happen, this should be avoided.
@@ -66,6 +76,7 @@ namespace Valk.Modules
         private static void ExitCleanup()
         {
             UIOptions.SaveOptions();
+            WebClient.Client.Dispose();
 
             Instance.GetTree().Quit();
         }

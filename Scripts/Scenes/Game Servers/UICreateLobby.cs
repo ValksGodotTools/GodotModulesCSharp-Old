@@ -1,8 +1,10 @@
 using Godot;
+using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Net.Http;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Text.RegularExpressions;
 using Valk.Modules.Settings;
 
@@ -33,7 +35,7 @@ namespace Valk.Modules.Netcode
             VBoxFeedback = GetNode<VBoxContainer>(NodePathVBoxFeedback);
         }
 
-        private Label AddFeedback(string text) 
+        private Label AddFeedback(string text)
         {
             var label = new Label { Text = text };
             VBoxFeedback.AddChild(label);
@@ -48,7 +50,7 @@ namespace Valk.Modules.Netcode
             InputMaxPlayerCount.Text = "10";
         }
 
-        public void ClearFeedback() 
+        public void ClearFeedback()
         {
             foreach (Control child in VBoxFeedback.GetChildren())
                 child.QueueFree();
@@ -56,7 +58,7 @@ namespace Valk.Modules.Netcode
 
         private void _on_Title_text_changed(string text) => Validate("title", text, "^[A-Za-z ]{3,15}$", "Name must contain only letters and have length of 3 to 15 characters");
         private void _on_Port_text_changed(string text) => Validate("port", text, "^[0-9]{1,65535}$", "Invalid Port: Please enter a valid number");
-        private void _on_Description_text_changed() 
+        private void _on_Description_text_changed()
         {
             if (InputDescription.Text.Trim().Length > 250)
                 Feedback["description"] = "Description exceeded max character limit of 250 characters";
@@ -65,7 +67,7 @@ namespace Valk.Modules.Netcode
 
             UpdateFeedback();
         }
-        private void _on_Max_Player_text_changed(string text) 
+        private void _on_Max_Player_text_changed(string text)
         {
             if (!int.TryParse(text.Trim(), out int maxCount))
                 Feedback["maxPlayers"] = "Invalid Max Players: Please enter a valid number";
@@ -82,7 +84,7 @@ namespace Valk.Modules.Netcode
             ClearFeedback();
 
             foreach (var text in Feedback.Values)
-                if (text != "") 
+                if (text != "")
                     AddFeedback(text);
         }
 
@@ -90,7 +92,7 @@ namespace Valk.Modules.Netcode
 
         private void Validate(string key, string text, string pattern, string feedback)
         {
-            if (!Regex.IsMatch(text.Trim(), pattern)) 
+            if (!Regex.IsMatch(text.Trim(), pattern))
                 Feedback[key] = feedback;
             else
                 Feedback[key] = "";
@@ -98,39 +100,30 @@ namespace Valk.Modules.Netcode
             UpdateFeedback();
         }
 
-        private string GetExternalIp() 
-        {
-            string externalIpString = new WebClient().DownloadString("http://icanhazip.com").Replace("\\r\\n", "").Replace("\\n", "").Trim();
-            return IPAddress.Parse(externalIpString).ToString();
-        }
-
         private void _on_Create_pressed()
         {
             if (!IsValid())
                 return;
 
-            var lobbyPrefab = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/LobbyListing.tscn");
-
             var port = ushort.Parse(InputPort.Text.Trim());
-            var externalIp = GetExternalIp();
-
-            var lobby = lobbyPrefab.Instance<UILobbyListing>();
-            lobby.Init();
-            lobby.SetInfo(new LobbyListing {
+            var externalIp = WebClient.GetExternalIp();
+            var info = new LobbyListing
+            {
                 Name = InputTitle.Text.Trim(),
                 Ip = externalIp,
                 Port = port,
                 Description = InputDescription.Text.Trim(),
                 MaxPlayerCount = int.Parse(InputMaxPlayerCount.Text.Trim()),
                 LobbyHost = UIOptions.Options.OnlineUsername
-            });
+            };
 
-            UIGameServers.ServerList.AddChild(lobby);
+            UIGameServers.AddServer(info);
+            UIGameServers.CurrentLobby = info;
 
             GameManager.GameServer.Start();
             GameManager.GameClient.Connect(externalIp, port);
 
-            UIGameServers.CurrentLobby = lobby.Info;
+            
             GetTree().ChangeScene("res://Scenes/Lobby.tscn");
 
             Hide();
