@@ -13,6 +13,7 @@ using Common.Netcode;
 using ENet;
 using Godot;
 using Common.Game;
+using Valk.Modules.Netcode;
 
 namespace Valk.Modules.Netcode.Server
 {
@@ -28,8 +29,7 @@ namespace Valk.Modules.Netcode.Server
         private static Dictionary<ClientPacketOpcode, HandlePacket> HandlePacket { get; set; }
         private static Dictionary<uint, Peer> Peers { get; set; }
         private static bool QueueRestart { get; set; }
-        private static Timer TimerPing { get; set; }
-        private const int WEB_PING_INTERVAL = 10000;
+        public static Timer TimerPingMasterServer { get; set; }
 
         public override void _Ready()
         {
@@ -40,14 +40,10 @@ namespace Valk.Modules.Netcode.Server
             ENetCmd = typeof(ENetCmd).Assembly.GetTypes().Where(x => typeof(ENetCmd).IsAssignableFrom(x) && !x.IsAbstract).Select(Activator.CreateInstance).Cast<ENetCmd>().ToDictionary(x => x.Opcode, x => x);
             HandlePacket = typeof(HandlePacket).Assembly.GetTypes().Where(x => typeof(HandlePacket).IsAssignableFrom(x) && !x.IsAbstract).Select(Activator.CreateInstance).Cast<HandlePacket>().ToDictionary(x => x.Opcode, x => x);
             Peers = new Dictionary<uint, Peer>();
-            TimerPing = new Timer(WEB_PING_INTERVAL);
-            TimerPing.AutoReset = true;
-            TimerPing.Elapsed += new ElapsedEventHandler(OnTimerPingEvent);
+            TimerPingMasterServer = new Timer(WebClient.WEB_PING_INTERVAL);
+            TimerPingMasterServer.AutoReset = true;
+            TimerPingMasterServer.Elapsed += new ElapsedEventHandler(WebClient.OnTimerPingMasterServerEvent);
         }
-
-        private void OnTimerPingEvent(System.Object source, ElapsedEventArgs e) => Ping();
-
-        private static async void Ping() => await WebClient.Post("localhost:4000/api/ping", new Dictionary<string, string> {{ "Name", UIGameServers.CurrentLobby.Name }});
 
         public override void _Process(float delta)
         {
@@ -107,7 +103,8 @@ namespace Valk.Modules.Netcode.Server
         public void ENetThreadWorker(ushort port, int maxClients)
         {
             Running = true;
-            TimerPing.Start();
+            if (UIGameServers.CurrentLobby.Public)
+                TimerPingMasterServer.Start();
 
             Library.Initialize();
 
