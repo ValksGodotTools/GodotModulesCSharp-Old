@@ -36,10 +36,10 @@ namespace Valk.Modules.Netcode
         {
             var servers = await WebClient.Get<LobbyListing[]>("localhost:4000/api/servers/get");
 
-            if (servers == null)
+            if (servers.Status == WebServerStatus.ERROR)
                 return;
 
-            foreach (var server in servers)
+            foreach (var server in servers.Content)
                 AddServer(server);
         }
 
