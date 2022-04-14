@@ -1,3 +1,5 @@
+using Timer = System.Timers.Timer; // ambitious reference between Godot.Timer and System.Timers.Timer
+
 using Newtonsoft.Json;
 using Godot;
 using System;
@@ -5,42 +7,74 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Timers;
+using Valk.Modules.Netcode.Server;
 
 namespace Valk.Modules.Netcode
 {
     public class WebClient : Node
     {
         public static HttpClient Client { get; set; }
+        private static int FailedPingAttempts { get; set; }
+        public const int WEB_PING_INTERVAL = 10000;
 
-        public WebClient() => Client = new HttpClient();
+        public WebClient() 
+        {
+            Client = new HttpClient();
+            Client.Timeout = TimeSpan.FromSeconds(5);
+        }
 
-        public static async Task<string> Post(string url, Dictionary<string, string> values)
+        public static async Task<WebServerResponse<string>> Post(string url, Dictionary<string, string> values)
         {
             try
             {
                 var data = new FormUrlEncodedContent(values);
                 var response = await Client.PostAsync($"http://{url}", data);
                 var content = await response.Content.ReadAsStringAsync();
-                return content;
+                return new WebServerResponse<string>{
+                    Status = WebServerStatus.OK,
+                    Content = content
+                };
             }
-            catch (HttpRequestException)
+            catch (HttpRequestException e)
             {
-                return $"Failed POST request, could not reach http://{url}";
+                return new WebServerResponse<string>{
+                    Status = WebServerStatus.ERROR,
+                    Exception = e
+                };
             }
         }
 
-        public static async Task<T> Get<T>(string url)
+        public static async Task<WebServerResponse<T>> Get<T>(string url)
         {
             try
             {
                 var response = await Client.GetAsync($"http://{url}");
                 var content = await response.Content.ReadAsStringAsync();
                 var obj = JsonConvert.DeserializeObject<T>(content);
-                return obj;
+                return new WebServerResponse<T>{
+                    Status = WebServerStatus.OK,
+                    Content = obj
+                };
             }
-            catch (HttpRequestException)
+            catch (HttpRequestException e)
             {
-                return default(T);
+                return new WebServerResponse<T>{
+                    Status = WebServerStatus.ERROR,
+                    Exception = e
+                };
+            }
+        }
+
+        public static async void OnTimerPingMasterServerEvent(System.Object source, ElapsedEventArgs e) 
+        {
+            var res = await WebClient.Post("localhost:4000/api/ping", new Dictionary<string, string> {{ "Name", UIGameServers.CurrentLobby.Name }});
+
+            if (res.Status == WebServerStatus.ERROR) 
+            {
+                FailedPingAttempts++;
+                if (FailedPingAttempts > 3)
+                    ENetServer.TimerPingMasterServer.Stop();
             }
         }
 
@@ -49,5 +83,18 @@ namespace Valk.Modules.Netcode
             string externalIpString = new System.Net.WebClient().DownloadString("http://icanhazip.com").Replace("\\r\\n", "").Replace("\\n", "").Trim();
             return IPAddress.Parse(externalIpString).ToString();
         }
+    }
+
+    public struct WebServerResponse<T>
+    {
+        public WebServerStatus Status { get; set; }
+        public HttpRequestException Exception { get; set; }
+        public T Content { get; set; }
+    }
+
+    public enum WebServerStatus 
+    {
+        OK,
+        ERROR
     }
 }
