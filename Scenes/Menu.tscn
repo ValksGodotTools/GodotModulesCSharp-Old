@@ -32,7 +32,7 @@ margin_bottom = 599.0
 
 [node name="Grid" type="GridContainer" parent="PanelContainer/ScrollContainer"]
 margin_right = 804.0
-margin_bottom = 561.0
+margin_bottom = 300.0
 columns = 2
 
 [node name="ModLoader" parent="PanelContainer/ScrollContainer/Grid" instance=ExtResource( 2 )]
@@ -50,6 +50,7 @@ margin_right = 804.0
 margin_bottom = 212.0
 
 [node name="ServerManager" parent="PanelContainer/ScrollContainer/Grid" instance=ExtResource( 1 )]
+visible = false
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 304.0

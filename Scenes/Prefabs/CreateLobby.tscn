@@ -8,7 +8,7 @@ margin_left = 287.0
 margin_top = 175.0
 margin_right = 737.0
 margin_bottom = 425.0
-rect_min_size = Vector2( 550, 300 )
+rect_min_size = Vector2( 550, 350 )
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme = ExtResource( 2 )
@@ -19,8 +19,11 @@ __meta__ = {
 NodePathInputTitle = NodePath("PanelContainer/MarginContainer/VBox/Title/Title")
 NodePathInputPort = NodePath("PanelContainer/MarginContainer/VBox/Address/Port/Port")
 NodePathInputDescription = NodePath("PanelContainer/MarginContainer/VBox/Description")
-NodePathMaxPlayerCount = NodePath("PanelContainer/MarginContainer/VBox/HBox/Max Player")
+NodePathMaxPlayerCount = NodePath("PanelContainer/MarginContainer/VBox/Max Players/Max Player")
 NodePathVBoxFeedback = NodePath("PanelContainer/MarginContainer/VBox/ScrollContainer/Feedback")
+NodePathPublic = NodePath("PanelContainer/MarginContainer/VBox/Public/Public")
+NodePathNumPingChecks = NodePath("PanelContainer/MarginContainer/VBox/Ping Checks/NumAttempts")
+NodePathNumPingChecksEnabled = NodePath("PanelContainer/MarginContainer/VBox/Ping Checks/TogglePingChecks")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 anchor_right = 1.0
@@ -33,7 +36,7 @@ __meta__ = {
 margin_left = 1.0
 margin_top = 1.0
 margin_right = 549.0
-margin_bottom = 299.0
+margin_bottom = 349.0
 custom_constants/margin_right = 20
 custom_constants/margin_top = 20
 custom_constants/margin_left = 20
@@ -41,9 +44,9 @@ custom_constants/margin_bottom = 20
 
 [node name="Create" type="Button" parent="PanelContainer/MarginContainer"]
 margin_left = 229.0
-margin_top = 255.0
+margin_top = 305.0
 margin_right = 318.0
-margin_bottom = 278.0
+margin_bottom = 328.0
 size_flags_horizontal = 4
 size_flags_vertical = 8
 text = "Create Lobby"
@@ -52,7 +55,7 @@ text = "Create Lobby"
 margin_left = 20.0
 margin_top = 20.0
 margin_right = 528.0
-margin_bottom = 206.0
+margin_bottom = 260.0
 size_flags_vertical = 0
 
 [node name="Address" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBox"]
@@ -74,6 +77,7 @@ margin_right = 106.0
 margin_bottom = 17.0
 rect_min_size = Vector2( 75, 0 )
 text = "25565"
+align = 1
 max_length = 65535
 
 [node name="Title" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBox"]
@@ -107,26 +111,74 @@ margin_bottom = 111.0
 rect_min_size = Vector2( 0, 48 )
 wrap_enabled = true
 
-[node name="HBox" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBox"]
+[node name="Max Players" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBox"]
 margin_top = 115.0
 margin_right = 508.0
 margin_bottom = 132.0
 
-[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBox/HBox"]
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBox/Max Players"]
 margin_right = 76.0
 margin_bottom = 17.0
 text = "Max Players"
 
-[node name="Max Player" type="LineEdit" parent="PanelContainer/MarginContainer/VBox/HBox"]
+[node name="Max Player" type="LineEdit" parent="PanelContainer/MarginContainer/VBox/Max Players"]
 margin_left = 80.0
 margin_right = 130.0
 margin_bottom = 17.0
 text = "10"
+align = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/MarginContainer/VBox"]
+[node name="Public" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBox"]
 margin_top = 136.0
 margin_right = 508.0
+margin_bottom = 159.0
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBox/Public"]
+margin_top = 3.0
+margin_right = 38.0
+margin_bottom = 20.0
+text = "Public"
+
+[node name="Public" type="CheckBox" parent="PanelContainer/MarginContainer/VBox/Public"]
+margin_left = 42.0
+margin_right = 64.0
+margin_bottom = 23.0
+pressed = true
+
+[node name="Ping Checks" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBox"]
+margin_top = 163.0
+margin_right = 508.0
 margin_bottom = 186.0
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBox/Ping Checks"]
+margin_top = 3.0
+margin_right = 199.0
+margin_bottom = 20.0
+text = "Stop pinging master server after"
+
+[node name="NumAttempts" type="LineEdit" parent="PanelContainer/MarginContainer/VBox/Ping Checks"]
+margin_left = 203.0
+margin_right = 253.0
+margin_bottom = 23.0
+text = "3"
+align = 1
+
+[node name="Label2" type="Label" parent="PanelContainer/MarginContainer/VBox/Ping Checks"]
+margin_left = 257.0
+margin_top = 3.0
+margin_right = 351.0
+margin_bottom = 20.0
+text = "failed attempts"
+
+[node name="TogglePingChecks" type="CheckBox" parent="PanelContainer/MarginContainer/VBox/Ping Checks"]
+margin_left = 355.0
+margin_right = 377.0
+margin_bottom = 23.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/MarginContainer/VBox"]
+margin_top = 190.0
+margin_right = 508.0
+margin_bottom = 240.0
 rect_min_size = Vector2( 0, 50 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -141,4 +193,5 @@ size_flags_vertical = 3
 [connection signal="text_changed" from="PanelContainer/MarginContainer/VBox/Address/Port/Port" to="." method="_on_Port_text_changed"]
 [connection signal="text_changed" from="PanelContainer/MarginContainer/VBox/Title/Title" to="." method="_on_Title_text_changed"]
 [connection signal="text_changed" from="PanelContainer/MarginContainer/VBox/Description" to="." method="_on_Description_text_changed"]
-[connection signal="text_changed" from="PanelContainer/MarginContainer/VBox/HBox/Max Player" to="." method="_on_Max_Player_text_changed"]
+[connection signal="text_changed" from="PanelContainer/MarginContainer/VBox/Max Players/Max Player" to="." method="_on_Max_Player_text_changed"]
+[connection signal="text_changed" from="PanelContainer/MarginContainer/VBox/Ping Checks/NumAttempts" to="." method="_on_NumAttempts_text_changed"]
