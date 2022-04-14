@@ -21,7 +21,7 @@ namespace Valk.Modules.ModLoader
 
         public static void Init()
         {
-            PathMods = FindModsPath();
+            PathMods = Path.Combine(FileManager.GetGameDataPath(), "Mods");
             PathModsEnabled = Path.Combine(PathMods, "enabled.json");
 
             Directory.CreateDirectory(PathMods);
@@ -239,20 +239,6 @@ namespace Valk.Modules.ModLoader
             }
 
             return mods;
-        }
-
-        private static string FindModsPath()
-        {
-            string pathExeDir;
-
-            if (Godot.OS.HasFeature("standalone")) // check if game is exported
-                // set to exported release dir
-                pathExeDir = $"{Directory.GetParent(Godot.OS.GetExecutablePath()).FullName}";
-            else
-                // set to project dir
-                pathExeDir = Godot.ProjectSettings.GlobalizePath("res://") + ModsProjectPath;
-
-            return Path.Combine(pathExeDir, "Mods");
         }
     }
 

@@ -81,7 +81,7 @@ namespace Valk.Modules.Settings
             OS.VsyncEnabled = Options.VSync;
         }
 
-        public static string PathOptions => System.IO.Path.Combine(FileManager.GetProjectPath(), "options.json");
+        public static string PathOptions => System.IO.Path.Combine(FileManager.GetGameDataPath(), "options.json");
         public static void SaveOptions() => FileManager.WriteConfig(PathOptions, Options);
 
         private static void SetupFullscreenOptions()
