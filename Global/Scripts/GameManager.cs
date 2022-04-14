@@ -10,6 +10,7 @@ namespace Valk.Modules
     // GameManager is attached to Global.tscn which is in AutoLoad
     public class GameManager : Node
     {
+        public static string GameName { get; set; }
         public static GameServer GameServer { get; set; }
         public static GameClient GameClient { get; set; }
         public static WebClient WebClient { get; set; }
@@ -18,6 +19,7 @@ namespace Valk.Modules
 
         public override void _Ready()
         {
+            GameName = "Godot Modules";
             Instance = this;
             InitOptions();
             InitClient();
@@ -76,6 +78,7 @@ namespace Valk.Modules
         private static void ExitCleanup()
         {
             UIOptions.SaveOptions();
+            WebClient.Client.CancelPendingRequests();
             WebClient.Client.Dispose();
 
             Instance.GetTree().Quit();
