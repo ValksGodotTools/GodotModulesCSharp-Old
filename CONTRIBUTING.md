@@ -16,7 +16,7 @@ VSCode is a UI friendly text editor for developers
     - [C# Tools for Godot](https://marketplace.visualstudio.com/items?itemName=neikeq.godot-csharp-vscode)
     - [godot-tools](https://marketplace.visualstudio.com/items?itemName=geequlim.godot-tools)
     - [Mono Debug](https://marketplace.visualstudio.com/items?itemName=ms-vscode.mono-debug)
-    - [MoonSharp Debug](https://marketplace.visualstudio.com/items?itemName=xanathar.moonsharp-debug)
+    - [MoonSharp Debug](https://marketplace.visualstudio.com/items?itemName=xanathar.moonsharp-debug) (only if debugging lua)
 3. Launch Godot through VSCode by hitting `F1` to open up VSCode command and run `godot tools: open workspace with godot editor` or simply click the `Open Godot Editor` button bottom right
 
 ## Debugging
