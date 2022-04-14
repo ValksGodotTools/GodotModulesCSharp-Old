@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Text.RegularExpressions;
 using Valk.Modules.Settings;
+using Valk.Modules;
 
 namespace Valk.Modules.Netcode
 {
@@ -17,12 +18,18 @@ namespace Valk.Modules.Netcode
         [Export] public readonly NodePath NodePathInputDescription;
         [Export] public readonly NodePath NodePathMaxPlayerCount;
         [Export] public readonly NodePath NodePathVBoxFeedback;
+        [Export] public readonly NodePath NodePathPublic;
+        [Export] public readonly NodePath NodePathNumPingChecks;
+        [Export] public readonly NodePath NodePathNumPingChecksEnabled;
 
         private LineEdit InputTitle { get; set; }
         private LineEdit InputPort { get; set; }
         private TextEdit InputDescription { get; set; }
         private LineEdit InputMaxPlayerCount { get; set; }
         private VBoxContainer VBoxFeedback { get; set; }
+        private CheckBox Public { get; set; }
+        private LineEdit NumPingChecks { get; set; }
+        private CheckBox NumPingChecksEnabled { get; set; }
 
         private static Dictionary<string, string> Feedback = new Dictionary<string, string>();
 
@@ -33,6 +40,9 @@ namespace Valk.Modules.Netcode
             InputDescription = GetNode<TextEdit>(NodePathInputDescription);
             InputMaxPlayerCount = GetNode<LineEdit>(NodePathMaxPlayerCount);
             VBoxFeedback = GetNode<VBoxContainer>(NodePathVBoxFeedback);
+            Public = GetNode<CheckBox>(NodePathPublic);
+            NumPingChecks = GetNode<LineEdit>(NodePathNumPingChecks);
+            NumPingChecksEnabled = GetNode<CheckBox>(NodePathNumPingChecksEnabled);
         }
 
         private Label AddFeedback(string text)
@@ -56,25 +66,20 @@ namespace Valk.Modules.Netcode
                 child.QueueFree();
         }
 
+        private static int ValidatedMaxPlayerCount = 10;
+        private static int ValidatedNumPingAttempts = 3;
+        private static int ValidatedPort = 25565;
+
         private void _on_Title_text_changed(string text) => Validate("title", text, "^[A-Za-z ]{3,15}$", "Name must contain only letters and have length of 3 to 15 characters");
-        private void _on_Port_text_changed(string text) => Validate("port", text, "^[0-9]{1,65535}$", "Invalid Port: Please enter a valid number");
+        private void _on_Port_text_changed(string text) => Validator.ValidateNumber(InputPort, text, 65535, ref ValidatedPort);
+        private void _on_Max_Player_text_changed(string text) => Validator.ValidateNumber(InputMaxPlayerCount, text, 999, ref ValidatedMaxPlayerCount);
+        private void _on_NumAttempts_text_changed(string text) => Validator.ValidateNumber(NumPingChecks, text, 99, ref ValidatedNumPingAttempts);
         private void _on_Description_text_changed()
         {
             if (InputDescription.Text.Trim().Length > 250)
                 Feedback["description"] = "Description exceeded max character limit of 250 characters";
             else
                 Feedback["description"] = "";
-
-            UpdateFeedback();
-        }
-        private void _on_Max_Player_text_changed(string text)
-        {
-            if (!int.TryParse(text.Trim(), out int maxCount))
-                Feedback["maxPlayers"] = "Invalid Max Players: Please enter a valid number";
-            else if (maxCount <= 0 || maxCount >= 1000)
-                Feedback["maxPlayers"] = "Invalid Max Players: Please enter a number between 1 and 999";
-            else
-                Feedback["maxPlayers"] = "";
 
             UpdateFeedback();
         }
@@ -113,8 +118,11 @@ namespace Valk.Modules.Netcode
                 Ip = externalIp,
                 Port = port,
                 Description = InputDescription.Text.Trim(),
-                MaxPlayerCount = int.Parse(InputMaxPlayerCount.Text.Trim()),
-                LobbyHost = UIOptions.Options.OnlineUsername
+                MaxPlayerCount = ValidatedMaxPlayerCount,
+                LobbyHost = UIOptions.Options.OnlineUsername,
+                Public = Public.Pressed,
+                NumPingChecks = ValidatedNumPingAttempts,
+                NumPingChecksEnabled = NumPingChecksEnabled.Pressed
             };
 
             UIGameServers.AddServer(info);
@@ -123,7 +131,7 @@ namespace Valk.Modules.Netcode
             GameManager.GameServer.Start();
             GameManager.GameClient.Connect(externalIp, port);
 
-            
+
             GetTree().ChangeScene("res://Scenes/Lobby.tscn");
 
             Hide();
