@@ -10,4 +10,5 @@ data_*/
 
 # User-specific ignores
 Mods/
+Server/
 options.json
