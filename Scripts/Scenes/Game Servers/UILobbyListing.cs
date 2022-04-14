@@ -61,5 +61,8 @@ namespace Valk.Modules.Netcode
         public ushort Port { get; set; }
         public string LobbyHost { get; set; }
         public int MaxPlayerCount { get; set; }
+        public bool Public { get; set; }
+        public int NumPingChecks { get; set; }
+        public bool NumPingChecksEnabled { get; set; }
     }
 }
