@@ -25,7 +25,7 @@ Todo
 - [x] Thread safety, run client on one thread, server on another
 - [ ] Server list scene (wip)
 - [ ] Lobby scene (wip)
-- [ ] Post created servers to NodeJS web server / fetch all servers from web server
+- [x] Post created servers to [NodeJS web server](https://github.com/valkyrienyanko/GodotListServers) / fetch all servers
 - [ ] Add packets for pinging servers
 - [ ] Demo netcode for game scene (playing around with syncing player positions, and perhaps other things)
 
