@@ -13,7 +13,7 @@ I was thinking to myself, I want to make a bullet hell game, but I'm also going 
 ### [Options](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/OPTIONS.md)  
 ![image](https://user-images.githubusercontent.com/6277739/163117944-e350b70c-aaaa-426f-8719-3c28648d5747.png)  
 
-### ENet-CSharp (wip)
+### [Netcode](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/NETCODE.md) (wip)
 Realtime client-side checks  
 ![image](https://user-images.githubusercontent.com/6277739/163118366-42523efa-33ab-4b0e-939f-3fba74618c83.png)  
 Server browser  
