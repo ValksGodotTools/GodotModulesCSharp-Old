@@ -1,15 +1,9 @@
 using Godot;
-using Newtonsoft.Json;
-using System;
-using System.Net;
-using System.Net.Http;
+using GodotModules.Settings;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Text.RegularExpressions;
-using Valk.Modules.Settings;
-using Valk.Modules;
 
-namespace Valk.Modules.Netcode
+namespace GodotModules.Netcode
 {
     public class UICreateLobby : WindowDialog
     {
@@ -71,9 +65,13 @@ namespace Valk.Modules.Netcode
         private static int ValidatedPort = 25565;
 
         private void _on_Title_text_changed(string text) => Validate("title", text, "^[A-Za-z ]{3,15}$", "Name must contain only letters and have length of 3 to 15 characters");
+
         private void _on_Port_text_changed(string text) => Validator.ValidateNumber(InputPort, text, 65535, ref ValidatedPort);
+
         private void _on_Max_Player_text_changed(string text) => Validator.ValidateNumber(InputMaxPlayerCount, text, 999, ref ValidatedMaxPlayerCount);
+
         private void _on_NumAttempts_text_changed(string text) => Validator.ValidateNumber(NumPingChecks, text, 99, ref ValidatedNumPingAttempts);
+
         private void _on_Description_text_changed()
         {
             if (InputDescription.Text.Trim().Length > 250)
@@ -131,7 +129,6 @@ namespace Valk.Modules.Netcode
 
             GameManager.GameServer.Start();
             GameManager.GameClient.Connect(externalIp, port);
-
 
             GetTree().ChangeScene("res://Scenes/Lobby.tscn");
 

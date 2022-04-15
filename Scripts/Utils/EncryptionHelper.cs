@@ -1,11 +1,11 @@
 using System;
 using System.IO;
-using System.Text;
 using System.Security.Cryptography;
+using System.Text;
 
-namespace Valk.Modules 
+namespace GodotModules
 {
-    public static class EncryptionHelper 
+    public static class EncryptionHelper
     {
         public static string Encrypt(string clearText)
         {
@@ -32,7 +32,7 @@ namespace Valk.Modules
             }
             return clearText;
         }
-        
+
         public static string Decrypt(string cipherText)
         {
             string EncryptionKey = "secret";

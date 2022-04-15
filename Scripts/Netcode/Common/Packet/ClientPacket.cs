@@ -4,7 +4,7 @@ namespace Common.Netcode
     {
         public ClientPacket(byte opcode, IWritable writable = null)
         {
-            using (var writer = new PacketWriter()) 
+            using (var writer = new PacketWriter())
             {
                 writer.Write(opcode);
                 if (writable != null) writable.Write(writer);

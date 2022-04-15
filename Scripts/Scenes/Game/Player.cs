@@ -7,7 +7,7 @@ namespace Game
         [Export] public float Speed = 250f;
         public int Health = 100;
 
-        public Player() 
+        public Player()
         {
             SetHealth(100);
         }
@@ -38,5 +38,4 @@ namespace Game
             GameMaster.LabelPlayerHealth.Text = $"Health: {v}";
         }
     }
-
 }

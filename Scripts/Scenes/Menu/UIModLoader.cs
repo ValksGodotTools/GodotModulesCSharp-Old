@@ -1,7 +1,7 @@
 using Godot;
 using System.Collections.Generic;
 
-namespace Valk.Modules.ModLoader 
+namespace GodotModules.ModLoader
 {
     public class UIModLoader : Control
     {
@@ -14,11 +14,13 @@ namespace Valk.Modules.ModLoader
 
         // mod list
         public static VBoxContainer ModList { get; set; } // where the ModInfo children are added
+
         public static Dictionary<string, UIModInfo> ModInfoList = new Dictionary<string, UIModInfo>(); // references to the ModInfo children added to the ModList VBoxContainer
         public static Dictionary<string, UIModInfo> ModInfoDependencyList = new Dictionary<string, UIModInfo>(); // refernces to the ModInfo children in the dependency list if any
 
         // mod info
         public static Label ModName { get; set; }
+
         public static Label ModGameVersions { get; set; }
         public static VBoxContainer ModDependencies { get; set; }
         public static Label ModDescription { get; set; }
@@ -47,6 +49,7 @@ namespace Valk.Modules.ModLoader
         }
 
         public static void ClearLog() => Logger.Clear();
+
         public static void Log(string text) => Logger.AddText($"{text}\n");
 
         public static void UpdateModInfo(string name)
@@ -63,13 +66,13 @@ namespace Valk.Modules.ModLoader
 
             var description = modInfo.Description == null ? "" : modInfo.Description;
             ModDescription.Text = description;
-            
+
             var modsEnabled = ModLoader.ModsEnabled;
             var modInfoPrefab = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/ModInfo.tscn");
-            
+
             ModInfoDependencyList.Clear();
 
-            foreach (var dependency in modInfo.Dependencies) 
+            foreach (var dependency in modInfo.Dependencies)
             {
                 var instance = CreateModInfoInstance(dependency);
                 instance.DisplayedInDependencies = true;

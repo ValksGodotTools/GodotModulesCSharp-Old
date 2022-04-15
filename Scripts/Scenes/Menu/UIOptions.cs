@@ -1,8 +1,7 @@
 using Godot;
-using System;
 using System.Collections.Generic;
 
-namespace Valk.Modules.Settings
+namespace GodotModules.Settings
 {
     public class UIOptions : Node
     {
@@ -39,7 +38,6 @@ namespace Valk.Modules.Settings
             ApplyOptions();
         }
 
-
         private static void ApplyOptions()
         {
             Options = FileManager.GetConfig<Options>(PathOptions);
@@ -47,7 +45,7 @@ namespace Valk.Modules.Settings
             if (GameManager.OptionsCreatedForFirstTime)
             {
                 // defaults
-                Options = new Options 
+                Options = new Options
                 {
                     Resolution = SupportedResolutions.Count - 1,
                     FullscreenMode = 0,
@@ -66,9 +64,9 @@ namespace Valk.Modules.Settings
             SliderSFX.Value = Options.VolumeSFX;
             VSync.Pressed = Options.VSync;
             InputUsername.Text = Options.OnlineUsername;
-                
+
             // apply settings
-            if (Options.FullscreenMode == FullscreenMode.Windowed) 
+            if (Options.FullscreenMode == FullscreenMode.Windowed)
             {
                 OS.WindowSize = SupportedResolutions[Options.Resolution];
                 CenterWindow();
@@ -82,6 +80,7 @@ namespace Valk.Modules.Settings
         }
 
         public static string PathOptions => System.IO.Path.Combine(FileManager.GetGameDataPath(), "options.json");
+
         public static void SaveOptions() => FileManager.WriteConfig(PathOptions, Options);
 
         private static void SetupFullscreenOptions()
@@ -97,7 +96,7 @@ namespace Valk.Modules.Settings
         /// This gets the supported resolutions based off OS.GetScreenSize()
         /// </summary>
         /// <returns>The supported resolutions of the monitor</returns>
-        private static Dictionary<int, Vector2> GetSupportedResolutions() 
+        private static Dictionary<int, Vector2> GetSupportedResolutions()
         {
             var supportedResolutions = new Dictionary<int, Vector2>();
 
@@ -136,9 +135,11 @@ namespace Valk.Modules.Settings
                 case FullscreenMode.Windowed:
                     SetWindowedMode();
                     break;
+
                 case FullscreenMode.Borderless:
                     SetFullscreenBorderless();
                     break;
+
                 case FullscreenMode.Fullscreen:
                     OS.WindowFullscreen = true;
                     break;

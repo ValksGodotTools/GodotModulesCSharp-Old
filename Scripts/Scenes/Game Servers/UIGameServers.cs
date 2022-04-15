@@ -1,9 +1,7 @@
 using Godot;
-using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
-namespace Valk.Modules.Netcode
+namespace GodotModules.Netcode
 {
     public class UIGameServers : Control
     {
@@ -31,7 +29,7 @@ namespace Valk.Modules.Netcode
             ServerList.AddChild(lobby);
         }
 
-        private static async void ListServers() 
+        private static async void ListServers()
         {
             var res = await WebClient.Get<LobbyListing[]>("servers/get");
 

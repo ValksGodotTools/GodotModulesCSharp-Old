@@ -1,17 +1,17 @@
-using ENet;
 using Common.Netcode;
-using Valk.Modules.Settings;
+using ENet;
+using GodotModules.Settings;
 
-namespace Valk.Modules.Netcode.Client
+namespace GodotModules.Netcode.Client
 {
-    public class GameClient : ENetClient 
+    public class GameClient : ENetClient
     {
         protected override void ProcessGodotCommands(GodotCmd cmd)
         {
             switch (cmd.Opcode)
             {
                 case GodotOpcode.AddPlayerToLobbyList:
-                    UILobby.AddPlayer((string)cmd.Data[0]);
+                    UILobby.AddPlayer((string)cmd.Data);
                     break;
             }
         }
@@ -19,7 +19,8 @@ namespace Valk.Modules.Netcode.Client
         protected override void Connect(Event netEvent)
         {
             GDLog("Client connected to server");
-            Outgoing.Enqueue(new ClientPacket((byte)ClientPacketOpcode.LobbyJoin, new WPacketLobbyJoin {
+            Outgoing.Enqueue(new ClientPacket((byte)ClientPacketOpcode.LobbyJoin, new WPacketLobbyJoin
+            {
                 Username = UIOptions.Options.OnlineUsername
             }));
         }
@@ -27,6 +28,14 @@ namespace Valk.Modules.Netcode.Client
         protected override void Timeout(Event netEvent)
         {
             GDLog("Client connection timeout");
+        }
+
+        protected override void Receive(ServerPacketOpcode opcode, PacketReader reader)
+        {
+            if (opcode == ServerPacketOpcode.LobbyJoin)
+            {
+                //var data = new RPacketLobbyJoin(reader);
+            }
         }
 
         protected override void Disconnect(Event netEvent)

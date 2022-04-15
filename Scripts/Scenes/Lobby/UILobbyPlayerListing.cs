@@ -1,7 +1,6 @@
 using Godot;
-using System;
 
-namespace Valk.Modules.Netcode
+namespace GodotModules.Netcode
 {
     public class UILobbyPlayerListing : Control
     {
@@ -27,7 +26,7 @@ namespace Valk.Modules.Netcode
         }
     }
 
-    public struct LobbyPlayerListing 
+    public struct LobbyPlayerListing
     {
         public string Name { get; set; }
         public bool Ready { get; set; }

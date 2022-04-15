@@ -1,16 +1,14 @@
-using Timer = System.Timers.Timer; // ambitious reference between Godot.Timer and System.Timers.Timer
-
-using Newtonsoft.Json;
 using Godot;
+using GodotModules.Netcode.Server;
+using Newtonsoft.Json;
 using System;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Timers;
-using Valk.Modules.Netcode.Server;
 
-namespace Valk.Modules.Netcode
+namespace GodotModules.Netcode
 {
     public class WebClient : Node
     {
@@ -19,7 +17,7 @@ namespace Valk.Modules.Netcode
         private const string WEB_SERVER_IP = "localhost:4000";
         public const int WEB_PING_INTERVAL = 10000;
 
-        public WebClient() 
+        public WebClient()
         {
             Client = new HttpClient();
             Client.Timeout = TimeSpan.FromSeconds(5);
@@ -32,15 +30,17 @@ namespace Valk.Modules.Netcode
                 var data = new FormUrlEncodedContent(values);
                 var response = await Client.PostAsync($"http://{WEB_SERVER_IP}/api/{path}", data);
                 var content = await response.Content.ReadAsStringAsync();
-                return new WebServerResponse<string>{
+                return new WebServerResponse<string>
+                {
                     Status = WebServerStatus.OK,
                     Content = content
                 };
             }
             catch (Exception e)
             {
-                GD.Print("POST: " + e.Message);
-                return new WebServerResponse<string>{
+                GD.Print($"Failed to POST to http://{WEB_SERVER_IP}/api/{path} Err: {e.Message}");
+                return new WebServerResponse<string>
+                {
                     Status = WebServerStatus.ERROR,
                     Exception = e
                 };
@@ -54,29 +54,31 @@ namespace Valk.Modules.Netcode
                 var response = await Client.GetAsync($"http://{WEB_SERVER_IP}/api/{path}");
                 var content = await response.Content.ReadAsStringAsync();
                 var obj = JsonConvert.DeserializeObject<T>(content);
-                return new WebServerResponse<T>{
+                return new WebServerResponse<T>
+                {
                     Status = WebServerStatus.OK,
                     Content = obj
                 };
             }
             catch (Exception e)
             {
-                GD.Print("GET: " + e.Message);
-                return new WebServerResponse<T>{
+                GD.Print($"Failed to GET from http://{WEB_SERVER_IP}/api/{path} Err: {e.Message}");
+                return new WebServerResponse<T>
+                {
                     Status = WebServerStatus.ERROR,
                     Exception = e
                 };
             }
         }
 
-        public static async void OnTimerPingMasterServerEvent(System.Object source, ElapsedEventArgs e) 
+        public static async void OnTimerPingMasterServerEvent(System.Object source, ElapsedEventArgs e)
         {
-            var res = await WebClient.Post("ping", new Dictionary<string, string> {{ "Name", UIGameServers.CurrentLobby.Name }});
+            var res = await WebClient.Post("ping", new Dictionary<string, string> { { "Name", UIGameServers.CurrentLobby.Name } });
 
-            if (res.Status == WebServerStatus.ERROR) 
+            if (res.Status == WebServerStatus.ERROR)
             {
                 FailedPingAttempts++;
-                if (FailedPingAttempts > 3)
+                if (FailedPingAttempts >= 3)
                     ENetServer.TimerPingMasterServer.Stop();
             }
         }
@@ -95,7 +97,7 @@ namespace Valk.Modules.Netcode
         public T Content { get; set; }
     }
 
-    public enum WebServerStatus 
+    public enum WebServerStatus
     {
         OK,
         ERROR

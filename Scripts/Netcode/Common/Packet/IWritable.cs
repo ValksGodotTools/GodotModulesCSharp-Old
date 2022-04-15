@@ -1,6 +1,6 @@
 namespace Common.Netcode
 {
-    public interface IWritable 
+    public interface IWritable
     {
         void Write(PacketWriter writer);
     }

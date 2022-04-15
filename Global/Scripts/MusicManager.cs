@@ -1,8 +1,7 @@
 using Godot;
-using System;
 using System.Collections.Generic;
 
-namespace Valk.Modules.Settings
+namespace GodotModules.Settings
 {
     public class MusicManager : AudioStreamPlayer
     {

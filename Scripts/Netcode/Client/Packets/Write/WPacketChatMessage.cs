@@ -1,6 +1,6 @@
 using Common.Netcode;
 
-namespace Valk.Modules.Netcode.Client
+namespace GodotModules.Netcode.Client
 {
     public class WPacketChatMessage : IWritable
     {

@@ -1,11 +1,9 @@
-using System.IO;
-using System.Collections.Generic;
-using ENet;
-using Common.Game;
-using Valk.Modules;
 using Common.Netcode;
+using ENet;
+using System.Collections.Generic;
+using System.IO;
 
-namespace Valk.Modules.Netcode.Server
+namespace GodotModules.Netcode.Server
 {
     // All game specific logic will be put in here
     public class GameServer : ENetServer
@@ -24,17 +22,22 @@ namespace Valk.Modules.Netcode.Server
 
         protected override void Connect(Event netEvent)
         {
-
         }
 
         protected override void Receive(Event netEvent, ClientPacketOpcode opcode, PacketReader reader)
         {
-            /*switch (opcode)
+            if (opcode == ClientPacketOpcode.LobbyJoin)
             {
-                case ClientPacketOpcode.LobbyJoin:
-                    HandlePacket.LobbyJoin(netEvent, opcode, reader);
-                    break;
-            }*/
+                var data = new RPacketLobbyJoin(reader);
+
+                GameServer.Players.Add(netEvent.Peer.ID, data.Username);
+
+                GodotCmds.Enqueue(new GodotCmd
+                {
+                    Opcode = GodotOpcode.AddPlayerToLobbyList,
+                    Data = data.Username
+                });
+            }
         }
 
         protected override void Disconnect(Event netEvent)
@@ -49,7 +52,6 @@ namespace Valk.Modules.Netcode.Server
 
         protected override void Stopped()
         {
-            
         }
     }
 }

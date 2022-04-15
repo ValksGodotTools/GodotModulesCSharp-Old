@@ -1,10 +1,6 @@
 using Godot;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using Valk.Modules.Settings;
 
-namespace Valk.Modules.Netcode
+namespace GodotModules.Netcode
 {
     public class UILobby : Node
     {
@@ -53,8 +49,9 @@ namespace Valk.Modules.Netcode
             var playerPrefab = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/LobbyPlayerListing.tscn");
             var player = playerPrefab.Instance<UILobbyPlayerListing>();
             player.Init();
-            
-            var info = new LobbyPlayerListing {
+
+            var info = new LobbyPlayerListing
+            {
                 Name = name,
                 Ready = false
             };
@@ -82,7 +79,7 @@ namespace Valk.Modules.Netcode
                 if (!pair.Value.Info.Ready)
                     playersNotReady.Add(pair.Key);
 
-            if (playersNotReady.Count > 0) 
+            if (playersNotReady.Count > 0)
             {
                 var isAre = playersNotReady.Count == 1 ? "is" : "are";
                 Log($"Cannot start because {string.Join(" ", playersNotReady.ToArray())} {isAre} not ready");
@@ -97,7 +94,7 @@ namespace Valk.Modules.Netcode
                 TimerCountdown = new System.Threading.Timer(TimerCountdownCallback, "state", 0, 1000);
                 BtnReady.Disabled = true;
             }
-            else 
+            else
             {
                 TimerCountdown.Dispose();
                 Countdown = 5;
@@ -110,7 +107,7 @@ namespace Valk.Modules.Netcode
         {
             Log($"Game starting in {Countdown--}");
 
-            if (Countdown == 0) 
+            if (Countdown == 0)
             {
                 TimerCountdown.Dispose();
                 // load game scene

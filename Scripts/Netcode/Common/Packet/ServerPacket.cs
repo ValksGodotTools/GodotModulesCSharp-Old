@@ -8,7 +8,7 @@ namespace Common.Netcode
 
         public ServerPacket(byte opcode, IWritable writable = null, params Peer[] peers)
         {
-            using (var writer = new PacketWriter()) 
+            using (var writer = new PacketWriter())
             {
                 writer.Write(opcode);
                 if (writable != null) writable.Write(writer);

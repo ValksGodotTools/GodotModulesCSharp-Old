@@ -1,42 +1,34 @@
-using Timer = System.Timers.Timer; // ambitious reference between Godot.Timer and System.Timers.Timer
-
-using System;
-using System.IO;
-using System.Timers;
-using System.Collections.Generic;
-using System.Collections.Concurrent;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Common.Netcode;
 using ENet;
 using Godot;
-using Common.Game;
-using Valk.Modules.Netcode;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Timers;
+using Timer = System.Timers.Timer; // ambitious reference between Godot.Timer and System.Timers.Timer
 
-namespace Valk.Modules.Netcode.Server
+namespace GodotModules.Netcode.Server
 {
     public abstract class ENetServer : Node
     {
-        public static ConcurrentQueue<ENetCommand> ENetCmds { get; private set; }
+        public static ConcurrentQueue<ENetCmd> ENetCmds { get; private set; }
         public static ConcurrentQueue<GodotCmd> GodotCmds { get; private set; }
         public static ConcurrentQueue<ServerPacket> Outgoing { get; private set; }
         public static bool Running { get; private set; }
 
         private static ConcurrentBag<Event> Incoming { get; set; }
-        private static Dictionary<ENetOpcode, ENetCmd> ENetCmd { get; set; }
         private static Dictionary<uint, Peer> Peers { get; set; }
         private static bool QueueRestart { get; set; }
         public static Timer TimerPingMasterServer { get; set; }
 
         public override void _Ready()
         {
-            ENetCmds = new ConcurrentQueue<ENetCommand>();
+            ENetCmds = new ConcurrentQueue<ENetCmd>();
             GodotCmds = new ConcurrentQueue<GodotCmd>();
             Outgoing = new ConcurrentQueue<ServerPacket>();
             Incoming = new ConcurrentBag<Event>();
-            ENetCmd = typeof(ENetCmd).Assembly.GetTypes().Where(x => typeof(ENetCmd).IsAssignableFrom(x) && !x.IsAbstract).Select(Activator.CreateInstance).Cast<ENetCmd>().ToDictionary(x => x.Opcode, x => x);
             Peers = new Dictionary<uint, Peer>();
             TimerPingMasterServer = new Timer(WebClient.WEB_PING_INTERVAL);
             TimerPingMasterServer.AutoReset = true;
@@ -50,10 +42,11 @@ namespace Valk.Modules.Netcode.Server
                 switch (cmd.Opcode)
                 {
                     case GodotOpcode.LogMessage:
-                        GD.Print((string)cmd.Data[0]);
+                        GD.Print((string)cmd.Data);
                         return;
+
                     case GodotOpcode.AddPlayerToLobbyList:
-                        UILobby.AddPlayer((string)cmd.Data[0]);
+                        UILobby.AddPlayer((string)cmd.Data);
                         return;
                 }
             }
@@ -123,8 +116,10 @@ namespace Valk.Modules.Netcode.Server
                     bool polled = false;
 
                     // ENet Cmds
-                    while (ENetCmds.TryDequeue(out ENetCommand cmd))
-                        ENetCmd[cmd.Opcode].Handle(cmd.Data);
+                    while (ENetCmds.TryDequeue(out ENetCmd cmd)) 
+                    {
+                        //var opcode = cmd.Opcode;
+                    }
 
                     // Incoming
                     while (Incoming.TryTake(out Event netEvent))
@@ -133,30 +128,11 @@ namespace Valk.Modules.Netcode.Server
                         var packetReader = new PacketReader(packet);
                         var opcode = (ClientPacketOpcode)packetReader.ReadByte();
 
-                        
-
-                        if (opcode == ClientPacketOpcode.LobbyJoin) 
-                        {
-                            var data = new RPacketLobbyJoin();
-                            data.Read(packetReader);
-
-                            GameServer.Players.Add(netEvent.Peer.ID, data.Username);
-                            //UILobby.AddPlayer(data.Username);
-                            GodotCmds.Enqueue(new GodotCmd{
-                                Opcode = GodotOpcode.AddPlayerToLobbyList,
-                                Data = new List<object>{
-                                    data.Username
-                                }
-                            });
-                        }
-
-                        
-
                         GDLog($"Received New Client Packet: {opcode}");
 
-                        //Receive(netEvent, opcode, packetReader);
+                        Receive(netEvent, opcode, packetReader);
 
-                        packetReader.Dispose(); // is this right?
+                        packetReader.Dispose();
                     }
 
                     // Outgoing
@@ -226,7 +202,8 @@ namespace Valk.Modules.Netcode.Server
             }
         }
 
-        public static void GDLog(string text) => GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.LogMessage, Data = new List<object> { text } });
+        public static void GDLog(string text) => GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.LogMessage, Data = text });
+
         protected abstract void Connect(Event netEvent);
         protected abstract void Disconnect(Event netEvent);
         protected abstract void Timeout(Event netEvent);
@@ -248,34 +225,5 @@ namespace Valk.Modules.Netcode.Server
 
             Peers.Clear();
         }
-    }
-
-    public class ENetCommand
-    {
-        public ENetOpcode Opcode { get; set; }
-        public List<object> Data { get; set; }
-    }
-
-    public enum ENetOpcode
-    {
-        GetOnlinePlayers,
-        GetPlayerStats,
-        KickPlayer,
-        BanPlayer,
-        PardonPlayer,
-        ClearPlayerStats,
-        SendPlayerData
-    }
-
-    public class GodotCmd
-    {
-        public GodotOpcode Opcode { get; set; }
-        public List<object> Data { get; set; }
-    }
-
-    public enum GodotOpcode
-    {
-        LogMessage,
-        AddPlayerToLobbyList
     }
 }

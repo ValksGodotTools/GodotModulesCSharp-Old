@@ -2,7 +2,7 @@ using ENet;
 
 namespace Common.Netcode
 {
-    public class GamePacket 
+    public class GamePacket
     {
         public const int MaxSize = 8192;
         public byte Opcode { get; set; }

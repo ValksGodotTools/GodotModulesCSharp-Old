@@ -1,11 +1,10 @@
 using Godot;
-using System;
-using Valk.Modules.Settings;
-using Valk.Modules.Netcode;
-using Valk.Modules.Netcode.Client;
-using Valk.Modules.Netcode.Server;
+using GodotModules.Netcode;
+using GodotModules.Netcode.Client;
+using GodotModules.Netcode.Server;
+using GodotModules.Settings;
 
-namespace Valk.Modules 
+namespace GodotModules
 {
     // GameManager is attached to Global.tscn which is in AutoLoad
     public class GameManager : Node
@@ -29,7 +28,7 @@ namespace Valk.Modules
 
         public override void _Notification(int what)
         {
-            if (what == MainLoop.NotificationWmQuitRequest) 
+            if (what == MainLoop.NotificationWmQuitRequest)
             {
                 Instance.GetTree().SetAutoAcceptQuit(false); // not sure if this is required
                 ExitCleanup();
@@ -38,7 +37,7 @@ namespace Valk.Modules
 
         private static void InitOptions()
         {
-            if (!System.IO.File.Exists(UIOptions.PathOptions)) 
+            if (!System.IO.File.Exists(UIOptions.PathOptions))
             {
                 OptionsCreatedForFirstTime = true;
                 FileManager.WriteConfig<Options>(UIOptions.PathOptions);

@@ -9,33 +9,7 @@
     // Sent to Game Client
     public enum ServerPacketOpcode
     {
-        ASD
-    }
-
-    public enum ResponseChannelCreateOpcode 
-    {
-        ChannelExistsAlready,
-        Success
-    }
-
-    public enum PurchaseItemResponseOpcode
-    {
-        Purchased,
-        NotEnoughResources
-    }
-
-    public enum JoinLeaveOpcode 
-    {
-        Join,
-        Leave
-    }
-
-    public enum LoginResponseOpcode
-    {
-        LoginSuccessReturningPlayer,
-        LoginSuccessNewPlayer,
-        VersionMismatch,
-        InvalidToken
+        LobbyJoin
     }
 
     public enum DisconnectOpcode
@@ -48,10 +22,31 @@
         PlayerWithUsernameExistsOnServerAlready
     }
 
-    public struct Version
+    public class GodotCmd
     {
-        public byte Major { get; set; }
-        public byte Minor { get; set; }
-        public byte Patch { get; set; }
+        public GodotOpcode Opcode { get; set; }
+        public object Data { get; set; }
+    }
+
+    public enum GodotOpcode
+    {
+        ENetPacket,
+        LogMessage,
+        LoadMainMenu,
+        ExitApp,
+        AddPlayerToLobbyList
+    }
+
+    public class ENetCmd
+    {
+        public ENetOpcode Opcode { get; set; }
+        public object Data { get; set; }
+    }
+
+    public enum ENetOpcode
+    {
+        ClientWantsToExitApp,
+        ClientWantsToDisconnect,
+        ClearPlayerStats
     }
 }

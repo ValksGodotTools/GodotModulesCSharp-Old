@@ -1,6 +1,7 @@
 using Godot;
-using Valk.Modules.Settings;
-using Valk.Modules;
+using GodotModules;
+using GodotModules.Netcode;
+using GodotModules.Settings;
 
 namespace Game
 {
@@ -20,7 +21,8 @@ namespace Game
         }
 
         private void _on_Play_pressed() => GetTree().ChangeScene("res://Scenes/Game.tscn");
-        private void _on_Multiplayer_pressed() 
+
+        private void _on_Multiplayer_pressed()
         {
             var onlineUsername = UIOptions.Options.OnlineUsername;
 
@@ -31,9 +33,10 @@ namespace Game
                 PopupOnlineUsername.Popup_();
                 return;
             }
-                
+
             GetTree().ChangeScene("res://Scenes/GameServers.tscn");
         }
+
         private void _on_Exit_pressed() => GameManager.Exit();
 
         private void _on_Set_Online_Username_Popup_confirmed()

@@ -1,14 +1,15 @@
+using Newtonsoft.Json;
 using System;
 using System.IO;
-using Newtonsoft.Json;
-using Valk.Modules.Settings;
 
-namespace Valk.Modules
+namespace GodotModules
 {
     public static class FileManager
     {
         public static char Separator => Path.DirectorySeparatorChar;
+
         public static string GetGameDataPath() => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), GameManager.GameName);
+
         public static string GetProjectPath()
         {
             string pathExeDir;
@@ -22,7 +23,7 @@ namespace Valk.Modules
 
             return pathExeDir;
         }
-        
+
         public static T WriteConfig<T>(string path) where T : new() => WriteConfig<T>(path, new T());
 
         public static T WriteConfig<T>(string path, T data)
@@ -43,7 +44,7 @@ namespace Valk.Modules
         }
     }
 
-    public enum FileStatus 
+    public enum FileStatus
     {
         DoesNotExist,
         Exists

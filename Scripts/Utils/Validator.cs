@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Valk.Modules
+namespace GodotModules
 {
     public static class Validator
     {

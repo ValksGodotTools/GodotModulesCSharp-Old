@@ -1,8 +1,6 @@
 using Godot;
-using System;
-using System.Collections.Generic;
 
-namespace Valk.Modules.Netcode
+namespace GodotModules.Netcode
 {
     public class UILobbyListing : Control
     {
@@ -39,7 +37,7 @@ namespace Valk.Modules.Netcode
             LabelPlayerCount.Text = "" + info.MaxPlayerCount;
         }
 
-        public void Join() 
+        public void Join()
         {
             GD.Print($"Connecting to {Info.Ip}:{Info.Port}");
             GameManager.GameClient.Connect(Info.Ip, Info.Port);
@@ -57,7 +55,7 @@ namespace Valk.Modules.Netcode
         }
     }
 
-    public class LobbyListing 
+    public class LobbyListing
     {
         public string Name { get; set; }
         public string Description { get; set; }

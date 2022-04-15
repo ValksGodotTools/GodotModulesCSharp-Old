@@ -1,6 +1,6 @@
 using Godot;
+using GodotModules.ModLoader;
 using System;
-using Valk.Modules.ModLoader;
 
 namespace Game
 {
@@ -21,7 +21,7 @@ namespace Game
 
             // set game definitions
             ModLoader.Script.Globals["Player", "setHealth"] = (Action<int>)GameMaster.Player.SetHealth;
-            
+
             ModLoader.Call("OnGameInit");
         }
 

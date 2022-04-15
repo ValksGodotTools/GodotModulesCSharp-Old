@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Valk.Modules.ModLoader
+namespace GodotModules.ModLoader
 {
     public class UIModInfo : Control
     {
@@ -11,7 +11,7 @@ namespace Valk.Modules.ModLoader
         public Button BtnModEnabled { get; set; }
 
         // This mod info is displayed on the right side in the dependency mod list
-        public bool DisplayedInDependencies { get; set; } 
+        public bool DisplayedInDependencies { get; set; }
 
         public void SetModName(string text)
         {
@@ -26,7 +26,7 @@ namespace Valk.Modules.ModLoader
             BtnModEnabled.Text = enabled ? "[x]" : "[ ]";
         }
 
-        public void SetColor(Color color) 
+        public void SetColor(Color color)
         {
             BtnMod.AddColorOverride("font_color", color);
             BtnModEnabled.AddColorOverride("font_color", color);
@@ -42,9 +42,9 @@ namespace Valk.Modules.ModLoader
 
             if (DisplayedInDependencies)
                 UIModLoader.ModInfoList[modName].SetModEnabled(enabled);
-            else 
+            else
                 if (UIModLoader.ModInfoDependencyList.ContainsKey(modName))
-                    UIModLoader.ModInfoDependencyList[modName].SetModEnabled(enabled);
+                UIModLoader.ModInfoDependencyList[modName].SetModEnabled(enabled);
         }
 
         private void _on_Mod_pressed()

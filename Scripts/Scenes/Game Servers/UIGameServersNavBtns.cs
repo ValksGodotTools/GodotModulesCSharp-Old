@@ -1,7 +1,6 @@
 using Godot;
-using System;
 
-namespace Valk.Modules.Netcode
+namespace GodotModules.Netcode
 {
     public class UIGameServersNavBtns : Node
     {
@@ -27,7 +26,6 @@ namespace Valk.Modules.Netcode
 
         private void _on_Refresh_pressed()
         {
-
         }
     }
 }

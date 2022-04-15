@@ -1,12 +1,12 @@
 ﻿using Common.Netcode;
 
-namespace Valk.Modules.Netcode.Server
+namespace GodotModules.Netcode.Server
 {
-    public class RPacketLobbyJoin : IReadable
+    public class RPacketLobbyJoin
     {
         public string Username { get; set; }
 
-        public void Read(PacketReader reader)
+        public RPacketLobbyJoin(PacketReader reader)
         {
             Username = reader.ReadString();
         }

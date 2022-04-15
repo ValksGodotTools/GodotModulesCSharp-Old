@@ -1,10 +1,6 @@
 using Godot;
-using System;
-using System.Threading.Tasks;
-using Valk.Modules;
-using Valk.Modules.Netcode.Server;
 
-namespace Valk.Modules.Netcode
+namespace GodotModules.Netcode
 {
     public class UIServerManager : Node
     {
@@ -21,12 +17,15 @@ namespace Valk.Modules.Netcode
         }
 
         public static void Log(string text) => Logger.AddText($"{text}\n");
-        
+
         private void _on_Start_pressed() => GameManager.GameServer.Start();
+
         private void _on_Stop_pressed() => GameManager.GameServer.Stop();
+
         private void _on_Restart_pressed() => GameManager.GameServer.Restart();
+
         private void _on_Connect_pressed() => GameManager.GameClient.Connect(InputIp.Text, 25565);
+
         private void _on_Disconnect_pressed() => GameManager.GameClient.Disconnect();
     }
-
 }

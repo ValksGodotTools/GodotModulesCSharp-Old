@@ -1,10 +1,10 @@
-using System.IO;
-using System.Collections.Generic;
-using Newtonsoft.Json;
 using MoonSharp.Interpreter;
 using MoonSharp.VsCodeDebugger;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.IO;
 
-namespace Valk.Modules.ModLoader
+namespace GodotModules.ModLoader
 {
     public class ModLoader
     {
@@ -65,8 +65,8 @@ namespace Valk.Modules.ModLoader
         {
             UIModLoader.ClearLog();
 
-            //if (Script != null) 
-                //DebugServer.Detach(Script);
+            //if (Script != null)
+            //DebugServer.Detach(Script);
 
             Script = new Script();
             //DebugServer.AttachToScript(Script, "Debug");
@@ -75,7 +75,7 @@ namespace Valk.Modules.ModLoader
 
             var modsEnabled = ModLoader.ModsEnabled;
             var modLoadedCount = 0;
-            
+
             foreach (var mod in LoadedMods)
             {
                 // if mod is not enabled do not run it
@@ -135,21 +135,21 @@ namespace Valk.Modules.ModLoader
             File.WriteAllText(PathModsEnabled, JsonConvert.SerializeObject(ModsEnabled, Formatting.Indented));
         }
 
-        public static void GetModsEnabled() 
+        public static void GetModsEnabled()
         {
             if (!File.Exists(PathModsEnabled))
                 return;
-            
+
             ModsEnabled = JsonConvert.DeserializeObject<Dictionary<string, bool>>(File.ReadAllText(PathModsEnabled));
         }
 
-        private static void Log(object obj) 
+        private static void Log(object obj)
         {
             Godot.GD.Print($"[ModLoader]: {obj}");
             UIModLoader.Log($"{obj}");
         }
 
-        private static void LogErr(object obj) 
+        private static void LogErr(object obj)
         {
             Godot.GD.PrintErr($"[ModLoader]: {obj}");
             UIModLoader.Log($"{obj}");

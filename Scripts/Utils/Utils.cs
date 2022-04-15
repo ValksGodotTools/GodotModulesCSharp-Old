@@ -1,7 +1,6 @@
 using Godot;
-using System;
 
-namespace Valk.Modules
+namespace GodotModules
 {
     public static class Utils
     {
