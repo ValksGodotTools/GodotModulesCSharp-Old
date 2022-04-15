@@ -28,9 +28,9 @@ namespace Valk.Modules.Netcode.Client
 
         public override void _Process(float delta)
         {
-            while (GodotCmds.TryDequeue(out GodotCmd cmd)) 
+            while (GodotCmds.TryDequeue(out GodotCmd cmd))
             {
-                switch (cmd.Opcode) 
+                switch (cmd.Opcode)
                 {
                     case GodotOpcode.ENetPacket:
                         var packetReader = (PacketReader)cmd.Data[0];
@@ -46,21 +46,27 @@ namespace Valk.Modules.Netcode.Client
                         GetTree().Quit();
                         return;
                 }
-                
+
                 ProcessGodotCommands(cmd);
             }
         }
 
-        public void Connect(string ip, ushort port) 
+        public void Connect(string ip, ushort port)
         {
-            if (ENetThreadRunning) 
+            if (ENetThreadRunning)
             {
                 GD.Print("ENet thread is running already");
                 return;
             }
-            
+
             ENetThreadRunning = true;
             Task.Run(() => ENetThreadWorker(ip, port));
+        }
+
+        static void ExceptionHandler(Task task)
+        {
+            var exception = task.Exception;
+            GD.Print(exception);
         }
 
         public void Disconnect()
@@ -79,7 +85,7 @@ namespace Valk.Modules.Netcode.Client
             var wantsToExit = false;
             var wantsToDisconnect = false;
 
-            using (var client = new Host()) 
+            using (var client = new Host())
             {
                 var address = new Address();
 
@@ -95,11 +101,12 @@ namespace Valk.Modules.Netcode.Client
                 uint timeoutMinimum = 5000; // The timeout for server not sending the packet to the client sent from the server
                 uint timeoutMaximum = 5000; // The timeout for server not receiving the packet sent from the client
 
-                peer.PingInterval(pingInterval); 
+                peer.PingInterval(pingInterval);
                 peer.Timeout(timeout, timeoutMinimum, timeoutMaximum);
 
                 RunningNetCode = true;
-                while (RunningNetCode) {
+                while (RunningNetCode)
+                {
                     var polled = false;
 
                     // ENet Cmds from Godot Thread
@@ -122,7 +129,7 @@ namespace Valk.Modules.Netcode.Client
 
                     // Incoming
                     while (Incoming.TryTake(out Packet packet))
-                        GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.ENetPacket, Data = new List<object> { new PacketReader(packet) }});
+                        GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.ENetPacket, Data = new List<object> { new PacketReader(packet) } });
 
                     // Outgoing
                     while (Outgoing.TryDequeue(out ClientPacket clientPacket))
@@ -133,8 +140,10 @@ namespace Valk.Modules.Netcode.Client
                         peer.Send(channelID, ref packet);
                     }
 
-                    while (!polled) {
-                        if (client.CheckEvents(out Event netEvent) <= 0) {
+                    while (!polled)
+                    {
+                        if (client.CheckEvents(out Event netEvent) <= 0)
+                        {
                             if (client.Service(15, out netEvent) <= 0)
                                 break;
 
@@ -149,7 +158,7 @@ namespace Valk.Modules.Netcode.Client
                             case EventType.Receive:
                                 // Receive
                                 var packet = netEvent.Packet;
-                                if (packet.Length > GamePacket.MaxSize) 
+                                if (packet.Length > GamePacket.MaxSize)
                                 {
                                     GDLog($"Tried to read packet from server of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
                                     packet.Dispose();
@@ -185,30 +194,31 @@ namespace Valk.Modules.Netcode.Client
                 GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.ExitApp });
         }
 
-        protected static void GDLog(string text) => GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.LogMessage, Data = new List<object> { text }});
+        protected static void GDLog(string text) => GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.LogMessage, Data = new List<object> { text } });
     }
 
-    public class GodotCmd 
+    public class GodotCmd
     {
         public GodotOpcode Opcode { get; set; }
         public List<object> Data { get; set; }
     }
 
-    public class ENetCmd 
+    public class ENetCmd
     {
         public ENetOpcode Opcode { get; set; }
         public List<object> Data { get; set; }
     }
 
-    public enum GodotOpcode 
+    public enum GodotOpcode
     {
         ENetPacket,
         LogMessage,
         LoadMainMenu,
-        ExitApp
+        ExitApp,
+        AddPlayerToLobbyList
     }
 
-    public enum ENetOpcode 
+    public enum ENetOpcode
     {
         ClientWantsToExitApp,
         ClientWantsToDisconnect

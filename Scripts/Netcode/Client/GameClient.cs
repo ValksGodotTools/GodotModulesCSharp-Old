@@ -10,9 +10,8 @@ namespace Valk.Modules.Netcode.Client
         {
             switch (cmd.Opcode)
             {
-                case GodotOpcode.LoadMainMenu:
-                    //UIGameMenu.ClientPressedDisconnect = false;
-                    //UIMainMenu.LoadMainMenu();
+                case GodotOpcode.AddPlayerToLobbyList:
+                    UILobby.AddPlayer((string)cmd.Data[0]);
                     break;
             }
         }

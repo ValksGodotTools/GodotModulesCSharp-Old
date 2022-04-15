@@ -52,6 +52,9 @@ namespace Valk.Modules.Netcode.Server
                     case GodotOpcode.LogMessage:
                         GD.Print((string)cmd.Data[0]);
                         return;
+                    case GodotOpcode.AddPlayerToLobbyList:
+                        UILobby.AddPlayer((string)cmd.Data[0]);
+                        return;
                 }
             }
         }
@@ -138,7 +141,13 @@ namespace Valk.Modules.Netcode.Server
                             data.Read(packetReader);
 
                             GameServer.Players.Add(netEvent.Peer.ID, data.Username);
-                            UILobby.AddPlayer(data.Username);
+                            //UILobby.AddPlayer(data.Username);
+                            GodotCmds.Enqueue(new GodotCmd{
+                                Opcode = GodotOpcode.AddPlayerToLobbyList,
+                                Data = new List<object>{
+                                    data.Username
+                                }
+                            });
                         }
 
                         
@@ -266,6 +275,7 @@ namespace Valk.Modules.Netcode.Server
 
     public enum GodotOpcode
     {
-        LogMessage
+        LogMessage,
+        AddPlayerToLobbyList
     }
 }

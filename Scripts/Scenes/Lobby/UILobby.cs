@@ -29,7 +29,6 @@ namespace Valk.Modules.Netcode
 
         private static System.Threading.Timer TimerCountdown { get; set; }
         private static int Countdown = 5;
-        private static Dictionary<string, UILobbyPlayerListing> UIPlayers { get; set; }
         private static string ClientUsername { get; set; }
 
         public override void _Ready()
@@ -41,8 +40,6 @@ namespace Valk.Modules.Netcode
             LobbyMaxPlayers = GetNode<Label>(NodePathLobbyMaxPlayers);
             BtnReady = GetNode<Button>(NodePathBtnReady);
             BtnStart = GetNode<Button>(NodePathBtnStart);
-
-            UIPlayers = new Dictionary<string, UILobbyPlayerListing>();
 
             var info = UIGameServers.CurrentLobby;
             LobbyName.Text = info.Name;
@@ -64,24 +61,23 @@ namespace Valk.Modules.Netcode
 
             player.SetInfo(info);
             Players.AddChild(player);
-            UIPlayers.Add(name, player);
         }
 
         private void _on_Ready_pressed()
         {
-            var player = UIPlayers[ClientUsername];
+            /*var player = UIPlayers[ClientUsername];
             var info = player.Info;
             info.Ready = !info.Ready;
             player.Info = info;
             player.Status.Text = info.Ready ? "Ready" : "Not Ready";
 
-            BtnReady.Text = info.Ready ? "Ready" : "Not Ready";
+            BtnReady.Text = info.Ready ? "Ready" : "Not Ready";*/
         }
 
         private void _on_Start_pressed()
         {
             // check if all players are ready
-            var playersNotReady = new List<string>();
+            /*var playersNotReady = new List<string>();
             foreach (var pair in UIPlayers)
                 if (!pair.Value.Info.Ready)
                     playersNotReady.Add(pair.Key);
@@ -107,7 +103,7 @@ namespace Valk.Modules.Netcode
                 Countdown = 5;
                 Log("Game start was cancelled");
                 BtnReady.Disabled = false;
-            }
+            }*/
         }
 
         private void TimerCountdownCallback(object state)
