@@ -27,4 +27,4 @@ VSCode is a UI friendly text editor for developers
 ## Exporting
 Do not forget to copy enet.dll to exported release folder
 
-Also remember THREAD SAFETY IS NO JOKE. Really really weird things will happen if you don't follow thread safety :(
+Also remember THREAD SAFETY IS NO JOKE. Really really weird things will happen if you don't follow thread safety (as seen [here](https://github.com/valkyrienyanko/GodotModules/issues/13) ) :(
