@@ -34,7 +34,7 @@ namespace Valk.Modules.Netcode
 
         private static async void ListServers() 
         {
-            var res = await WebClient.Get<LobbyListing[]>("localhost:4000/api/servers/get");
+            var res = await WebClient.Get<LobbyListing[]>("servers/get");
 
             if (res.Status == WebServerStatus.ERROR)
             {
@@ -47,7 +47,7 @@ namespace Valk.Modules.Netcode
 
         private static async void PostServer(LobbyListing info)
         {
-            await WebClient.Post("localhost:4000/api/servers/post", new Dictionary<string, string>
+            await WebClient.Post("servers/post", new Dictionary<string, string>
             {
                 { "Name", info.Name },
                 { "Ip", info.Ip },

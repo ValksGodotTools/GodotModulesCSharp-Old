@@ -16,6 +16,7 @@ namespace Valk.Modules.Netcode
     {
         public static HttpClient Client { get; set; }
         private static int FailedPingAttempts { get; set; }
+        private const string WEB_SERVER_IP = "localhost:4000";
         public const int WEB_PING_INTERVAL = 10000;
 
         public WebClient() 
@@ -24,12 +25,12 @@ namespace Valk.Modules.Netcode
             Client.Timeout = TimeSpan.FromSeconds(5);
         }
 
-        public static async Task<WebServerResponse<string>> Post(string url, Dictionary<string, string> values)
+        public static async Task<WebServerResponse<string>> Post(string path, Dictionary<string, string> values)
         {
             try
             {
                 var data = new FormUrlEncodedContent(values);
-                var response = await Client.PostAsync($"http://{url}", data);
+                var response = await Client.PostAsync($"http://{WEB_SERVER_IP}/api/{path}", data);
                 var content = await response.Content.ReadAsStringAsync();
                 return new WebServerResponse<string>{
                     Status = WebServerStatus.OK,
@@ -45,11 +46,11 @@ namespace Valk.Modules.Netcode
             }
         }
 
-        public static async Task<WebServerResponse<T>> Get<T>(string url)
+        public static async Task<WebServerResponse<T>> Get<T>(string path)
         {
             try
             {
-                var response = await Client.GetAsync($"http://{url}");
+                var response = await Client.GetAsync($"http://{WEB_SERVER_IP}/api/{path}");
                 var content = await response.Content.ReadAsStringAsync();
                 var obj = JsonConvert.DeserializeObject<T>(content);
                 return new WebServerResponse<T>{
@@ -68,7 +69,7 @@ namespace Valk.Modules.Netcode
 
         public static async void OnTimerPingMasterServerEvent(System.Object source, ElapsedEventArgs e) 
         {
-            var res = await WebClient.Post("localhost:4000/api/ping", new Dictionary<string, string> {{ "Name", UIGameServers.CurrentLobby.Name }});
+            var res = await WebClient.Post("ping", new Dictionary<string, string> {{ "Name", UIGameServers.CurrentLobby.Name }});
 
             if (res.Status == WebServerStatus.ERROR) 
             {
