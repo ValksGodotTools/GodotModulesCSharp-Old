@@ -39,7 +39,11 @@ namespace Valk.Modules.Netcode
             LabelPlayerCount.Text = "" + info.MaxPlayerCount;
         }
 
-        public void Join() => GameManager.GameClient.Connect(Info.Ip, Info.Port);
+        public void Join() 
+        {
+            GD.Print($"Connecting to {Info.Ip}:{Info.Port}");
+            GameManager.GameClient.Connect(Info.Ip, Info.Port);
+        }
 
         private void _on_Btn_pressed()
         {

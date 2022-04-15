@@ -29,7 +29,6 @@ namespace Valk.Modules.Netcode
             lobby.Init();
             lobby.SetInfo(info);
             ServerList.AddChild(lobby);
-            PostServer(info);
         }
 
         private static async void ListServers() 
@@ -45,7 +44,7 @@ namespace Valk.Modules.Netcode
                 AddServer(server);
         }
 
-        private static async void PostServer(LobbyListing info)
+        public static async void PostServer(LobbyListing info)
         {
             await WebClient.Post("servers/post", new Dictionary<string, string>
             {

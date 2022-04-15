@@ -130,9 +130,22 @@ namespace Valk.Modules.Netcode.Server
                         var packetReader = new PacketReader(packet);
                         var opcode = (ClientPacketOpcode)packetReader.ReadByte();
 
+                        
+
+                        if (opcode == ClientPacketOpcode.LobbyJoin) 
+                        {
+                            var data = new RPacketLobbyJoin();
+                            data.Read(packetReader);
+
+                            GameServer.Players.Add(netEvent.Peer.ID, data.Username);
+                            UILobby.AddPlayer(data.Username);
+                        }
+
+                        
+
                         GDLog($"Received New Client Packet: {opcode}");
 
-                        Receive(netEvent, opcode, packetReader);
+                        //Receive(netEvent, opcode, packetReader);
 
                         packetReader.Dispose(); // is this right?
                     }

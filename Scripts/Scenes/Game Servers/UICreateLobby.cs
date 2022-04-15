@@ -126,6 +126,7 @@ namespace Valk.Modules.Netcode
             };
 
             UIGameServers.AddServer(info);
+            UIGameServers.PostServer(info);
             UIGameServers.CurrentLobby = info;
 
             GameManager.GameServer.Start();

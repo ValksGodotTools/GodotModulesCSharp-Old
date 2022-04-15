@@ -2,7 +2,7 @@
 
 namespace Valk.Modules.Netcode.Server
 {
-    public class RPacketLogin : IReadable
+    public class RPacketLobbyJoin : IReadable
     {
         public string Username { get; set; }
 

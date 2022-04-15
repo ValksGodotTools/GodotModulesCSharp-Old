@@ -29,22 +29,22 @@ namespace Valk.Modules.Netcode.Server
 
         protected override void Receive(Event netEvent, ClientPacketOpcode opcode, PacketReader reader)
         {
-            switch (opcode)
+            /*switch (opcode)
             {
                 case ClientPacketOpcode.LobbyJoin:
                     HandlePacket.LobbyJoin(netEvent, opcode, reader);
                     break;
-            }
+            }*/
         }
 
         protected override void Disconnect(Event netEvent)
         {
-            GameServer.Players.Remove(netEvent.Peer.ID);
+            //GameServer.Players.Remove(netEvent.Peer.ID);
         }
 
         protected override void Timeout(Event netEvent)
         {
-            GameServer.Players.Remove(netEvent.Peer.ID);
+            //GameServer.Players.Remove(netEvent.Peer.ID);
         }
 
         protected override void Stopped()

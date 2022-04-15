@@ -39,6 +39,7 @@ namespace Valk.Modules.Netcode
             }
             catch (Exception e)
             {
+                GD.Print("POST: " + e.Message);
                 return new WebServerResponse<string>{
                     Status = WebServerStatus.ERROR,
                     Exception = e
@@ -60,6 +61,7 @@ namespace Valk.Modules.Netcode
             }
             catch (Exception e)
             {
+                GD.Print("GET: " + e.Message);
                 return new WebServerResponse<T>{
                     Status = WebServerStatus.ERROR,
                     Exception = e
