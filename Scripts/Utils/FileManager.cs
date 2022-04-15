@@ -7,7 +7,7 @@ namespace Valk.Modules
 {
     public static class FileManager
     {
-        public static char Seperator => Path.DirectorySeparatorChar;
+        public static char Separator => Path.DirectorySeparatorChar;
         public static string GetGameDataPath() => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), GameManager.GameName);
         public static string GetProjectPath()
         {

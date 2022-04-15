@@ -12,10 +12,6 @@ namespace Valk.Modules.ModLoader
         [Export] public readonly NodePath NodePathModDescription;
         [Export] public readonly NodePath NodePathLogger;
 
-        // custom mod paths
-        [Export] public readonly string CustomLuaScriptsPath;
-        [Export] public readonly string CustomModsPath;
-
         // mod list
         public static VBoxContainer ModList { get; set; } // where the ModInfo children are added
         public static Dictionary<string, UIModInfo> ModInfoList = new Dictionary<string, UIModInfo>(); // references to the ModInfo children added to the ModList VBoxContainer
@@ -43,11 +39,6 @@ namespace Valk.Modules.ModLoader
             ModGameVersions.Text = "";
             ModDescription.Text = "";
             Logger.Clear();
-
-            if (!string.IsNullOrWhiteSpace(CustomModsPath))
-                ModLoader.ModsProjectPath = CustomModsPath;
-            if (!string.IsNullOrWhiteSpace(CustomLuaScriptsPath))
-                ModLoader.LuaScriptsPath = CustomLuaScriptsPath;
 
             ModLoader.Init();
             ModLoader.LoadMods();

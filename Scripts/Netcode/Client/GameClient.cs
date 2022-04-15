@@ -1,11 +1,11 @@
 using ENet;
+using Common.Netcode;
+using Valk.Modules.Settings;
 
 namespace Valk.Modules.Netcode.Client
 {
     public class GameClient : ENetClient 
     {
-        public static string Username = "Unnamed";
-
         protected override void ProcessGodotCommands(GodotCmd cmd)
         {
             switch (cmd.Opcode)
@@ -20,6 +20,9 @@ namespace Valk.Modules.Netcode.Client
         protected override void Connect(Event netEvent)
         {
             GDLog("Client connected to server");
+            Outgoing.Enqueue(new ClientPacket((byte)ClientPacketOpcode.LobbyJoin, new WPacketLobbyJoin {
+                Username = UIOptions.Options.OnlineUsername
+            }));
         }
 
         protected override void Timeout(Event netEvent)

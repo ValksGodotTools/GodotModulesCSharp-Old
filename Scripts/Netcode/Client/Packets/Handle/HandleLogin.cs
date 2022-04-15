@@ -9,7 +9,7 @@ namespace Valk.Modules.Netcode.Client
     {
         public override ServerPacketOpcode Opcode { get; set; }
 
-        public HandlePacketLogin() => Opcode = ServerPacketOpcode.LoginResponse;
+        public HandlePacketLogin() => Opcode = ServerPacketOpcode.ASD;
 
         public override void Handle(PacketReader packetReader)
         {

@@ -48,7 +48,7 @@ namespace Valk.Modules.Netcode
             LobbyName.Text = info.Name;
             LobbyMaxPlayers.Text = "" + info.MaxPlayerCount;
             ClientUsername = info.LobbyHost;
-            AddPlayer(info.LobbyHost);
+            //AddPlayer(info.LobbyHost);
         }
 
         public static void AddPlayer(string name)

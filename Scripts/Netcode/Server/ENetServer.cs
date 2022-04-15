@@ -26,7 +26,6 @@ namespace Valk.Modules.Netcode.Server
 
         private static ConcurrentBag<Event> Incoming { get; set; }
         private static Dictionary<ENetOpcode, ENetCmd> ENetCmd { get; set; }
-        private static Dictionary<ClientPacketOpcode, HandlePacket> HandlePacket { get; set; }
         private static Dictionary<uint, Peer> Peers { get; set; }
         private static bool QueueRestart { get; set; }
         public static Timer TimerPingMasterServer { get; set; }
@@ -38,7 +37,6 @@ namespace Valk.Modules.Netcode.Server
             Outgoing = new ConcurrentQueue<ServerPacket>();
             Incoming = new ConcurrentBag<Event>();
             ENetCmd = typeof(ENetCmd).Assembly.GetTypes().Where(x => typeof(ENetCmd).IsAssignableFrom(x) && !x.IsAbstract).Select(Activator.CreateInstance).Cast<ENetCmd>().ToDictionary(x => x.Opcode, x => x);
-            HandlePacket = typeof(HandlePacket).Assembly.GetTypes().Where(x => typeof(HandlePacket).IsAssignableFrom(x) && !x.IsAbstract).Select(Activator.CreateInstance).Cast<HandlePacket>().ToDictionary(x => x.Opcode, x => x);
             Peers = new Dictionary<uint, Peer>();
             TimerPingMasterServer = new Timer(WebClient.WEB_PING_INTERVAL);
             TimerPingMasterServer.AutoReset = true;
@@ -134,7 +132,8 @@ namespace Valk.Modules.Netcode.Server
 
                         GDLog($"Received New Client Packet: {opcode}");
 
-                        HandlePacket[opcode].Handle(netEvent.Peer, packetReader); // is ref needed for the packetReader param?
+                        Receive(netEvent, opcode, packetReader);
+
                         packetReader.Dispose(); // is this right?
                     }
 
@@ -204,10 +203,11 @@ namespace Valk.Modules.Netcode.Server
             }
         }
 
+        public static void GDLog(string text) => GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.LogMessage, Data = new List<object> { text } });
         protected abstract void Connect(Event netEvent);
         protected abstract void Disconnect(Event netEvent);
         protected abstract void Timeout(Event netEvent);
-        protected static void GDLog(string text) => GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.LogMessage, Data = new List<object> { text } });
+        protected abstract void Receive(Event netEvent, ClientPacketOpcode opcode, PacketReader reader);
 
         private void Send(ServerPacket gamePacket, Peer peer)
         {

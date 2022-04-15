@@ -3,10 +3,15 @@ using ENet;
 
 namespace Valk.Modules.Netcode.Server
 {
-    public abstract class HandlePacket
+    public class HandlePacket
     {
-        public abstract ClientPacketOpcode Opcode { get; set; }
+        public static void LobbyJoin(Event netEvent, ClientPacketOpcode opcode, PacketReader reader)
+        {
+            var data = new RPacketLogin();
+            data.Read(reader);
 
-        public abstract void Handle(Peer peer, PacketReader packetReader);
+            GameServer.Players.Add(netEvent.Peer.ID, data.Username);
+            UILobby.AddPlayer(data.Username);
+        }
     }
 }

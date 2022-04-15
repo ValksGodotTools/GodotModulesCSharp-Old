@@ -3,32 +3,13 @@
     // Received from Game Client
     public enum ClientPacketOpcode
     {
-        Disconnect,
-        PurchaseItem,
-        CreateAccount,
-        Login,
-        ChatMessage,
-        CreateChannel,
-        RemoveChannel,
-        AddUserToChannel,
-        RemoveUserFromChannel,
-        AddFriend,
-        Block
+        LobbyJoin
     }
 
     // Sent to Game Client
     public enum ServerPacketOpcode
     {
-        ClientDisconnected,
-        PurchasedItem,
-        CreatedAccount,
-        LoginResponse,
-        PlayerData,
-        ChatMessage,
-        PlayerJoinLeave,
-        PlayerList,
-        CreateChannel,
-        ChannelList
+        ASD
     }
 
     public enum ResponseChannelCreateOpcode 
