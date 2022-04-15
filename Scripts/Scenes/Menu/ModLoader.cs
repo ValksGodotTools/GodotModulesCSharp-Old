@@ -15,7 +15,7 @@ namespace Valk.Modules.ModLoader
         public static string PathModsEnabled { get; set; }
         private static string PathMods { get; set; }
         public static Script Script { get; set; }
-        public static string LuaScriptsPath = "Scripts/Lua";
+        public static string LuaScriptsPath = "";
         public static string ModsProjectPath = "";
 
 
@@ -23,6 +23,8 @@ namespace Valk.Modules.ModLoader
         {
             PathMods = Path.Combine(FileManager.GetGameDataPath(), "Mods");
             PathModsEnabled = Path.Combine(PathMods, "enabled.json");
+
+            LuaScriptsPath = $"Scripts{FileManager.Separator}Lua";
 
             Directory.CreateDirectory(PathMods);
             Directory.CreateDirectory(LuaScriptsPath);
@@ -158,6 +160,13 @@ namespace Valk.Modules.ModLoader
 
         private static void LoadLuaScripts(string directory)
         {
+            // DEBUG
+            //var file = new Godot.File();
+            //file.Open("res://Scripts/Lua/Game.lua", Godot.File.ModeFlags.Read);
+            //Godot.GD.Print("DEBUG");
+            //Godot.GD.Print(file.GetPathAbsolute());
+            //Godot.GD.Print(file.GetAsText());
+
             var luaDir = new Godot.Directory();
             if (luaDir.Open($"res://{directory}") != Godot.Error.Ok)
             {
@@ -169,7 +178,7 @@ namespace Valk.Modules.ModLoader
             var fileName = luaDir.GetNext();
             while (fileName != "")
             {
-                var absolutePath = $"{directory}/{fileName}";
+                var absolutePath = $"{luaDir.GetCurrentDir()}/{fileName}";
 
                 if (luaDir.CurrentIsDir())
                     LoadLuaScripts(absolutePath);
