@@ -23,3 +23,6 @@ VSCode is a UI friendly text editor for developers
 1. Launch the VSCode configuration `Play in Editor` (if configuration is set to this already then just press `F5`)
 2. While the debugger is running in the editor and if you want to debug Lua scripts as well launch the VSCode configuration `MoonSharp Attach`
 3. Place a debug point anywhere in Lua or C# script to start debugging
+
+## Exporting
+Do not forget to copy enet.dll to exported release folder
