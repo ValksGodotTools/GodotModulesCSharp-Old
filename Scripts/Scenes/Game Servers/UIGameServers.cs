@@ -1,5 +1,7 @@
 using Godot;
+using GodotModules.Netcode;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace GodotModules.Netcode
 {
@@ -8,7 +10,7 @@ namespace GodotModules.Netcode
         [Export] public readonly NodePath NodePathServerList;
         [Export] public readonly NodePath NodePathServerCreationPopup;
 
-        public static VBoxContainer ServerList { get; set; }
+        private static VBoxContainer ServerList { get; set; }
         public UICreateLobby ServerCreationPopup { get; set; }
 
         public static LobbyListing CurrentLobby { get; set; }
@@ -26,6 +28,7 @@ namespace GodotModules.Netcode
         {
             if (Input.IsActionJustPressed("ui_cancel"))
             {
+                WebClient.Client.CancelPendingRequests();
                 GetTree().ChangeScene("res://Scenes/Menu.tscn");
             }
         }
@@ -39,9 +42,16 @@ namespace GodotModules.Netcode
             ServerList.AddChild(lobby);
         }
 
-        private static async void ListServers()
+        public static void ClearServers()
         {
-            var res = await WebClient.Get<LobbyListing[]>("servers/get");
+            foreach (Control child in ServerList.GetChildren())
+                child.QueueFree();
+        }
+
+        public static async void ListServers()
+        {
+            WebClient.TaskGetServers = WebClient.Get<LobbyListing[]>("servers/get");
+            var res = await WebClient.TaskGetServers;
 
             if (res.Status == WebServerStatus.ERROR)
             {

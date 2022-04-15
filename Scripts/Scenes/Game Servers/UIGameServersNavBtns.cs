@@ -16,16 +16,23 @@ namespace GodotModules.Netcode
 
         private void _on_Create_Lobby_pressed()
         {
-            if (UIGameServers.Instance.ServerCreationPopup.Visible)
+            var popup = UIGameServers.Instance.ServerCreationPopup;
+
+            if (popup.Visible)
                 return;
 
-            UIGameServers.Instance.ServerCreationPopup.ClearFields();
-            UIGameServers.Instance.ServerCreationPopup.ClearFeedback();
-            UIGameServers.Instance.ServerCreationPopup.PopupCentered();
+            popup.ClearFields();
+            popup.ClearFeedback();
+            popup.PopupCentered();
         }
 
         private void _on_Refresh_pressed()
         {
+            if (!WebClient.TaskGetServers.IsCompleted)
+                return;
+
+            UIGameServers.ClearServers();
+            UIGameServers.ListServers();
         }
     }
 }
