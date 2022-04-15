@@ -32,8 +32,8 @@ namespace Valk.Modules.ModLoader
             SetupModsEnabled();
             GetModsEnabled();
 
-            DebugServer = new MoonSharpVsCodeDebugServer();
-            DebugServer.Start();
+            //DebugServer = new MoonSharpVsCodeDebugServer();
+            //DebugServer.Start();
 
             SortMods();
         }
@@ -68,11 +68,11 @@ namespace Valk.Modules.ModLoader
         {
             UIModLoader.ClearLog();
 
-            if (Script != null) 
-                DebugServer.Detach(Script);
+            //if (Script != null) 
+                //DebugServer.Detach(Script);
 
             Script = new Script();
-            DebugServer.AttachToScript(Script, "Debug");
+            //DebugServer.AttachToScript(Script, "Debug");
 
             LoadLuaScripts(LuaScriptsPath);
 
