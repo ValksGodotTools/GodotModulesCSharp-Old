@@ -10,7 +10,7 @@ namespace Valk.Modules.Netcode.Server
     public class GameServer : ENetServer
     {
         private static Dictionary<uint, Player> Players { get; set; }
-        private static string PathServer => Path.Combine(FileManager.GetGameDataPath(), "Server/Players");
+        private static string PathServer => Path.Combine(FileManager.GetGameDataPath(), $"Server{FileManager.Seperator}Players");
 
         public override void _Ready()
         {

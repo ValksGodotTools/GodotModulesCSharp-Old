@@ -34,12 +34,14 @@ namespace Valk.Modules.Netcode
 
         private static async void ListServers() 
         {
-            var servers = await WebClient.Get<LobbyListing[]>("localhost:4000/api/servers/get");
+            var res = await WebClient.Get<LobbyListing[]>("localhost:4000/api/servers/get");
 
-            if (servers.Status == WebServerStatus.ERROR)
+            if (res.Status == WebServerStatus.ERROR)
+            {
                 return;
+            }
 
-            foreach (var server in servers.Content)
+            foreach (var server in res.Content)
                 AddServer(server);
         }
 

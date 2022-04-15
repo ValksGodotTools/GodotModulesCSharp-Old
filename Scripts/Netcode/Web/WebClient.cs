@@ -36,7 +36,7 @@ namespace Valk.Modules.Netcode
                     Content = content
                 };
             }
-            catch (HttpRequestException e)
+            catch (Exception e)
             {
                 return new WebServerResponse<string>{
                     Status = WebServerStatus.ERROR,
@@ -57,7 +57,7 @@ namespace Valk.Modules.Netcode
                     Content = obj
                 };
             }
-            catch (HttpRequestException e)
+            catch (Exception e)
             {
                 return new WebServerResponse<T>{
                     Status = WebServerStatus.ERROR,
@@ -88,7 +88,7 @@ namespace Valk.Modules.Netcode
     public struct WebServerResponse<T>
     {
         public WebServerStatus Status { get; set; }
-        public HttpRequestException Exception { get; set; }
+        public Exception Exception { get; set; }
         public T Content { get; set; }
     }
 
