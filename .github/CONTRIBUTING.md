@@ -1,3 +1,5 @@
+[Common Mistakes](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/COMMON_MISTAKES.md)  
+
 ## Setup
 ### Godot Mono (C#)
 1. Install [Godot Mono 64 Bit](https://godotengine.org)
@@ -26,5 +28,3 @@ VSCode is a UI friendly text editor for developers
 
 ## Exporting
 Do not forget to copy enet.dll to exported release folder
-
-[Common Mistakes](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/COMMON_MISTAKES.md)  
