@@ -195,6 +195,7 @@ namespace Valk.Modules.Netcode.Server
             }
 
             GDLog("Server stopped");
+            Stopped();
 
             if (QueueRestart)
             {
@@ -208,6 +209,7 @@ namespace Valk.Modules.Netcode.Server
         protected abstract void Disconnect(Event netEvent);
         protected abstract void Timeout(Event netEvent);
         protected abstract void Receive(Event netEvent, ClientPacketOpcode opcode, PacketReader reader);
+        protected abstract void Stopped();
 
         private void Send(ServerPacket gamePacket, Peer peer)
         {

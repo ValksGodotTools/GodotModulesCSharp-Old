@@ -46,5 +46,10 @@ namespace Valk.Modules.Netcode.Server
         {
             GameServer.Players.Remove(netEvent.Peer.ID);
         }
+
+        protected override void Stopped()
+        {
+            
+        }
     }
 }

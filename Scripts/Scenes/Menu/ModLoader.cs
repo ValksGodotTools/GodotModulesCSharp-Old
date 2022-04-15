@@ -16,8 +16,6 @@ namespace Valk.Modules.ModLoader
         private static string PathMods { get; set; }
         public static Script Script { get; set; }
         public static string LuaScriptsPath = "";
-        public static string ModsProjectPath = "";
-
 
         public static void Init()
         {
@@ -27,7 +25,6 @@ namespace Valk.Modules.ModLoader
             LuaScriptsPath = $"Scripts{FileManager.Separator}Lua";
 
             Directory.CreateDirectory(PathMods);
-            Directory.CreateDirectory(LuaScriptsPath);
 
             SetupModsEnabled();
             GetModsEnabled();
