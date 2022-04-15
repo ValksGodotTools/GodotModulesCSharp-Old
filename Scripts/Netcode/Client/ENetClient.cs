@@ -43,6 +43,11 @@ namespace GodotModules.Netcode.Client
             }
         }
 
+        /// <summary>
+        /// The client thread worker
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <param name="port"></param>
         private void ENetThreadWorker(string ip, ushort port)
         {
             Library.Initialize();

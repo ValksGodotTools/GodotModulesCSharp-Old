@@ -52,48 +52,11 @@ namespace GodotModules.Netcode.Server
             }
         }
 
-        public void Start()
-        {
-            if (Running)
-            {
-                GDLog("Server is running already");
-                return;
-            }
-
-            GDLog("Attempting to connect to server");
-
-            Task.Run(() => ENetThreadWorker(25565, 100));
-        }
-
-        public void Stop()
-        {
-            if (!Running)
-            {
-                GDLog("Server has been stopped already");
-                return;
-            }
-
-            DisconnectAllPeers();
-
-            GDLog("Stopping server");
-            Running = false;
-        }
-
-        public void Restart()
-        {
-            if (!Running)
-            {
-                GDLog("Server has been stopped already");
-                return;
-            }
-
-            DisconnectAllPeers();
-
-            GDLog("Restarting server");
-            Running = false;
-            QueueRestart = true;
-        }
-
+        /// <summary>
+        /// The server thread worker
+        /// </summary>
+        /// <param name="port"></param>
+        /// <param name="maxClients"></param>
         public void ENetThreadWorker(ushort port, int maxClients)
         {
             Running = true;
@@ -202,14 +165,99 @@ namespace GodotModules.Netcode.Server
             }
         }
 
-        public static void GDLog(string text) => GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.LogMessage, Data = text });
+        /// <summary>
+        /// Start the server, can be called from the Godot thread
+        /// </summary>
+        public void Start()
+        {
+            if (Running)
+            {
+                GDLog("Server is running already");
+                return;
+            }
 
+            GDLog("Attempting to connect to server");
+
+            Task.Run(() => ENetThreadWorker(25565, 100));
+        }
+
+        /// <summary>
+        /// Stop the server, can be called from the Godot thread
+        /// </summary>
+        public void Stop()
+        {
+            if (!Running)
+            {
+                GDLog("Server has been stopped already");
+                return;
+            }
+
+            DisconnectAllPeers();
+
+            GDLog("Stopping server");
+            Running = false;
+        }
+
+        /// <summary>
+        /// Restart the server, can be called from the Godot thread
+        /// </summary>
+        public void Restart()
+        {
+            if (!Running)
+            {
+                GDLog("Server has been stopped already");
+                return;
+            }
+
+            DisconnectAllPeers();
+
+            GDLog("Restarting server");
+            Running = false;
+            QueueRestart = true;
+        }
+
+        /// <summary>
+        /// Provides a way to log a message on the Godot thread from the ENet thread
+        /// </summary>
+        /// <param name="obj">The object to log</param>
+        public static void GDLog(object obj) => GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.LogMessage, Data = obj });
+
+        /// <summary>
+        /// This is in the ENet thread, anything from the ENet thread can be used here
+        /// </summary>
+        /// <param name="netEvent"></param>
         protected abstract void Connect(Event netEvent);
+
+        /// <summary>
+        /// This is in the ENet thread, anything from the ENet thread can be used here
+        /// </summary>
+        /// <param name="netEvent"></param>
         protected abstract void Disconnect(Event netEvent);
+
+        /// <summary>
+        /// This is in the ENet thread, anything from the ENet thread can be used here
+        /// </summary>
+        /// <param name="netEvent"></param>
         protected abstract void Timeout(Event netEvent);
+
+        /// <summary>
+        /// This is in the ENet thread, anything from the ENet thread can be used here
+        /// </summary>
+        /// <param name="netEvent"></param>
+        /// <param name="opcode"></param>
+        /// <param name="reader"></param>
         protected abstract void Receive(Event netEvent, ClientPacketOpcode opcode, PacketReader reader);
+        
+        /// <summary>
+        /// This is in the ENet thread, anything from the ENet thread can be used here
+        /// </summary>
         protected abstract void Stopped();
 
+        /// <summary>
+        /// Send a packet to a client. This method is not meant to be used directly, see Outgoing ConcurrentQueue
+        /// </summary>
+        /// <param name="gamePacket">The packet to send</param>
+        /// <param name="peer">The peer to send this packet to</param>
         private void Send(ServerPacket gamePacket, Peer peer)
         {
             var packet = default(Packet);
@@ -218,6 +266,9 @@ namespace GodotModules.Netcode.Server
             peer.Send(channelID, ref packet);
         }
 
+        /// <summary>
+        /// Kick all peers from the server, a method to be used only on the ENet thread
+        /// </summary>
         private void DisconnectAllPeers()
         {
             foreach (var peer in Peers.Values)
