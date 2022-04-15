@@ -67,6 +67,8 @@ GameManager.Exit();
 ## Contributing
 See [CONTRIBUTING.md](https://github.com/valkyrienyanko/GodotLuaModdingTest/blob/main/CONTRIBUTING.md)
 
+Have a look at all the issues marked with -> [`Good First Issue`](https://github.com/valkyrienyanko/GodotModules/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
+
 A lot of this is overwhelming at times, just making a minor contribution here and there is a huge motivator for me. Talk to me through Discord valk#9904 if you need more info on something.
 
 Another way to contact me is by joining this [Discord](https://discord.gg/866cg8yfxZ)
