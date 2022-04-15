@@ -43,20 +43,6 @@ namespace GodotModules.Netcode.Client
             }
         }
 
-        public void Connect(string ip, ushort port)
-        {
-            if (ENetThreadRunning)
-            {
-                GD.Print("ENet thread is running already");
-                return;
-            }
-
-            ENetThreadRunning = true;
-            Task.Run(() => ENetThreadWorker(ip, port));
-        }
-
-        public void Disconnect() => ENetCmds.Enqueue(new ENetCmd { Opcode = ENetOpcode.ClientWantsToDisconnect });
-
         private void ENetThreadWorker(string ip, ushort port)
         {
             Library.Initialize();
@@ -175,13 +161,64 @@ namespace GodotModules.Netcode.Client
             if (wantsToExit)
                 GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.ExitApp });
         }
-        
-        protected static void GDLog(string text) => GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.LogMessage, Data = text });
 
+        /// <summary>
+        /// Attempt to connect to the server, can be called from the Godot thread
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <param name="port"></param>
+        public void Connect(string ip, ushort port)
+        {
+            if (ENetThreadRunning)
+            {
+                GD.Print("ENet thread is running already");
+                return;
+            }
+
+            ENetThreadRunning = true;
+            Task.Run(() => ENetThreadWorker(ip, port));
+        }
+
+        /// <summary>
+        /// Disconnect the client from the server, can be called from the Godot thread
+        /// </summary>
+        public void Disconnect() => ENetCmds.Enqueue(new ENetCmd { Opcode = ENetOpcode.ClientWantsToDisconnect });
+        
+        /// <summary>
+        /// Provides a way to log a message on the Godot thread from the ENet thread
+        /// </summary>
+        /// <param name="obj">The object to log</param>
+        protected static void GDLog(object obj) => GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.LogMessage, Data = obj });
+
+        /// <summary>
+        /// This is in the Godot thread, anything from the Godot thread can be used here
+        /// </summary>
+        /// <param name="cmd">A command received from the ENet thread</param>
         protected abstract void ProcessGodotCommands(GodotCmd cmd);
-        protected abstract void Connect(Event netEvent);
-        protected abstract void Disconnect(Event netEvent);
-        protected abstract void Timeout(Event netEvent);
+
+        /// <summary>
+        /// This is in the Godot thread, anything from the Godot thread can be used here
+        /// </summary>
+        /// <param name="opcode">The opcode received from the server</param>
+        /// <param name="reader">The data received from the server</param>
         protected abstract void Receive(ServerPacketOpcode opcode, PacketReader reader);
+
+        /// <summary>
+        /// This is in the ENet thread, anything from the ENet thread can be used here
+        /// </summary>
+        /// <param name="netEvent"></param>
+        protected abstract void Connect(Event netEvent);
+
+        /// <summary>
+        /// This is in the ENet thread, anything from the ENet thread can be used here
+        /// </summary>
+        /// <param name="netEvent"></param>
+        protected abstract void Disconnect(Event netEvent);
+
+        /// <summary>
+        /// This is in the ENet thread, anything from the ENet thread can be used here
+        /// </summary>
+        /// <param name="netEvent"></param>
+        protected abstract void Timeout(Event netEvent);
     }
 }
