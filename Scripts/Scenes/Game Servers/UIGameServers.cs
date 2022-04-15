@@ -9,15 +9,25 @@ namespace GodotModules.Netcode
         [Export] public readonly NodePath NodePathServerCreationPopup;
 
         public static VBoxContainer ServerList { get; set; }
-        public static UICreateLobby ServerCreationPopup { get; set; }
+        public UICreateLobby ServerCreationPopup { get; set; }
 
         public static LobbyListing CurrentLobby { get; set; }
+        public static UIGameServers Instance { get; set; }
 
         public override void _Ready()
         {
+            Instance = this;
             ServerList = GetNode<VBoxContainer>(NodePathServerList);
             ServerCreationPopup = GetNode<UICreateLobby>(NodePathServerCreationPopup);
             ListServers();
+        }
+
+        public override void _Input(InputEvent @event)
+        {
+            if (Input.IsActionJustPressed("ui_cancel"))
+            {
+                GetTree().ChangeScene("res://Scenes/Menu.tscn");
+            }
         }
 
         public static void AddServer(LobbyListing info)
