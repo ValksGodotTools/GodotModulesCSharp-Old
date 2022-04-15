@@ -63,7 +63,7 @@ namespace GodotModules.ModLoader
 
         public static void LoadMods()
         {
-            UIModLoader.ClearLog();
+            UIModLoader.Instance.ClearLog();
 
             //if (Script != null)
             //DebugServer.Detach(Script);
@@ -104,7 +104,7 @@ namespace GodotModules.ModLoader
                 try
                 {
                     Script.DoFile(mod.PathScript);
-                    UIModLoader.Log($"Loaded {mod.ModInfo.Name}");
+                    UIModLoader.Instance.Log($"Loaded {mod.ModInfo.Name}");
                 }
                 catch (ScriptRuntimeException e)
                 {
@@ -115,7 +115,7 @@ namespace GodotModules.ModLoader
             }
 
             if (modLoadedCount > 0)
-                UIModLoader.Log($"{modLoadedCount} mods have loaded successfully");
+                UIModLoader.Instance.Log($"{modLoadedCount} mods have loaded successfully");
         }
 
         public static void Call(string v, params object[] args)
@@ -146,13 +146,13 @@ namespace GodotModules.ModLoader
         private static void Log(object obj)
         {
             Godot.GD.Print($"[ModLoader]: {obj}");
-            UIModLoader.Log($"{obj}");
+            UIModLoader.Instance.Log($"{obj}");
         }
 
         private static void LogErr(object obj)
         {
             Godot.GD.PrintErr($"[ModLoader]: {obj}");
-            UIModLoader.Log($"{obj}");
+            UIModLoader.Instance.Log($"{obj}");
         }
 
         private static void LoadLuaScripts(string directory)

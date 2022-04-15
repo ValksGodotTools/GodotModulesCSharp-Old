@@ -8,10 +8,10 @@ namespace Game
     public class GameMaster : Node
     {
         public static Player Player { get; set; }
-        private static GameMaster Instance { get; set; }
+        public static GameMaster Instance { get; set; }
 
         [Export] public readonly NodePath NodePathLabelPlayerHealth;
-        public static Label LabelPlayerHealth;
+        public Label LabelPlayerHealth;
 
         public override void _Ready()
         {
@@ -30,12 +30,12 @@ namespace Game
             ModLoader.Call("OnGameUpdate", delta);
         }
 
-        private static void InitNodes()
+        private void InitNodes()
         {
             LabelPlayerHealth = Instance.GetNode<Label>(Instance.NodePathLabelPlayerHealth);
         }
 
-        private static void InitPlayer()
+        private void InitPlayer()
         {
             var playerPrefab = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/Player.tscn");
             Player = playerPrefab.Instance<Player>();

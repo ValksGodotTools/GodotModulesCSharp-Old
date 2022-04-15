@@ -11,7 +11,7 @@ namespace GodotModules.Netcode.Client
             switch (cmd.Opcode)
             {
                 case GodotOpcode.AddPlayerToLobbyList:
-                    UILobby.AddPlayer((string)cmd.Data);
+                    
                     break;
             }
         }
@@ -21,7 +21,7 @@ namespace GodotModules.Netcode.Client
             GDLog("Client connected to server");
             Outgoing.Enqueue(new ClientPacket((byte)ClientPacketOpcode.LobbyJoin, new WPacketLobbyJoin
             {
-                Username = UIOptions.Options.OnlineUsername
+                Username = UIOptions.Instance.Options.OnlineUsername
             }));
         }
 

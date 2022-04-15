@@ -76,7 +76,7 @@ namespace GodotModules
         /// </summary>
         private static void ExitCleanup()
         {
-            UIOptions.SaveOptions();
+            UIOptions.Instance.SaveOptions();
             WebClient.Client.CancelPendingRequests();
             WebClient.Client.Dispose();
 

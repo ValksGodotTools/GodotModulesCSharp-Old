@@ -12,16 +12,16 @@ namespace GodotModules.Settings
         [Export] public readonly NodePath NodePathVSync;
         [Export] public readonly NodePath NodePathInputOnlineUsername;
 
-        public static HSlider SliderMusic { get; set; }
-        public static HSlider SliderSFX { get; set; }
-        private static OptionButton FullscreenOptions { get; set; }
-        private static OptionButton ResolutionOptions { get; set; }
-        private static CheckBox VSync { get; set; }
-        public static LineEdit InputUsername { get; set; }
-        private static UIOptions Instance { get; set; }
-        public static Options Options { get; set; }
-        private static Dictionary<int, Vector2> SupportedResolutions { get; set; }
-        private static int CurrentResolution { get; set; }
+        public HSlider SliderMusic { get; set; }
+        public HSlider SliderSFX { get; set; }
+        private OptionButton FullscreenOptions { get; set; }
+        private OptionButton ResolutionOptions { get; set; }
+        private CheckBox VSync { get; set; }
+        public LineEdit InputUsername { get; set; }
+        public Options Options { get; set; }
+        private Dictionary<int, Vector2> SupportedResolutions { get; set; }
+        private int CurrentResolution { get; set; }
+        public static UIOptions Instance { get; set; }
 
         public override void _Ready()
         {
@@ -38,7 +38,7 @@ namespace GodotModules.Settings
             ApplyOptions();
         }
 
-        private static void ApplyOptions()
+        private void ApplyOptions()
         {
             Options = FileManager.GetConfig<Options>(PathOptions);
 
@@ -81,9 +81,9 @@ namespace GodotModules.Settings
 
         public static string PathOptions => System.IO.Path.Combine(FileManager.GetGameDataPath(), "options.json");
 
-        public static void SaveOptions() => FileManager.WriteConfig(PathOptions, Options);
+        public void SaveOptions() => FileManager.WriteConfig(PathOptions, Options);
 
-        private static void SetupFullscreenOptions()
+        private void SetupFullscreenOptions()
         {
             FullscreenOptions = Instance.GetNode<OptionButton>(Instance.NodePathFullscreenOptions);
             FullscreenOptions.AddItem("Windowed");
@@ -96,7 +96,7 @@ namespace GodotModules.Settings
         /// This gets the supported resolutions based off OS.GetScreenSize()
         /// </summary>
         /// <returns>The supported resolutions of the monitor</returns>
-        private static Dictionary<int, Vector2> GetSupportedResolutions()
+        private Dictionary<int, Vector2> GetSupportedResolutions()
         {
             var supportedResolutions = new Dictionary<int, Vector2>();
 
@@ -120,7 +120,7 @@ namespace GodotModules.Settings
             return supportedResolutions;
         }
 
-        private static void SetupResolutionOptions()
+        private void SetupResolutionOptions()
         {
             ResolutionOptions = Instance.GetNode<OptionButton>(Instance.NodePathResolutionOptions);
 
@@ -185,9 +185,9 @@ namespace GodotModules.Settings
             Options.OnlineUsername = text;
         }
 
-        private static void CenterWindow() => OS.WindowPosition = OS.GetScreenSize() / 2 - OS.WindowSize / 2;
+        private void CenterWindow() => OS.WindowPosition = OS.GetScreenSize() / 2 - OS.WindowSize / 2;
 
-        private static void SetWindowedMode()
+        private void SetWindowedMode()
         {
             OS.WindowFullscreen = false;
             OS.WindowBorderless = false;
@@ -195,7 +195,7 @@ namespace GodotModules.Settings
             CenterWindow();
         }
 
-        private static void SetFullscreenBorderless()
+        private void SetFullscreenBorderless()
         {
             OS.WindowFullscreen = false;
             OS.WindowBorderless = true;

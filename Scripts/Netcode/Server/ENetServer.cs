@@ -13,18 +13,20 @@ namespace GodotModules.Netcode.Server
 {
     public abstract class ENetServer : Node
     {
-        public static ConcurrentQueue<ENetCmd> ENetCmds { get; private set; }
-        public static ConcurrentQueue<GodotCmd> GodotCmds { get; private set; }
-        public static ConcurrentQueue<ServerPacket> Outgoing { get; private set; }
-        public static bool Running { get; private set; }
+        public ConcurrentQueue<ENetCmd> ENetCmds { get; private set; }
+        public ConcurrentQueue<GodotCmd> GodotCmds { get; private set; }
+        public ConcurrentQueue<ServerPacket> Outgoing { get; private set; }
+        public bool Running { get; private set; }
 
-        private static ConcurrentBag<Event> Incoming { get; set; }
-        private static Dictionary<uint, Peer> Peers { get; set; }
-        private static bool QueueRestart { get; set; }
-        public static Timer TimerPingMasterServer { get; set; }
+        private ConcurrentBag<Event> Incoming { get; set; }
+        private Dictionary<uint, Peer> Peers { get; set; }
+        private bool QueueRestart { get; set; }
+        public Timer TimerPingMasterServer { get; set; }
+        public static ENetServer Instance { get; set; }
 
         public override void _Ready()
         {
+            Instance = this;
             ENetCmds = new ConcurrentQueue<ENetCmd>();
             GodotCmds = new ConcurrentQueue<GodotCmd>();
             Outgoing = new ConcurrentQueue<ServerPacket>();
@@ -46,7 +48,8 @@ namespace GodotModules.Netcode.Server
                         return;
 
                     case GodotOpcode.AddPlayerToLobbyList:
-                        UILobby.AddPlayer((string)cmd.Data);
+                        //UILobby.AddPlayer((string)cmd.Data);
+                        // TODO: Find another way to add player to lobby
                         return;
                 }
             }
@@ -60,7 +63,7 @@ namespace GodotModules.Netcode.Server
         public Task ENetThreadWorker(ushort port, int maxClients)
         {
             Running = true;
-            if (UIGameServers.CurrentLobby.Public)
+            if (UIGameServers.Instance.CurrentLobby.Public)
                 TimerPingMasterServer.Start();
 
             Library.Initialize();
@@ -230,7 +233,7 @@ namespace GodotModules.Netcode.Server
         /// Provides a way to log a message on the Godot thread from the ENet thread
         /// </summary>
         /// <param name="obj">The object to log</param>
-        public static void GDLog(object obj) => GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.LogMessage, Data = obj });
+        public void GDLog(object obj) => GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.LogMessage, Data = obj });
 
         /// <summary>
         /// This is in the ENet thread, anything from the ENet thread can be used here

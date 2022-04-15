@@ -12,8 +12,8 @@ namespace GodotModules.Netcode
 {
     public class WebClient : Node
     {
-        public static HttpClient Client { get; set; }
-        public static Task<WebServerResponse<LobbyListing[]>> TaskGetServers { get; set; }
+        public HttpClient Client { get; set; }
+        public Task<WebServerResponse<LobbyListing[]>> TaskGetServers { get; set; }
         private static int FailedPingAttempts { get; set; }
         private const string WEB_SERVER_IP = "localhost:4000";
         public const int WEB_PING_INTERVAL = 10000;
@@ -24,7 +24,7 @@ namespace GodotModules.Netcode
             Client.Timeout = TimeSpan.FromSeconds(5);
         }
 
-        public static async Task<WebServerResponse<string>> Post(string path, Dictionary<string, string> values)
+        public async Task<WebServerResponse<string>> Post(string path, Dictionary<string, string> values)
         {
             try
             {
@@ -48,7 +48,7 @@ namespace GodotModules.Netcode
             }
         }
 
-        public static async Task<WebServerResponse<T>> Get<T>(string path)
+        public async Task<WebServerResponse<T>> Get<T>(string path)
         {
             try
             {
@@ -72,19 +72,30 @@ namespace GodotModules.Netcode
             }
         }
 
-        public static async void OnTimerPingMasterServerEvent(System.Object source, ElapsedEventArgs e)
+        public async static void OnTimerPingMasterServerEvent(System.Object source, ElapsedEventArgs e)
         {
-            var res = await WebClient.Post("ping", new Dictionary<string, string> { { "Name", UIGameServers.CurrentLobby.Name } });
+            var res = await GameManager.WebClient.Post("ping", new Dictionary<string, string> { { "Name", UIGameServers.Instance.CurrentLobby.Name } });
 
             if (res.Status == WebServerStatus.ERROR)
             {
                 FailedPingAttempts++;
                 if (FailedPingAttempts >= 3)
-                    ENetServer.TimerPingMasterServer.Stop();
+                    ENetServer.Instance.TimerPingMasterServer.Stop();
+
+                return;
             }
+
+            FailedPingAttempts = 0; // reset failed ping attempts if a ping gets through
         }
 
-        public static string GetExternalIp()
+        /*private static int FailedPostAttempts { get; set; }
+        private static System.Timers.Timer TimerPostAttempts { get; set; }
+        public async static void OnTimerPostMasterServerEvent(System.Object source, ElapsedEventArgs e)
+        {
+
+        }*/
+
+        public string GetExternalIp()
         {
             string externalIpString = new System.Net.WebClient().DownloadString("http://icanhazip.com").Replace("\\r\\n", "").Replace("\\n", "").Trim();
             return IPAddress.Parse(externalIpString).ToString();

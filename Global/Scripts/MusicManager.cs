@@ -56,7 +56,7 @@ namespace GodotModules.Settings
                 volume = -80; // can't go lower than this (this essentially mutes the track)
 
             Instance.VolumeDb = volume;
-            UIOptions.SliderMusic.Value = volume;
+            UIOptions.Instance.SliderMusic.Value = volume;
         }
 
         /// <summary>

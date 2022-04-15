@@ -18,10 +18,12 @@ namespace GodotModules.Netcode
 
         public LobbyListing Info { get; set; }
 
-        public static UILobbyListing CurrentListingFocused { get; set; }
+        public UILobbyListing CurrentListingFocused { get; set; }
+        public static UILobbyListing Instance { get; set; }
 
         public void Init()
         {
+            Instance = this;
             LabelTitle = GetNode<Label>(NodePathLabelTitle);
             LabelDescription = GetNode<Label>(NodePathLabelDescription);
             LabelPing = GetNode<Label>(NodePathLabelPing);

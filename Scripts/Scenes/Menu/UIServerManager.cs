@@ -7,16 +7,18 @@ namespace GodotModules.Netcode
         [Export] public readonly NodePath NodePathIp;
         [Export] public readonly NodePath NodePathLogger;
 
-        private static LineEdit InputIp { get; set; }
-        private static RichTextLabel Logger { get; set; }
+        private LineEdit InputIp { get; set; }
+        private RichTextLabel Logger { get; set; }
+        public static UIServerManager Instance { get; set; }
 
         public override void _Ready()
         {
+            Instance = this;
             InputIp = GetNode<LineEdit>(NodePathIp);
             Logger = GetNode<RichTextLabel>(NodePathLogger);
         }
 
-        public static void Log(string text) => Logger.AddText($"{text}\n");
+        public void Log(string text) => Logger.AddText($"{text}\n");
 
         private void _on_Start_pressed() => GameManager.GameServer.Start();
 

@@ -9,12 +9,12 @@ namespace GodotModules.Netcode.Client
 {
     public abstract class ENetClient : Node
     {
-        public static readonly ConcurrentQueue<ClientPacket> Outgoing = new ConcurrentQueue<ClientPacket>();
-        public static readonly ConcurrentQueue<ENetCmd> ENetCmds = new ConcurrentQueue<ENetCmd>();
-        private static readonly ConcurrentBag<Packet> Incoming = new ConcurrentBag<Packet>();
-        private static readonly ConcurrentQueue<GodotCmd> GodotCmds = new ConcurrentQueue<GodotCmd>();
-        public static bool ENetThreadRunning;
-        private static bool RunningNetCode;
+        public readonly ConcurrentQueue<ClientPacket> Outgoing = new ConcurrentQueue<ClientPacket>();
+        public readonly ConcurrentQueue<ENetCmd> ENetCmds = new ConcurrentQueue<ENetCmd>();
+        private readonly ConcurrentBag<Packet> Incoming = new ConcurrentBag<Packet>();
+        private readonly ConcurrentQueue<GodotCmd> GodotCmds = new ConcurrentQueue<GodotCmd>();
+        public bool ENetThreadRunning;
+        private bool RunningNetCode;
 
         public override void _Process(float delta)
         {
@@ -205,7 +205,7 @@ namespace GodotModules.Netcode.Client
         /// Provides a way to log a message on the Godot thread from the ENet thread
         /// </summary>
         /// <param name="obj">The object to log</param>
-        protected static void GDLog(object obj) => GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.LogMessage, Data = obj });
+        protected void GDLog(object obj) => GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.LogMessage, Data = obj });
 
         /// <summary>
         /// This is in the Godot thread, anything from the Godot thread can be used here

@@ -24,7 +24,7 @@ namespace Game
 
         private void _on_Multiplayer_pressed()
         {
-            var onlineUsername = UIOptions.Options.OnlineUsername;
+            var onlineUsername = UIOptions.Instance.Options.OnlineUsername;
 
             if (string.IsNullOrWhiteSpace(onlineUsername))
             {
@@ -49,8 +49,8 @@ namespace Game
                 return;
             }
 
-            UIOptions.InputUsername.Text = username;
-            UIOptions.Options.OnlineUsername = username;
+            UIOptions.Instance.InputUsername.Text = username;
+            UIOptions.Instance.Options.OnlineUsername = username;
             PopupOnlineUsername.Hide();
 
             GetTree().ChangeScene("res://Scenes/GameServers.tscn");

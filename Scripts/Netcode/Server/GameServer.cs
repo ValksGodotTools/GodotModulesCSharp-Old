@@ -8,10 +8,10 @@ namespace GodotModules.Netcode.Server
     // All game specific logic will be put in here
     public class GameServer : ENetServer
     {
-        public static Dictionary<uint, string> Players { get; set; }
+        public Dictionary<uint, string> Players { get; set; }
 
-        private static string PathServer => Path.Combine(FileManager.GetGameDataPath(), "Server");
-        private static string PathPlayers => Path.Combine(PathServer, "Players");
+        private string PathServer => Path.Combine(FileManager.GetGameDataPath(), "Server");
+        private string PathPlayers => Path.Combine(PathServer, "Players");
 
         public override void _Ready()
         {
@@ -30,7 +30,7 @@ namespace GodotModules.Netcode.Server
             {
                 var data = new RPacketLobbyJoin(reader);
 
-                GameServer.Players.Add(netEvent.Peer.ID, data.Username);
+                Players.Add(netEvent.Peer.ID, data.Username);
 
                 GodotCmds.Enqueue(new GodotCmd
                 {

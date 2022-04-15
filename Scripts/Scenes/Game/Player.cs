@@ -35,7 +35,7 @@ namespace Game
 
         public void SetHealth(int v)
         {
-            GameMaster.LabelPlayerHealth.Text = $"Health: {v}";
+            GameMaster.Instance.LabelPlayerHealth.Text = $"Health: {v}";
         }
     }
 }

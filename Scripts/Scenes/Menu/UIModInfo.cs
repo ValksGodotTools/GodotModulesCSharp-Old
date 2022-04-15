@@ -41,15 +41,15 @@ namespace GodotModules.ModLoader
             ModLoader.ModsEnabled[modName] = enabled;
 
             if (DisplayedInDependencies)
-                UIModLoader.ModInfoList[modName].SetModEnabled(enabled);
+                UIModLoader.Instance.ModInfoList[modName].SetModEnabled(enabled);
             else
-                if (UIModLoader.ModInfoDependencyList.ContainsKey(modName))
-                UIModLoader.ModInfoDependencyList[modName].SetModEnabled(enabled);
+                if (UIModLoader.Instance.ModInfoDependencyList.ContainsKey(modName))
+                UIModLoader.Instance.ModInfoDependencyList[modName].SetModEnabled(enabled);
         }
 
         private void _on_Mod_pressed()
         {
-            UIModLoader.UpdateModInfo(BtnMod.Text);
+            UIModLoader.Instance.UpdateModInfo(BtnMod.Text);
         }
     }
 }

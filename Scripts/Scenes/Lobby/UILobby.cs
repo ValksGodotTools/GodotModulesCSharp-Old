@@ -1,4 +1,5 @@
 using Godot;
+using System.Collections.Generic;
 
 namespace GodotModules.Netcode
 {
@@ -12,20 +13,19 @@ namespace GodotModules.Netcode
         [Export] public readonly NodePath NodePathBtnReady;
         [Export] public readonly NodePath NodePathBtnStart;
 
-        private static Control Players { get; set; }
-        private static RichTextLabel ChatText { get; set; }
-        private static LineEdit ChatInput { get; set; }
-        private static Label LobbyName { get; set; }
-        private static Label LobbyMaxPlayers { get; set; }
-        private static Button BtnReady { get; set; }
-        private static Button BtnStart { get; set; }
+        private Control Players { get; set; }
+        private RichTextLabel ChatText { get; set; }
+        private LineEdit ChatInput { get; set; }
+        private Label LobbyName { get; set; }
+        private Label LobbyMaxPlayers { get; set; }
+        private Button BtnReady { get; set; }
+        private Button BtnStart { get; set; }
 
-        public static bool Ready { get; set; }
-        public static bool Start { get; set; }
+        public bool Ready { get; set; }
+        public bool Start { get; set; }
 
-        private static System.Threading.Timer TimerCountdown { get; set; }
-        private static int Countdown = 5;
-        private static string ClientUsername { get; set; }
+        private System.Threading.Timer TimerCountdown { get; set; }
+        private int Countdown = 5;
 
         public override void _Ready()
         {
@@ -37,14 +37,12 @@ namespace GodotModules.Netcode
             BtnReady = GetNode<Button>(NodePathBtnReady);
             BtnStart = GetNode<Button>(NodePathBtnStart);
 
-            var info = UIGameServers.CurrentLobby;
+            var info = UIGameServers.Instance.CurrentLobby;
             LobbyName.Text = info.Name;
             LobbyMaxPlayers.Text = "" + info.MaxPlayerCount;
-            ClientUsername = info.LobbyHost;
-            //AddPlayer(info.LobbyHost);
         }
 
-        public static void AddPlayer(string name)
+        public void AddPlayer(string name)
         {
             var playerPrefab = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/LobbyPlayerListing.tscn");
             var player = playerPrefab.Instance<UILobbyPlayerListing>();

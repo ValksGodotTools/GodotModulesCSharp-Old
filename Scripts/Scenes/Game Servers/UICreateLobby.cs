@@ -25,7 +25,7 @@ namespace GodotModules.Netcode
         private LineEdit NumPingChecks { get; set; }
         private CheckBox NumPingChecksEnabled { get; set; }
 
-        private static Dictionary<string, string> Feedback = new Dictionary<string, string>();
+        private Dictionary<string, string> Feedback = new Dictionary<string, string>();
 
         public override void _Ready()
         {
@@ -60,9 +60,9 @@ namespace GodotModules.Netcode
                 child.QueueFree();
         }
 
-        private static int ValidatedMaxPlayerCount = 10;
-        private static int ValidatedNumPingAttempts = 3;
-        private static int ValidatedPort = 25565;
+        private int ValidatedMaxPlayerCount = 10;
+        private int ValidatedNumPingAttempts = 3;
+        private int ValidatedPort = 25565;
 
         private void _on_Title_text_changed(string text) => Validate("title", text, "^[A-Za-z ]{3,15}$", "Name must contain only letters and have length of 3 to 15 characters");
 
@@ -109,7 +109,7 @@ namespace GodotModules.Netcode
                 return;
 
             var port = ushort.Parse(InputPort.Text.Trim());
-            var externalIp = WebClient.GetExternalIp();
+            var externalIp = GameManager.WebClient.GetExternalIp();
             var info = new LobbyListing
             {
                 Name = InputTitle.Text.Trim(),
@@ -117,15 +117,15 @@ namespace GodotModules.Netcode
                 Port = port,
                 Description = InputDescription.Text.Trim(),
                 MaxPlayerCount = ValidatedMaxPlayerCount,
-                LobbyHost = UIOptions.Options.OnlineUsername,
+                LobbyHost = UIOptions.Instance.Options.OnlineUsername,
                 Public = Public.Pressed,
                 NumPingChecks = ValidatedNumPingAttempts,
                 NumPingChecksEnabled = NumPingChecksEnabled.Pressed
             };
 
-            UIGameServers.AddServer(info);
-            UIGameServers.PostServer(info);
-            UIGameServers.CurrentLobby = info;
+            UIGameServers.Instance.AddServer(info);
+            UIGameServers.Instance.PostServer(info);
+            UIGameServers.Instance.CurrentLobby = info;
 
             GameManager.GameServer.Start();
             GameManager.GameClient.Connect(externalIp, port);

@@ -10,10 +10,10 @@ namespace GodotModules.Netcode
         [Export] public readonly NodePath NodePathServerList;
         [Export] public readonly NodePath NodePathServerCreationPopup;
 
-        private static VBoxContainer ServerList { get; set; }
+        private VBoxContainer ServerList { get; set; }
         public UICreateLobby ServerCreationPopup { get; set; }
 
-        public static LobbyListing CurrentLobby { get; set; }
+        public LobbyListing CurrentLobby { get; set; }
         public static UIGameServers Instance { get; set; }
 
         public override void _Ready()
@@ -28,12 +28,12 @@ namespace GodotModules.Netcode
         {
             if (Input.IsActionJustPressed("ui_cancel"))
             {
-                WebClient.Client.CancelPendingRequests();
+                GameManager.WebClient.Client.CancelPendingRequests();
                 GetTree().ChangeScene("res://Scenes/Menu.tscn");
             }
         }
 
-        public static void AddServer(LobbyListing info)
+        public void AddServer(LobbyListing info)
         {
             var lobbyPrefab = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/LobbyListing.tscn");
             var lobby = lobbyPrefab.Instance<UILobbyListing>();
@@ -42,16 +42,16 @@ namespace GodotModules.Netcode
             ServerList.AddChild(lobby);
         }
 
-        public static void ClearServers()
+        public void ClearServers()
         {
             foreach (Control child in ServerList.GetChildren())
                 child.QueueFree();
         }
 
-        public static async void ListServers()
+        public async void ListServers()
         {
-            WebClient.TaskGetServers = WebClient.Get<LobbyListing[]>("servers/get");
-            var res = await WebClient.TaskGetServers;
+            GameManager.WebClient.TaskGetServers = GameManager.WebClient.Get<LobbyListing[]>("servers/get");
+            var res = await GameManager.WebClient.TaskGetServers;
 
             if (res.Status == WebServerStatus.ERROR)
             {
@@ -62,9 +62,9 @@ namespace GodotModules.Netcode
                 AddServer(server);
         }
 
-        public static async void PostServer(LobbyListing info)
+        public async void PostServer(LobbyListing info)
         {
-            await WebClient.Post("servers/post", new Dictionary<string, string>
+            var res = await GameManager.WebClient.Post("servers/post", new Dictionary<string, string>
             {
                 { "Name", info.Name },
                 { "Ip", info.Ip },
@@ -72,6 +72,11 @@ namespace GodotModules.Netcode
                 { "Description", info.Description },
                 { "MaxPlayerCount", "" + info.MaxPlayerCount }
             });
+
+            if (res.Status == WebServerStatus.ERROR)
+            {
+                // TODO: Try to post server on master server 3 more times
+            }
         }
 
         private void _on_Control_resized()

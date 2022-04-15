@@ -13,23 +13,26 @@ namespace GodotModules.ModLoader
         [Export] public readonly NodePath NodePathLogger;
 
         // mod list
-        public static VBoxContainer ModList { get; set; } // where the ModInfo children are added
+        public VBoxContainer ModList { get; set; } // where the ModInfo children are added
 
-        public static Dictionary<string, UIModInfo> ModInfoList = new Dictionary<string, UIModInfo>(); // references to the ModInfo children added to the ModList VBoxContainer
-        public static Dictionary<string, UIModInfo> ModInfoDependencyList = new Dictionary<string, UIModInfo>(); // refernces to the ModInfo children in the dependency list if any
+        public Dictionary<string, UIModInfo> ModInfoList = new Dictionary<string, UIModInfo>(); // references to the ModInfo children added to the ModList VBoxContainer
+        public Dictionary<string, UIModInfo> ModInfoDependencyList = new Dictionary<string, UIModInfo>(); // refernces to the ModInfo children in the dependency list if any
 
         // mod info
-        public static Label ModName { get; set; }
+        public Label ModName { get; set; }
 
-        public static Label ModGameVersions { get; set; }
-        public static VBoxContainer ModDependencies { get; set; }
-        public static Label ModDescription { get; set; }
+        public Label ModGameVersions { get; set; }
+        public VBoxContainer ModDependencies { get; set; }
+        public Label ModDescription { get; set; }
 
         // logger
-        private static RichTextLabel Logger { get; set; }
+        private RichTextLabel Logger { get; set; }
+
+        public static UIModLoader Instance { get; set; }
 
         public override void _Ready()
         {
+            Instance = this;
             ModList = GetNode<VBoxContainer>(NodePathModList);
             ModName = GetNode<Label>(NodePathModName);
             ModGameVersions = GetNode<Label>(NodePathModGameVersions);
@@ -48,11 +51,11 @@ namespace GodotModules.ModLoader
             DisplayMods();
         }
 
-        public static void ClearLog() => Logger.Clear();
+        public void ClearLog() => Logger.Clear();
 
-        public static void Log(string text) => Logger.AddText($"{text}\n");
+        public void Log(string text) => Logger.AddText($"{text}\n");
 
-        public static void UpdateModInfo(string name)
+        public void UpdateModInfo(string name)
         {
             foreach (Node node in ModDependencies.GetChildren())
                 node.QueueFree();
@@ -83,7 +86,7 @@ namespace GodotModules.ModLoader
             }
         }
 
-        public static void DisplayMods()
+        public void DisplayMods()
         {
             var modsEnabled = ModLoader.ModsEnabled;
             var modInfoPrefab = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/ModInfo.tscn");
@@ -95,10 +98,10 @@ namespace GodotModules.ModLoader
             }
 
             if (ModLoader.LoadedMods.Count > 0)
-                UIModLoader.UpdateModInfo(ModLoader.LoadedMods[0].ModInfo.Name);
+                UpdateModInfo(ModLoader.LoadedMods[0].ModInfo.Name);
         }
 
-        private static UIModInfo CreateModInfoInstance(string modName)
+        private UIModInfo CreateModInfoInstance(string modName)
         {
             var modInfoPrefab = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/ModInfo.tscn");
             var instance = modInfoPrefab.Instance<UIModInfo>();
@@ -120,7 +123,7 @@ namespace GodotModules.ModLoader
                 node.QueueFree();
 
             ModLoader.SortMods();
-            UIModLoader.DisplayMods();
+            DisplayMods();
         }
 
         private void _on_Load_Mods_pressed()
