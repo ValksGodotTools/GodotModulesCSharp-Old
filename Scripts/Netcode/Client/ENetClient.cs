@@ -1,6 +1,7 @@
 using Common.Netcode;
 using ENet;
 using Godot;
+using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
@@ -48,7 +49,7 @@ namespace GodotModules.Netcode.Client
         /// </summary>
         /// <param name="ip"></param>
         /// <param name="port"></param>
-        private void ENetThreadWorker(string ip, ushort port)
+        private Task ENetThreadWorker(string ip, ushort port)
         {
             Library.Initialize();
             var wantsToExit = false;
@@ -165,6 +166,8 @@ namespace GodotModules.Netcode.Client
 
             if (wantsToExit)
                 GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.ExitApp });
+
+            return Task.FromResult(1);
         }
 
         /// <summary>
@@ -172,7 +175,7 @@ namespace GodotModules.Netcode.Client
         /// </summary>
         /// <param name="ip"></param>
         /// <param name="port"></param>
-        public void Connect(string ip, ushort port)
+        public async void Connect(string ip, ushort port)
         {
             if (ENetThreadRunning)
             {
@@ -181,14 +184,23 @@ namespace GodotModules.Netcode.Client
             }
 
             ENetThreadRunning = true;
-            Task.Run(() => ENetThreadWorker(ip, port));
+
+            try
+            {
+                var workerClient = Task.Run(() => ENetThreadWorker(ip, port));
+                await workerClient;
+            }
+            catch (Exception e)
+            {
+                GD.Print($"Worker client: {e.Message}");
+            }
         }
 
         /// <summary>
         /// Disconnect the client from the server, can be called from the Godot thread
         /// </summary>
         public void Disconnect() => ENetCmds.Enqueue(new ENetCmd { Opcode = ENetOpcode.ClientWantsToDisconnect });
-        
+
         /// <summary>
         /// Provides a way to log a message on the Godot thread from the ENet thread
         /// </summary>

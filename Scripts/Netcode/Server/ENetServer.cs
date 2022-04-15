@@ -57,7 +57,7 @@ namespace GodotModules.Netcode.Server
         /// </summary>
         /// <param name="port"></param>
         /// <param name="maxClients"></param>
-        public void ENetThreadWorker(ushort port, int maxClients)
+        public Task ENetThreadWorker(ushort port, int maxClients)
         {
             Running = true;
             if (UIGameServers.CurrentLobby.Public)
@@ -163,12 +163,14 @@ namespace GodotModules.Netcode.Server
                 QueueRestart = false;
                 Start();
             }
+
+            return Task.FromResult(1);
         }
 
         /// <summary>
         /// Start the server, can be called from the Godot thread
         /// </summary>
-        public void Start()
+        public async void Start()
         {
             if (Running)
             {
@@ -178,7 +180,15 @@ namespace GodotModules.Netcode.Server
 
             GDLog("Attempting to connect to server");
 
-            Task.Run(() => ENetThreadWorker(25565, 100));
+            try 
+            {
+                var workerServer = Task.Run(() => ENetThreadWorker(25565, 100));
+                await workerServer;
+            } 
+            catch (Exception e)
+            {
+                GD.Print($"Worker server: {e.Message}");
+            }
         }
 
         /// <summary>
