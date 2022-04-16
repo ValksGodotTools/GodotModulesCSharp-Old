@@ -33,3 +33,5 @@ ENetClient.Outgoing.Enqueue(new ClientPacket((byte)ClientPacketOpcode.PlayerData
     PlayerName = "Steve"
 }));
 ```
+
+Consider size of data types when sending them over the network https://condor.depaul.edu/sjost/nwdp/notes/cs1/CSDatatypes.htm
