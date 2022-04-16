@@ -42,18 +42,16 @@ namespace GodotModules.Netcode.Server
                 var otherPlayers = new Dictionary<uint, string>(Players);
                 otherPlayers.Remove(netEvent.Peer.ID);
 
-                Outgoing.Enqueue(new ServerPacket((byte)ServerPacketOpcode.LobbyList, new WPacketLobbyList {
-                    Players = otherPlayers
-                }, netEvent.Peer));
+                if (otherPlayers.Count > 0)
+                    Outgoing.Enqueue(new ServerPacket((byte)ServerPacketOpcode.LobbyList, new WPacketLobbyList {
+                        Players = otherPlayers
+                    }, netEvent.Peer));
 
-                // tell other players that this player joined
-                var otherPeers = new Dictionary<uint, Peer>(Peers);
-                otherPeers.Remove(netEvent.Peer.ID);
-
+                // tell other players (including player to tell player about their ID) that this player joined
                 Outgoing.Enqueue(new ServerPacket((byte)ServerPacketOpcode.LobbyJoin, new WPacketLobbyJoin {
                     Id = netEvent.Peer.ID,
                     Username = data.Username
-                }, otherPeers.Values.ToArray()));
+                }, Peers.Values.ToArray()));
             }
         }
 

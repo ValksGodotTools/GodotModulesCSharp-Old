@@ -38,6 +38,8 @@ namespace GodotModules.Netcode.Client
             {
                 var data = new RPacketLobbyJoin(reader);
                 UILobby.AddPlayer(data.Id, data.Username);
+
+                GetTree().ChangeScene("res://Scenes/Lobby.tscn");
             }
 
             if (opcode == ServerPacketOpcode.LobbyList)

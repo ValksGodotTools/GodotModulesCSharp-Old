@@ -1,5 +1,6 @@
 using Godot;
 using System.Collections.Generic;
+using GodotModules.Settings;
 
 namespace GodotModules.Netcode
 {
@@ -30,12 +31,10 @@ namespace GodotModules.Netcode
         public static Dictionary<uint, string> Players = new Dictionary<uint, string>();
         private Dictionary<uint, UILobbyPlayerListing> UIPlayers { get; set; }
         private static UILobby Instance { get; set; }
-        private bool UILobbyActive { get; set; }
 
         public override void _Ready()
         {
             Instance = this;
-            UILobbyActive = true;
             ListPlayers = GetNode<Control>(NodePathPlayers);
             ChatText = GetNode<RichTextLabel>(NodePathChatText);
             ChatInput = GetNode<LineEdit>(NodePathChatInput);
@@ -46,9 +45,9 @@ namespace GodotModules.Netcode
 
             UIPlayers = new Dictionary<uint, UILobbyPlayerListing>();
 
-            var info = UIGameServers.Instance.CurrentLobby;
-            LobbyName.Text = info.Name;
-            LobbyMaxPlayers.Text = "" + info.MaxPlayerCount;
+            //var info = UIGameServers.Instance.CurrentLobby;
+            //LobbyName.Text = info.Name;
+            //LobbyMaxPlayers.Text = "" + info.MaxPlayerCount;
 
             foreach (var player in Players)
                 UIAddPlayer(player.Key, player.Value);
@@ -57,8 +56,8 @@ namespace GodotModules.Netcode
         public static void AddPlayer(uint id, string name) 
         {
             Players.Add(id, name);
-            
-            if (Instance.UILobbyActive)
+
+            if (Instance != null)
                 Instance.UIAddPlayer(id, name);
         }
 
