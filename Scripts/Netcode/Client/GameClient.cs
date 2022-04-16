@@ -32,9 +32,19 @@ namespace GodotModules.Netcode.Client
 
         protected override void Receive(ServerPacketOpcode opcode, PacketReader reader)
         {
+            GDLog($"Received new server packet: {opcode}");
+
             if (opcode == ServerPacketOpcode.LobbyJoin)
             {
-                //var data = new RPacketLobbyJoin(reader);
+                var data = new RPacketLobbyJoin(reader);
+                UILobby.AddPlayer(data.Id, data.Username);
+            }
+
+            if (opcode == ServerPacketOpcode.LobbyList)
+            {
+                var data = new RPacketLobbyList(reader);
+                foreach (var player in data.Players)
+                    UILobby.AddPlayer(player.Key, player.Value);
             }
         }
 

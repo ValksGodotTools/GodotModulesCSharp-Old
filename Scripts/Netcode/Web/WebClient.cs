@@ -17,6 +17,7 @@ namespace GodotModules.Netcode
         private static int FailedPingAttempts { get; set; }
         private const string WEB_SERVER_IP = "localhost:4000";
         public const int WEB_PING_INTERVAL = 10000;
+        private bool LogExceptions = false;
 
         public WebClient()
         {
@@ -39,7 +40,8 @@ namespace GodotModules.Netcode
             }
             catch (Exception e)
             {
-                GD.Print($"Failed to POST to http://{WEB_SERVER_IP}/api/{path} {e.Message}");
+                if (LogExceptions)
+                    GD.Print($"Failed to POST to http://{WEB_SERVER_IP}/api/{path} {e.Message}");
                 return new WebServerResponse<string>
                 {
                     Status = WebServerStatus.ERROR,
@@ -63,7 +65,8 @@ namespace GodotModules.Netcode
             }
             catch (Exception e)
             {
-                GD.Print($"Failed to GET from http://{WEB_SERVER_IP}/api/{path} {e.Message}");
+                if (LogExceptions)
+                    GD.Print($"Failed to GET from http://{WEB_SERVER_IP}/api/{path} {e.Message}");
                 return new WebServerResponse<T>
                 {
                     Status = WebServerStatus.ERROR,

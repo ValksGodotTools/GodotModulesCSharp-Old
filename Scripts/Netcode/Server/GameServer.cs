@@ -1,23 +1,19 @@
 using Common.Netcode;
 using ENet;
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 
 namespace GodotModules.Netcode.Server
 {
     // All game specific logic will be put in here
     public class GameServer : ENetServer
     {
-        public Dictionary<uint, string> Players { get; set; }
-
-        private string PathServer => Path.Combine(FileManager.GetGameDataPath(), "Server");
-        private string PathPlayers => Path.Combine(PathServer, "Players");
+        public Dictionary<uint, string> Players { get; set; } // the players in a lobby
 
         public override void _Ready()
         {
             base._Ready();
             Players = new Dictionary<uint, string>();
-            Directory.CreateDirectory(PathServer);
         }
 
         protected override void Connect(Event netEvent)
@@ -26,17 +22,38 @@ namespace GodotModules.Netcode.Server
 
         protected override void Receive(Event netEvent, ClientPacketOpcode opcode, PacketReader reader)
         {
+            GDLog($"Received new client packet: {opcode}");
+            
             if (opcode == ClientPacketOpcode.LobbyJoin)
             {
                 var data = new RPacketLobbyJoin(reader);
 
+                // add player to lobby
                 Players.Add(netEvent.Peer.ID, data.Username);
 
+                // update lobby player list UI
                 GodotCmds.Enqueue(new GodotCmd
                 {
                     Opcode = GodotOpcode.AddPlayerToLobbyList,
                     Data = data.Username
                 });
+
+                // tell joining player about all the other players in the lobby
+                var otherPlayers = new Dictionary<uint, string>(Players);
+                otherPlayers.Remove(netEvent.Peer.ID);
+
+                Outgoing.Enqueue(new ServerPacket((byte)ServerPacketOpcode.LobbyList, new WPacketLobbyList {
+                    Players = otherPlayers
+                }, netEvent.Peer));
+
+                // tell other players that this player joined
+                var otherPeers = new Dictionary<uint, Peer>(Peers);
+                otherPeers.Remove(netEvent.Peer.ID);
+
+                Outgoing.Enqueue(new ServerPacket((byte)ServerPacketOpcode.LobbyJoin, new WPacketLobbyJoin {
+                    Id = netEvent.Peer.ID,
+                    Username = data.Username
+                }, otherPeers.Values.ToArray()));
             }
         }
 

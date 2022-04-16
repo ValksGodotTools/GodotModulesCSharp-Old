@@ -32,7 +32,7 @@ namespace GodotModules.Netcode.Client
                         return;
 
                     case GodotOpcode.LogMessage:
-                        GD.Print((string)cmd.Data);
+                        GD.Print($"[Client]: {cmd.Data}");
                         return;
 
                     case GodotOpcode.ExitApp:

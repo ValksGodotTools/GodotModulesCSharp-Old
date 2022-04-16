@@ -9,7 +9,8 @@
     // Sent to Game Client
     public enum ServerPacketOpcode
     {
-        LobbyJoin
+        LobbyJoin,
+        LobbyList
     }
 
     public enum DisconnectOpcode

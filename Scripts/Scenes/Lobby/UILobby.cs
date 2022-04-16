@@ -13,7 +13,7 @@ namespace GodotModules.Netcode
         [Export] public readonly NodePath NodePathBtnReady;
         [Export] public readonly NodePath NodePathBtnStart;
 
-        private Control Players { get; set; }
+        private Control ListPlayers { get; set; }
         private RichTextLabel ChatText { get; set; }
         private LineEdit ChatInput { get; set; }
         private Label LobbyName { get; set; }
@@ -24,12 +24,19 @@ namespace GodotModules.Netcode
         public bool Ready { get; set; }
         public bool Start { get; set; }
 
-        private System.Threading.Timer TimerCountdown { get; set; }
-        private int Countdown = 5;
+        private System.Threading.Timer TimerCountdownGameStart { get; set; }
+        private int CountdownGameStart = 5;
+
+        public static Dictionary<uint, string> Players = new Dictionary<uint, string>();
+        private Dictionary<uint, UILobbyPlayerListing> UIPlayers { get; set; }
+        private static UILobby Instance { get; set; }
+        private bool UILobbyActive { get; set; }
 
         public override void _Ready()
         {
-            Players = GetNode<Control>(NodePathPlayers);
+            Instance = this;
+            UILobbyActive = true;
+            ListPlayers = GetNode<Control>(NodePathPlayers);
             ChatText = GetNode<RichTextLabel>(NodePathChatText);
             ChatInput = GetNode<LineEdit>(NodePathChatInput);
             LobbyName = GetNode<Label>(NodePathLobbyName);
@@ -37,25 +44,37 @@ namespace GodotModules.Netcode
             BtnReady = GetNode<Button>(NodePathBtnReady);
             BtnStart = GetNode<Button>(NodePathBtnStart);
 
+            UIPlayers = new Dictionary<uint, UILobbyPlayerListing>();
+
             var info = UIGameServers.Instance.CurrentLobby;
             LobbyName.Text = info.Name;
             LobbyMaxPlayers.Text = "" + info.MaxPlayerCount;
+
+            foreach (var player in Players)
+                UIAddPlayer(player.Key, player.Value);
         }
 
-        public void AddPlayer(string name)
+        public static void AddPlayer(uint id, string name) 
+        {
+            Players.Add(id, name);
+            
+            if (Instance.UILobbyActive)
+                Instance.UIAddPlayer(id, name);
+        }
+
+        public void UIAddPlayer(uint id, string name)
         {
             var playerPrefab = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/LobbyPlayerListing.tscn");
             var player = playerPrefab.Instance<UILobbyPlayerListing>();
             player.Init();
-
-            var info = new LobbyPlayerListing
+            player.SetInfo(new LobbyPlayerListing
             {
                 Name = name,
                 Ready = false
-            };
+            });
 
-            player.SetInfo(info);
-            Players.AddChild(player);
+            UIPlayers.Add(id, player);
+            ListPlayers.AddChild(player);
         }
 
         private void _on_Ready_pressed()
@@ -103,11 +122,11 @@ namespace GodotModules.Netcode
 
         private void TimerCountdownCallback(object state)
         {
-            Log($"Game starting in {Countdown--}");
+            Log($"Game starting in {CountdownGameStart--}");
 
-            if (Countdown == 0)
+            if (CountdownGameStart == 0)
             {
-                TimerCountdown.Dispose();
+                TimerCountdownGameStart.Dispose();
                 // load game scene
             }
         }

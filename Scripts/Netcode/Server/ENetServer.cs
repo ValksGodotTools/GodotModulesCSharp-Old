@@ -19,7 +19,7 @@ namespace GodotModules.Netcode.Server
         public bool Running { get; private set; }
 
         private ConcurrentBag<Event> Incoming { get; set; }
-        private Dictionary<uint, Peer> Peers { get; set; }
+        protected Dictionary<uint, Peer> Peers { get; set; }
         private bool QueueRestart { get; set; }
         public Timer TimerPingMasterServer { get; set; }
         public static ENetServer Instance { get; set; }
@@ -44,7 +44,7 @@ namespace GodotModules.Netcode.Server
                 switch (cmd.Opcode)
                 {
                     case GodotOpcode.LogMessage:
-                        GD.Print((string)cmd.Data);
+                        GD.Print($"[Server]: {cmd.Data}");
                         return;
 
                     case GodotOpcode.AddPlayerToLobbyList:
@@ -93,8 +93,6 @@ namespace GodotModules.Netcode.Server
                         var packet = netEvent.Packet;
                         var packetReader = new PacketReader(packet);
                         var opcode = (ClientPacketOpcode)packetReader.ReadByte();
-
-                        GDLog($"Received New Client Packet: {opcode}");
 
                         Receive(netEvent, opcode, packetReader);
 
@@ -181,7 +179,7 @@ namespace GodotModules.Netcode.Server
                 return;
             }
 
-            GDLog("Attempting to connect to server");
+            GDLog("Starting server");
 
             try 
             {
