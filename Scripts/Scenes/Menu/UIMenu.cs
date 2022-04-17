@@ -24,7 +24,7 @@ namespace Game
 
         private void _on_Multiplayer_pressed()
         {
-            var onlineUsername = UIOptions.Instance.Options.OnlineUsername;
+            var onlineUsername = GameManager.Options.OnlineUsername;
 
             if (string.IsNullOrWhiteSpace(onlineUsername))
             {
@@ -50,7 +50,7 @@ namespace Game
             }
 
             UIOptions.Instance.InputUsername.Text = username;
-            UIOptions.Instance.Options.OnlineUsername = username;
+            GameManager.Options.OnlineUsername = username;
             PopupOnlineUsername.Hide();
 
             GameManager.ChangeScene("GameServers");

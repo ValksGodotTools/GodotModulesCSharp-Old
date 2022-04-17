@@ -3,6 +3,7 @@ using GodotModules.Netcode;
 using GodotModules.Netcode.Client;
 using GodotModules.Netcode.Server;
 using GodotModules.Settings;
+using System.Collections.Generic;
 
 namespace GodotModules
 {
@@ -13,16 +14,16 @@ namespace GodotModules
         public static GameServer GameServer { get; set; }
         public static GameClient GameClient { get; set; }
         public static WebClient WebClient { get; set; }
+        public static OptionsData Options { get; set; }
         private static GameManager Instance { get; set; }
         public static string ActiveScene { get; set; }
-        public static bool OptionsCreatedForFirstTime { get; set; }
 
         public override void _Ready()
         {
             GameName = "Godot Modules";
             ActiveScene = "Menu";
             Instance = this;
-            InitOptions();
+            UtilOptions.InitOptions();
             InitClient();
             InitServer();
             InitWebClient();
@@ -58,20 +59,11 @@ namespace GodotModules
         /// </summary>
         private static void ExitCleanup()
         {
-            UIOptions.Instance.SaveOptions();
+            UtilOptions.SaveOptions();
             WebClient.Client.CancelPendingRequests();
             WebClient.Client.Dispose();
 
             Instance.GetTree().Quit();
-        }
-
-        private static void InitOptions()
-        {
-            if (!System.IO.File.Exists(UIOptions.PathOptions))
-            {
-                OptionsCreatedForFirstTime = true;
-                FileManager.WriteConfig<Options>(UIOptions.PathOptions);
-            }
         }
 
         private static void InitClient()

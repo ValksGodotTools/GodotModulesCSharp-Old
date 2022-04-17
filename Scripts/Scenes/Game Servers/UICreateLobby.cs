@@ -117,7 +117,7 @@ namespace GodotModules.Netcode
                 Port = port,
                 Description = InputDescription.Text.Trim(),
                 MaxPlayerCount = ValidatedMaxPlayerCount,
-                LobbyHost = UIOptions.Instance.Options.OnlineUsername,
+                LobbyHost = GameManager.Options.OnlineUsername,
                 Public = Public.Pressed,
                 NumPingChecks = ValidatedNumPingAttempts,
                 NumPingChecksEnabled = NumPingChecksEnabled.Pressed

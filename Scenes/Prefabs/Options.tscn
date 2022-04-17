@@ -27,7 +27,7 @@ NodePathInputOnlineUsername = NodePath("MarginContainer/VBoxContainer/Online Use
 margin_left = 1.0
 margin_top = 1.0
 margin_right = 399.0
-margin_bottom = 218.0
+margin_bottom = 211.0
 custom_constants/margin_right = 15
 custom_constants/margin_top = 15
 custom_constants/margin_left = 15
@@ -37,7 +37,7 @@ custom_constants/margin_bottom = 15
 margin_left = 15.0
 margin_top = 15.0
 margin_right = 383.0
-margin_bottom = 202.0
+margin_bottom = 195.0
 
 [node name="Label1" type="Label" parent="MarginContainer/VBoxContainer"]
 margin_right = 368.0
@@ -95,18 +95,17 @@ margin_bottom = 23.0
 [node name="Online Username" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 margin_top = 163.0
 margin_right = 368.0
-margin_bottom = 187.0
+margin_bottom = 180.0
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Online Username"]
-margin_top = 3.0
 margin_right = 111.0
-margin_bottom = 20.0
+margin_bottom = 17.0
 text = "Online Username: "
 
 [node name="OnlineUsername" type="LineEdit" parent="MarginContainer/VBoxContainer/Online Username"]
 margin_left = 115.0
 margin_right = 368.0
-margin_bottom = 24.0
+margin_bottom = 17.0
 size_flags_horizontal = 3
 
 [connection signal="value_changed" from="MarginContainer/VBoxContainer/Music" to="." method="_on_Music_value_changed"]

@@ -21,7 +21,7 @@ namespace GodotModules.Netcode.Client
             GDLog("Client connected to server");
             Outgoing.Enqueue(new ClientPacket((byte)ClientPacketOpcode.LobbyJoin, new WPacketLobbyJoin
             {
-                Username = UIOptions.Instance.Options.OnlineUsername
+                Username = GameManager.Options.OnlineUsername
             }));
         }
 

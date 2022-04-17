@@ -1,7 +1,8 @@
 using Godot;
 using System.Collections.Generic;
+using GodotModules.Settings;
 
-namespace GodotModules.Settings
+namespace GodotModules
 {
     public class MusicManager : AudioStreamPlayer
     {
@@ -56,7 +57,9 @@ namespace GodotModules.Settings
                 volume = -80; // can't go lower than this (this essentially mutes the track)
 
             Instance.VolumeDb = volume;
-            UIOptions.Instance.SliderMusic.Value = volume;
+
+            if (UIOptions.Instance != null)
+                UIOptions.Instance.SliderMusic.Value = volume;
         }
 
         /// <summary>
