@@ -1,3 +1,5 @@
+using Timer = System.Timers.Timer; // ambitious reference between Godot.Timer and System.Timers.Timer
+
 using Godot;
 using GodotModules.Netcode.Server;
 using Newtonsoft.Json;
@@ -18,11 +20,16 @@ namespace GodotModules.Netcode
         private const string WEB_SERVER_IP = "localhost:4000";
         public const int WEB_PING_INTERVAL = 10000;
         private bool LogExceptions = false;
+        public Timer TimerPingMasterServer { get; set; }
 
         public WebClient()
         {
             Client = new HttpClient();
             Client.Timeout = TimeSpan.FromSeconds(5);
+
+            TimerPingMasterServer = new Timer(WebClient.WEB_PING_INTERVAL);
+            TimerPingMasterServer.AutoReset = true;
+            TimerPingMasterServer.Elapsed += new ElapsedEventHandler(OnTimerPingMasterServerEvent);
         }
 
         public async Task<WebServerResponse<string>> Post(string path, Dictionary<string, string> values)
@@ -75,7 +82,7 @@ namespace GodotModules.Netcode
             }
         }
 
-        public async static void OnTimerPingMasterServerEvent(System.Object source, ElapsedEventArgs e)
+        public async void OnTimerPingMasterServerEvent(System.Object source, ElapsedEventArgs e)
         {
             var res = await GameManager.WebClient.Post("ping", new Dictionary<string, string> { { "Name", UIGameServers.Instance.CurrentLobby.Name } });
 
@@ -83,7 +90,7 @@ namespace GodotModules.Netcode
             {
                 FailedPingAttempts++;
                 if (FailedPingAttempts >= 3)
-                    ENetServer.Instance.TimerPingMasterServer.Stop();
+                    TimerPingMasterServer.Stop();
 
                 return;
             }

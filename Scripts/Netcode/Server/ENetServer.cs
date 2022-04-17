@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
-using Timer = System.Timers.Timer; // ambitious reference between Godot.Timer and System.Timers.Timer
 
 namespace GodotModules.Netcode.Server
 {
@@ -21,20 +20,14 @@ namespace GodotModules.Netcode.Server
         private ConcurrentBag<Event> Incoming { get; set; }
         protected Dictionary<uint, Peer> Peers { get; set; }
         private bool QueueRestart { get; set; }
-        public Timer TimerPingMasterServer { get; set; }
-        public static ENetServer Instance { get; set; }
-
+        
         public override void _Ready()
         {
-            Instance = this;
             ENetCmds = new ConcurrentQueue<ENetCmd>();
             GodotCmds = new ConcurrentQueue<GodotCmd>();
             Outgoing = new ConcurrentQueue<ServerPacket>();
             Incoming = new ConcurrentBag<Event>();
             Peers = new Dictionary<uint, Peer>();
-            TimerPingMasterServer = new Timer(WebClient.WEB_PING_INTERVAL);
-            TimerPingMasterServer.AutoReset = true;
-            TimerPingMasterServer.Elapsed += new ElapsedEventHandler(WebClient.OnTimerPingMasterServerEvent);
         }
 
         public override void _Process(float delta)
@@ -64,7 +57,7 @@ namespace GodotModules.Netcode.Server
         {
             Running = true;
             if (UIGameServers.Instance.CurrentLobby.Public)
-                TimerPingMasterServer.Start();
+                GameManager.WebClient.TimerPingMasterServer.Start();
 
             Library.Initialize();
 
