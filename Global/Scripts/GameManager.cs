@@ -15,7 +15,7 @@ namespace GodotModules
         public static GameClient GameClient { get; set; }
         public static WebClient WebClient { get; set; }
         public static OptionsData Options { get; set; }
-        private static GameManager Instance { get; set; }
+        public static GameManager Instance { get; set; }
         public static string ActiveScene { get; set; }
 
         public override void _Ready()
@@ -24,8 +24,6 @@ namespace GodotModules
             ActiveScene = "Menu";
             Instance = this;
             UtilOptions.InitOptions();
-            InitClient();
-            InitServer();
             InitWebClient();
         }
 
@@ -66,18 +64,20 @@ namespace GodotModules
             Instance.GetTree().Quit();
         }
 
-        private static void InitClient()
+        public static void StartClient(string ip, ushort port)
         {
             GameClient = new GameClient();
             GameClient.Name = "Game Client";
             Instance.AddChild(GameClient);
+            GameClient.Connect(ip, port);
         }
 
-        private static void InitServer()
+        public static void StartServer()
         {
             GameServer = new GameServer();
             GameServer.Name = "Game Server";
             Instance.AddChild(GameServer);
+            GameServer.Start();
         }
 
         private static void InitWebClient()

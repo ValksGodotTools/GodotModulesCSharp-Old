@@ -42,7 +42,8 @@ namespace GodotModules.Netcode
         public void Join()
         {
             GD.Print($"Connecting to {Info.Ip}:{Info.Port}");
-            GameManager.GameClient.Connect(Info.Ip, Info.Port);
+            //GameManager.GameClient.Connect(Info.Ip, Info.Port);
+            GameManager.StartClient(Info.Ip, Info.Port);
         }
 
         private void _on_Btn_pressed()

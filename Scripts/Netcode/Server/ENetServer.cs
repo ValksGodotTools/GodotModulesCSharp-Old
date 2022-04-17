@@ -12,22 +12,25 @@ namespace GodotModules.Netcode.Server
 {
     public abstract class ENetServer : Node
     {
-        public ConcurrentQueue<ENetCmd> ENetCmds { get; private set; }
-        public ConcurrentQueue<GodotCmd> GodotCmds { get; private set; }
-        public ConcurrentQueue<ServerPacket> Outgoing { get; private set; }
-        public bool Running { get; private set; }
-
-        private ConcurrentBag<Event> Incoming { get; set; }
-        protected Dictionary<uint, Peer> Peers { get; set; }
+        private static readonly Dictionary<ClientPacketOpcode, HandlePacket> HandlePacket = typeof(HandlePacket).Assembly.GetTypes().Where(x => typeof(HandlePacket).IsAssignableFrom(x) && !x.IsAbstract).Select(Activator.CreateInstance).Cast<HandlePacket>().ToDictionary(x => (ClientPacketOpcode)Enum.Parse(typeof(ClientPacketOpcode), x.GetType().Name.Replace("HandlePacket", "")), x => x);
+        private ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
+        public static ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
+        public static ConcurrentQueue<ServerPacket> Outgoing { get; set; }
+        private bool Running { get; set; }
+        public static Dictionary<uint, Peer> Peers { get; set; }
         private bool QueueRestart { get; set; }
-        
+
         public override void _Ready()
         {
             ENetCmds = new ConcurrentQueue<ENetCmd>();
             GodotCmds = new ConcurrentQueue<GodotCmd>();
             Outgoing = new ConcurrentQueue<ServerPacket>();
-            Incoming = new ConcurrentBag<Event>();
             Peers = new Dictionary<uint, Peer>();
+
+            // ensure queues are empty
+            //Outgoing.TryDequeue(out ServerPacket _);
+            //GodotCmds.TryDequeue(out GodotCmd _);
+            //ENetCmds.TryDequeue(out ENetCmd _);
         }
 
         public override void _Process(float delta)
@@ -75,21 +78,9 @@ namespace GodotModules.Netcode.Server
                     bool polled = false;
 
                     // ENet Cmds
-                    while (ENetCmds.TryDequeue(out ENetCmd cmd)) 
+                    while (ENetCmds.TryDequeue(out ENetCmd cmd))
                     {
                         //var opcode = cmd.Opcode;
-                    }
-
-                    // Incoming
-                    while (Incoming.TryTake(out Event netEvent))
-                    {
-                        var packet = netEvent.Packet;
-                        var packetReader = new PacketReader(packet);
-                        var opcode = (ClientPacketOpcode)packetReader.ReadByte();
-
-                        Receive(netEvent, opcode, packetReader);
-
-                        packetReader.Dispose();
                     }
 
                     // Outgoing
@@ -123,7 +114,13 @@ namespace GodotModules.Netcode.Server
                                 continue;
                             }
 
-                            Incoming.Add(netEvent);
+                            var packetReader = new PacketReader(packet);
+                            var opcode = (ClientPacketOpcode)packetReader.ReadByte();
+
+                            GDLog($"Received new client packet: {opcode}");
+                            HandlePacket[opcode].Handle(netEvent.Peer, packetReader);
+
+                            packetReader.Dispose();
                         }
                         else if (eventType == EventType.Connect)
                         {
@@ -155,8 +152,12 @@ namespace GodotModules.Netcode.Server
             if (QueueRestart)
             {
                 QueueRestart = false;
-                Start();
+                //Start();
+                GameManager.StartServer();
             }
+
+            GameManager.GameServer.QueueFree();
+            GameManager.GameServer = null;
 
             return Task.FromResult(1);
         }
@@ -174,21 +175,21 @@ namespace GodotModules.Netcode.Server
 
             GDLog("Starting server");
 
-            try 
+            try
             {
                 var workerServer = Task.Run(() => ENetThreadWorker(25565, 100));
                 await workerServer;
-            } 
+            }
             catch (Exception e)
             {
-                GD.Print($"Worker server: {e.Message}");
+                GD.Print($"ENet Server: {e.Message}{e.StackTrace}");
             }
         }
 
         /// <summary>
         /// Stop the server, can be called from the Godot thread
         /// </summary>
-        public void Stop()
+        public virtual void Stop()
         {
             if (!Running)
             {
@@ -230,32 +231,24 @@ namespace GodotModules.Netcode.Server
         /// This is in the ENet thread, anything from the ENet thread can be used here
         /// </summary>
         /// <param name="netEvent"></param>
-        protected abstract void Connect(Event netEvent);
+        protected virtual void Connect(Event netEvent) { }
 
         /// <summary>
         /// This is in the ENet thread, anything from the ENet thread can be used here
         /// </summary>
         /// <param name="netEvent"></param>
-        protected abstract void Disconnect(Event netEvent);
+        protected virtual void Disconnect(Event netEvent) { }
 
         /// <summary>
         /// This is in the ENet thread, anything from the ENet thread can be used here
         /// </summary>
         /// <param name="netEvent"></param>
-        protected abstract void Timeout(Event netEvent);
+        protected virtual void Timeout(Event netEvent) { }
 
         /// <summary>
         /// This is in the ENet thread, anything from the ENet thread can be used here
         /// </summary>
-        /// <param name="netEvent"></param>
-        /// <param name="opcode"></param>
-        /// <param name="reader"></param>
-        protected abstract void Receive(Event netEvent, ClientPacketOpcode opcode, PacketReader reader);
-        
-        /// <summary>
-        /// This is in the ENet thread, anything from the ENet thread can be used here
-        /// </summary>
-        protected abstract void Stopped();
+        protected virtual void Stopped() { }
 
         /// <summary>
         /// Send a packet to a client. This method is not meant to be used directly, see Outgoing ConcurrentQueue

@@ -28,7 +28,7 @@ namespace GodotModules.Netcode
         private System.Threading.Timer TimerCountdownGameStart { get; set; }
         private int CountdownGameStart = 5;
 
-        public static Dictionary<uint, string> Players = new Dictionary<uint, string>();
+        
         private Dictionary<uint, UILobbyPlayerListing> UIPlayers { get; set; }
         private static UILobby Instance { get; set; }
         public static LobbyListing CurrentLobby { get; set; }
@@ -50,7 +50,7 @@ namespace GodotModules.Netcode
             //LobbyName.Text = info.Name;
             //LobbyMaxPlayers.Text = "" + info.MaxPlayerCount;
 
-            foreach (var player in Players)
+            foreach (var player in GameManager.GameClient.Players)
                 UIAddPlayer(player.Key, player.Value);
         }
 
@@ -68,7 +68,7 @@ namespace GodotModules.Netcode
 
         public static void AddPlayer(uint id, string name) 
         {
-            Players.Add(id, name);
+            GameManager.GameClient.Players.Add(id, name);
 
             if (GameManager.ActiveScene == "Lobby")
                 Instance.UIAddPlayer(id, name);

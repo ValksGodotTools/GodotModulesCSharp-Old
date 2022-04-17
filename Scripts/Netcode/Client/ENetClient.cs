@@ -2,19 +2,33 @@ using Common.Netcode;
 using ENet;
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace GodotModules.Netcode.Client
 {
     public abstract class ENetClient : Node
     {
-        public readonly ConcurrentQueue<ClientPacket> Outgoing = new ConcurrentQueue<ClientPacket>();
-        public readonly ConcurrentQueue<ENetCmd> ENetCmds = new ConcurrentQueue<ENetCmd>();
-        private readonly ConcurrentBag<Packet> Incoming = new ConcurrentBag<Packet>();
-        private readonly ConcurrentQueue<GodotCmd> GodotCmds = new ConcurrentQueue<GodotCmd>();
+        private static readonly Dictionary<ServerPacketOpcode, HandlePacket> HandlePacket = typeof(HandlePacket).Assembly.GetTypes().Where(x => typeof(HandlePacket).IsAssignableFrom(x) && !x.IsAbstract).Select(Activator.CreateInstance).Cast<HandlePacket>().ToDictionary(x => (ServerPacketOpcode)Enum.Parse(typeof(ServerPacketOpcode), x.GetType().Name.Replace("HandlePacket", "")), x => x);
+        public ConcurrentQueue<ClientPacket> Outgoing { get; set; }
+        public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
+        private ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
         public bool ENetThreadRunning;
         private bool RunningNetCode;
+
+        public override void _Ready()
+        {
+            Outgoing = new ConcurrentQueue<ClientPacket>();
+            ENetCmds = new ConcurrentQueue<ENetCmd>();
+            GodotCmds = new ConcurrentQueue<GodotCmd>();
+            
+            // ensure queues are empty
+            //while (ENetCmds.TryDequeue(out ENetCmd _));
+            //while (GodotCmds.TryDequeue(out GodotCmd _));
+            //while (Outgoing.TryDequeue(out ClientPacket _));
+        }
 
         public override void _Process(float delta)
         {
@@ -26,7 +40,9 @@ namespace GodotModules.Netcode.Client
                         var packetReader = (PacketReader)cmd.Data;
                         var opcode = (ServerPacketOpcode)packetReader.ReadByte();
 
-                        Receive(opcode, packetReader);
+                        GDLog($"Received new server packet: {opcode}");
+
+                        HandlePacket[opcode].Handle(packetReader);
 
                         packetReader.Dispose();
                         return;
@@ -96,11 +112,7 @@ namespace GodotModules.Netcode.Client
                                 wantsToDisconnect = true;
                                 break;
                         }
-                    }
-
-                    // Incoming
-                    while (Incoming.TryTake(out Packet packet))
-                        GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.ENetPacket, Data = new PacketReader(packet) });
+                    }   
 
                     // Outgoing
                     while (Outgoing.TryDequeue(out ClientPacket clientPacket))
@@ -137,7 +149,7 @@ namespace GodotModules.Netcode.Client
                                     continue;
                                 }
 
-                                Incoming.Add(netEvent.Packet);
+                                GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.ENetPacket, Data = new PacketReader(packet) });
                                 break;
 
                             case EventType.Timeout:
@@ -167,6 +179,11 @@ namespace GodotModules.Netcode.Client
             if (wantsToExit)
                 GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.ExitApp });
 
+            GDLog("Client stopped");
+
+            GameManager.GameClient.QueueFree();
+            GameManager.GameClient = null;
+
             return Task.FromResult(1);
         }
 
@@ -192,7 +209,7 @@ namespace GodotModules.Netcode.Client
             }
             catch (Exception e)
             {
-                GD.Print($"Worker client: {e.Message}");
+                GD.Print($"ENet Client: {e.Message}{e.StackTrace}");
             }
         }
 
@@ -211,31 +228,24 @@ namespace GodotModules.Netcode.Client
         /// This is in the Godot thread, anything from the Godot thread can be used here
         /// </summary>
         /// <param name="cmd">A command received from the ENet thread</param>
-        protected abstract void ProcessGodotCommands(GodotCmd cmd);
-
-        /// <summary>
-        /// This is in the Godot thread, anything from the Godot thread can be used here
-        /// </summary>
-        /// <param name="opcode">The opcode received from the server</param>
-        /// <param name="reader">The data received from the server</param>
-        protected abstract void Receive(ServerPacketOpcode opcode, PacketReader reader);
+        protected virtual void ProcessGodotCommands(GodotCmd cmd) {}
 
         /// <summary>
         /// This is in the ENet thread, anything from the ENet thread can be used here
         /// </summary>
         /// <param name="netEvent"></param>
-        protected abstract void Connect(Event netEvent);
+        protected virtual void Connect(Event netEvent) {}
 
         /// <summary>
         /// This is in the ENet thread, anything from the ENet thread can be used here
         /// </summary>
         /// <param name="netEvent"></param>
-        protected abstract void Disconnect(Event netEvent);
+        protected virtual void Disconnect(Event netEvent) {}
 
         /// <summary>
         /// This is in the ENet thread, anything from the ENet thread can be used here
         /// </summary>
         /// <param name="netEvent"></param>
-        protected abstract void Timeout(Event netEvent);
+        protected virtual void Timeout(Event netEvent) {}
     }
 }

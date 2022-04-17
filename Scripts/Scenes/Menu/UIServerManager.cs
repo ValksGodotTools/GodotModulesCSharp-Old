@@ -26,7 +26,7 @@ namespace GodotModules.Netcode
 
         private void _on_Restart_pressed() => GameManager.GameServer.Restart();
 
-        private void _on_Connect_pressed() => GameManager.GameClient.Connect(InputIp.Text, 25565);
+        private void _on_Connect_pressed() => GameManager.StartClient(InputIp.Text, 25565); //GameManager.GameClient.Connect(InputIp.Text, 25565);
 
         private void _on_Disconnect_pressed() => GameManager.GameClient.Disconnect();
     }
