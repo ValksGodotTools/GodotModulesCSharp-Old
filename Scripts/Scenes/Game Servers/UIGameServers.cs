@@ -29,7 +29,7 @@ namespace GodotModules.Netcode
             if (Input.IsActionJustPressed("ui_cancel"))
             {
                 GameManager.WebClient.Client.CancelPendingRequests();
-                GetTree().ChangeScene("res://Scenes/Menu.tscn");
+                GameManager.ChangeScene("Menu");
             }
         }
 

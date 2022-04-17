@@ -57,7 +57,7 @@ namespace GodotModules.Netcode
         {
             Players.Add(id, name);
 
-            if (Instance != null)
+            if (GameManager.ActiveScene == "Lobby")
                 Instance.UIAddPlayer(id, name);
         }
 

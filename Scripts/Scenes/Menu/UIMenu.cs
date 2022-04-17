@@ -20,7 +20,7 @@ namespace Game
             MusicManager.PlayTrack("Menu");
         }
 
-        private void _on_Play_pressed() => GetTree().ChangeScene("res://Scenes/Game.tscn");
+        private void _on_Play_pressed() => GameManager.ChangeScene("Game");
 
         private void _on_Multiplayer_pressed()
         {
@@ -34,7 +34,7 @@ namespace Game
                 return;
             }
 
-            GetTree().ChangeScene("res://Scenes/GameServers.tscn");
+            GameManager.ChangeScene("GameServers");
         }
 
         private void _on_Exit_pressed() => GameManager.Exit();
@@ -53,7 +53,7 @@ namespace Game
             UIOptions.Instance.Options.OnlineUsername = username;
             PopupOnlineUsername.Hide();
 
-            GetTree().ChangeScene("res://Scenes/GameServers.tscn");
+            GameManager.ChangeScene("GameServers");
         }
     }
 }

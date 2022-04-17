@@ -131,7 +131,7 @@ namespace GodotModules.Netcode
             GameManager.GameClient.Connect(externalIp, port);
 
             // TODO: Only connect client when game server has finished setting up
-            GetTree().ChangeScene("res://Scenes/Lobby.tscn");
+            GameManager.ChangeScene("Lobby");
 
             Hide();
         }
