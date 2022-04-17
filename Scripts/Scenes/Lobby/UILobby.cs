@@ -31,6 +31,7 @@ namespace GodotModules.Netcode
         public static Dictionary<uint, string> Players = new Dictionary<uint, string>();
         private Dictionary<uint, UILobbyPlayerListing> UIPlayers { get; set; }
         private static UILobby Instance { get; set; }
+        public static LobbyListing CurrentLobby { get; set; }
 
         public override void _Ready()
         {
@@ -51,6 +52,18 @@ namespace GodotModules.Netcode
 
             foreach (var player in Players)
                 UIAddPlayer(player.Key, player.Value);
+        }
+
+        public override void _Input(InputEvent @event)
+        {
+            if (Input.IsActionJustPressed("ui_cancel"))
+            {
+                GameManager.WebClient.Client.CancelPendingRequests();
+                GameManager.WebClient.TimerPingMasterServer.Stop();
+                GameManager.GameClient.Disconnect();
+                GameManager.GameServer.Stop();
+                GameManager.ChangeScene("GameServers");
+            }
         }
 
         public static void AddPlayer(uint id, string name) 

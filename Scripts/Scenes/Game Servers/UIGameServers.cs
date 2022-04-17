@@ -13,7 +13,6 @@ namespace GodotModules.Netcode
         private VBoxContainer ServerList { get; set; }
         public UICreateLobby ServerCreationPopup { get; set; }
 
-        public LobbyListing CurrentLobby { get; set; }
         public static UIGameServers Instance { get; set; }
 
         public override void _Ready()

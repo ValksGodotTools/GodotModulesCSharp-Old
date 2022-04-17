@@ -56,7 +56,7 @@ namespace GodotModules.Netcode.Server
         public Task ENetThreadWorker(ushort port, int maxClients)
         {
             Running = true;
-            if (UIGameServers.Instance.CurrentLobby.Public)
+            if (UILobby.CurrentLobby.Public)
                 GameManager.WebClient.TimerPingMasterServer.Start();
 
             Library.Initialize();

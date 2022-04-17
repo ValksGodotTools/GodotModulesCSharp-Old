@@ -82,10 +82,9 @@ namespace GodotModules.Netcode
             }
         }
 
-        public async void OnTimerPingMasterServerEvent(System.Object source, ElapsedEventArgs e)
+        public async void OnTimerPingMasterServerEvent(System.Object source, ElapsedEventArgs args)
         {
-            var res = await GameManager.WebClient.Post("ping", new Dictionary<string, string> { { "Name", UIGameServers.Instance.CurrentLobby.Name } });
-
+            var res = await GameManager.WebClient.Post("ping", new Dictionary<string, string> { { "Name", UILobby.CurrentLobby.Name } });
             if (res.Status == WebServerStatus.ERROR)
             {
                 FailedPingAttempts++;

@@ -125,7 +125,7 @@ namespace GodotModules.Netcode
 
             UIGameServers.Instance.AddServer(info);
             UIGameServers.Instance.PostServer(info);
-            UIGameServers.Instance.CurrentLobby = info;
+            UILobby.CurrentLobby = info;
 
             GameManager.GameServer.Start();
             GameManager.GameClient.Connect(externalIp, port);
