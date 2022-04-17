@@ -14,20 +14,6 @@ I was thinking to myself, I want to make a bullet hell game, but I'm also going 
 ![image](https://user-images.githubusercontent.com/6277739/163117944-e350b70c-aaaa-426f-8719-3c28648d5747.png)  
 
 ### [Netcode](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/NETCODE.md) (wip)
-Realtime client-side checks  
-![image](https://user-images.githubusercontent.com/6277739/163118366-42523efa-33ab-4b0e-939f-3fba74618c83.png)  
-Server browser  
-![image](https://user-images.githubusercontent.com/6277739/163118505-7f47f22e-94a8-44ab-ad56-18bafd44c149.png)  
-Lobby  
-![image](https://user-images.githubusercontent.com/6277739/163263124-ad230a6c-6253-4c89-914c-de1a40ef32e4.png)  
-
-Todo
-- [x] Thread safety, run client on one thread, server on another
-- [ ] Server list scene (wip)
-- [ ] Lobby scene (wip)
-- [x] Post created servers to [NodeJS web server](https://github.com/valkyrienyanko/GodotListServers) / fetch all servers
-- [ ] Add packets for pinging servers
-- [ ] Demo netcode for game scene (playing around with syncing player positions, and perhaps other things)
 
 ### Popup Menu (coming soon)
 In games usually when you press Esc a popup menu comes up asking if you want to go back to the main menu or edit the options

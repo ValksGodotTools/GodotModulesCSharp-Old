@@ -1,6 +1,13 @@
 ## Thread Safety
 THREAD SAFETY IS NO JOKE. Really really weird things will happen if you don't follow thread safety (as seen [here](https://github.com/valkyrienyanko/GodotModules/issues/13)) :(
 
+Note that tasks are surrounded with try catch so you will see error in console unlike with issue above.
+
+## Avoid static in netcode
+Static properties / fields should never be used unless you want something to be persistent even if the server / client gets destroyed but this is rarely the case. 
+
+For e.g. you could make Players static and it would retain its data even after server / client gets destroyed. Next time the server / client start up they will add a duplicate player key.
+
 ## Popups
 Never make static references to Godot Popup Windows, changing the scene more than once will cause the code to access a old invalid reference and crash the game with `Could not access a disposed object`
 
