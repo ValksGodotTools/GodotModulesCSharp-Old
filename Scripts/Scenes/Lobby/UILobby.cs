@@ -1,6 +1,5 @@
 using Godot;
 using System.Collections.Generic;
-using GodotModules.Settings;
 
 namespace GodotModules.Netcode
 {
@@ -68,6 +67,13 @@ namespace GodotModules.Netcode
 
         public static void AddPlayer(uint id, string name) 
         {
+            if (GameManager.GameClient.Players.ContainsKey(id))
+            {
+                GD.Print($"Players contains id: '{id}' already");
+                GD.Print(Utils.StringifyDict(GameManager.GameClient.Players));
+                return;
+            }
+
             GameManager.GameClient.Players.Add(id, name);
 
             if (GameManager.ActiveScene == "Lobby")

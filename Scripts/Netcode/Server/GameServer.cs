@@ -8,7 +8,8 @@ namespace GodotModules.Netcode.Server
     // All game specific logic will be put in here
     public class GameServer : ENetServer
     {
-        public Dictionary<uint, string> Players { get; set; } // the players in a lobby
+        // marking Players as static is okay as long as it is created a new in _Ready() (same goes for any other statics)
+        public static Dictionary<uint, string> Players { get; set; } // the players in a lobby
 
         public override void _Ready()
         {
@@ -34,6 +35,13 @@ namespace GodotModules.Netcode.Server
 
         protected override void Stopped()
         {
+        }
+
+        public static Dictionary<uint, string> GetOtherPlayers(uint id)
+        {
+            var otherPlayers = new Dictionary<uint, string>(Players);
+            otherPlayers.Remove(id);
+            return otherPlayers;
         }
     }
 }

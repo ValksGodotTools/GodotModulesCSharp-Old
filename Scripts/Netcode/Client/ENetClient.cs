@@ -23,11 +23,6 @@ namespace GodotModules.Netcode.Client
             Outgoing = new ConcurrentQueue<ClientPacket>();
             ENetCmds = new ConcurrentQueue<ENetCmd>();
             GodotCmds = new ConcurrentQueue<GodotCmd>();
-            
-            // ensure queues are empty
-            //while (ENetCmds.TryDequeue(out ENetCmd _));
-            //while (GodotCmds.TryDequeue(out GodotCmd _));
-            //while (Outgoing.TryDequeue(out ClientPacket _));
         }
 
         public override void _Process(float delta)

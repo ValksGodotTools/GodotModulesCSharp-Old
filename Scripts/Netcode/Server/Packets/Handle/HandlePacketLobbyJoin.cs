@@ -11,27 +11,22 @@ namespace GodotModules.Netcode.Server
         {
             var data = new RPacketLobbyJoin(reader);
 
-            // add player to lobby
-            GameManager.GameServer.Players.Add(peer.ID, data.Username);
+            // Keep track of joining player server side
+            GameServer.Players.Add(peer.ID, data.Username);
 
-            // update lobby player list UI
-            GameServer.GodotCmds.Enqueue(new GodotCmd
-            {
-                Opcode = GodotOpcode.AddPlayerToLobbyList,
-                Data = data.Username
-            });
+            // Get all players EXCEPT for peer.ID
+            var otherPlayers = GameServer.GetOtherPlayers(peer.ID);
 
-            // tell joining player about all the other players in the lobby
-            var otherPlayers = new Dictionary<uint, string>(GameManager.GameServer.Players);
-            otherPlayers.Remove(peer.ID);
+            GameServer.GDLog($"Other Players {Utils.StringifyDict(otherPlayers)}");
 
+            // Tell joining player about all the other players in the lobby
             if (otherPlayers.Count > 0)
                 GameServer.Outgoing.Enqueue(new ServerPacket((byte)ServerPacketOpcode.LobbyList, new WPacketLobbyList
                 {
                     Players = otherPlayers
                 }, peer));
 
-            // tell other players (including player to tell player about their ID) that this player joined
+            // Tell everyone including player this player joined
             GameServer.Outgoing.Enqueue(new ServerPacket((byte)ServerPacketOpcode.LobbyJoin, new WPacketLobbyJoin
             {
                 Id = peer.ID,

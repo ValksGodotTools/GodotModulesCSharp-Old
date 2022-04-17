@@ -26,11 +26,6 @@ namespace GodotModules.Netcode.Server
             GodotCmds = new ConcurrentQueue<GodotCmd>();
             Outgoing = new ConcurrentQueue<ServerPacket>();
             Peers = new Dictionary<uint, Peer>();
-
-            // ensure queues are empty
-            //Outgoing.TryDequeue(out ServerPacket _);
-            //GodotCmds.TryDequeue(out GodotCmd _);
-            //ENetCmds.TryDequeue(out ENetCmd _);
         }
 
         public override void _Process(float delta)
@@ -41,11 +36,6 @@ namespace GodotModules.Netcode.Server
                 {
                     case GodotOpcode.LogMessage:
                         GD.Print($"[Server]: {cmd.Data}");
-                        return;
-
-                    case GodotOpcode.AddPlayerToLobbyList:
-                        //UILobby.AddPlayer((string)cmd.Data);
-                        // TODO: Find another way to add player to lobby
                         return;
                 }
             }
@@ -221,11 +211,18 @@ namespace GodotModules.Netcode.Server
             QueueRestart = true;
         }
 
+        public static Peer[] GetOtherPeers(uint id) 
+        {
+            var otherPeers = new Dictionary<uint, Peer>(Peers);
+            otherPeers.Remove(id);
+            return otherPeers.Values.ToArray();
+        }
+
         /// <summary>
         /// Provides a way to log a message on the Godot thread from the ENet thread
         /// </summary>
         /// <param name="obj">The object to log</param>
-        public void GDLog(object obj) => GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.LogMessage, Data = obj });
+        public static void GDLog(object obj) => GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.LogMessage, Data = obj });
 
         /// <summary>
         /// This is in the ENet thread, anything from the ENet thread can be used here
@@ -266,7 +263,7 @@ namespace GodotModules.Netcode.Server
         /// <summary>
         /// Kick all peers from the server, a method to be used only on the ENet thread
         /// </summary>
-        private void DisconnectAllPeers()
+        public static void DisconnectAllPeers()
         {
             foreach (var peer in Peers.Values)
                 peer.DisconnectNow(0);
