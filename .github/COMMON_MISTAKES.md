@@ -3,9 +3,6 @@ THREAD SAFETY IS NO JOKE. Really really weird things will happen if you don't fo
 
 Note that tasks are surrounded with try catch so you will see error in console unlike with issue above.
 
-## Do not send 2 packets at same time to client
-Or [this could happen](https://github.com/valkyrienyanko/GodotModules/issues/18)
-
 ## Avoid static in netcode
 Static properties / fields should never be used unless you want something to be persistent even if the server / client gets destroyed but this is rarely the case. 
 
