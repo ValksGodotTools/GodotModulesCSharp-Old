@@ -3,7 +3,7 @@ using ENet;
 
 namespace GodotModules.Netcode.Client
 {
-    public abstract class HandlePacket
+    public abstract class HandlePacket : GameClient
     {
         /// <summary>
         /// This is in the Godot thread, anything from the Godot thread can be used here

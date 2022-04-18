@@ -29,6 +29,12 @@ namespace GodotModules
             InitWebClient();
         }
 
+        public override void _Process(float delta)
+        {
+            ProcessENetServerGodotCmds();
+            ProcessENetClientGodotCmds();
+        }
+
         public override async void _Notification(int what)
         {
             if (what == MainLoop.NotificationWmQuitRequest)
@@ -86,8 +92,6 @@ namespace GodotModules
         public static void StartServer()
         {
             GameServer = new GameServer();
-            GameServer.Name = "Game Server";
-            Instance.AddChild(GameServer);
             GameServer.Start();
         }
 
@@ -96,6 +100,49 @@ namespace GodotModules
             WebClient = new WebClient();
             WebClient.Name = "Web Client";
             Instance.AddChild(WebClient);
+        }
+
+        private void ProcessENetServerGodotCmds()
+        {
+            if (ENetServer.GodotCmds == null)
+                return;
+
+            while (ENetServer.GodotCmds.TryDequeue(out GodotCmd cmd))
+            {
+                switch (cmd.Opcode)
+                {
+                    case GodotOpcode.LogMessage:
+                        GD.Print($"[Server]: {cmd.Data}");
+                        return;
+                }
+            }
+        }
+
+        private void ProcessENetClientGodotCmds()
+        {
+            if (ENetClient.GodotCmds == null)
+                return;
+
+            while (ENetClient.GodotCmds.TryDequeue(out GodotCmd cmd))
+            {
+                switch (cmd.Opcode)
+                {
+                    case GodotOpcode.ENetPacket:
+                        var packetReader = (PacketReader)cmd.Data;
+                        var opcode = (ServerPacketOpcode)packetReader.ReadByte();
+
+                        GD.Print($"Received new server packet: {opcode}");
+
+                        ENetClient.HandlePacket[opcode].Handle(packetReader);
+
+                        packetReader.Dispose();
+                        break;
+
+                    case GodotOpcode.LogMessage:
+                        GD.Print($"[Client]: {cmd.Data}");
+                        break;
+                }
+            }
         }
     }
 }

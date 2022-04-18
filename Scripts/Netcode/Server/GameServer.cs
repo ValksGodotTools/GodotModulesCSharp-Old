@@ -11,9 +11,8 @@ namespace GodotModules.Netcode.Server
         // marking Players as static is okay as long as it is created a new in _Ready() (same goes for any other statics)
         public static Dictionary<uint, string> Players { get; set; } // the players in a lobby
 
-        public override void _Ready()
+        public GameServer()
         {
-            base._Ready();
             Players = new Dictionary<uint, string>();
         }
 

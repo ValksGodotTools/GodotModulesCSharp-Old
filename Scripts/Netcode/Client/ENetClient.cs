@@ -14,41 +14,15 @@ namespace GodotModules.Netcode.Client
         public static bool Running;
         public ConcurrentQueue<ClientPacket> Outgoing { get; set; }
         public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
+        public static ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
         protected bool ENetThreadRunning;
-        private static readonly Dictionary<ServerPacketOpcode, HandlePacket> HandlePacket = Utils.LoadInstances<ServerPacketOpcode, HandlePacket, ENetClient>();
-        private ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
+        public static readonly Dictionary<ServerPacketOpcode, HandlePacket> HandlePacket = Utils.LoadInstances<ServerPacketOpcode, HandlePacket, ENetClient>();
 
-        public override void _Ready()
+        public ENetClient()
         {
             Outgoing = new ConcurrentQueue<ClientPacket>();
             ENetCmds = new ConcurrentQueue<ENetCmd>();
             GodotCmds = new ConcurrentQueue<GodotCmd>();
-        }
-
-        public override void _Process(float delta)
-        {
-            while (GodotCmds.TryDequeue(out GodotCmd cmd))
-            {
-                switch (cmd.Opcode)
-                {
-                    case GodotOpcode.ENetPacket:
-                        var packetReader = (PacketReader)cmd.Data;
-                        var opcode = (ServerPacketOpcode)packetReader.ReadByte();
-
-                        GDLog($"Received new server packet: {opcode}");
-
-                        HandlePacket[opcode].Handle(packetReader);
-
-                        packetReader.Dispose();
-                        break;
-
-                    case GodotOpcode.LogMessage:
-                        GD.Print($"[Client]: {cmd.Data}");
-                        break;
-                }
-
-                ProcessGodotCommands(cmd);
-            }
         }
 
         /// <summary>
@@ -158,9 +132,6 @@ namespace GodotModules.Netcode.Client
 
             while (ConcurrentQueuesWorking())
                 await Task.Delay(100);
-
-            GameManager.GameClient.QueueFree();
-            GameManager.GameClient = null;
         }
 
         private bool ConcurrentQueuesWorking() => GodotCmds.Count != 0 || ENetCmds.Count != 0 || Outgoing.Count != 0;
@@ -207,12 +178,6 @@ namespace GodotModules.Netcode.Client
         /// </summary>
         /// <param name="obj">The object to log</param>
         protected void GDLog(object obj) => GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessage, obj));
-
-        /// <summary>
-        /// This is in the Godot thread, anything from the Godot thread can be used here
-        /// </summary>
-        /// <param name="cmd">A command received from the ENet thread</param>
-        protected virtual void ProcessGodotCommands(GodotCmd cmd) {}
 
         /// <summary>
         /// This is in the ENet thread, anything from the ENet thread can be used here

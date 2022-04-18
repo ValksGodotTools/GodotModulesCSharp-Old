@@ -10,36 +10,23 @@ using System.Timers;
 
 namespace GodotModules.Netcode.Server
 {
-    public abstract class ENetServer : Node
+    public abstract class ENetServer
     {
         public static Task WorkerServer { get; set; }
         public static bool Running { get; set; }
         public static ConcurrentQueue<ServerPacket> Outgoing { get; set; }
         public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
         public static Dictionary<uint, Peer> Peers { get; set; }
-        protected static ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
+        public static ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
         private static readonly Dictionary<ClientPacketOpcode, HandlePacket> HandlePacket = Utils.LoadInstances<ClientPacketOpcode, HandlePacket, ENetServer>();
         private bool QueueRestart { get; set; }
 
-        public override void _Ready()
+        public ENetServer()
         {
             ENetCmds = new ConcurrentQueue<ENetCmd>();
             GodotCmds = new ConcurrentQueue<GodotCmd>();
             Outgoing = new ConcurrentQueue<ServerPacket>();
             Peers = new Dictionary<uint, Peer>();
-        }
-
-        public override void _Process(float delta)
-        {
-            while (GodotCmds.TryDequeue(out GodotCmd cmd))
-            {
-                switch (cmd.Opcode)
-                {
-                    case GodotOpcode.LogMessage:
-                        GD.Print($"[Server]: {cmd.Data}");
-                        return;
-                }
-            }
         }
 
         /// <summary>
@@ -156,9 +143,6 @@ namespace GodotModules.Netcode.Server
                 //Start();
                 GameManager.StartServer();
             }
-
-            GameManager.GameServer.QueueFree();
-            GameManager.GameServer = null;
         }
 
         private bool ConcurrentQueuesWorking() => GodotCmds.Count != 0 || ENetCmds.Count != 0 || Outgoing.Count != 0;
