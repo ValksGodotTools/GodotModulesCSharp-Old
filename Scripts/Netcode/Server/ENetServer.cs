@@ -12,12 +12,12 @@ namespace GodotModules.Netcode.Server
 {
     public abstract class ENetServer : Node
     {
-        private static readonly Dictionary<ClientPacketOpcode, HandlePacket> HandlePacket = typeof(HandlePacket).Assembly.GetTypes().Where(x => typeof(HandlePacket).IsAssignableFrom(x) && !x.IsAbstract).Select(Activator.CreateInstance).Cast<HandlePacket>().ToDictionary(x => (ClientPacketOpcode)Enum.Parse(typeof(ClientPacketOpcode), x.GetType().Name.Replace("HandlePacket", "")), x => x);
-        private ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
-        public static ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
+        protected static ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
         public static ConcurrentQueue<ServerPacket> Outgoing { get; set; }
-        private bool Running { get; set; }
         public static Dictionary<uint, Peer> Peers { get; set; }
+        private static readonly Dictionary<ClientPacketOpcode, HandlePacket> HandlePacket = typeof(HandlePacket).Assembly.GetTypes().Where(x => typeof(HandlePacket).IsAssignableFrom(x) && !x.IsAbstract && x.Namespace == typeof(ENetServer).Namespace).Select(Activator.CreateInstance).Cast<HandlePacket>().ToDictionary(x => (ClientPacketOpcode)Enum.Parse(typeof(ClientPacketOpcode), x.GetType().Name.Replace("HandlePacket", "")), x => x);
+        private ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
+        private bool Running { get; set; }
         private bool QueueRestart { get; set; }
 
         public override void _Ready()
@@ -46,7 +46,7 @@ namespace GodotModules.Netcode.Server
         /// </summary>
         /// <param name="port"></param>
         /// <param name="maxClients"></param>
-        public Task ENetThreadWorker(ushort port, int maxClients)
+        public async void ENetThreadWorker(ushort port, int maxClients)
         {
             Running = true;
             if (UILobby.CurrentLobby.Public)
@@ -137,6 +137,10 @@ namespace GodotModules.Netcode.Server
             }
 
             GDLog("Server stopped");
+
+            while (ConcurrentQueuesWorking())
+                await Task.Delay(100);
+
             Stopped();
 
             if (QueueRestart)
@@ -148,9 +152,9 @@ namespace GodotModules.Netcode.Server
 
             GameManager.GameServer.QueueFree();
             GameManager.GameServer = null;
-
-            return Task.FromResult(1);
         }
+
+        private bool ConcurrentQueuesWorking() => GodotCmds.Count != 0 || ENetCmds.Count != 0 || Outgoing.Count != 0;
 
         /// <summary>
         /// Start the server, can be called from the Godot thread
@@ -211,7 +215,7 @@ namespace GodotModules.Netcode.Server
             QueueRestart = true;
         }
 
-        public static Peer[] GetOtherPeers(uint id) 
+        protected static Peer[] GetOtherPeers(uint id) 
         {
             var otherPeers = new Dictionary<uint, Peer>(Peers);
             otherPeers.Remove(id);
@@ -263,7 +267,7 @@ namespace GodotModules.Netcode.Server
         /// <summary>
         /// Kick all peers from the server, a method to be used only on the ENet thread
         /// </summary>
-        public static void DisconnectAllPeers()
+        private static void DisconnectAllPeers()
         {
             foreach (var peer in Peers.Values)
                 peer.DisconnectNow(0);

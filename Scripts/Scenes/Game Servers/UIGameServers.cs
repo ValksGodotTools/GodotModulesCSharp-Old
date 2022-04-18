@@ -36,6 +36,7 @@ namespace GodotModules.Netcode
         {
             var lobbyPrefab = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/LobbyListing.tscn");
             var lobby = lobbyPrefab.Instance<UILobbyListing>();
+            lobby.Name = "Lobby";
             lobby.Init();
             lobby.SetInfo(info);
             ServerList.AddChild(lobby);

@@ -11,11 +11,11 @@ namespace GodotModules.Netcode.Client
 {
     public abstract class ENetClient : Node
     {
-        private static readonly Dictionary<ServerPacketOpcode, HandlePacket> HandlePacket = typeof(HandlePacket).Assembly.GetTypes().Where(x => typeof(HandlePacket).IsAssignableFrom(x) && !x.IsAbstract).Select(Activator.CreateInstance).Cast<HandlePacket>().ToDictionary(x => (ServerPacketOpcode)Enum.Parse(typeof(ServerPacketOpcode), x.GetType().Name.Replace("HandlePacket", "")), x => x);
-        public ConcurrentQueue<ClientPacket> Outgoing { get; set; }
-        public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
+        protected ConcurrentQueue<ClientPacket> Outgoing { get; set; }
+        protected ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
+        protected bool ENetThreadRunning;
+        private static readonly Dictionary<ServerPacketOpcode, HandlePacket> HandlePacket = typeof(HandlePacket).Assembly.GetTypes().Where(x => typeof(HandlePacket).IsAssignableFrom(x) && !x.IsAbstract && x.Namespace == typeof(ENetClient).Namespace).Select(Activator.CreateInstance).Cast<HandlePacket>().ToDictionary(x => (ServerPacketOpcode)Enum.Parse(typeof(ServerPacketOpcode), x.GetType().Name.Replace("HandlePacket", "")), x => x);
         private ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
-        public bool ENetThreadRunning;
         private bool RunningNetCode;
 
         public override void _Ready()
@@ -60,7 +60,7 @@ namespace GodotModules.Netcode.Client
         /// </summary>
         /// <param name="ip"></param>
         /// <param name="port"></param>
-        private Task ENetThreadWorker(string ip, ushort port)
+        private async void ENetThreadWorker(string ip, ushort port)
         {
             Library.Initialize();
             var wantsToExit = false;
@@ -176,11 +176,14 @@ namespace GodotModules.Netcode.Client
 
             GDLog("Client stopped");
 
+            while (ConcurrentQueuesWorking())
+                await Task.Delay(100);
+
             GameManager.GameClient.QueueFree();
             GameManager.GameClient = null;
-
-            return Task.FromResult(1);
         }
+
+        private bool ConcurrentQueuesWorking() => GodotCmds.Count != 0 || ENetCmds.Count != 0 || Outgoing.Count != 0;
 
         /// <summary>
         /// Attempt to connect to the server, can be called from the Godot thread
