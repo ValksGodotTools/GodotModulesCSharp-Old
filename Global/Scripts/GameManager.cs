@@ -47,7 +47,10 @@ namespace GodotModules
                 if (ENetClient.Running)
                     GameClient.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToExitApp));
 
-                if (!GameClient.WorkerClient.IsCompleted || !GameServer.WorkerServer.IsCompleted)
+                if (GameClient.WorkerClient != null && !GameClient.WorkerClient.IsCompleted)
+                    await Task.Delay(100);
+
+                if (GameServer.WorkerServer != null && !GameServer.WorkerServer.IsCompleted)
                     await Task.Delay(100);
 
                 ExitCleanup();
