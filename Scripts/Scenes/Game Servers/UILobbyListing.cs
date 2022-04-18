@@ -19,11 +19,13 @@ namespace GodotModules.Netcode
         public LobbyListing Info { get; set; }
 
         public UILobbyListing CurrentListingFocused { get; set; }
+        public static bool ConnectingToLobby { get; set; }
         public static UILobbyListing Instance { get; set; }
 
         public void Init()
         {
             Instance = this;
+            ConnectingToLobby = false;
             LabelTitle = GetNode<Label>(NodePathLabelTitle);
             LabelDescription = GetNode<Label>(NodePathLabelDescription);
             LabelPing = GetNode<Label>(NodePathLabelPing);
@@ -41,8 +43,12 @@ namespace GodotModules.Netcode
 
         public void Join()
         {
-            GD.Print($"Connecting to {Info.Ip}:{Info.Port}");
-            //GameManager.GameClient.Connect(Info.Ip, Info.Port);
+            if (ConnectingToLobby)
+                return;
+
+            ConnectingToLobby = true;
+            //GD.Print($"Connecting to {Info.Ip}:{Info.Port}");
+            GD.Print("Connecting to lobby...");
             GameManager.StartClient(Info.Ip, Info.Port);
         }
 

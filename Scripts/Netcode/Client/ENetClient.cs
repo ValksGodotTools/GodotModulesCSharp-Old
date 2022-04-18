@@ -110,6 +110,7 @@ namespace GodotModules.Netcode.Client
                                 break;
 
                             case EventType.Timeout:
+                                UILobbyListing.ConnectingToLobby = false;
                                 Running = false;
                                 Timeout(netEvent);
                                 break;
@@ -145,6 +146,7 @@ namespace GodotModules.Netcode.Client
         {
             if (ENetThreadRunning)
             {
+                UILobbyListing.ConnectingToLobby = false;
                 GD.Print("ENet thread is running already");
                 return;
             }
