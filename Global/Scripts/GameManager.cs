@@ -87,8 +87,6 @@ namespace GodotModules
         public static void StartClient(string ip, ushort port)
         {
             GameClient = new GameClient();
-            GameClient.Name = "Game Client";
-            Instance.AddChild(GameClient);
             GameClient.Connect(ip, port);
         }
 

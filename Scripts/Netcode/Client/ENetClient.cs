@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GodotModules.Netcode.Client
 {
-    public abstract class ENetClient : Node
+    public abstract class ENetClient
     {
         public static Task WorkerClient { get; set; }
         public static bool Running;
