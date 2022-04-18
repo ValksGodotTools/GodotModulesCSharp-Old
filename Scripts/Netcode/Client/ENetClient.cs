@@ -5,18 +5,18 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
-using System.Linq;
 
 namespace GodotModules.Netcode.Client
 {
     public abstract class ENetClient : Node
     {
-        protected ConcurrentQueue<ClientPacket> Outgoing { get; set; }
-        protected ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
+        public static Task WorkerClient { get; set; }
+        public static bool Running;
+        public ConcurrentQueue<ClientPacket> Outgoing { get; set; }
+        public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
         protected bool ENetThreadRunning;
         private static readonly Dictionary<ServerPacketOpcode, HandlePacket> HandlePacket = Utils.LoadInstances<ServerPacketOpcode, HandlePacket, ENetClient>();
         private ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
-        private bool RunningNetCode;
 
         public override void _Ready()
         {
@@ -40,15 +40,11 @@ namespace GodotModules.Netcode.Client
                         HandlePacket[opcode].Handle(packetReader);
 
                         packetReader.Dispose();
-                        return;
+                        break;
 
                     case GodotOpcode.LogMessage:
                         GD.Print($"[Client]: {cmd.Data}");
-                        return;
-
-                    case GodotOpcode.ExitApp:
-                        GetTree().Quit();
-                        return;
+                        break;
                 }
 
                 ProcessGodotCommands(cmd);
@@ -63,8 +59,6 @@ namespace GodotModules.Netcode.Client
         private async void ENetThreadWorker(string ip, ushort port)
         {
             Library.Initialize();
-            var wantsToExit = false;
-            var wantsToDisconnect = false;
 
             using (var client = new Host())
             {
@@ -85,8 +79,8 @@ namespace GodotModules.Netcode.Client
                 peer.PingInterval(pingInterval);
                 peer.Timeout(timeout, timeoutMinimum, timeoutMaximum);
 
-                RunningNetCode = true;
-                while (RunningNetCode)
+                Running = true;
+                while (Running)
                 {
                     var polled = false;
 
@@ -96,15 +90,9 @@ namespace GodotModules.Netcode.Client
                         switch (cmd.Opcode)
                         {
                             case ENetOpcode.ClientWantsToExitApp:
-                                peer.Disconnect(0);
-                                RunningNetCode = false;
-                                wantsToExit = true;
-                                break;
-
                             case ENetOpcode.ClientWantsToDisconnect:
                                 peer.Disconnect(0);
-                                RunningNetCode = false;
-                                wantsToDisconnect = true;
+                                Running = false;
                                 break;
                         }
                     }   
@@ -144,18 +132,16 @@ namespace GodotModules.Netcode.Client
                                     continue;
                                 }
 
-                                GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.ENetPacket, Data = new PacketReader(packet) });
+                                GodotCmds.Enqueue(new GodotCmd(GodotOpcode.ENetPacket, new PacketReader(packet)));
                                 break;
 
                             case EventType.Timeout:
-                                RunningNetCode = false;
-                                wantsToDisconnect = true;
+                                Running = false;
                                 Timeout(netEvent);
                                 break;
 
                             case EventType.Disconnect:
-                                RunningNetCode = false;
-                                wantsToDisconnect = true;
+                                Running = false;
                                 Disconnect(netEvent);
                                 break;
                         }
@@ -167,12 +153,6 @@ namespace GodotModules.Netcode.Client
 
             Library.Deinitialize();
             ENetThreadRunning = false;
-
-            if (wantsToDisconnect)
-                GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.LoadMainMenu });
-
-            if (wantsToExit)
-                GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.ExitApp });
 
             GDLog("Client stopped");
 
@@ -202,8 +182,8 @@ namespace GodotModules.Netcode.Client
 
             try
             {
-                var workerClient = Task.Run(() => ENetThreadWorker(ip, port));
-                await workerClient;
+                WorkerClient = Task.Run(() => ENetThreadWorker(ip, port));
+                await WorkerClient;
             }
             catch (Exception e)
             {
@@ -214,13 +194,19 @@ namespace GodotModules.Netcode.Client
         /// <summary>
         /// Disconnect the client from the server, can be called from the Godot thread
         /// </summary>
-        public void Disconnect() => ENetCmds.Enqueue(new ENetCmd { Opcode = ENetOpcode.ClientWantsToDisconnect });
+        public async Task Stop() 
+        {
+            ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToDisconnect));
+
+            if (!ENetClient.WorkerClient.IsCompleted)
+                await Task.Delay(100);
+        }
 
         /// <summary>
         /// Provides a way to log a message on the Godot thread from the ENet thread
         /// </summary>
         /// <param name="obj">The object to log</param>
-        protected void GDLog(object obj) => GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.LogMessage, Data = obj });
+        protected void GDLog(object obj) => GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessage, obj));
 
         /// <summary>
         /// This is in the Godot thread, anything from the Godot thread can be used here

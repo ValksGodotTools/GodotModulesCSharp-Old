@@ -25,6 +25,17 @@
 
     public class GodotCmd
     {
+        public GodotCmd(GodotOpcode opcode)
+        {
+            Opcode = opcode;
+        }
+
+        public GodotCmd(GodotOpcode opcode, object data)
+        {
+            Opcode = opcode;
+            Data = data;
+        }
+
         public GodotOpcode Opcode { get; set; }
         public object Data { get; set; }
     }
@@ -32,14 +43,22 @@
     public enum GodotOpcode
     {
         ENetPacket,
-        LogMessage,
-        LoadMainMenu,
-        ExitApp,
-        AddPlayerToLobbyList
+        LogMessage
     }
 
     public class ENetCmd
     {
+        public ENetCmd(ENetOpcode opcode) 
+        {
+            Opcode = opcode;
+        }
+
+        public ENetCmd(ENetOpcode opcode, object data)
+        {
+            Opcode = opcode;
+            Data = data;
+        }
+
         public ENetOpcode Opcode { get; set; }
         public object Data { get; set; }
     }
@@ -47,7 +66,6 @@
     public enum ENetOpcode
     {
         ClientWantsToExitApp,
-        ClientWantsToDisconnect,
-        ClearPlayerStats
+        ClientWantsToDisconnect
     }
 }

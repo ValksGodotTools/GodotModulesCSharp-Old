@@ -9,11 +9,6 @@ namespace GodotModules.Netcode.Client
     {
         public Dictionary<uint, string> Players = new Dictionary<uint, string>();
 
-        protected override void ProcessGodotCommands(GodotCmd cmd)
-        {
-            
-        }
-
         protected override void Connect(Event netEvent)
         {
             GDLog("Client connected to server");

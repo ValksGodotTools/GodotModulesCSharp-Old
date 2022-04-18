@@ -1,9 +1,11 @@
+using Common.Netcode;
 using Godot;
 using GodotModules.Netcode;
 using GodotModules.Netcode.Client;
 using GodotModules.Netcode.Server;
 using GodotModules.Settings;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace GodotModules
 {
@@ -27,11 +29,21 @@ namespace GodotModules
             InitWebClient();
         }
 
-        public override void _Notification(int what)
+        public override async void _Notification(int what)
         {
             if (what == MainLoop.NotificationWmQuitRequest)
             {
-                Instance.GetTree().SetAutoAcceptQuit(false); // not sure if this is required
+                Instance.GetTree().SetAutoAcceptQuit(false);
+
+                if (ENetServer.Running) 
+                    GameServer.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToExitApp));
+
+                if (ENetClient.Running)
+                    GameClient.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToExitApp));
+
+                if (!GameClient.WorkerClient.IsCompleted || !GameServer.WorkerServer.IsCompleted)
+                    await Task.Delay(100);
+
                 ExitCleanup();
             }
         }
@@ -58,7 +70,6 @@ namespace GodotModules
         private static void ExitCleanup()
         {
             UtilOptions.SaveOptions();
-            WebClient.Client.CancelPendingRequests();
             WebClient.Client.Dispose();
 
             Instance.GetTree().Quit();

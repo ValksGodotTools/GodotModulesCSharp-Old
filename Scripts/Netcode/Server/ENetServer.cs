@@ -12,12 +12,13 @@ namespace GodotModules.Netcode.Server
 {
     public abstract class ENetServer : Node
     {
-        protected static ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
+        public static Task WorkerServer { get; set; }
+        public static bool Running { get; set; }
         public static ConcurrentQueue<ServerPacket> Outgoing { get; set; }
+        public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
         public static Dictionary<uint, Peer> Peers { get; set; }
+        protected static ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
         private static readonly Dictionary<ClientPacketOpcode, HandlePacket> HandlePacket = Utils.LoadInstances<ClientPacketOpcode, HandlePacket, ENetServer>();
-        private ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
-        private bool Running { get; set; }
         private bool QueueRestart { get; set; }
 
         public override void _Ready()
@@ -70,7 +71,13 @@ namespace GodotModules.Netcode.Server
                     // ENet Cmds
                     while (ENetCmds.TryDequeue(out ENetCmd cmd))
                     {
-                        //var opcode = cmd.Opcode;
+                        var opcode = cmd.Opcode;
+
+                        if (opcode == ENetOpcode.ClientWantsToExitApp)
+                        {
+                            Running = false;
+                            DisconnectAllPeers();
+                        }
                     }
 
                     // Outgoing
@@ -171,8 +178,8 @@ namespace GodotModules.Netcode.Server
 
             try
             {
-                var workerServer = Task.Run(() => ENetThreadWorker(25565, 100));
-                await workerServer;
+                WorkerServer = Task.Run(() => ENetThreadWorker(25565, 100));
+                await WorkerServer;
             }
             catch (Exception e)
             {
@@ -183,7 +190,7 @@ namespace GodotModules.Netcode.Server
         /// <summary>
         /// Stop the server, can be called from the Godot thread
         /// </summary>
-        public virtual void Stop()
+        public virtual async Task Stop()
         {
             if (!Running)
             {
@@ -195,6 +202,9 @@ namespace GodotModules.Netcode.Server
 
             GDLog("Stopping server");
             Running = false;
+
+            if (!ENetServer.WorkerServer.IsCompleted)
+                await Task.Delay(100);
         }
 
         /// <summary>
@@ -215,7 +225,7 @@ namespace GodotModules.Netcode.Server
             QueueRestart = true;
         }
 
-        protected static Peer[] GetOtherPeers(uint id) 
+        protected static Peer[] GetOtherPeers(uint id)
         {
             var otherPeers = new Dictionary<uint, Peer>(Peers);
             otherPeers.Remove(id);
@@ -226,7 +236,7 @@ namespace GodotModules.Netcode.Server
         /// Provides a way to log a message on the Godot thread from the ENet thread
         /// </summary>
         /// <param name="obj">The object to log</param>
-        public static void GDLog(object obj) => GodotCmds.Enqueue(new GodotCmd { Opcode = GodotOpcode.LogMessage, Data = obj });
+        public static void GDLog(object obj) => GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessage, obj));
 
         /// <summary>
         /// This is in the ENet thread, anything from the ENet thread can be used here

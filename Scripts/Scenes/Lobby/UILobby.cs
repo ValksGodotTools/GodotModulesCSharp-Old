@@ -1,5 +1,8 @@
 using Godot;
+using GodotModules.Netcode.Client;
+using GodotModules.Netcode.Server;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace GodotModules.Netcode
 {
@@ -53,14 +56,15 @@ namespace GodotModules.Netcode
                 UIAddPlayer(player.Key, player.Value);
         }
 
-        public override void _Input(InputEvent @event)
+        public override async void _Input(InputEvent @event)
         {
             if (Input.IsActionJustPressed("ui_cancel"))
             {
                 GameManager.WebClient.Client.CancelPendingRequests();
                 GameManager.WebClient.TimerPingMasterServer.Stop();
-                GameManager.GameClient.Disconnect();
-                GameManager.GameServer.Stop();
+                await GameManager.GameClient.Stop();
+                await GameManager.GameServer.Stop();
+                
                 GameManager.ChangeScene("GameServers");
             }
         }
