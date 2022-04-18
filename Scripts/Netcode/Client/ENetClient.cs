@@ -13,7 +13,7 @@ namespace GodotModules.Netcode.Client
         public static Task WorkerClient { get; set; }
         public static bool Running;
         public ConcurrentQueue<ClientPacket> Outgoing { get; set; }
-        public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
+        public static ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
         public static ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
         protected bool ENetThreadRunning;
         public static readonly Dictionary<ServerPacketOpcode, HandlePacket> HandlePacket = Utils.LoadInstances<ServerPacketOpcode, HandlePacket, ENetClient>();
@@ -167,7 +167,7 @@ namespace GodotModules.Netcode.Client
         /// <summary>
         /// Disconnect the client from the server, can be called from the Godot thread
         /// </summary>
-        public async Task Stop() 
+        public async static Task Stop() 
         {
             ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToDisconnect));
 

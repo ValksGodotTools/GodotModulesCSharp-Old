@@ -174,7 +174,7 @@ namespace GodotModules.Netcode.Server
         /// <summary>
         /// Stop the server, can be called from the Godot thread
         /// </summary>
-        public virtual async Task Stop()
+        public static async Task Stop()
         {
             if (!Running)
             {
