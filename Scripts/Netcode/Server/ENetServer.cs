@@ -15,7 +15,7 @@ namespace GodotModules.Netcode.Server
         protected static ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
         public static ConcurrentQueue<ServerPacket> Outgoing { get; set; }
         public static Dictionary<uint, Peer> Peers { get; set; }
-        private static readonly Dictionary<ClientPacketOpcode, HandlePacket> HandlePacket = typeof(HandlePacket).Assembly.GetTypes().Where(x => typeof(HandlePacket).IsAssignableFrom(x) && !x.IsAbstract && x.Namespace == typeof(ENetServer).Namespace).Select(Activator.CreateInstance).Cast<HandlePacket>().ToDictionary(x => (ClientPacketOpcode)Enum.Parse(typeof(ClientPacketOpcode), x.GetType().Name.Replace("HandlePacket", "")), x => x);
+        private static readonly Dictionary<ClientPacketOpcode, HandlePacket> HandlePacket = Utils.LoadInstances<ClientPacketOpcode, HandlePacket, ENetServer>();
         private ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
         private bool Running { get; set; }
         private bool QueueRestart { get; set; }

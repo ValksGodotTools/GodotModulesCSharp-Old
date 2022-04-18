@@ -1,5 +1,6 @@
 using Godot;
 using System.Collections.Generic;
+using System;
 using System.Linq;
 
 namespace GodotModules
@@ -19,5 +20,11 @@ namespace GodotModules
             float retY = Mathf.Lerp(a.y, b.y, by);
             return new Vector2(retX, retY);
         }
+
+        public static Dictionary<Key, Value> LoadInstances<Key, Value, Namespace>() =>
+            typeof(Value).Assembly.GetTypes()
+                .Where(x => typeof(Value).IsAssignableFrom(x) && !x.IsAbstract && x.Namespace == typeof(Namespace).Namespace)
+                .Select(Activator.CreateInstance).Cast<Value>()
+                .ToDictionary(x => (Key)Enum.Parse(typeof(Key), x.GetType().Name.Replace(typeof(Value).Name, "")), x => x);
     }
 }
