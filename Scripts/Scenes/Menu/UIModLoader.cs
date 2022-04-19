@@ -5,6 +5,10 @@ namespace GodotModules.ModLoader
 {
     public class UIModLoader : Control
     {
+        private static PackedScene PrefabModInfo = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/ModInfo.tscn");
+
+        public static UIModLoader Instance { get; set; }
+        
         [Export] public readonly NodePath NodePathModList;
         [Export] public readonly NodePath NodePathModName;
         [Export] public readonly NodePath NodePathModGameVersions;
@@ -27,9 +31,6 @@ namespace GodotModules.ModLoader
 
         // logger
         private RichTextLabel Logger { get; set; }
-        private static PackedScene PrefabModInfo = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/ModInfo.tscn");
-
-        public static UIModLoader Instance { get; set; }
 
         public override void _Ready()
         {

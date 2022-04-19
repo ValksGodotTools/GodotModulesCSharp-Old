@@ -9,6 +9,10 @@ namespace GodotModules.Netcode
 {
     public class UILobby : Node
     {
+        private static PackedScene PrefabLobbyPlayerListing = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/LobbyPlayerListing.tscn");
+        public static LobbyListing CurrentLobby { get; set; }
+        private static UILobby Instance { get; set; }
+        
         [Export] public readonly NodePath NodePathPlayers;
         [Export] public readonly NodePath NodePathChatText;
         [Export] public readonly NodePath NodePathChatInput;
@@ -31,11 +35,7 @@ namespace GodotModules.Netcode
         private System.Threading.Timer TimerCountdownGameStart { get; set; }
         private int CountdownGameStart = 5;
 
-        
         private Dictionary<uint, UILobbyPlayerListing> UIPlayers { get; set; }
-        private static UILobby Instance { get; set; }
-        public static LobbyListing CurrentLobby { get; set; }
-        private static PackedScene PrefabLobbyPlayerListing = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/LobbyPlayerListing.tscn");
 
         public override void _Ready()
         {

@@ -5,6 +5,8 @@ namespace GodotModules.Settings
 {
     public class UIOptions : Node
     {
+        public static UIOptions Instance { get; set; }
+        
         [Export] public readonly NodePath NodePathFullscreenOptions;
         [Export] public readonly NodePath NodePathResolutionOptions;
         [Export] public readonly NodePath NodePathSliderMusic;
@@ -19,7 +21,6 @@ namespace GodotModules.Settings
         private CheckBox VSync { get; set; }
         public LineEdit InputUsername { get; set; }
 
-        public static UIOptions Instance { get; set; }
         public OptionsData Options { get; set; }
 
         public override void _Ready()

@@ -7,20 +7,22 @@ namespace GodotModules.Netcode
 {
     public class UIGameServers : Control
     {
+        private static PackedScene PrefabLobbyListing = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/LobbyListing.tscn");
+        public static Dictionary<string, LobbyListing> LobbyListings { get; set; }
+        public static UIGameServers Instance { get; set; }
+
         [Export] public readonly NodePath NodePathServerList;
         [Export] public readonly NodePath NodePathServerCreationPopup;
 
         private VBoxContainer ServerList { get; set; }
         public UICreateLobby ServerCreationPopup { get; set; }
 
-        public static UIGameServers Instance { get; set; }
-        private static PackedScene PrefabLobbyListing = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/LobbyListing.tscn");
-
         public override void _Ready()
         {
             Instance = this;
             ServerList = GetNode<VBoxContainer>(NodePathServerList);
             ServerCreationPopup = GetNode<UICreateLobby>(NodePathServerCreationPopup);
+            LobbyListings = new Dictionary<string, LobbyListing>();
             ListServers();
         }
 
@@ -53,12 +55,15 @@ namespace GodotModules.Netcode
             var res = await GameManager.WebClient.TaskGetServers;
 
             if (res.Status == WebServerStatus.ERROR)
-            {
                 return;
-            }
 
-            foreach (var server in res.Content)
+            LobbyListings.Clear();
+
+            foreach (var server in res.Content) 
+            {
+                LobbyListings.Add(server.Ip, server);
                 AddServer(server);
+            }
         }
 
         public async void PostServer(LobbyListing info)

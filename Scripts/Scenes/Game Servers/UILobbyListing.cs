@@ -4,6 +4,9 @@ namespace GodotModules.Netcode
 {
     public class UILobbyListing : Control
     {
+        public static bool ConnectingToLobby { get; set; }
+        public static UILobbyListing Instance { get; set; }
+        
         [Export] public readonly NodePath NodePathLabelTitle;
         [Export] public readonly NodePath NodePathLabelDescription;
         [Export] public readonly NodePath NodePathLabelPing;
@@ -19,8 +22,6 @@ namespace GodotModules.Netcode
         public LobbyListing Info { get; set; }
 
         public UILobbyListing CurrentListingFocused { get; set; }
-        public static bool ConnectingToLobby { get; set; }
-        public static UILobbyListing Instance { get; set; }
 
         public void Init()
         {

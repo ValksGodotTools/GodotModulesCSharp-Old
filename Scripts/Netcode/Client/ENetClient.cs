@@ -17,8 +17,8 @@ namespace GodotModules.Netcode.Client
         private static int OutgoingId { get; set; }
         private static ConcurrentDictionary<int, ClientPacket> Outgoing { get; set; }
         public static DisconnectOpcode DisconnectOpcode { get; set; }
-        protected bool ENetThreadRunning;
         public static readonly Dictionary<ServerPacketOpcode, HandlePacket> HandlePacket = Utils.LoadInstances<ServerPacketOpcode, HandlePacket, ENetClient>();
+        protected bool ENetThreadRunning;
 
         public ENetClient()
         {

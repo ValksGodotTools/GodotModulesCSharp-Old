@@ -8,13 +8,13 @@ namespace Game
     // Master manages everything in the game (DEMO)
     public class GameMaster : Node
     {
+        private static PackedScene PrefabPlayer = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/Player.tscn");
         public static Player Player { get; set; }
         public static GameMaster Instance { get; set; }
 
         [Export] public readonly NodePath NodePathLabelPlayerHealth;
         public Label LabelPlayerHealth;
 
-        private static PackedScene PrefabPlayer = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/Player.tscn");
 
         public override void _Ready()
         {
