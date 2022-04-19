@@ -11,27 +11,23 @@ namespace GodotModules.Netcode.Server
         {
             var data = new RPacketLobbyJoin(reader);
 
+            // Check if data.Username is appropriate username
+            // TODO
+
             // Keep track of joining player server side
             Players.Add(peer.ID, data.Username);
 
-            // Get all players EXCEPT for peer.ID
-            var otherPlayers = GetOtherPlayers(peer.ID);
+            // tell joining player their Id and tell them about other players in lobby
+            Outgoing.Enqueue(new ServerPacket((byte)ServerPacketOpcode.LobbyInfo, new WPacketLobbyInfo {
+                Id = peer.ID,
+                Players = GetOtherPlayers(peer.ID)
+            }, peer));
 
-            GDLog($"Other Players {Utils.StringifyDict(otherPlayers)}");
-
-            // Tell joining player about all the other players in the lobby
-            if (otherPlayers.Count > 0)
-                Outgoing.Enqueue(new ServerPacket((byte)ServerPacketOpcode.LobbyList, new WPacketLobbyList
-                {
-                    Players = otherPlayers
-                }, peer));
-
-            // Tell everyone including player this player joined
-            Outgoing.Enqueue(new ServerPacket((byte)ServerPacketOpcode.LobbyJoin, new WPacketLobbyJoin
-            {
+            // tell other players about new player that joined
+            Outgoing.Enqueue(new ServerPacket((byte)ServerPacketOpcode.LobbyJoin, new WPacketLobbyJoin {
                 Id = peer.ID,
                 Username = data.Username
-            }, Peers.Values.ToArray()));
+            }, GetOtherPeers(peer.ID)));
         }
     }
 }
