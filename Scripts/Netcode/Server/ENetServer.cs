@@ -45,9 +45,17 @@ namespace GodotModules.Netcode.Server
             using (Host server = new Host())
             {
                 Address address = new Address();
-
                 address.Port = port;
-                server.Create(address, maxClients);
+
+                try 
+                {
+                    server.Create(address, maxClients);
+                }
+                catch (Exception e)
+                {
+                    GD.Print($"A server is running on port {port} already! {e.Message}");
+                    return;
+                }
 
                 GDLog($"Server listening on port {port}");
 
@@ -60,10 +68,11 @@ namespace GodotModules.Netcode.Server
                     {
                         var opcode = cmd.Opcode;
 
+                        // Host client wants to stop the server
                         if (opcode == ENetOpcode.ClientWantsToExitApp)
                         {
                             Running = false;
-                            DisconnectAllPeers();
+                            KickAll(DisconnectOpcode.Stopping);
                         }
                     }
 
@@ -141,7 +150,7 @@ namespace GodotModules.Netcode.Server
             {
                 QueueRestart = false;
                 //Start();
-                GameManager.StartServer();
+                GameManager.StartServer(port, maxClients);
             }
         }
 
@@ -150,7 +159,7 @@ namespace GodotModules.Netcode.Server
         /// <summary>
         /// Start the server, can be called from the Godot thread
         /// </summary>
-        public async void Start()
+        public async void Start(ushort port, int maxClients)
         {
             if (Running)
             {
@@ -162,7 +171,7 @@ namespace GodotModules.Netcode.Server
 
             try
             {
-                WorkerServer = Task.Run(() => ENetThreadWorker(25565, 100));
+                WorkerServer = Task.Run(() => ENetThreadWorker(port, maxClients));
                 await WorkerServer;
             }
             catch (Exception e)
@@ -182,7 +191,7 @@ namespace GodotModules.Netcode.Server
                 return;
             }
 
-            DisconnectAllPeers();
+            KickAll(DisconnectOpcode.Stopping);
 
             GDLog("Stopping server");
             Running = false;
@@ -202,7 +211,7 @@ namespace GodotModules.Netcode.Server
                 return;
             }
 
-            DisconnectAllPeers();
+            KickAll(DisconnectOpcode.Restarting);
 
             GDLog("Restarting server");
             Running = false;
@@ -259,14 +268,26 @@ namespace GodotModules.Netcode.Server
         }
 
         /// <summary>
-        /// Kick all peers from the server, a method to be used only on the ENet thread
+        /// Kick all clients from the server
         /// </summary>
-        private static void DisconnectAllPeers()
+        /// <param name="opcode">Tells the client why they were kicked</param>
+        private static void KickAll(DisconnectOpcode opcode)
         {
-            foreach (var peer in Peers.Values)
-                peer.DisconnectNow(0);
+            foreach (var peer in Peers.Values) 
+                peer.DisconnectNow((uint)opcode);
 
             Peers.Clear();
+        }
+
+        /// <summary>
+        /// Kick a specified client from the server
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="opcode">Tells the client why they were kicked</param>
+        private static void Kick(uint id, DisconnectOpcode opcode) 
+        {
+            Peers[id].DisconnectNow((uint)opcode);
+            Peers.Remove(id);
         }
     }
 }
