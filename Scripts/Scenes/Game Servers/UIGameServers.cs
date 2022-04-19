@@ -10,6 +10,8 @@ namespace GodotModules.Netcode
         private static PackedScene PrefabLobbyListing = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/LobbyListing.tscn");
         public static Dictionary<string, LobbyListing> LobbyListings { get; set; }
         public static UIGameServers Instance { get; set; }
+        public static UILobbyListing SelectedLobbyInstance { get; set; }
+        public static bool ConnectingToLobby { get; set; }
 
         [Export] public readonly NodePath NodePathServerList;
         [Export] public readonly NodePath NodePathServerCreationPopup;

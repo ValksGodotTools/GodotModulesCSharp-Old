@@ -6,7 +6,7 @@ namespace GodotModules.Netcode
     {
         private void _on_Join_Lobby_pressed()
         {
-            var selected = UILobbyListing.Instance.CurrentListingFocused;
+            var selected = UIGameServers.SelectedLobbyInstance;
 
             if (selected == null)
                 return;

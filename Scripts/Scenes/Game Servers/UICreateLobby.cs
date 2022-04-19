@@ -105,7 +105,7 @@ namespace GodotModules.Netcode
 
         private void _on_Create_pressed()
         {
-            if (UILobbyListing.ConnectingToLobby)
+            if (UIGameServers.ConnectingToLobby)
                 return;
 
             if (!IsValid())
