@@ -8,6 +8,18 @@ namespace GodotModules
     public static class Utils
     {
         /// <summary>
+        /// All logging should be done through here
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="color"></param>
+        public static void Log(object obj, ConsoleColor color = ConsoleColor.Gray) 
+        {
+            Console.ForegroundColor = color;
+            GD.Print(obj);
+            Console.ResetColor();
+        }
+
+        /// <summary>
         /// Put a Dict<Key, Value> into a nice string format for printing to console.
         /// </summary>
         /// <param name="dict"></param>
