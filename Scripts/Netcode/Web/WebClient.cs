@@ -15,6 +15,7 @@ namespace GodotModules.Netcode
     public class WebClient : Node
     {
         public HttpClient Client { get; set; }
+        public static string ExternalIp { get; set; }
         public Task<WebServerResponse<LobbyListing[]>> TaskGetServers { get; set; }
         private static int FailedPingAttempts { get; set; }
         private const string WEB_SERVER_IP = "localhost:4000";
@@ -104,10 +105,10 @@ namespace GodotModules.Netcode
 
         }*/
 
-        public string GetExternalIp()
+        public static void GetExternalIp()
         {
             string externalIpString = new System.Net.WebClient().DownloadString("http://icanhazip.com").Replace("\\r\\n", "").Replace("\\n", "").Trim();
-            return IPAddress.Parse(externalIpString).ToString();
+            ExternalIp = IPAddress.Parse(externalIpString).ToString();
         }
     }
 

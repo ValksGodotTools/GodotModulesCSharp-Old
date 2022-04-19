@@ -49,7 +49,7 @@ namespace GodotModules.Netcode
         public void ClearFields()
         {
             InputTitle.Text = "Test";
-            InputPort.Text = "25565";
+            InputPort.Text = "7777";
             InputDescription.Text = "";
             InputMaxPlayerCount.Text = "10";
         }
@@ -62,7 +62,7 @@ namespace GodotModules.Netcode
 
         private int ValidatedMaxPlayerCount = 10;
         private int ValidatedNumPingAttempts = 3;
-        private int ValidatedPort = 25565;
+        private int ValidatedPort = 7777;
 
         private void _on_Title_text_changed(string text) => Validate("title", text, "^[A-Za-z ]{3,15}$", "Name must contain only letters and have length of 3 to 15 characters");
 
@@ -112,9 +112,10 @@ namespace GodotModules.Netcode
                 return;
 
             var port = ushort.Parse(InputPort.Text.Trim());
-            var externalIp = GameManager.WebClient.GetExternalIp();
+            var localIp = "127.0.0.1";
 
-            if (UIGameServers.LobbyListings.ContainsKey(externalIp)) 
+            // does not update fast enough to be reliable
+            /*if (UIGameServers.LobbyListings.ContainsKey(externalIp)) 
             {
                 var listing = UIGameServers.LobbyListings[externalIp];
 
@@ -123,12 +124,12 @@ namespace GodotModules.Netcode
                     GD.Print("A server is running on this ip and port already");
                     return;
                 }
-            }
+            }*/
 
             var info = new LobbyListing
             {
                 Name = InputTitle.Text.Trim(),
-                Ip = externalIp,
+                Ip = localIp,
                 Port = port,
                 Description = InputDescription.Text.Trim(),
                 MaxPlayerCount = ValidatedMaxPlayerCount,
@@ -143,7 +144,7 @@ namespace GodotModules.Netcode
             UILobby.CurrentLobby = info;
 
             GameManager.StartServer(port, ValidatedMaxPlayerCount);
-            GameManager.StartClient(externalIp, port);
+            GameManager.StartClient(localIp, port);
 
             Hide();
         }

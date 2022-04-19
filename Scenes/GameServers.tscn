@@ -104,7 +104,6 @@ focus_mode = 0
 text = "Refresh"
 
 [node name="CreateLobby" parent="PanelContainer" instance=ExtResource( 4 )]
-visible = true
 margin_left = 237.0
 margin_top = 125.0
 margin_right = 787.0
