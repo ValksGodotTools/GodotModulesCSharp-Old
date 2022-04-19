@@ -113,6 +113,18 @@ namespace GodotModules.Netcode
 
             var port = ushort.Parse(InputPort.Text.Trim());
             var externalIp = GameManager.WebClient.GetExternalIp();
+
+            if (UIGameServers.LobbyListings.ContainsKey(externalIp)) 
+            {
+                var listing = UIGameServers.LobbyListings[externalIp];
+
+                if (listing.Port == port)
+                {
+                    GD.Print("A server is running on this ip and port already");
+                    return;
+                }
+            }
+
             var info = new LobbyListing
             {
                 Name = InputTitle.Text.Trim(),
