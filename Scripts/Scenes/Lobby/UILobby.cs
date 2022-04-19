@@ -62,11 +62,9 @@ namespace GodotModules.Netcode
         {
             if (Input.IsActionJustPressed("ui_cancel"))
             {
-                await GameClient.Send(ClientPacketOpcode.LobbyLeave);
-
                 GameManager.WebClient.Client.CancelPendingRequests();
                 GameManager.WebClient.TimerPingMasterServer.Stop();
-                await GameClient.Stop();
+                await GameClient.Disconnect();
                 await GameServer.Stop();
             }
         }
