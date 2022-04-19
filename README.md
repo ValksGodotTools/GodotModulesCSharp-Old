@@ -14,6 +14,14 @@ I was thinking to myself, I want to make a bullet hell game, but I'm also going 
 ![image](https://user-images.githubusercontent.com/6277739/163117944-e350b70c-aaaa-426f-8719-3c28648d5747.png)  
 
 ### [Netcode](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/NETCODE.md) (wip)
+- [x] Server is shipped with client
+- [x] Server browser
+- [x] Join, leave lobbies
+- [x] Lobbies are broadcasted to master nodejs server
+- [ ] Lobby chat
+- [ ] Player positions
+- [ ] Game events like player spawn, player bullet spawn, enemy bullet spawn events
+- [ ] Fix all bugs
 
 ### Popup Menu (coming soon)
 In games usually when you press Esc a popup menu comes up asking if you want to go back to the main menu or edit the options
