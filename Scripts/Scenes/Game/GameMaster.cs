@@ -1,4 +1,5 @@
 using Godot;
+using GodotModules;
 using GodotModules.ModLoader;
 using System;
 
@@ -12,6 +13,8 @@ namespace Game
 
         [Export] public readonly NodePath NodePathLabelPlayerHealth;
         public Label LabelPlayerHealth;
+
+        private static PackedScene PrefabPlayer = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/Player.tscn");
 
         public override void _Ready()
         {
@@ -37,8 +40,7 @@ namespace Game
 
         private void InitPlayer()
         {
-            var playerPrefab = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/Player.tscn");
-            Player = playerPrefab.Instance<Player>();
+            Player = PrefabPlayer.Instance<Player>();
             Player.Position = OS.WindowSize / 2;
             Player.Name = "Player";
             Instance.AddChild(Player);

@@ -27,6 +27,7 @@ namespace GodotModules.ModLoader
 
         // logger
         private RichTextLabel Logger { get; set; }
+        private static PackedScene PrefabModInfo = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/ModInfo.tscn");
 
         public static UIModLoader Instance { get; set; }
 
@@ -71,7 +72,6 @@ namespace GodotModules.ModLoader
             ModDescription.Text = description;
 
             var modsEnabled = ModLoader.ModsEnabled;
-            var modInfoPrefab = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/ModInfo.tscn");
 
             ModInfoDependencyList.Clear();
 
@@ -89,7 +89,6 @@ namespace GodotModules.ModLoader
         public void DisplayMods()
         {
             var modsEnabled = ModLoader.ModsEnabled;
-            var modInfoPrefab = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/ModInfo.tscn");
             foreach (var mod in ModLoader.LoadedMods)
             {
                 var modInfo = CreateModInfoInstance(mod.ModInfo.Name);
@@ -103,8 +102,7 @@ namespace GodotModules.ModLoader
 
         private UIModInfo CreateModInfoInstance(string modName)
         {
-            var modInfoPrefab = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/ModInfo.tscn");
-            var instance = modInfoPrefab.Instance<UIModInfo>();
+            var instance = PrefabModInfo.Instance<UIModInfo>();
             instance.SetModName(modName);
 
             if (ModLoader.ModsEnabled.ContainsKey(modName))

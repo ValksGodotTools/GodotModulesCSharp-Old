@@ -14,6 +14,7 @@ namespace GodotModules.Netcode
         public UICreateLobby ServerCreationPopup { get; set; }
 
         public static UIGameServers Instance { get; set; }
+        private static PackedScene PrefabLobbyListing = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/LobbyListing.tscn");
 
         public override void _Ready()
         {
@@ -34,9 +35,7 @@ namespace GodotModules.Netcode
 
         public void AddServer(LobbyListing info)
         {
-            var lobbyPrefab = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/LobbyListing.tscn");
-            var lobby = lobbyPrefab.Instance<UILobbyListing>();
-            lobby.Name = "Lobby";
+            var lobby = PrefabLobbyListing.Instance<UILobbyListing>();
             lobby.Init();
             lobby.SetInfo(info);
             ServerList.AddChild(lobby);

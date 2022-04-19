@@ -105,6 +105,9 @@ namespace GodotModules.Netcode
 
         private void _on_Create_pressed()
         {
+            if (UILobbyListing.ConnectingToLobby)
+                return;
+
             if (!IsValid())
                 return;
 
@@ -127,7 +130,7 @@ namespace GodotModules.Netcode
             UIGameServers.Instance.PostServer(info);
             UILobby.CurrentLobby = info;
 
-            GameManager.StartServer();
+            GameManager.StartServer(port, ValidatedMaxPlayerCount);
             GameManager.StartClient(externalIp, port);
 
             Hide();

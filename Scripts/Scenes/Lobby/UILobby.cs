@@ -1,3 +1,4 @@
+using Common.Netcode;
 using Godot;
 using GodotModules.Netcode.Client;
 using GodotModules.Netcode.Server;
@@ -34,6 +35,7 @@ namespace GodotModules.Netcode
         private Dictionary<uint, UILobbyPlayerListing> UIPlayers { get; set; }
         private static UILobby Instance { get; set; }
         public static LobbyListing CurrentLobby { get; set; }
+        private static PackedScene PrefabLobbyPlayerListing = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/LobbyPlayerListing.tscn");
 
         public override void _Ready()
         {
@@ -60,12 +62,12 @@ namespace GodotModules.Netcode
         {
             if (Input.IsActionJustPressed("ui_cancel"))
             {
+                await GameClient.Send(ClientPacketOpcode.LobbyLeave);
+
                 GameManager.WebClient.Client.CancelPendingRequests();
                 GameManager.WebClient.TimerPingMasterServer.Stop();
                 await GameClient.Stop();
                 await GameServer.Stop();
-                
-                GameManager.ChangeScene("GameServers");
             }
         }
 
@@ -84,10 +86,21 @@ namespace GodotModules.Netcode
                 Instance.UIAddPlayer(id, name);
         }
 
+        public static void RemovePlayer(uint id)
+        {
+            GameManager.GameClient.Players.Remove(id);
+
+            if (GameManager.ActiveScene == "Lobby")
+            {
+                var uiPlayer = Instance.UIPlayers[id];
+                uiPlayer.QueueFree();
+                Instance.UIPlayers.Remove(id);
+            }
+        }
+
         public void UIAddPlayer(uint id, string name)
         {
-            var playerPrefab = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/LobbyPlayerListing.tscn");
-            var player = playerPrefab.Instance<UILobbyPlayerListing>();
+            var player = PrefabLobbyPlayerListing.Instance<UILobbyPlayerListing>();
             player.Init();
             player.SetInfo(new LobbyPlayerListing
             {
