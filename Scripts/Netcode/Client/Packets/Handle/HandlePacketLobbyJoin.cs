@@ -15,8 +15,6 @@ namespace GodotModules.Netcode.Client
             UILobby.AddPlayer(data.Id, data.Username);
 
             GD.Print($"Player with username {data.Username} id: {data.Id} joined the lobby");
-
-            GameManager.ChangeScene("Lobby");
         }
     }
 }
