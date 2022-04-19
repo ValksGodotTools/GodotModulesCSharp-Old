@@ -15,6 +15,12 @@ namespace GodotModules.Netcode.Server
             // TODO
 
             // Keep track of joining player server side
+            if (Players.ContainsKey(peer.ID)) 
+            {
+                GDLog($"Received LobbyJoin packet from peer with id {peer.ID}. Tried to add id {peer.ID} to Players but exists already");
+                return;
+            }
+
             Players.Add(peer.ID, data.Username);
 
             // tell joining player their Id and tell them about other players in lobby

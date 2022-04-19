@@ -11,6 +11,12 @@ namespace GodotModules.Netcode.Server
         {
             GDLog($"Received lobby leave packet from {peer.ID}");
 
+            if (!Players.ContainsKey(peer.ID))
+            {
+                GDLog($"Received LobbyLeave packet from peer with id {peer.ID}. Tried to remove id {peer.ID} from Players but does not exist to begin with");
+                return;
+            }
+
             Players.Remove(peer.ID);
 
             // tell other players that this player left lobby
