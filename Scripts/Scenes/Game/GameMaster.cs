@@ -19,7 +19,7 @@ namespace Game
         public override void _Ready()
         {
             Instance = this;
-            InitNodes();
+            LabelPlayerHealth = GetNode<Label>(NodePathLabelPlayerHealth);
             InitPlayer();
 
             // set game definitions
@@ -33,17 +33,12 @@ namespace Game
             ModLoader.Call("OnGameUpdate", delta);
         }
 
-        private void InitNodes()
-        {
-            LabelPlayerHealth = Instance.GetNode<Label>(Instance.NodePathLabelPlayerHealth);
-        }
-
         private void InitPlayer()
         {
             Player = PrefabPlayer.Instance<Player>();
             Player.Position = OS.WindowSize / 2;
             Player.Name = "Player";
-            Instance.AddChild(Player);
+            AddChild(Player);
         }
     }
 }
