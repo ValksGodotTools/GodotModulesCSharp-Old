@@ -3,24 +3,27 @@
     // Received from Game Client
     public enum ClientPacketOpcode
     {
-        LobbyJoin
+        LobbyJoin,
+        LobbyLeave
     }
 
     // Sent to Game Client
     public enum ServerPacketOpcode
     {
         LobbyJoin,
-        LobbyList
+        LobbyLeave,
+        LobbyInfo
     }
 
     public enum DisconnectOpcode
     {
         Disconnected,
+        Timeout,
         Maintenance,
         Restarting,
+        Stopping,
         Kicked,
-        Banned,
-        PlayerWithUsernameExistsOnServerAlready
+        Banned
     }
 
     public class GodotCmd
@@ -43,7 +46,8 @@
     public enum GodotOpcode
     {
         ENetPacket,
-        LogMessage
+        LogMessage,
+        ChangeScene
     }
 
     public class ENetCmd
