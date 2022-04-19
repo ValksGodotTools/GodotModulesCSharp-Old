@@ -4,6 +4,7 @@ using GodotModules.Netcode;
 using GodotModules.Netcode.Client;
 using GodotModules.Netcode.Server;
 using GodotModules.Settings;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -90,10 +91,10 @@ namespace GodotModules
             GameClient.Connect(ip, port);
         }
 
-        public static void StartServer()
+        public static void StartServer(ushort port, int maxClients)
         {
             GameServer = new GameServer();
-            GameServer.Start();
+            GameServer.Start(port, maxClients);
         }
 
         private static void InitWebClient()
@@ -140,7 +141,11 @@ namespace GodotModules
                         break;
 
                     case GodotOpcode.LogMessage:
+                        // TODO: Tie this into Utils.Log
                         GD.Print($"[Client]: {cmd.Data}");
+                        break;
+                    case GodotOpcode.ChangeScene:
+                        ChangeScene($"{cmd.Data}");
                         break;
                 }
             }
