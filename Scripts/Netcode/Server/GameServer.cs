@@ -22,18 +22,27 @@ namespace GodotModules.Netcode.Server
 
         protected override void Disconnect(Event netEvent)
         {
-            if (Players.ContainsKey(netEvent.Peer.ID))
-                Players.Remove(netEvent.Peer.ID);
+            HandlePlayerLeave(netEvent.Peer.ID);
         }
 
         protected override void Timeout(Event netEvent)
         {
-            if (Players.ContainsKey(netEvent.Peer.ID))
-                Players.Remove(netEvent.Peer.ID);
+            HandlePlayerLeave(netEvent.Peer.ID);
         }
 
         protected override void Stopped()
         {
+        }
+
+        private void HandlePlayerLeave(uint id)
+        {
+            // tell other players that this player left lobby
+            Outgoing.Enqueue(new ServerPacket((byte)ServerPacketOpcode.LobbyLeave, new WPacketLobbyLeave {
+                Id = id
+            }, GetOtherPeers(id)));
+
+            if (Players.ContainsKey(id))
+                Players.Remove(id);
         }
 
         public static Dictionary<uint, string> GetOtherPlayers(uint id)
