@@ -54,6 +54,8 @@ namespace GodotModules.Netcode.Server
                 catch (Exception e)
                 {
                     GD.Print($"A server is running on port {port} already! {e.Message}");
+                    await GodotModules.Netcode.Client.ENetClient.Stop();
+                    await Stop();
                     return;
                 }
 
