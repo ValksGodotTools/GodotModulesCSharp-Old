@@ -60,19 +60,19 @@ namespace GodotModules
             }
         }
 
-        public static void SpawnPopupMessage(Node parent, string message)
+        public static void SpawnPopupMessage(string message)
         {
             var popupMessage = GameManager.PrefabPopupMessage.Instance<UIPopupMessage>();
             popupMessage.Init(message);
-            parent.AddChild(popupMessage);
+            Instance.GetTree().CurrentScene.AddChild(popupMessage);
             popupMessage.PopupCentered();
         }
 
-        public static void SpawnPopupError(Node parent, Exception e)
+        public static void SpawnPopupError(Exception e)
         {
             var popupError = GameManager.PrefabPopupError.Instance<UIPopupError>();
             popupError.Init(e.Message, e.StackTrace);
-            parent.AddChild(popupError);
+            Instance.GetTree().CurrentScene.AddChild(popupError);
             popupError.PopupCentered();
         }
 
@@ -132,7 +132,7 @@ namespace GodotModules
                 switch (cmd.Opcode)
                 {
                     case GodotOpcode.LogMessage:
-                        GD.Print($"[Server]: {cmd.Data}");
+                        Utils.Log($"[Server]: {cmd.Data}", ENetServer.LogsColor);
                         return;
                 }
             }
@@ -151,7 +151,7 @@ namespace GodotModules
                         var packetReader = (PacketReader)cmd.Data;
                         var opcode = (ServerPacketOpcode)packetReader.ReadByte();
 
-                        GD.Print($"Received new server packet: {opcode}");
+                        Utils.Log($"Received new server packet: {opcode}", ENetClient.LogsColor);
 
                         ENetClient.HandlePacket[opcode].Handle(packetReader);
 
@@ -159,11 +159,13 @@ namespace GodotModules
                         break;
 
                     case GodotOpcode.LogMessage:
-                        // TODO: Tie this into Utils.Log
-                        GD.Print($"[Client]: {cmd.Data}");
+                        Utils.Log($"[Client]: {cmd.Data}", ENetClient.LogsColor);
                         break;
                     case GodotOpcode.ChangeScene:
                         ChangeScene($"{cmd.Data}");
+                        break;
+                    case GodotOpcode.PopupError:
+                        SpawnPopupError((Exception)cmd.Data);
                         break;
                 }
             }

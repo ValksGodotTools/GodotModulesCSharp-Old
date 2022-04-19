@@ -47,7 +47,8 @@
     {
         ENetPacket,
         LogMessage,
-        ChangeScene
+        ChangeScene,
+        PopupError
     }
 
     public class ENetCmd

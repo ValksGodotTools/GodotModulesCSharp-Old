@@ -11,7 +11,7 @@ namespace GodotModules.Netcode.Client
 
         protected override async void Connect(Event netEvent)
         {
-            GDLog("Client connected to server");
+            Log("Client connected to server");
             await Send(ClientPacketOpcode.LobbyJoin, new WPacketLobbyJoin {
                 Username = GameManager.Options.OnlineUsername
             });
@@ -19,12 +19,12 @@ namespace GodotModules.Netcode.Client
 
         protected override void Timeout(Event netEvent)
         {
-            GDLog("Client connection timeout");
+            Log("Client connection timeout");
         }
 
         protected override void Disconnect(Event netEvent)
         {
-            GDLog("Client disconnected from server");
+            Log("Client disconnected from server");
         }
     }
 }

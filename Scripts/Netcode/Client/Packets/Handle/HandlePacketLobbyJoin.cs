@@ -14,7 +14,7 @@ namespace GodotModules.Netcode.Client
 
             SceneLobby.AddPlayer(data.Id, data.Username);
 
-            GD.Print($"Player with username {data.Username} id: {data.Id} joined the lobby");
+            Log($"Player with username {data.Username} id: {data.Id} joined the lobby");
         }
     }
 }

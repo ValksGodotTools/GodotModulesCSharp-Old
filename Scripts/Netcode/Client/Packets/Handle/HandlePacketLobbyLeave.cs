@@ -14,13 +14,13 @@ namespace GodotModules.Netcode.Client
 
             if (!GameManager.GameClient.Players.ContainsKey(data.Id))
             {
-                GD.Print($"Received LobbyLeave packet from server for id {data.Id}. Tried to remove from Players but does not exist in Players to begin with");
+                Log($"Received LobbyLeave packet from server for id {data.Id}. Tried to remove from Players but does not exist in Players to begin with");
                 return;
             }
 
             SceneLobby.RemovePlayer(data.Id);
 
-            GD.Print($"Player with id: {data.Id} left the lobby");
+            Log($"Player with id: {data.Id} left the lobby");
         }
     }
 }

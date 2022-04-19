@@ -1,3 +1,5 @@
+using Thread = System.Threading.Thread;
+
 using Common.Netcode;
 using ENet;
 using Godot;
@@ -13,6 +15,7 @@ namespace GodotModules.Netcode.Server
     public abstract class ENetServer
     {
         public static Task WorkerServer { get; set; }
+        public static ConsoleColor LogsColor = ConsoleColor.Cyan;
         public static bool Running { get; set; }
         public static ConcurrentQueue<ServerPacket> Outgoing { get; set; }
         public static Dictionary<uint, Peer> Peers { get; set; }
@@ -36,6 +39,7 @@ namespace GodotModules.Netcode.Server
         /// <param name="maxClients"></param>
         public async void ENetThreadWorker(ushort port, int maxClients)
         {
+            Thread.CurrentThread.Name = "Server";
             Running = true;
             if (SceneLobby.CurrentLobby.Public)
                 GameManager.WebClient.TimerPingMasterServer.Start();
@@ -53,13 +57,13 @@ namespace GodotModules.Netcode.Server
                 }
                 catch (Exception e)
                 {
-                    GD.Print($"A server is running on port {port} already! {e.Message}");
+                    Log($"A server is running on port {port} already! {e.Message}");
                     await GodotModules.Netcode.Client.ENetClient.Stop();
                     await Stop();
                     return;
                 }
 
-                GDLog($"Server listening on port {port}");
+                Log($"Server listening on port {port}");
 
                 while (Running)
                 {
@@ -104,7 +108,7 @@ namespace GodotModules.Netcode.Server
                             var packet = netEvent.Packet;
                             if (packet.Length > GamePacket.MaxSize)
                             {
-                                GDLog($"Tried to read packet from server of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
+                                Log($"Tried to read packet from server of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
                                 packet.Dispose();
                                 continue;
                             }
@@ -112,7 +116,7 @@ namespace GodotModules.Netcode.Server
                             var packetReader = new PacketReader(packet);
                             var opcode = (ClientPacketOpcode)packetReader.ReadByte();
 
-                            GDLog($"Received new client packet: {opcode}");
+                            Log($"Received new client packet: {opcode}");
                             HandlePacket[opcode].Handle(netEvent.Peer, packetReader);
 
                             packetReader.Dispose();
@@ -141,7 +145,7 @@ namespace GodotModules.Netcode.Server
                 server.Flush();
             }
 
-            GDLog("Server stopped");
+            Log("Server stopped");
 
             while (ConcurrentQueuesWorking())
                 await Task.Delay(100);
@@ -165,11 +169,11 @@ namespace GodotModules.Netcode.Server
         {
             if (Running)
             {
-                GDLog("Server is running already");
+                Log("Server is running already");
                 return;
             }
 
-            GDLog("Starting server");
+            Log("Starting server");
 
             try
             {
@@ -178,7 +182,7 @@ namespace GodotModules.Netcode.Server
             }
             catch (Exception e)
             {
-                GD.Print($"ENet Server: {e.Message}{e.StackTrace}");
+                Utils.Log($"ENet Server: {e.Message}{e.StackTrace}", ConsoleColor.Red);
             }
         }
 
@@ -189,13 +193,13 @@ namespace GodotModules.Netcode.Server
         {
             if (!Running)
             {
-                GDLog("Server has been stopped already");
+                Log("Server has been stopped already");
                 return;
             }
 
             KickAll(DisconnectOpcode.Stopping);
 
-            GDLog("Stopping server");
+            Log("Stopping server");
             Running = false;
 
             if (!ENetServer.WorkerServer.IsCompleted)
@@ -209,13 +213,13 @@ namespace GodotModules.Netcode.Server
         {
             if (!Running)
             {
-                GDLog("Server has been stopped already");
+                Log("Server has been stopped already");
                 return;
             }
 
             KickAll(DisconnectOpcode.Restarting);
 
-            GDLog("Restarting server");
+            Log("Restarting server");
             Running = false;
             QueueRestart = true;
         }
@@ -231,7 +235,15 @@ namespace GodotModules.Netcode.Server
         /// Provides a way to log a message on the Godot thread from the ENet thread
         /// </summary>
         /// <param name="obj">The object to log</param>
-        public static void GDLog(object obj) => GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessage, obj));
+        public static void Log(object obj) 
+        {
+            var threadName = Thread.CurrentThread.Name;
+
+            if (threadName == "Server")
+                GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessage, obj));
+            else
+                Utils.Log($"{obj}", LogsColor);
+        }
 
         /// <summary>
         /// This is in the ENet thread, anything from the ENet thread can be used here

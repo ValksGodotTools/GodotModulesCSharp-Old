@@ -11,7 +11,7 @@ namespace GodotModules.Netcode.Client
         {
             var data = new RPacketLobbyInfo(reader);
 
-            Utils.Log($"{GameManager.Options.OnlineUsername} joined lobby with id {data.Id} also other players in lobby are {Utils.StringifyDict(data.Players)}", System.ConsoleColor.Green);
+            Log($"{GameManager.Options.OnlineUsername} joined lobby with id {data.Id} also other players in lobby are {Utils.StringifyDict(data.Players)}");
 
             SceneLobby.AddPlayer(data.Id, GameManager.Options.OnlineUsername);
 

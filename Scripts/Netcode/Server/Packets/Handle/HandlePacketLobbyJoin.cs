@@ -17,7 +17,7 @@ namespace GodotModules.Netcode.Server
             // Keep track of joining player server side
             if (Players.ContainsKey(peer.ID)) 
             {
-                GDLog($"Received LobbyJoin packet from peer with id {peer.ID}. Tried to add id {peer.ID} to Players but exists already");
+                Log($"Received LobbyJoin packet from peer with id {peer.ID}. Tried to add id {peer.ID} to Players but exists already");
                 return;
             }
 

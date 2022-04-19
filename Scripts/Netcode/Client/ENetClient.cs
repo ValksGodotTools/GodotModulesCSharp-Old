@@ -1,9 +1,12 @@
+using Thread = System.Threading.Thread;
+
 using Common.Netcode;
 using ENet;
 using Godot;
 using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace GodotModules.Netcode.Client
@@ -11,6 +14,7 @@ namespace GodotModules.Netcode.Client
     public abstract class ENetClient
     {
         public static Task WorkerClient { get; set; }
+        public static ConsoleColor LogsColor = ConsoleColor.Yellow;
         public static bool Running;
         public static ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
         public static ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
@@ -35,6 +39,7 @@ namespace GodotModules.Netcode.Client
         /// <param name="port"></param>
         private async void ENetThreadWorker(string ip, ushort port)
         {
+            Thread.CurrentThread.Name = "Client";
             Library.Initialize();
 
             using (var client = new Host())
@@ -104,7 +109,7 @@ namespace GodotModules.Netcode.Client
                                 var packet = netEvent.Packet;
                                 if (packet.Length > GamePacket.MaxSize)
                                 {
-                                    GDLog($"Tried to read packet from server of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
+                                    Log($"Tried to read packet from server of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
                                     packet.Dispose();
                                     continue;
                                 }
@@ -114,16 +119,18 @@ namespace GodotModules.Netcode.Client
 
                             case EventType.Timeout:
                                 DisconnectOpcode = DisconnectOpcode.Timeout;
-                                GodotCmds.Enqueue(new GodotCmd(GodotOpcode.ChangeScene, "Disconnected"));
+                                GodotCmds.Enqueue(new GodotCmd(GodotOpcode.ChangeScene, "GameServers"));
                                 SceneGameServers.ConnectingToLobby = false;
+                                SceneGameServers.Disconnected = true;
                                 Running = false;
                                 Timeout(netEvent);
                                 break;
 
                             case EventType.Disconnect:
                                 DisconnectOpcode = (DisconnectOpcode)netEvent.Data;
-                                GodotCmds.Enqueue(new GodotCmd(GodotOpcode.ChangeScene, "Disconnected"));
+                                GodotCmds.Enqueue(new GodotCmd(GodotOpcode.ChangeScene, "GameServers"));
                                 SceneGameServers.ConnectingToLobby = false;
+                                SceneGameServers.Disconnected = true;
                                 Running = false;
                                 Disconnect(netEvent);
                                 break;
@@ -137,7 +144,7 @@ namespace GodotModules.Netcode.Client
             Library.Deinitialize();
             ENetThreadRunning = false;
 
-            GDLog("Client stopped");
+            Log("Client stopped");
 
             while (ConcurrentQueuesWorking())
                 await Task.Delay(100);
@@ -171,7 +178,7 @@ namespace GodotModules.Netcode.Client
             if (ENetThreadRunning)
             {
                 SceneGameServers.ConnectingToLobby = false;
-                GD.Print("ENet thread is running already");
+                Log("ENet thread is running already");
                 return;
             }
 
@@ -184,7 +191,8 @@ namespace GodotModules.Netcode.Client
             }
             catch (Exception e)
             {
-                GD.Print($"ENet Client: {e.Message}{e.StackTrace}");
+                GodotCmds.Enqueue(new GodotCmd(GodotOpcode.PopupError, e));
+                Utils.Log($"ENet Client: {e.Message}{e.StackTrace}", ConsoleColor.Red);
             }
         }
 
@@ -206,9 +214,18 @@ namespace GodotModules.Netcode.Client
 
         /// <summary>
         /// Provides a way to log a message on the Godot thread from the ENet thread
+        /// Checks thread name, if its Client send request to log on Godot thread otherwise log on Godot thread directly
         /// </summary>
         /// <param name="obj">The object to log</param>
-        protected void GDLog(object obj) => GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessage, obj));
+        protected void Log(object obj) 
+        {
+            var threadName = Thread.CurrentThread.Name;
+
+            if (threadName == "Client")
+                GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessage, obj));
+            else
+                Utils.Log($"{obj}", LogsColor);
+        }
 
         /// <summary>
         /// This is in the ENet thread, anything from the ENet thread can be used here

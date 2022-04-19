@@ -7,7 +7,7 @@ namespace Game
         [Export] public float Speed = 250f;
         public int Health = 100;
 
-        public Player()
+        public override void _Ready()
         {
             SetHealth(100);
         }
