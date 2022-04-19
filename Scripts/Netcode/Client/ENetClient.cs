@@ -22,10 +22,12 @@ namespace GodotModules.Netcode.Client
         private static ConcurrentDictionary<int, ClientPacket> Outgoing { get; set; }
         public static DisconnectOpcode DisconnectOpcode { get; set; }
         public static readonly Dictionary<ServerPacketOpcode, HandlePacket> HandlePacket = Utils.LoadInstances<ServerPacketOpcode, HandlePacket, ENetClient>();
+        public static bool Connected { get; set; }
         protected bool ENetThreadRunning;
 
         public ENetClient()
         {
+            Connected = false;
             OutgoingId = 0;
             Outgoing = new ConcurrentDictionary<int, ClientPacket>();
             ENetCmds = new ConcurrentQueue<ENetCmd>();
@@ -101,6 +103,8 @@ namespace GodotModules.Netcode.Client
                         switch (netEvent.Type)
                         {
                             case EventType.Connect:
+                                Console.WriteLine("Connected");
+                                Connected = true;
                                 Connect(netEvent);
                                 break;
 
@@ -118,6 +122,7 @@ namespace GodotModules.Netcode.Client
                                 break;
 
                             case EventType.Timeout:
+                                Connected = false;
                                 DisconnectOpcode = DisconnectOpcode.Timeout;
                                 GodotCmds.Enqueue(new GodotCmd(GodotOpcode.ChangeScene, "GameServers"));
                                 SceneGameServers.ConnectingToLobby = false;
@@ -127,6 +132,7 @@ namespace GodotModules.Netcode.Client
                                 break;
 
                             case EventType.Disconnect:
+                                Connected = false;
                                 DisconnectOpcode = (DisconnectOpcode)netEvent.Data;
                                 GodotCmds.Enqueue(new GodotCmd(GodotOpcode.ChangeScene, "GameServers"));
                                 SceneGameServers.ConnectingToLobby = false;

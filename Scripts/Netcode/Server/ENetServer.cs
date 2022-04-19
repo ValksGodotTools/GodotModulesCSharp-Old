@@ -17,6 +17,7 @@ namespace GodotModules.Netcode.Server
         public static Task WorkerServer { get; set; }
         public static ConsoleColor LogsColor = ConsoleColor.Cyan;
         public static bool Running { get; set; }
+        public static bool SomeoneConnected { get; set; }
         public static ConcurrentQueue<ServerPacket> Outgoing { get; set; }
         public static Dictionary<uint, Peer> Peers { get; set; }
         public static ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
@@ -26,6 +27,8 @@ namespace GodotModules.Netcode.Server
 
         public ENetServer()
         {
+            SomeoneConnected = false;
+            Running = false;
             ENetCmds = new ConcurrentQueue<ENetCmd>();
             GodotCmds = new ConcurrentQueue<GodotCmd>();
             Outgoing = new ConcurrentQueue<ServerPacket>();
@@ -124,6 +127,7 @@ namespace GodotModules.Netcode.Server
                         else if (eventType == EventType.Connect)
                         {
                             // Connect
+                            SomeoneConnected = true;
                             Peers.Add(netEvent.Peer.ID, netEvent.Peer);
                             Connect(netEvent);
                         }

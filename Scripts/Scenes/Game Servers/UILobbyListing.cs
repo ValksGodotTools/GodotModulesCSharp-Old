@@ -1,3 +1,5 @@
+using Common.Netcode;
+using GodotModules.Netcode.Client;
 using Godot;
 
 namespace GodotModules.Netcode
@@ -36,7 +38,7 @@ namespace GodotModules.Netcode
             LabelPlayerCount.Text = "" + info.MaxPlayerCount;
         }
 
-        public void Join()
+        public async void Join()
         {
             if (SceneGameServers.ConnectingToLobby)
                 return;
@@ -45,6 +47,10 @@ namespace GodotModules.Netcode
             //GD.Print($"Connecting to {Info.Ip}:{Info.Port}");
             GD.Print("Connecting to lobby...");
             GameManager.StartClient(Info.Ip, Info.Port);
+            await GameManager.ServerAndClientReady();
+            await ENetClient.Send(ClientPacketOpcode.LobbyJoin, new WPacketLobbyJoin {
+                Username = GameManager.Options.OnlineUsername
+            });
         }
 
         private void _on_Btn_pressed()

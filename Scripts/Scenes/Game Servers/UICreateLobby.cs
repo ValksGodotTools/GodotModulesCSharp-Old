@@ -1,5 +1,8 @@
+using Common.Netcode;
 using Godot;
+using GodotModules.Netcode.Client;
 using GodotModules.Settings;
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -103,7 +106,7 @@ namespace GodotModules.Netcode
             UpdateFeedback();
         }
 
-        private void _on_Create_pressed()
+        private async void _on_Create_pressed()
         {
             if (SceneGameServers.ConnectingToLobby)
                 return;
@@ -142,11 +145,15 @@ namespace GodotModules.Netcode
             SceneGameServers.Instance.AddServer(info);
             SceneGameServers.Instance.PostServer(info);
             SceneLobby.CurrentLobby = info;
+            
+            Hide();
 
             GameManager.StartServer(port, ValidatedMaxPlayerCount);
             GameManager.StartClient(localIp, port);
-
-            Hide();
+            await GameManager.ServerAndClientReady();
+            await ENetClient.Send(ClientPacketOpcode.LobbyJoin, new WPacketLobbyJoin {
+                Username = GameManager.Options.OnlineUsername
+            });
         }
     }
 }
