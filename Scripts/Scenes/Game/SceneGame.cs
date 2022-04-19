@@ -6,11 +6,11 @@ using System;
 namespace Game
 {
     // Master manages everything in the game (DEMO)
-    public class GameMaster : Node
+    public class SceneGame : Node
     {
         private static PackedScene PrefabPlayer = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/Player.tscn");
         public static Player Player { get; set; }
-        public static GameMaster Instance { get; set; }
+        public static SceneGame Instance { get; set; }
 
         [Export] public readonly NodePath NodePathLabelPlayerHealth;
         public Label LabelPlayerHealth;
@@ -23,7 +23,7 @@ namespace Game
             InitPlayer();
 
             // set game definitions
-            ModLoader.Script.Globals["Player", "setHealth"] = (Action<int>)GameMaster.Player.SetHealth;
+            ModLoader.Script.Globals["Player", "setHealth"] = (Action<int>)SceneGame.Player.SetHealth;
 
             ModLoader.Call("OnGameInit");
         }

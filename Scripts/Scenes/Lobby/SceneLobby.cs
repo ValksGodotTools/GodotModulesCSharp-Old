@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace GodotModules.Netcode
 {
-    public class UILobby : Node
+    public class SceneLobby : Node
     {
         private static PackedScene PrefabLobbyPlayerListing = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/LobbyPlayerListing.tscn");
         public static LobbyListing CurrentLobby { get; set; }
-        private static UILobby Instance { get; set; }
+        private static SceneLobby Instance { get; set; }
         
         [Export] public readonly NodePath NodePathPlayers;
         [Export] public readonly NodePath NodePathChatText;

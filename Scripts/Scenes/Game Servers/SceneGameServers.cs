@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace GodotModules.Netcode
 {
-    public class UIGameServers : Control
+    public class SceneGameServers : Control
     {
         private static PackedScene PrefabLobbyListing = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/LobbyListing.tscn");
         public static Dictionary<string, LobbyListing> LobbyListings { get; set; }
-        public static UIGameServers Instance { get; set; }
+        public static SceneGameServers Instance { get; set; }
         public static UILobbyListing SelectedLobbyInstance { get; set; }
         public static bool ConnectingToLobby { get; set; }
 

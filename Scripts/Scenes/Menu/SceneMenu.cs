@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Game
 {
     // DEMO
-    public class UIMenu : Node
+    public class SceneMenu : Node
     {
         [Export] public readonly NodePath NodePathSetupOnlineUsernamePopup;
 

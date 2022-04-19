@@ -115,7 +115,7 @@ namespace GodotModules.Netcode.Client
                             case EventType.Timeout:
                                 DisconnectOpcode = DisconnectOpcode.Timeout;
                                 GodotCmds.Enqueue(new GodotCmd(GodotOpcode.ChangeScene, "Disconnected"));
-                                UIGameServers.ConnectingToLobby = false;
+                                SceneGameServers.ConnectingToLobby = false;
                                 Running = false;
                                 Timeout(netEvent);
                                 break;
@@ -123,7 +123,7 @@ namespace GodotModules.Netcode.Client
                             case EventType.Disconnect:
                                 DisconnectOpcode = (DisconnectOpcode)netEvent.Data;
                                 GodotCmds.Enqueue(new GodotCmd(GodotOpcode.ChangeScene, "Disconnected"));
-                                UIGameServers.ConnectingToLobby = false;
+                                SceneGameServers.ConnectingToLobby = false;
                                 Running = false;
                                 Disconnect(netEvent);
                                 break;
@@ -170,7 +170,7 @@ namespace GodotModules.Netcode.Client
         {
             if (ENetThreadRunning)
             {
-                UIGameServers.ConnectingToLobby = false;
+                SceneGameServers.ConnectingToLobby = false;
                 GD.Print("ENet thread is running already");
                 return;
             }

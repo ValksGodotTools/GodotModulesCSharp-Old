@@ -12,7 +12,7 @@ namespace GodotModules.Netcode.Client
         {
             var data = new RPacketLobbyJoin(reader);
 
-            UILobby.AddPlayer(data.Id, data.Username);
+            SceneLobby.AddPlayer(data.Id, data.Username);
 
             GD.Print($"Player with username {data.Username} id: {data.Id} joined the lobby");
         }

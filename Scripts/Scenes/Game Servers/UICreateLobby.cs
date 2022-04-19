@@ -105,7 +105,7 @@ namespace GodotModules.Netcode
 
         private void _on_Create_pressed()
         {
-            if (UIGameServers.ConnectingToLobby)
+            if (SceneGameServers.ConnectingToLobby)
                 return;
 
             if (!IsValid())
@@ -139,9 +139,9 @@ namespace GodotModules.Netcode
                 NumPingChecksEnabled = NumPingChecksEnabled.Pressed
             };
 
-            UIGameServers.Instance.AddServer(info);
-            UIGameServers.Instance.PostServer(info);
-            UILobby.CurrentLobby = info;
+            SceneGameServers.Instance.AddServer(info);
+            SceneGameServers.Instance.PostServer(info);
+            SceneLobby.CurrentLobby = info;
 
             GameManager.StartServer(port, ValidatedMaxPlayerCount);
             GameManager.StartClient(localIp, port);

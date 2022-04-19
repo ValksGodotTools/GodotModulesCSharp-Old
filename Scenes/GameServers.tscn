@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Themes/Main.tres" type="Theme" id=1]
-[ext_resource path="res://Scripts/Scenes/Game Servers/UIGameServers.cs" type="Script" id=2]
+[ext_resource path="res://Scripts/Scenes/Game Servers/SceneGameServers.cs" type="Script" id=2]
 [ext_resource path="res://Scripts/Scenes/Game Servers/UIGameServersNavBtns.cs" type="Script" id=3]
 [ext_resource path="res://Scenes/Prefabs/CreateLobby.tscn" type="PackedScene" id=4]
 

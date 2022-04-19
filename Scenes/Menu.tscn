@@ -3,7 +3,7 @@
 [ext_resource path="res://Scenes/Prefabs/ModLoader.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scenes/Prefabs/Options.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Themes/Main.tres" type="Theme" id=4]
-[ext_resource path="res://Scripts/Scenes/Menu/UIMenu.cs" type="Script" id=5]
+[ext_resource path="res://Scripts/Scenes/Menu/SceneMenu.cs" type="Script" id=5]
 [ext_resource path="res://Scenes/Prefabs/SetupOnlineProfile.tscn" type="PackedScene" id=6]
 
 [node name="Menu" type="Control"]

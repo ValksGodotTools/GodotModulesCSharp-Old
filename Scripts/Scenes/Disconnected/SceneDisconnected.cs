@@ -5,7 +5,7 @@ using System;
 
 namespace GodotModules
 {
-    public class UIDisconnected : Node
+    public class SceneDisconnected : Node
     {
         [Export] public readonly NodePath NodePathFeedback;
 

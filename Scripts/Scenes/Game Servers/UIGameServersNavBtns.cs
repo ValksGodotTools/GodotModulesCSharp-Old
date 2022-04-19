@@ -6,7 +6,7 @@ namespace GodotModules.Netcode
     {
         private void _on_Join_Lobby_pressed()
         {
-            var selected = UIGameServers.SelectedLobbyInstance;
+            var selected = SceneGameServers.SelectedLobbyInstance;
 
             if (selected == null)
                 return;
@@ -16,7 +16,7 @@ namespace GodotModules.Netcode
 
         private void _on_Create_Lobby_pressed()
         {
-            var popup = UIGameServers.Instance.ServerCreationPopup;
+            var popup = SceneGameServers.Instance.ServerCreationPopup;
 
             if (popup.Visible)
                 return;
@@ -31,8 +31,8 @@ namespace GodotModules.Netcode
             if (!GameManager.WebClient.TaskGetServers.IsCompleted)
                 return;
 
-            UIGameServers.Instance.ClearServers();
-            UIGameServers.Instance.ListServers();
+            SceneGameServers.Instance.ClearServers();
+            SceneGameServers.Instance.ListServers();
         }
     }
 }

@@ -20,7 +20,7 @@ namespace GodotModules.Netcode
 
         public void Init()
         {
-            UIGameServers.ConnectingToLobby = false;
+            SceneGameServers.ConnectingToLobby = false;
             LabelTitle = GetNode<Label>(NodePathLabelTitle);
             LabelDescription = GetNode<Label>(NodePathLabelDescription);
             LabelPing = GetNode<Label>(NodePathLabelPing);
@@ -38,10 +38,10 @@ namespace GodotModules.Netcode
 
         public void Join()
         {
-            if (UIGameServers.ConnectingToLobby)
+            if (SceneGameServers.ConnectingToLobby)
                 return;
 
-            UIGameServers.ConnectingToLobby = true;
+            SceneGameServers.ConnectingToLobby = true;
             //GD.Print($"Connecting to {Info.Ip}:{Info.Port}");
             GD.Print("Connecting to lobby...");
             GameManager.StartClient(Info.Ip, Info.Port);
@@ -49,13 +49,13 @@ namespace GodotModules.Netcode
 
         private void _on_Btn_pressed()
         {
-            UIGameServers.SelectedLobbyInstance = this;
+            SceneGameServers.SelectedLobbyInstance = this;
             Join();
         }
 
         private void _on_Btn_focus_entered()
         {
-            UIGameServers.SelectedLobbyInstance = this;
+            SceneGameServers.SelectedLobbyInstance = this;
         }
     }
 

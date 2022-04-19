@@ -18,7 +18,7 @@ namespace GodotModules.Netcode.Client
                 return;
             }
 
-            UILobby.RemovePlayer(data.Id);
+            SceneLobby.RemovePlayer(data.Id);
 
             GD.Print($"Player with id: {data.Id} left the lobby");
         }
