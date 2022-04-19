@@ -1,0 +1,59 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Themes/Main.tres" type="Theme" id=1]
+[ext_resource path="res://Scripts/Msc/UIPopupMessage.cs" type="Script" id=2]
+
+[node name="PopupMessage" type="WindowDialog"]
+visible = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -976.0
+margin_bottom = -599.0
+rect_min_size = Vector2( 450, 150 )
+theme = ExtResource( 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+NodePathMessage = NodePath("PanelContainer/VBoxContainer/CenterContainer/Message")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 449.0
+margin_bottom = 149.0
+
+[node name="CenterContainer" type="CenterContainer" parent="PanelContainer/VBoxContainer"]
+margin_right = 448.0
+margin_bottom = 111.0
+size_flags_vertical = 3
+
+[node name="Message" type="Label" parent="PanelContainer/VBoxContainer/CenterContainer"]
+margin_left = 196.0
+margin_top = 47.0
+margin_right = 252.0
+margin_bottom = 64.0
+text = "Message"
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer"]
+margin_top = 115.0
+margin_right = 448.0
+margin_bottom = 148.0
+custom_constants/margin_bottom = 10
+
+[node name="Ok" type="Button" parent="PanelContainer/VBoxContainer/MarginContainer"]
+margin_left = 212.0
+margin_right = 235.0
+margin_bottom = 23.0
+size_flags_horizontal = 4
+size_flags_vertical = 8
+text = "Ok"
+
+[connection signal="pressed" from="PanelContainer/VBoxContainer/MarginContainer/Ok" to="." method="_on_Ok_pressed"]
