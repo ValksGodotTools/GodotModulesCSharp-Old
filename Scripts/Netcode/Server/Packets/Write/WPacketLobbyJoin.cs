@@ -2,7 +2,6 @@ using Common.Netcode;
 
 namespace GodotModules.Netcode.Server
 {
-    // notify other players that this player joined the lobby
     public class WPacketLobbyJoin : IWritable 
     {
         public uint Id { get; set; }
