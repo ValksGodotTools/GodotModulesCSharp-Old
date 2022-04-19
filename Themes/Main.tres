@@ -7,6 +7,7 @@
 [ext_resource path="res://Themes/Button/Btn_Focus.tres" type="StyleBox" id=5]
 [ext_resource path="res://Themes/Button/Btn_Normal.tres" type="StyleBox" id=6]
 [ext_resource path="res://Themes/Slider/Slider_Grabber_Area.tres" type="StyleBox" id=7]
+[ext_resource path="res://Themes/TextEdit/TextEdit_Normal.tres" type="StyleBox" id=8]
 
 [sub_resource type="StyleBoxFlat" id=4]
 bg_color = Color( 0.164706, 0.164706, 0.164706, 1 )
@@ -32,14 +33,6 @@ border_color = Color( 0.188235, 0.188235, 0.188235, 1 )
 shadow_color = Color( 0.184314, 0.184314, 0.184314, 0.486275 )
 shadow_size = 3
 
-[sub_resource type="StyleBoxFlat" id=5]
-bg_color = Color( 0.152941, 0.152941, 0.152941, 1 )
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-shadow_size = 5
-
 [sub_resource type="StyleBoxFlat" id=2]
 bg_color = Color( 0.505882, 0.505882, 0.505882, 1 )
 corner_radius_top_left = 5
@@ -64,6 +57,15 @@ Label/fonts/font = ExtResource( 1 )
 LineEdit/styles/normal = SubResource( 4 )
 PanelContainer/styles/panel = SubResource( 1 )
 RichTextLabel/constants/line_separation = 4
-TextEdit/styles/normal = SubResource( 5 )
+TextEdit/colors/brace_mismatch_color = Color( 0.372549, 0.372549, 0.372549, 1 )
+TextEdit/colors/font_color = Color( 0.588235, 0.588235, 0.588235, 1 )
+TextEdit/colors/font_color_readonly = Color( 1, 1, 1, 1 )
+TextEdit/colors/function_color = Color( 0.8, 0.517647, 1, 1 )
+TextEdit/colors/member_variable_color = Color( 1, 0.827451, 1, 1 )
+TextEdit/colors/number_color = Color( 1, 0.435294, 0.960784, 1 )
+TextEdit/colors/symbol_color = Color( 0.392157, 0.392157, 0.392157, 1 )
+TextEdit/styles/focus = ExtResource( 8 )
+TextEdit/styles/normal = ExtResource( 8 )
+TextEdit/styles/read_only = ExtResource( 8 )
 VScrollBar/styles/grabber = SubResource( 2 )
 VScrollBar/styles/scroll = SubResource( 3 )
