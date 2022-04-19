@@ -12,15 +12,18 @@ namespace GodotModules.Netcode.Client
     {
         public static Task WorkerClient { get; set; }
         public static bool Running;
-        public ConcurrentQueue<ClientPacket> Outgoing { get; set; }
         public static ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
         public static ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
+        private static int OutgoingId { get; set; }
+        private static ConcurrentDictionary<int, ClientPacket> Outgoing { get; set; }
+        public static DisconnectOpcode DisconnectOpcode { get; set; }
         protected bool ENetThreadRunning;
         public static readonly Dictionary<ServerPacketOpcode, HandlePacket> HandlePacket = Utils.LoadInstances<ServerPacketOpcode, HandlePacket, ENetClient>();
 
         public ENetClient()
         {
-            Outgoing = new ConcurrentQueue<ClientPacket>();
+            OutgoingId = 0;
+            Outgoing = new ConcurrentDictionary<int, ClientPacket>();
             ENetCmds = new ConcurrentQueue<ENetCmd>();
             GodotCmds = new ConcurrentQueue<GodotCmd>();
         }
@@ -69,10 +72,10 @@ namespace GodotModules.Netcode.Client
                                 Running = false;
                                 break;
                         }
-                    }   
+                    }
 
                     // Outgoing
-                    while (Outgoing.TryDequeue(out ClientPacket clientPacket))
+                    while (Outgoing.TryGetValue(OutgoingId--, out ClientPacket clientPacket))
                     {
                         byte channelID = 0; // The channel all networking traffic will be going through
                         var packet = default(Packet);
@@ -110,12 +113,17 @@ namespace GodotModules.Netcode.Client
                                 break;
 
                             case EventType.Timeout:
+                                DisconnectOpcode = DisconnectOpcode.Timeout;
+                                GodotCmds.Enqueue(new GodotCmd(GodotOpcode.ChangeScene, "Disconnected"));
                                 UILobbyListing.ConnectingToLobby = false;
                                 Running = false;
                                 Timeout(netEvent);
                                 break;
 
                             case EventType.Disconnect:
+                                DisconnectOpcode = (DisconnectOpcode)netEvent.Data;
+                                GodotCmds.Enqueue(new GodotCmd(GodotOpcode.ChangeScene, "Disconnected"));
+                                UILobbyListing.ConnectingToLobby = false;
                                 Running = false;
                                 Disconnect(netEvent);
                                 break;
@@ -132,6 +140,22 @@ namespace GodotModules.Netcode.Client
             GDLog("Client stopped");
 
             while (ConcurrentQueuesWorking())
+                await Task.Delay(100);
+        }
+
+        /// <summary>
+        /// Send a packet to the server
+        /// </summary>
+        /// <param name="opcode">The opcode of the packet</param>
+        /// <param name="data">The data if any</param>
+        /// <returns></returns>
+        public static async Task Send(ClientPacketOpcode opcode, IWritable data = null)
+        {
+            OutgoingId++;
+
+            Outgoing.TryAdd(OutgoingId, new ClientPacket((byte)opcode, data));
+
+            while (Outgoing.ContainsKey(OutgoingId))
                 await Task.Delay(100);
         }
 
@@ -167,7 +191,7 @@ namespace GodotModules.Netcode.Client
         /// <summary>
         /// Disconnect the client from the server, can be called from the Godot thread
         /// </summary>
-        public async static Task Stop() 
+        public async static Task Stop()
         {
             ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToDisconnect));
 
@@ -185,18 +209,18 @@ namespace GodotModules.Netcode.Client
         /// This is in the ENet thread, anything from the ENet thread can be used here
         /// </summary>
         /// <param name="netEvent"></param>
-        protected virtual void Connect(Event netEvent) {}
+        protected virtual void Connect(Event netEvent) { }
 
         /// <summary>
         /// This is in the ENet thread, anything from the ENet thread can be used here
         /// </summary>
         /// <param name="netEvent"></param>
-        protected virtual void Disconnect(Event netEvent) {}
+        protected virtual void Disconnect(Event netEvent) { }
 
         /// <summary>
         /// This is in the ENet thread, anything from the ENet thread can be used here
         /// </summary>
         /// <param name="netEvent"></param>
-        protected virtual void Timeout(Event netEvent) {}
+        protected virtual void Timeout(Event netEvent) { }
     }
 }
