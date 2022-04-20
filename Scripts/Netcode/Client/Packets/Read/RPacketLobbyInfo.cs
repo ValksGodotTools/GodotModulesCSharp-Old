@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GodotModules.Netcode.Client 
 {
-    public class RPacketLobbyInfo 
+    public class RPacketLobbyInfo
     {
         public uint Id { get; set; }
         public Dictionary<uint, string> Players { get; set; }

@@ -2,6 +2,7 @@ using Godot;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using System.Reflection;
 
 namespace GodotModules
 {
@@ -64,7 +65,8 @@ namespace GodotModules
         /// <typeparam name="Namespace">Only add types from this namespace</typeparam>
         /// <returns></returns>
         public static Dictionary<Key, Value> LoadInstances<Key, Value, Namespace>() =>
-            typeof(Value).Assembly.GetTypes()
+            Assembly.GetExecutingAssembly()
+                .GetTypes()
                 .Where(x => typeof(Value).IsAssignableFrom(x) && !x.IsAbstract && x.Namespace == typeof(Namespace).Namespace)
                 .Select(Activator.CreateInstance).Cast<Value>()
                 .ToDictionary(x => (Key)Enum.Parse(typeof(Key), x.GetType().Name.Replace(typeof(Value).Name, "")), x => x);
