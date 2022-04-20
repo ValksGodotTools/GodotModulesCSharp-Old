@@ -113,13 +113,13 @@ namespace GodotModules
         public static async Task WaitForHostToConnectToServer()
         {
             while (!ENetServer.SomeoneConnected)
-                await Task.Delay(100);
+                await Task.Delay(200);
         }
 
         public static async Task ClientConnecting()
         {
             while (!ENetClient.Connected)
-                await Task.Delay(100);
+                await Task.Delay(200);
         }
     }
 }
