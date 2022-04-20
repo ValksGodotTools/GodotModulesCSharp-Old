@@ -6,6 +6,15 @@ namespace GodotModules
 {
     public static class Utils
     {
+        public static void EscapeToScene(string scene, Action action)
+        {
+            if (Input.IsActionJustPressed("ui_cancel"))
+            {
+                action();
+                GameManager.ChangeScene(scene);
+            }
+        }
+
         public static void Log(object obj, ConsoleColor color = ConsoleColor.Gray) 
         {
             Console.ForegroundColor = color;

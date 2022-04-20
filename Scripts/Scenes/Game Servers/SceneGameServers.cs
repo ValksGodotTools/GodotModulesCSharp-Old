@@ -61,11 +61,9 @@ namespace GodotModules
 
         public override void _Input(InputEvent @event)
         {
-            if (Input.IsActionJustPressed("ui_cancel"))
-            {
+            Utils.EscapeToScene("Menu", () => {
                 GameManager.WebClient.Client.CancelPendingRequests();
-                GameManager.ChangeScene("Menu");
-            }
+            });
         }
 
         public void AddServer(LobbyListing info)

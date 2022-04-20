@@ -4,6 +4,7 @@ using GodotModules.Netcode.Client;
 using GodotModules.Netcode.Server;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace GodotModules
 {
@@ -58,16 +59,14 @@ namespace GodotModules
                 UIAddPlayer(player.Key, player.Value);
         }
 
-        public override async void _Input(InputEvent @event)
+        public override void _Input(InputEvent @event)
         {
-            if (Input.IsActionJustPressed("ui_cancel"))
-            {
+            Utils.EscapeToScene("GameServers", async () => {
                 GameManager.WebClient.Client.CancelPendingRequests();
                 GameManager.WebClient.TimerPingMasterServer.Stop();
                 await GameClient.Disconnect();
                 await GameServer.Stop();
-                GameManager.ChangeScene("GameServers");
-            }
+            });
         }
 
         public static void AddPlayer(uint id, string name) 
