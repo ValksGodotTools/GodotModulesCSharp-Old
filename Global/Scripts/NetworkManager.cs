@@ -100,9 +100,12 @@ namespace GodotModules
             {
                 switch (cmd.Opcode)
                 {
+                    case GodotOpcode.PopupMessage:
+                        GameManager.SpawnPopupMessage((string)cmd.Data);
+                        break;
                     case GodotOpcode.LogMessage:
                         Utils.Log($"[Server]: {cmd.Data}", ENetServer.LogsColor);
-                        return;
+                        break;
                 }
             }
         }

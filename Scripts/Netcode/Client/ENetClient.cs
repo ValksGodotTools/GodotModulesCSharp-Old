@@ -200,8 +200,8 @@ namespace GodotModules.Netcode.Client
             }
             catch (Exception e)
             {
+                Log($"{e.Message}{e.StackTrace}");
                 NetworkManager.ClientGodotCmds.Enqueue(new GodotCmd(GodotOpcode.PopupError, e));
-                Console.WriteLine($"ENet Client: {e.Message}{e.StackTrace}");
             }
         }
 

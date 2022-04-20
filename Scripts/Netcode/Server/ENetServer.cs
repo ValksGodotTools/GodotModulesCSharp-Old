@@ -58,7 +58,9 @@ namespace GodotModules.Netcode.Server
                 }
                 catch (Exception e)
                 {
-                    Log($"A server is running on port {port} already! {e.Message}");
+                    var message = $"A server is running on port {port} already! {e.Message}";
+                    Log(message);
+                    NetworkManager.ClientGodotCmds.Enqueue(new GodotCmd(GodotOpcode.PopupMessage, message));
                     await GodotModules.Netcode.Client.ENetClient.Stop();
                     await Stop();
                     return;
@@ -186,7 +188,8 @@ namespace GodotModules.Netcode.Server
             }
             catch (Exception e)
             {
-                GD.Print($"ENet Server: {e.Message}{e.StackTrace}");
+                Log($"{e.Message}{e.StackTrace}");
+                NetworkManager.ClientGodotCmds.Enqueue(new GodotCmd(GodotOpcode.PopupError, e));
             }
         }
 

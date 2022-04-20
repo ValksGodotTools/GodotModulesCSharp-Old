@@ -48,6 +48,7 @@
         ENetPacket,
         LogMessage,
         ChangeScene,
+        PopupMessage,
         PopupError
     }
 
