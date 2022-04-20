@@ -30,6 +30,6 @@ namespace GodotModules
             Instance.AddChild(Scenes[scene].Instance());
         }
 
-        private void LoadScene(string scene) => Scenes[scene] = ResourceLoader.Load<PackedScene>($"res://Scenes/{scene}.tscn");
+        private void LoadScene(string scene) => Scenes[scene] = ResourceLoader.Load<PackedScene>($"res://Scenes/Scenes/{scene}.tscn");
     }
 }
