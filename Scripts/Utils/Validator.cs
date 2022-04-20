@@ -1,4 +1,6 @@
 using Godot;
+using System;
+using System.Linq;
 
 namespace GodotModules
 {
@@ -7,7 +9,7 @@ namespace GodotModules
         public static void ValidateNumber(LineEdit input, string newText, int maxRange, ref int num)
         {
             // do NOT use text.Clear() as it will trigger _on_NumAttempts_text_changed and cause infinite loop -> stack overflow
-            if (newText == "")
+            if (newText.Empty())
             {
                 num = 0;
                 EditInputText(input, "");
