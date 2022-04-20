@@ -1,6 +1,7 @@
 using Common.Netcode;
 using Godot;
 using GodotModules.Netcode.Client;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -21,7 +22,7 @@ namespace GodotModules.Netcode
         private VBoxContainer ServerList { get; set; }
         public UICreateLobby ServerCreationPopup { get; set; }
 
-        public override void _Ready()
+        public override async void _Ready()
         {
             Instance = this;
             ServerList = GetNode<VBoxContainer>(NodePathServerList);
@@ -55,7 +56,7 @@ namespace GodotModules.Netcode
                 GameManager.SpawnPopupMessage(message);
             }
 
-            ListServers();
+            await ListServers();
         }
 
         public override void _Input(InputEvent @event)
@@ -81,7 +82,7 @@ namespace GodotModules.Netcode
                 child.QueueFree();
         }
 
-        public async void ListServers()
+        public async Task ListServers()
         {
             GameManager.WebClient.TaskGetServers = GameManager.WebClient.Get<LobbyListing[]>("servers/get");
             var res = await GameManager.WebClient.TaskGetServers;

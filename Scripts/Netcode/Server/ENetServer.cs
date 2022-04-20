@@ -54,7 +54,7 @@ namespace GodotModules.Netcode.Server
                 Address address = new Address();
                 address.Port = port;
 
-                try 
+                try
                 {
                     server.Create(address, maxClients);
                 }
@@ -186,7 +186,7 @@ namespace GodotModules.Netcode.Server
             }
             catch (Exception e)
             {
-                Utils.Log($"ENet Server: {e.Message}{e.StackTrace}", ConsoleColor.Red);
+                Console.WriteLine($"ENet Server: {e.Message}{e.StackTrace}");
             }
         }
 
@@ -201,10 +201,10 @@ namespace GodotModules.Netcode.Server
                 return;
             }
 
-            KickAll(DisconnectOpcode.Stopping);
-
             Log("Stopping server");
             Running = false;
+
+            KickAll(DisconnectOpcode.Stopping);
 
             if (!ENetServer.WorkerServer.IsCompleted)
                 await Task.Delay(100);
@@ -239,7 +239,7 @@ namespace GodotModules.Netcode.Server
         /// Provides a way to log a message on the Godot thread from the ENet thread
         /// </summary>
         /// <param name="obj">The object to log</param>
-        public static void Log(object obj) 
+        public static void Log(object obj)
         {
             var threadName = Thread.CurrentThread.Name;
 
@@ -291,7 +291,7 @@ namespace GodotModules.Netcode.Server
         /// <param name="opcode">Tells the client why they were kicked</param>
         private static void KickAll(DisconnectOpcode opcode)
         {
-            foreach (var peer in Peers.Values) 
+            foreach (var peer in Peers.Values)
                 peer.DisconnectNow((uint)opcode);
 
             Peers.Clear();
@@ -302,7 +302,7 @@ namespace GodotModules.Netcode.Server
         /// </summary>
         /// <param name="id"></param>
         /// <param name="opcode">Tells the client why they were kicked</param>
-        private static void Kick(uint id, DisconnectOpcode opcode) 
+        private static void Kick(uint id, DisconnectOpcode opcode)
         {
             Peers[id].DisconnectNow((uint)opcode);
             Peers.Remove(id);

@@ -66,6 +66,7 @@ namespace GodotModules.Netcode
                 GameManager.WebClient.TimerPingMasterServer.Stop();
                 await GameClient.Disconnect();
                 await GameServer.Stop();
+                GameManager.ChangeScene("GameServers");
             }
         }
 

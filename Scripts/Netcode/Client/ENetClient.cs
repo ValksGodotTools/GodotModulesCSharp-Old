@@ -122,22 +122,12 @@ namespace GodotModules.Netcode.Client
                                 break;
 
                             case EventType.Timeout:
-                                Connected = false;
-                                DisconnectOpcode = DisconnectOpcode.Timeout;
-                                GodotCmds.Enqueue(new GodotCmd(GodotOpcode.ChangeScene, "GameServers"));
-                                SceneGameServers.ConnectingToLobby = false;
-                                SceneGameServers.Disconnected = true;
-                                Running = false;
+                                HandlePeerLeave(DisconnectOpcode.Timeout);
                                 Timeout(netEvent);
                                 break;
 
                             case EventType.Disconnect:
-                                Connected = false;
-                                DisconnectOpcode = (DisconnectOpcode)netEvent.Data;
-                                GodotCmds.Enqueue(new GodotCmd(GodotOpcode.ChangeScene, "GameServers"));
-                                SceneGameServers.ConnectingToLobby = false;
-                                SceneGameServers.Disconnected = true;
-                                Running = false;
+                                HandlePeerLeave((DisconnectOpcode)netEvent.Data);
                                 Disconnect(netEvent);
                                 break;
                         }
@@ -154,6 +144,15 @@ namespace GodotModules.Netcode.Client
 
             while (ConcurrentQueuesWorking())
                 await Task.Delay(100);
+        }
+
+        private void HandlePeerLeave(DisconnectOpcode opcode)
+        {
+            DisconnectOpcode = (DisconnectOpcode)opcode;
+            Connected = false;
+            Running = false;
+            SceneGameServers.ConnectingToLobby = false;
+            SceneGameServers.Disconnected = true;
         }
 
         /// <summary>
@@ -198,7 +197,7 @@ namespace GodotModules.Netcode.Client
             catch (Exception e)
             {
                 GodotCmds.Enqueue(new GodotCmd(GodotOpcode.PopupError, e));
-                Utils.Log($"ENet Client: {e.Message}{e.StackTrace}", ConsoleColor.Red);
+                Console.WriteLine($"ENet Client: {e.Message}{e.StackTrace}");
             }
         }
 

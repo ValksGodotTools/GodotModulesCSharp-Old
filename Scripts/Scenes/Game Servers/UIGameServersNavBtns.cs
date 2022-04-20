@@ -26,13 +26,13 @@ namespace GodotModules.Netcode
             popup.PopupCentered();
         }
 
-        private void _on_Refresh_pressed()
+        private async void _on_Refresh_pressed()
         {
             if (!GameManager.WebClient.TaskGetServers.IsCompleted)
                 return;
 
             SceneGameServers.Instance.ClearServers();
-            SceneGameServers.Instance.ListServers();
+            await SceneGameServers.Instance.ListServers();
         }
     }
 }
