@@ -2,7 +2,7 @@ using GodotModules.Netcode;
 using GodotModules.Netcode.Client;
 using Godot;
 
-namespace GodotModules.Netcode
+namespace GodotModules
 {
     public class UILobbyListing : Control
     {

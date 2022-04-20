@@ -1,12 +1,12 @@
-using GodotModules.Netcode;
 using Godot;
+using GodotModules.Netcode;
 using GodotModules.Netcode.Client;
 using GodotModules.Settings;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace GodotModules.Netcode
+namespace GodotModules
 {
     public class UICreateLobby : WindowDialog
     {

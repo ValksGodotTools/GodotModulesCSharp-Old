@@ -1,6 +1,6 @@
 using Godot;
 
-namespace GodotModules.Netcode
+namespace GodotModules
 {
     public class UILobbyPlayerListing : Control
     {

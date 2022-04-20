@@ -1,11 +1,11 @@
-using GodotModules.Netcode;
 using Godot;
+using GodotModules.Netcode;
 using GodotModules.Netcode.Client;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace GodotModules.Netcode
+namespace GodotModules
 {
     public class SceneGameServers : Control
     {
