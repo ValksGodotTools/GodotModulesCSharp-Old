@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace Common.Utils
+namespace GodotModules
 {
     public static class SharedUtils
     {

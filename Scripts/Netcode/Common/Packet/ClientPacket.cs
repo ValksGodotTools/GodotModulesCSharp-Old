@@ -1,4 +1,4 @@
-namespace Common.Netcode
+namespace GodotModules.Netcode
 {
     public class ClientPacket : GamePacket
     {

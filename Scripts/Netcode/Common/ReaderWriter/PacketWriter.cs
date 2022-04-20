@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace Common.Netcode
+namespace GodotModules.Netcode
 {
     public class PacketWriter : BinaryWriter
     {

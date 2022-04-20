@@ -1,4 +1,4 @@
-using Common.Netcode;
+using GodotModules.Netcode;
 using ENet;
 
 namespace GodotModules.Netcode.Client

@@ -1,6 +1,6 @@
 using ENet;
 
-namespace Common.Netcode
+namespace GodotModules.Netcode
 {
     public class ServerPacket : GamePacket
     {
