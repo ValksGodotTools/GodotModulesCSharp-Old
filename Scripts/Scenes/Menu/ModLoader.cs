@@ -130,10 +130,7 @@ namespace GodotModules.ModLoader
             }
         }
 
-        public static void SetModsEnabled()
-        {
-            File.WriteAllText(PathModsEnabled, JsonConvert.SerializeObject(ModsEnabled, Formatting.Indented));
-        }
+        public static void SetModsEnabled() => File.WriteAllText(PathModsEnabled, JsonConvert.SerializeObject(ModsEnabled, Formatting.Indented));
 
         public static void GetModsEnabled()
         {

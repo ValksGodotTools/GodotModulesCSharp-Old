@@ -47,9 +47,6 @@ namespace GodotModules.ModLoader
                 UIModLoader.Instance.ModInfoDependencyList[modName].SetModEnabled(enabled);
         }
 
-        private void _on_Mod_pressed()
-        {
-            UIModLoader.Instance.UpdateModInfo(BtnMod.Text);
-        }
+        private void _on_Mod_pressed() => UIModLoader.Instance.UpdateModInfo(BtnMod.Text);
     }
 }
