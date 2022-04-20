@@ -34,17 +34,16 @@ namespace GodotModules
             {
                 Instance.GetTree().SetAutoAcceptQuit(false);
 
-                if (ENetServer.Running) 
-                    GameServer.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToExitApp));
-
                 if (ENetClient.Running)
-                    GameClient.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToExitApp));
+                {
+                    await GameClient.Stop();
+                }
 
-                if (GameClient.WorkerClient != null && !GameClient.WorkerClient.IsCompleted)
-                    await Task.Delay(100);
-
-                if (GameServer.WorkerServer != null && !GameServer.WorkerServer.IsCompleted)
-                    await Task.Delay(100);
+                if (ENetServer.Running) 
+                {
+                    GameServer.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToExitApp));
+                    await GameServer.Stop();
+                }
 
                 ExitCleanup();
             }
@@ -57,6 +56,11 @@ namespace GodotModules
         {
             UtilOptions.SaveOptions();
             WebClient.Client.Dispose();
+
+            if (ENetClient.CancelTokenSource != null)
+                ENetClient.CancelTokenSource.Dispose();
+            if (ENetServer.CancelTokenSource != null)
+                ENetServer.CancelTokenSource.Dispose();
 
             Instance.GetTree().Quit();
         }

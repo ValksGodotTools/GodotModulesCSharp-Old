@@ -14,8 +14,8 @@ namespace GodotModules.Netcode.Client
     public abstract class ENetClient
     {
         public static Task WorkerClient { get; set; }
+        public static CancellationTokenSource CancelTokenSource { get; private set; }
         public static ConsoleColor LogsColor = ConsoleColor.Yellow;
-        public static bool Running;
         public static ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
         public static ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
         private static int OutgoingId { get; set; }
@@ -23,10 +23,12 @@ namespace GodotModules.Netcode.Client
         public static DisconnectOpcode DisconnectOpcode { get; set; }
         public static readonly Dictionary<ServerPacketOpcode, HandlePacket> HandlePacket = ReflectionUtils.LoadInstances<ServerPacketOpcode, HandlePacket, ENetClient>();
         public static bool Connected { get; set; }
+        public static bool Running { get; set; }
         protected bool ENetThreadRunning;
 
         public ENetClient()
         {
+            Running = false;
             Connected = false;
             OutgoingId = 0;
             Outgoing = new ConcurrentDictionary<int, ClientPacket>();
@@ -64,7 +66,8 @@ namespace GodotModules.Netcode.Client
                 peer.Timeout(timeout, timeoutMinimum, timeoutMaximum);
 
                 Running = true;
-                while (Running)
+
+                while (!CancelTokenSource.IsCancellationRequested)
                 {
                     var polled = false;
 
@@ -76,7 +79,7 @@ namespace GodotModules.Netcode.Client
                             case ENetOpcode.ClientWantsToExitApp:
                             case ENetOpcode.ClientWantsToDisconnect:
                                 peer.Disconnect(0);
-                                Running = false;
+                                CancelTokenSource.Cancel();
                                 break;
                         }
                     }
@@ -144,15 +147,17 @@ namespace GodotModules.Netcode.Client
 
             while (ConcurrentQueuesWorking())
                 await Task.Delay(100);
+
+            Running = false;
         }
 
         private void HandlePeerLeave(DisconnectOpcode opcode)
         {
-            DisconnectOpcode = (DisconnectOpcode)opcode;
-            Connected = false;
-            Running = false;
             SceneGameServers.ConnectingToLobby = false;
             SceneGameServers.Disconnected = true;
+            Connected = false;
+            DisconnectOpcode = (DisconnectOpcode)opcode;
+            CancelTokenSource.Cancel();
         }
 
         /// <summary>
@@ -188,10 +193,11 @@ namespace GodotModules.Netcode.Client
             }
 
             ENetThreadRunning = true;
+            CancelTokenSource = new CancellationTokenSource();
 
             try
             {
-                WorkerClient = Task.Run(() => ENetThreadWorker(ip, port));
+                WorkerClient = Task.Run(() => ENetThreadWorker(ip, port), CancelTokenSource.Token);
                 await WorkerClient;
             }
             catch (Exception e)
@@ -204,16 +210,12 @@ namespace GodotModules.Netcode.Client
         /// <summary>
         /// Disconnect the client from the server, can be called from the Godot thread
         /// </summary>
-        public async static Task Disconnect() => await Stop();
-
-        /// <summary>
-        /// Disconnect the client from the server, can be called from the Godot thread
-        /// </summary>
         public async static Task Stop()
         {
-            ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToDisconnect));
+            CancelTokenSource.Cancel();
+            //ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToDisconnect));
 
-            if (!ENetClient.WorkerClient.IsCompleted)
+            while (!ENetClient.WorkerClient.IsCompleted)
                 await Task.Delay(100);
         }
 

@@ -64,7 +64,7 @@ namespace GodotModules
             Utils.EscapeToScene("GameServers", async () => {
                 NetworkManager.WebClient.Client.CancelPendingRequests();
                 NetworkManager.WebClient.TimerPingMasterServer.Stop();
-                await GameClient.Disconnect();
+                await GameClient.Stop();
                 await GameServer.Stop();
             });
         }

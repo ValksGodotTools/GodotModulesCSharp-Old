@@ -7,17 +7,18 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 
 namespace GodotModules.Netcode.Server
 {
     public abstract class ENetServer
     {
         public static Task WorkerServer { get; set; }
+        public static CancellationTokenSource CancelTokenSource { get; private set; }
         public static ConsoleColor LogsColor = ConsoleColor.Cyan;
-        public static bool Running { get; set; }
         public static bool SomeoneConnected { get; set; }
+        public static bool Running { get; set; }
         public static ConcurrentQueue<ServerPacket> Outgoing { get; set; }
         public static Dictionary<uint, Peer> Peers { get; set; }
         public static ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
@@ -27,8 +28,8 @@ namespace GodotModules.Netcode.Server
 
         public ENetServer()
         {
-            SomeoneConnected = false;
             Running = false;
+            SomeoneConnected = false;
             ENetCmds = new ConcurrentQueue<ENetCmd>();
             GodotCmds = new ConcurrentQueue<GodotCmd>();
             Outgoing = new ConcurrentQueue<ServerPacket>();
@@ -43,7 +44,6 @@ namespace GodotModules.Netcode.Server
         public async void ENetThreadWorker(ushort port, int maxClients)
         {
             Thread.CurrentThread.Name = "Server";
-            Running = true;
             if (SceneLobby.CurrentLobby.Public)
                 NetworkManager.WebClient.TimerPingMasterServer.Start();
 
@@ -67,8 +67,9 @@ namespace GodotModules.Netcode.Server
                 }
 
                 Log($"Server listening on port {port}");
+                Running = true;
 
-                while (Running)
+                while (!CancelTokenSource.IsCancellationRequested)
                 {
                     bool polled = false;
 
@@ -80,7 +81,7 @@ namespace GodotModules.Netcode.Server
                         // Host client wants to stop the server
                         if (opcode == ENetOpcode.ClientWantsToExitApp)
                         {
-                            Running = false;
+                            CancelTokenSource.Cancel();
                             KickAll(DisconnectOpcode.Stopping);
                         }
                     }
@@ -178,15 +179,16 @@ namespace GodotModules.Netcode.Server
             }
 
             Log("Starting server");
+            CancelTokenSource = new CancellationTokenSource();
 
             try
             {
-                WorkerServer = Task.Run(() => ENetThreadWorker(port, maxClients));
+                WorkerServer = Task.Run(() => ENetThreadWorker(port, maxClients), CancelTokenSource.Token);
                 await WorkerServer;
             }
             catch (Exception e)
             {
-                Console.WriteLine($"ENet Server: {e.Message}{e.StackTrace}");
+                GD.Print($"ENet Server: {e.Message}{e.StackTrace}");
             }
         }
 
@@ -195,18 +197,19 @@ namespace GodotModules.Netcode.Server
         /// </summary>
         public static async Task Stop()
         {
-            if (!Running)
+            if (CancelTokenSource.IsCancellationRequested)
             {
                 Log("Server has been stopped already");
                 return;
             }
 
-            Log("Stopping server");
             Running = false;
+            CancelTokenSource.Cancel();
+            Log("Stopping server");
 
             KickAll(DisconnectOpcode.Stopping);
 
-            if (!ENetServer.WorkerServer.IsCompleted)
+            while (!ENetServer.WorkerServer.IsCompleted)
                 await Task.Delay(100);
         }
 
@@ -215,7 +218,7 @@ namespace GodotModules.Netcode.Server
         /// </summary>
         public void Restart()
         {
-            if (!Running)
+            if (CancelTokenSource.IsCancellationRequested)
             {
                 Log("Server has been stopped already");
                 return;
@@ -224,7 +227,6 @@ namespace GodotModules.Netcode.Server
             KickAll(DisconnectOpcode.Restarting);
 
             Log("Restarting server");
-            Running = false;
             QueueRestart = true;
         }
 
