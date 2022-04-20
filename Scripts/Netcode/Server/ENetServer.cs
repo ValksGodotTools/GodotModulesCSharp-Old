@@ -21,7 +21,6 @@ namespace GodotModules.Netcode.Server
         public static bool Running { get; set; }
         public static ConcurrentQueue<ServerPacket> Outgoing { get; set; }
         public static Dictionary<uint, Peer> Peers { get; set; }
-        public static ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
         private static readonly Dictionary<ClientPacketOpcode, HandlePacket> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, HandlePacket, ENetServer>();
         public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
         private bool QueueRestart { get; set; }
@@ -31,7 +30,6 @@ namespace GodotModules.Netcode.Server
             Running = false;
             SomeoneConnected = false;
             ENetCmds = new ConcurrentQueue<ENetCmd>();
-            GodotCmds = new ConcurrentQueue<GodotCmd>();
             Outgoing = new ConcurrentQueue<ServerPacket>();
             Peers = new Dictionary<uint, Peer>();
         }
@@ -165,7 +163,7 @@ namespace GodotModules.Netcode.Server
             }
         }
 
-        private bool ConcurrentQueuesWorking() => GodotCmds.Count != 0 || ENetCmds.Count != 0 || Outgoing.Count != 0;
+        private bool ConcurrentQueuesWorking() => NetworkManager.ServerGodotCmds.Count != 0 || ENetCmds.Count != 0 || Outgoing.Count != 0;
 
         /// <summary>
         /// Start the server, can be called from the Godot thread
@@ -246,7 +244,7 @@ namespace GodotModules.Netcode.Server
             var threadName = Thread.CurrentThread.Name;
 
             if (threadName == "Server")
-                GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessage, obj));
+                NetworkManager.ServerGodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessage, obj));
             else
                 Utils.Log($"{obj}", LogsColor);
         }

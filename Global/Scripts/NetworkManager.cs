@@ -4,6 +4,7 @@ using GodotModules.Netcode.Client;
 using GodotModules.Netcode.Server;
 using GodotModules.Settings;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,6 +12,8 @@ namespace GodotModules
 {
     public class NetworkManager : Node 
     {
+        public static ConcurrentQueue<GodotCmd> ServerGodotCmds { get; set; }
+        public static ConcurrentQueue<GodotCmd> ClientGodotCmds { get; set; }
         public static GameServer GameServer { get; set; }
         public static GameClient GameClient { get; set; }
         public static WebClient WebClient { get; set; }
@@ -20,6 +23,8 @@ namespace GodotModules
         {
             Instance = this;
             WebClient = new WebClient();
+            ServerGodotCmds = new ConcurrentQueue<GodotCmd>();
+            ClientGodotCmds = new ConcurrentQueue<GodotCmd>();
         }
 
         public override void _Process(float delta)
@@ -91,10 +96,7 @@ namespace GodotModules
 
         private void ProcessENetServerGodotCmds()
         {
-            if (ENetServer.GodotCmds == null)
-                return;
-
-            while (ENetServer.GodotCmds.TryDequeue(out GodotCmd cmd))
+            while (ServerGodotCmds.TryDequeue(out GodotCmd cmd))
             {
                 switch (cmd.Opcode)
                 {
@@ -107,10 +109,7 @@ namespace GodotModules
 
         private void ProcessENetClientGodotCmds()
         {
-            if (ENetClient.GodotCmds == null)
-                return;
-
-            while (ENetClient.GodotCmds.TryDequeue(out GodotCmd cmd))
+            while (ClientGodotCmds.TryDequeue(out GodotCmd cmd))
             {
                 switch (cmd.Opcode)
                 {

@@ -17,7 +17,6 @@ namespace GodotModules.Netcode.Client
         public static CancellationTokenSource CancelTokenSource { get; private set; }
         public static ConsoleColor LogsColor = ConsoleColor.Yellow;
         public static ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
-        public static ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
         private static int OutgoingId { get; set; }
         private static ConcurrentDictionary<int, ClientPacket> Outgoing { get; set; }
         public static DisconnectOpcode DisconnectOpcode { get; set; }
@@ -33,7 +32,6 @@ namespace GodotModules.Netcode.Client
             OutgoingId = 0;
             Outgoing = new ConcurrentDictionary<int, ClientPacket>();
             ENetCmds = new ConcurrentQueue<ENetCmd>();
-            GodotCmds = new ConcurrentQueue<GodotCmd>();
         }
 
         /// <summary>
@@ -121,7 +119,7 @@ namespace GodotModules.Netcode.Client
                                     continue;
                                 }
 
-                                GodotCmds.Enqueue(new GodotCmd(GodotOpcode.ENetPacket, new PacketReader(packet)));
+                                NetworkManager.ClientGodotCmds.Enqueue(new GodotCmd(GodotOpcode.ENetPacket, new PacketReader(packet)));
                                 break;
 
                             case EventType.Timeout:
@@ -176,7 +174,7 @@ namespace GodotModules.Netcode.Client
                 await Task.Delay(100);
         }
 
-        private bool ConcurrentQueuesWorking() => GodotCmds.Count != 0 || ENetCmds.Count != 0 || Outgoing.Count != 0;
+        private bool ConcurrentQueuesWorking() => NetworkManager.ClientGodotCmds.Count != 0 || ENetCmds.Count != 0 || Outgoing.Count != 0;
 
         /// <summary>
         /// Attempt to connect to the server, can be called from the Godot thread
@@ -202,7 +200,7 @@ namespace GodotModules.Netcode.Client
             }
             catch (Exception e)
             {
-                GodotCmds.Enqueue(new GodotCmd(GodotOpcode.PopupError, e));
+                NetworkManager.ClientGodotCmds.Enqueue(new GodotCmd(GodotOpcode.PopupError, e));
                 Console.WriteLine($"ENet Client: {e.Message}{e.StackTrace}");
             }
         }
@@ -229,7 +227,7 @@ namespace GodotModules.Netcode.Client
             var threadName = Thread.CurrentThread.Name;
 
             if (threadName == "Client")
-                GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessage, obj));
+                NetworkManager.ClientGodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessage, obj));
             else
                 Utils.Log($"{obj}", LogsColor);
         }
