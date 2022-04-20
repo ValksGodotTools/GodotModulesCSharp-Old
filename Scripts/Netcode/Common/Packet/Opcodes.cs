@@ -46,7 +46,8 @@
     public enum GodotOpcode
     {
         ENetPacket,
-        LogMessage,
+        LogMessageClient,
+        LogMessageServer,
         ChangeScene,
         PopupMessage,
         PopupError

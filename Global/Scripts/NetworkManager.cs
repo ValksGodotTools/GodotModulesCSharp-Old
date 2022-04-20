@@ -12,8 +12,7 @@ namespace GodotModules
 {
     public class NetworkManager : Node 
     {
-        public static ConcurrentQueue<GodotCmd> ServerGodotCmds { get; set; }
-        public static ConcurrentQueue<GodotCmd> ClientGodotCmds { get; set; }
+        public static ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
         public static GameServer GameServer { get; set; }
         public static GameClient GameClient { get; set; }
         public static WebClient WebClient { get; set; }
@@ -23,14 +22,43 @@ namespace GodotModules
         {
             Instance = this;
             WebClient = new WebClient();
-            ServerGodotCmds = new ConcurrentQueue<GodotCmd>();
-            ClientGodotCmds = new ConcurrentQueue<GodotCmd>();
+            GodotCmds = new ConcurrentQueue<GodotCmd>();
         }
 
         public override void _Process(float delta)
         {
-            ProcessENetServerGodotCmds();
-            ProcessENetClientGodotCmds();
+            while (GodotCmds.TryDequeue(out GodotCmd cmd))
+            {
+                switch (cmd.Opcode)
+                {
+                    case GodotOpcode.PopupMessage:
+                        GameManager.SpawnPopupMessage((string)cmd.Data);
+                        break;
+                    case GodotOpcode.LogMessageServer:
+                        Utils.Log($"[Server]: {cmd.Data}", ENetServer.LogsColor);
+                        break;
+                    case GodotOpcode.ENetPacket:
+                        var packetReader = (PacketReader)cmd.Data;
+                        var opcode = (ServerPacketOpcode)packetReader.ReadByte();
+
+                        Utils.Log($"Received new server packet: {opcode}", ENetClient.LogsColor);
+
+                        ENetClient.HandlePacket[opcode].Handle(packetReader);
+
+                        packetReader.Dispose();
+                        break;
+
+                    case GodotOpcode.LogMessageClient:
+                        Utils.Log($"[Client]: {cmd.Data}", ENetClient.LogsColor);
+                        break;
+                    case GodotOpcode.ChangeScene:
+                        SceneManager.ChangeScene($"{cmd.Data}");
+                        break;
+                    case GodotOpcode.PopupError:
+                        GameManager.SpawnPopupError((Exception)cmd.Data);
+                        break;
+                }
+            }
         }
 
         public override async void _Notification(int what)
@@ -92,52 +120,6 @@ namespace GodotModules
         {
             while (!ENetClient.Connected)
                 await Task.Delay(100);
-        }
-
-        private void ProcessENetServerGodotCmds()
-        {
-            while (ServerGodotCmds.TryDequeue(out GodotCmd cmd))
-            {
-                switch (cmd.Opcode)
-                {
-                    case GodotOpcode.PopupMessage:
-                        GameManager.SpawnPopupMessage((string)cmd.Data);
-                        break;
-                    case GodotOpcode.LogMessage:
-                        Utils.Log($"[Server]: {cmd.Data}", ENetServer.LogsColor);
-                        break;
-                }
-            }
-        }
-
-        private void ProcessENetClientGodotCmds()
-        {
-            while (ClientGodotCmds.TryDequeue(out GodotCmd cmd))
-            {
-                switch (cmd.Opcode)
-                {
-                    case GodotOpcode.ENetPacket:
-                        var packetReader = (PacketReader)cmd.Data;
-                        var opcode = (ServerPacketOpcode)packetReader.ReadByte();
-
-                        Utils.Log($"Received new server packet: {opcode}", ENetClient.LogsColor);
-
-                        ENetClient.HandlePacket[opcode].Handle(packetReader);
-
-                        packetReader.Dispose();
-                        break;
-
-                    case GodotOpcode.LogMessage:
-                        Utils.Log($"[Client]: {cmd.Data}", ENetClient.LogsColor);
-                        break;
-                    case GodotOpcode.ChangeScene:
-                        SceneManager.ChangeScene($"{cmd.Data}");
-                        break;
-                    case GodotOpcode.PopupError:
-                        GameManager.SpawnPopupError((Exception)cmd.Data);
-                        break;
-                }
-            }
         }
     }
 }

@@ -120,7 +120,7 @@ namespace GodotModules.Netcode.Client
                                     continue;
                                 }
 
-                                NetworkManager.ClientGodotCmds.Enqueue(new GodotCmd(GodotOpcode.ENetPacket, new PacketReader(packet)));
+                                NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.ENetPacket, new PacketReader(packet)));
                                 break;
 
                             case EventType.Timeout:
@@ -175,7 +175,7 @@ namespace GodotModules.Netcode.Client
                 await Task.Delay(100);
         }
 
-        private bool ConcurrentQueuesWorking() => NetworkManager.ClientGodotCmds.Count != 0 || ENetCmds.Count != 0 || Outgoing.Count != 0;
+        private bool ConcurrentQueuesWorking() => NetworkManager.GodotCmds.Count != 0 || ENetCmds.Count != 0 || Outgoing.Count != 0;
 
         /// <summary>
         /// Attempt to connect to the server, can be called from the Godot thread
@@ -202,7 +202,7 @@ namespace GodotModules.Netcode.Client
             catch (Exception e)
             {
                 Log($"{e.Message}{e.StackTrace}");
-                NetworkManager.ClientGodotCmds.Enqueue(new GodotCmd(GodotOpcode.PopupError, e));
+                NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.PopupError, e));
             }
         }
 
@@ -228,7 +228,7 @@ namespace GodotModules.Netcode.Client
             var threadName = Thread.CurrentThread.Name;
 
             if (threadName == "Client")
-                NetworkManager.ClientGodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessage, obj));
+                NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessageClient, obj));
             else
                 Utils.Log($"{obj}", LogsColor);
         }

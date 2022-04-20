@@ -60,7 +60,7 @@ namespace GodotModules.Netcode.Server
                 {
                     var message = $"A server is running on port {port} already! {e.Message}";
                     Log(message);
-                    NetworkManager.ClientGodotCmds.Enqueue(new GodotCmd(GodotOpcode.PopupMessage, message));
+                    NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.PopupMessage, message));
                     await GodotModules.Netcode.Client.ENetClient.Stop();
                     await Stop();
                     return;
@@ -165,7 +165,7 @@ namespace GodotModules.Netcode.Server
             }
         }
 
-        private bool ConcurrentQueuesWorking() => NetworkManager.ServerGodotCmds.Count != 0 || ENetCmds.Count != 0 || Outgoing.Count != 0;
+        private bool ConcurrentQueuesWorking() => NetworkManager.GodotCmds.Count != 0 || ENetCmds.Count != 0 || Outgoing.Count != 0;
 
         /// <summary>
         /// Start the server, can be called from the Godot thread
@@ -189,7 +189,7 @@ namespace GodotModules.Netcode.Server
             catch (Exception e)
             {
                 Log($"{e.Message}{e.StackTrace}");
-                NetworkManager.ClientGodotCmds.Enqueue(new GodotCmd(GodotOpcode.PopupError, e));
+                NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.PopupError, e));
             }
         }
 
@@ -247,7 +247,7 @@ namespace GodotModules.Netcode.Server
             var threadName = Thread.CurrentThread.Name;
 
             if (threadName == "Server")
-                NetworkManager.ServerGodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessage, obj));
+                NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessageServer, obj));
             else
                 Utils.Log($"{obj}", LogsColor);
         }
