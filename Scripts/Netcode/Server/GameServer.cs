@@ -49,5 +49,7 @@ namespace GodotModules.Netcode.Server
             otherPlayers.Remove(id);
             return otherPlayers;
         }
+
+        public static Peer[] GetAllPlayerPeers() => Players.Keys.Select(x => Peers[x]).ToArray();
     }
 }

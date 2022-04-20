@@ -1,8 +1,4 @@
-using GodotModules.Netcode;
-using ENet;
-using Godot;
-using System.Collections.Generic;
-using System.Linq;
+using GodotModules;
 
 namespace GodotModules.Netcode.Client
 {
@@ -11,6 +7,8 @@ namespace GodotModules.Netcode.Client
         public override void Handle(PacketReader reader)
         {
             var data = new RPacketLobbyChatMessage(reader);
+
+            SceneLobby.Log(data.Message);
         }
     }
 }

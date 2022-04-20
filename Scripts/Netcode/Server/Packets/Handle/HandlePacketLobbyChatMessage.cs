@@ -11,7 +11,10 @@ namespace GodotModules.Netcode.Server
         {
             var data = new RPacketLobbyChatMessage(reader);
 
-            Log(data.Message);
+            Send(ServerPacketOpcode.LobbyChatMessage, new WPacketLobbyChatMessage {
+                Id = peer.ID,
+                Message = data.Message
+            }, GetAllPlayerPeers());
         }
     }
 }
