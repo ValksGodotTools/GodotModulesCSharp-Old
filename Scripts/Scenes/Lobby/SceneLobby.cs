@@ -164,10 +164,15 @@ namespace GodotModules
             }
         }
 
-        public static void Log(string text) 
+        public static void Log(string text) => ChatText.AddText(text);
+
+        public static void Log(uint peerId, string text) 
         {
-            if (SceneManager.ActiveScene == "Lobby")
-                ChatText.AddText($"{text}\n");
+            if (SceneManager.ActiveScene != "Lobby")
+                return;
+
+            var playerName = NetworkManager.GameClient.Players[peerId];
+            Log($"{playerName}: {text}\n");
         }
 
         private async void _on_Chat_Input_text_entered(string text)

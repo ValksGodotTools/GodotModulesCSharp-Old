@@ -8,7 +8,7 @@ namespace GodotModules.Netcode.Client
         {
             var data = new RPacketLobbyChatMessage(reader);
 
-            SceneLobby.Log(data.Message);
+            SceneLobby.Log(data.Id, data.Message);
         }
     }
 }
