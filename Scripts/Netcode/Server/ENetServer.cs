@@ -19,7 +19,7 @@ namespace GodotModules.Netcode.Server
         public static ConsoleColor LogsColor = ConsoleColor.Cyan;
         public static bool SomeoneConnected { get; set; }
         public static bool Running { get; set; }
-        public static ConcurrentQueue<ServerPacket> Outgoing { get; set; }
+        private static ConcurrentQueue<ServerPacket> Outgoing { get; set; }
         public static Dictionary<uint, Peer> Peers { get; set; }
         private static readonly Dictionary<ClientPacketOpcode, HandlePacket> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, HandlePacket, ENetServer>();
         public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
@@ -237,6 +237,9 @@ namespace GodotModules.Netcode.Server
             otherPeers.Remove(id);
             return otherPeers.Values.ToArray();
         }
+
+        public static void Send(ServerPacketOpcode opcode, params Peer[] peers) => Send(opcode, null, peers);
+        public static void Send(ServerPacketOpcode opcode, IWritable data, params Peer[] peers) => Outgoing.Enqueue(new ServerPacket((byte)opcode, data, peers));
 
         /// <summary>
         /// Provides a way to log a message on the Godot thread from the ENet thread

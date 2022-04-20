@@ -26,16 +26,16 @@ namespace GodotModules.Netcode.Server
             Players.Add(peer.ID, data.Username);
 
             // tell joining player their Id and tell them about other players in lobby
-            Outgoing.Enqueue(new ServerPacket((byte)ServerPacketOpcode.LobbyInfo, new WPacketLobbyInfo {
+            Send(ServerPacketOpcode.LobbyInfo, new WPacketLobbyInfo {
                 Id = peer.ID,
                 Players = GetOtherPlayers(peer.ID)
-            }, peer));
+            }, peer);
 
             // tell other players about new player that joined
-            Outgoing.Enqueue(new ServerPacket((byte)ServerPacketOpcode.LobbyJoin, new WPacketLobbyJoin {
+            Send(ServerPacketOpcode.LobbyJoin, new WPacketLobbyJoin {
                 Id = peer.ID,
                 Username = data.Username
-            }, GetOtherPeers(peer.ID)));
+            }, GetOtherPeers(peer.ID));
         }
     }
 }

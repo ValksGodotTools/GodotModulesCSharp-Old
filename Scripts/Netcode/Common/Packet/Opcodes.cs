@@ -4,7 +4,8 @@
     public enum ClientPacketOpcode
     {
         LobbyJoin,
-        LobbyLeave
+        LobbyLeave,
+        LobbyChatMessage
     }
 
     // Sent to Game Client
@@ -12,7 +13,8 @@
     {
         LobbyJoin,
         LobbyLeave,
-        LobbyInfo
+        LobbyInfo,
+        LobbyChatMessage
     }
 
     public enum DisconnectOpcode

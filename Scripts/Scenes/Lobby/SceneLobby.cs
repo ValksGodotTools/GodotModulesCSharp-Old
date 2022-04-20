@@ -23,7 +23,7 @@ namespace GodotModules
         [Export] public readonly NodePath NodePathBtnStart;
 
         private Control ListPlayers { get; set; }
-        private RichTextLabel ChatText { get; set; }
+        private static RichTextLabel ChatText { get; set; }
         private LineEdit ChatInput { get; set; }
         private Label LobbyName { get; set; }
         private Label LobbyMaxPlayers { get; set; }
@@ -164,13 +164,21 @@ namespace GodotModules
             }
         }
 
-        private void Log(string text) => ChatText.AddText($"{text}\n");
-
-        private void _on_Chat_Input_text_entered(string text)
+        public static void Log(string text) 
         {
-            if (!string.IsNullOrWhiteSpace(text))
-                Log(text.Trim());
+            if (SceneManager.ActiveScene == "Lobby")
+                ChatText.AddText($"{text}\n");
+        }
+
+        private async void _on_Chat_Input_text_entered(string text)
+        {
             ChatInput.Clear();
+            if (!string.IsNullOrWhiteSpace(text))
+            {
+                await GameClient.Send(ClientPacketOpcode.LobbyChatMessage, new GodotModules.Netcode.Client.WPacketLobbyChatMessage {
+                    Message = text.Trim()
+                });
+            }
         }
     }
 }
