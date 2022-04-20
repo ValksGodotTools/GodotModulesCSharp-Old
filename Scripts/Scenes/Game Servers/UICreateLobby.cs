@@ -150,7 +150,8 @@ namespace GodotModules.Netcode
 
             GameManager.StartServer(port, ValidatedMaxPlayerCount);
             GameManager.StartClient(localIp, port);
-            await GameManager.ServerAndClientReady();
+            await GameManager.ClientConnecting();
+            await GameManager.WaitForHostToConnectToServer();
             await ENetClient.Send(ClientPacketOpcode.LobbyJoin, new WPacketLobbyJoin {
                 Username = GameManager.Options.OnlineUsername
             });

@@ -115,9 +115,15 @@ namespace GodotModules
             GameServer.Start(port, maxClients);
         }
 
-        public static async Task ServerAndClientReady()
+        public static async Task WaitForHostToConnectToServer()
         {
-            while (!ENetClient.Connected && !ENetServer.SomeoneConnected)
+            while (!ENetServer.SomeoneConnected)
+                await Task.Delay(100);
+        }
+
+        public static async Task ClientConnecting()
+        {
+            while (!ENetClient.Connected)
                 await Task.Delay(100);
         }
 
