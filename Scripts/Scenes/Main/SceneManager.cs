@@ -1,7 +1,8 @@
 using Godot;
+using System;
 using System.Collections.Generic;
 
-namespace GodotModules 
+namespace GodotModules
 {
     public class SceneManager : Node
     {
@@ -14,9 +15,14 @@ namespace GodotModules
             Instance = this;
             UtilOptions.InitOptions();
 
-            LoadAllScenes();
+            var loadedScenes = GodotFileManager.LoadDir("Scenes/Scenes", (dir, fileName) =>
+            {
+                if (!dir.CurrentIsDir())
+                    LoadScene(fileName.Replace(".tscn", ""));
+            });
 
-            ChangeScene("Menu");
+            if (loadedScenes)
+                ChangeScene("Menu");
         }
 
         public static void ChangeScene(string scene)
@@ -25,29 +31,6 @@ namespace GodotModules
             if (Instance.GetChildCount() != 0)
                 Instance.GetChild(0).QueueFree();
             Instance.AddChild(Scenes[scene].Instance());
-        }
-
-        private void LoadAllScenes()
-        {
-            var dir = new Godot.Directory();
-            var path = "res://Scenes/Scenes";
-            var error = dir.Open(path);
-
-            if (error != Error.Ok)
-                GD.PrintErr($"Failed to open {path}");
-
-            dir.ListDirBegin(true);
-            var fileName = dir.GetNext();
-            while (fileName != "") 
-            {
-                if (!dir.CurrentIsDir()) 
-                {
-                    LoadScene(fileName.Replace(".tscn", ""));
-                }
-
-                fileName = dir.GetNext();
-            }
-            dir.ListDirEnd();
         }
 
         private void LoadScene(string scene) => Scenes[scene] = ResourceLoader.Load<PackedScene>($"res://Scenes/Scenes/{scene}.tscn");

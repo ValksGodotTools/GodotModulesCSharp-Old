@@ -19,10 +19,10 @@ namespace GodotModules.ModLoader
 
         public static void Init()
         {
-            PathMods = Path.Combine(FileManager.GetGameDataPath(), "Mods");
+            PathMods = Path.Combine(SystemFileManager.GetGameDataPath(), "Mods");
             PathModsEnabled = Path.Combine(PathMods, "enabled.json");
 
-            LuaScriptsPath = $"Scripts{FileManager.Separator}Lua";
+            LuaScriptsPath = $"Scripts{SystemFileManager.Separator}Lua";
 
             Directory.CreateDirectory(PathMods);
 
@@ -157,27 +157,10 @@ namespace GodotModules.ModLoader
 
         private static void LoadLuaScripts(string directory)
         {
-            // DEBUG
-            //var file = new Godot.File();
-            //file.Open("res://Scripts/Lua/Game.lua", Godot.File.ModeFlags.Read);
-            //Godot.GD.Print("DEBUG");
-            //Godot.GD.Print(file.GetPathAbsolute());
-            //Godot.GD.Print(file.GetAsText());
+            GodotFileManager.LoadDir(directory, (dir, fileName) => {
+                var absolutePath = $"{dir.GetCurrentDir()}/{fileName}";
 
-            var luaDir = new Godot.Directory();
-            if (luaDir.Open($"res://{directory}") != Godot.Error.Ok)
-            {
-                LogErr("Could not open lua directory");
-                return;
-            }
-
-            luaDir.ListDirBegin(true);
-            var fileName = luaDir.GetNext();
-            while (fileName != "")
-            {
-                var absolutePath = $"{luaDir.GetCurrentDir()}/{fileName}";
-
-                if (luaDir.CurrentIsDir())
+                if (dir.CurrentIsDir())
                     LoadLuaScripts(absolutePath);
                 else
                 {
@@ -189,9 +172,7 @@ namespace GodotModules.ModLoader
                     else
                         LogErr($"Could not open file: {absolutePath}");
                 }
-
-                fileName = luaDir.GetNext();
-            }
+            });
         }
 
         private static void SetupModsEnabled()

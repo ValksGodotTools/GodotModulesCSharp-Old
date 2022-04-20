@@ -12,10 +12,10 @@ namespace GodotModules
             if (!System.IO.File.Exists(PathOptions))
             {
                 OptionsCreatedForFirstTime = true;
-                FileManager.WriteConfig<OptionsData>(PathOptions);
+                SystemFileManager.WriteConfig<OptionsData>(PathOptions);
             }
 
-            GameManager.Options = FileManager.GetConfig<OptionsData>(PathOptions);
+            GameManager.Options = SystemFileManager.GetConfig<OptionsData>(PathOptions);
             SupportedResolutions = GetSupportedResolutions();
 
             if (OptionsCreatedForFirstTime)
@@ -122,9 +122,9 @@ namespace GodotModules
             return supportedResolutions;
         }
 
-        public static string PathOptions => System.IO.Path.Combine(FileManager.GetGameDataPath(), "options.json");
+        public static string PathOptions => System.IO.Path.Combine(SystemFileManager.GetGameDataPath(), "options.json");
 
-        public static void SaveOptions() => FileManager.WriteConfig(PathOptions, GameManager.Options);
+        public static void SaveOptions() => SystemFileManager.WriteConfig(PathOptions, GameManager.Options);
     }
 
     public enum FullscreenMode
