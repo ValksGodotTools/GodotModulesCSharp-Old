@@ -11,7 +11,7 @@ namespace GodotModules
             if (Input.IsActionJustPressed("ui_cancel"))
             {
                 action();
-                GameManager.ChangeScene(scene);
+                SceneManager.ChangeScene(scene);
             }
         }
 

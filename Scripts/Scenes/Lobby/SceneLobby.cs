@@ -80,7 +80,7 @@ namespace GodotModules
 
             NetworkManager.GameClient.Players.Add(id, name);
 
-            if (GameManager.ActiveScene == "Lobby")
+            if (SceneManager.ActiveScene == "Lobby")
                 Instance.UIAddPlayer(id, name);
         }
 
@@ -88,7 +88,7 @@ namespace GodotModules
         {
             NetworkManager.GameClient.Players.Remove(id);
 
-            if (GameManager.ActiveScene == "Lobby")
+            if (SceneManager.ActiveScene == "Lobby")
             {
                 var uiPlayer = Instance.UIPlayers[id];
                 uiPlayer.QueueFree();

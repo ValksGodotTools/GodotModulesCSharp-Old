@@ -14,17 +14,13 @@ namespace GodotModules
     {
         public static PackedScene PrefabPopupMessage = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/PopupMessage.tscn");
         public static PackedScene PrefabPopupError = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/PopupError.tscn");
-        public static string GameName { get; set; }
+        public static string GameName = "Godot Modules";
         public static OptionsData Options { get; set; }
         public static GameManager Instance { get; set; }
-        public static string ActiveScene { get; set; }
 
         public override void _Ready()
         {
-            GameName = "Godot Modules";
-            ActiveScene = "Menu";
             Instance = this;
-            UtilOptions.InitOptions();
         }
 
         public static void SpawnPopupMessage(string message)
@@ -41,16 +37,6 @@ namespace GodotModules
             popupError.Init(e.Message, e.StackTrace);
             Instance.GetTree().CurrentScene.AddChild(popupError);
             popupError.PopupCentered();
-        }
-
-        /// <summary>
-        /// This should be used over GetTree().ChangeScene(string path)
-        /// </summary>
-        /// <param name="scene"></param>
-        public static void ChangeScene(string scene)
-        {
-            ActiveScene = scene;
-            Instance.GetTree().ChangeScene($"res://Scenes/{scene}.tscn");
         }
 
         /// <summary>

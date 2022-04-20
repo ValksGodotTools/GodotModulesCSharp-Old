@@ -131,7 +131,7 @@ namespace GodotModules
                         Utils.Log($"[Client]: {cmd.Data}", ENetClient.LogsColor);
                         break;
                     case GodotOpcode.ChangeScene:
-                        GameManager.ChangeScene($"{cmd.Data}");
+                        SceneManager.ChangeScene($"{cmd.Data}");
                         break;
                     case GodotOpcode.PopupError:
                         GameManager.SpawnPopupError((Exception)cmd.Data);

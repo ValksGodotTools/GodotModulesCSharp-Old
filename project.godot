@@ -21,12 +21,8 @@ _global_script_class_icons={
 [application]
 
 config/name="LuaModdingTest"
-run/main_scene="res://Scenes/Menu.tscn"
+run/main_scene="res://Global/Scenes/Global.tscn"
 config/icon="res://icon.png"
-
-[autoload]
-
-Global="*res://Global/Scenes/Global.tscn"
 
 [input]
 

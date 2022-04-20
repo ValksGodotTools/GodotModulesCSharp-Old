@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Global/Scripts/MusicManager.cs" type="Script" id=1]
 [ext_resource path="res://Global/Scripts/GameManager.cs" type="Script" id=2]
 [ext_resource path="res://Global/Scripts/Debug.cs" type="Script" id=3]
 [ext_resource path="res://Global/Scripts/NetworkManager.cs" type="Script" id=4]
+[ext_resource path="res://Global/Scripts/SceneManager.cs" type="Script" id=5]
 
 [node name="Global" type="Node"]
 script = ExtResource( 2 )
@@ -17,3 +18,6 @@ script = ExtResource( 3 )
 
 [node name="NetworkManager" type="Node" parent="."]
 script = ExtResource( 4 )
+
+[node name="SceneManager" type="Node" parent="."]
+script = ExtResource( 5 )

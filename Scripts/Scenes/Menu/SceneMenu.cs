@@ -21,7 +21,7 @@ namespace Game
             MusicManager.PlayTrack("Menu");
         }
 
-        private void _on_Play_pressed() => GameManager.ChangeScene("Game");
+        private void _on_Play_pressed() => SceneManager.ChangeScene("Game");
 
         private void _on_Multiplayer_pressed()
         {
@@ -35,7 +35,7 @@ namespace Game
                 return;
             }
 
-            GameManager.ChangeScene("GameServers");
+            SceneManager.ChangeScene("GameServers");
         }
 
         private void _on_Exit_pressed() => GameManager.Exit();
@@ -54,7 +54,7 @@ namespace Game
             GameManager.Options.OnlineUsername = username;
             PopupOnlineUsername.Hide();
 
-            GameManager.ChangeScene("GameServers");
+            SceneManager.ChangeScene("GameServers");
         }
     }
 }

@@ -18,7 +18,7 @@ namespace GodotModules.Netcode.Client
             foreach (var player in data.Players)
                 SceneLobby.AddPlayer(player.Key, player.Value);
 
-            GameManager.ChangeScene("Lobby");
+            SceneManager.ChangeScene("Lobby");
         }
     }
 }
