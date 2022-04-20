@@ -19,7 +19,7 @@ namespace GodotModules
         public override void _Ready()
         {
             Instance = this;
-            InitWebClient();
+            WebClient = new WebClient();
         }
 
         public override void _Process(float delta)
@@ -83,13 +83,6 @@ namespace GodotModules
         {
             while (!ENetClient.Connected)
                 await Task.Delay(100);
-        }
-
-        private static void InitWebClient()
-        {
-            WebClient = new WebClient();
-            WebClient.Name = "Web Client";
-            Instance.AddChild(WebClient);
         }
 
         private void ProcessENetServerGodotCmds()

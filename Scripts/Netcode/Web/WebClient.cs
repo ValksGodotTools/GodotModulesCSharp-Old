@@ -12,7 +12,7 @@ using System.Timers;
 
 namespace GodotModules.Netcode
 {
-    public class WebClient : Node
+    public class WebClient
     {
         public HttpClient Client { get; set; }
         public static string ExternalIp { get; set; }
