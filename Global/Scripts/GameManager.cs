@@ -117,7 +117,7 @@ namespace GodotModules
 
         public static async Task ServerAndClientReady()
         {
-            if (!ENetClient.Connected && !ENetServer.SomeoneConnected)
+            while (!ENetClient.Connected && !ENetServer.SomeoneConnected)
                 await Task.Delay(100);
         }
 
