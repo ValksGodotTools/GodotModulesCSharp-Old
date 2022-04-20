@@ -1,21 +1,25 @@
 using Godot;
 using System;
 
-public class UIPopupMessage : WindowDialog
+namespace GodotModules
 {
-    [Export] public readonly NodePath NodePathMessage;
-
-    private Label Message { get; set; }
-
-    public void Init(string message) 
+    public class UIPopupMessage : WindowDialog
     {
-        Message = GetNode<Label>(NodePathMessage);
-        Message.Text = message;
-    }
+        [Export] public readonly NodePath NodePathMessage;
 
-    private void _on_Ok_pressed() 
-    {
-        Hide();
-        QueueFree();
+        private Label Message { get; set; }
+
+        public void Init(string message)
+        {
+            Message = GetNode<Label>(NodePathMessage);
+            Message.Text = message;
+        }
+
+        private void _on_Ok_pressed()
+        {
+            Hide();
+            QueueFree();
+        }
     }
 }
+
