@@ -45,7 +45,7 @@ namespace GodotModules.Netcode.Server
             Thread.CurrentThread.Name = "Server";
             Running = true;
             if (SceneLobby.CurrentLobby.Public)
-                GameManager.WebClient.TimerPingMasterServer.Start();
+                NetworkManager.WebClient.TimerPingMasterServer.Start();
 
             Library.Initialize();
 
@@ -160,7 +160,7 @@ namespace GodotModules.Netcode.Server
             {
                 QueueRestart = false;
                 //Start();
-                GameManager.StartServer(port, maxClients);
+                NetworkManager.StartServer(port, maxClients);
             }
         }
 

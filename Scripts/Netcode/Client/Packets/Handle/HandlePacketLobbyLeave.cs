@@ -12,7 +12,7 @@ namespace GodotModules.Netcode.Client
         {
             var data = new RPacketLobbyLeave(reader);
 
-            if (!GameManager.GameClient.Players.ContainsKey(data.Id))
+            if (!NetworkManager.GameClient.Players.ContainsKey(data.Id))
             {
                 Log($"Received LobbyLeave packet from server for id {data.Id}. Tried to remove from Players but does not exist in Players to begin with");
                 return;

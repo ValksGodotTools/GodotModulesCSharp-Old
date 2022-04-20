@@ -28,7 +28,7 @@ namespace GodotModules
 
         private async void _on_Refresh_pressed()
         {
-            if (!GameManager.WebClient.TaskGetServers.IsCompleted)
+            if (!NetworkManager.WebClient.TaskGetServers.IsCompleted)
                 return;
 
             SceneGameServers.Instance.ClearServers();

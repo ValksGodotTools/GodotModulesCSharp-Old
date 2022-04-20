@@ -55,15 +55,15 @@ namespace GodotModules
             //LobbyName.Text = info.Name;
             //LobbyMaxPlayers.Text = "" + info.MaxPlayerCount;
 
-            foreach (var player in GameManager.GameClient.Players)
+            foreach (var player in NetworkManager.GameClient.Players)
                 UIAddPlayer(player.Key, player.Value);
         }
 
         public override void _Input(InputEvent @event)
         {
             Utils.EscapeToScene("GameServers", async () => {
-                GameManager.WebClient.Client.CancelPendingRequests();
-                GameManager.WebClient.TimerPingMasterServer.Stop();
+                NetworkManager.WebClient.Client.CancelPendingRequests();
+                NetworkManager.WebClient.TimerPingMasterServer.Stop();
                 await GameClient.Disconnect();
                 await GameServer.Stop();
             });
@@ -71,14 +71,14 @@ namespace GodotModules
 
         public static void AddPlayer(uint id, string name) 
         {
-            if (GameManager.GameClient.Players.ContainsKey(id))
+            if (NetworkManager.GameClient.Players.ContainsKey(id))
             {
                 GD.Print($"Players contains id: '{id}' already");
-                GD.Print(GameManager.GameClient.Players.Print());
+                GD.Print(NetworkManager.GameClient.Players.Print());
                 return;
             }
 
-            GameManager.GameClient.Players.Add(id, name);
+            NetworkManager.GameClient.Players.Add(id, name);
 
             if (GameManager.ActiveScene == "Lobby")
                 Instance.UIAddPlayer(id, name);
@@ -86,7 +86,7 @@ namespace GodotModules
 
         public static void RemovePlayer(uint id)
         {
-            GameManager.GameClient.Players.Remove(id);
+            NetworkManager.GameClient.Players.Remove(id);
 
             if (GameManager.ActiveScene == "Lobby")
             {

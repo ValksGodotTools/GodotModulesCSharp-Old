@@ -62,7 +62,7 @@ namespace GodotModules
         public override void _Input(InputEvent @event)
         {
             Utils.EscapeToScene("Menu", () => {
-                GameManager.WebClient.Client.CancelPendingRequests();
+                NetworkManager.WebClient.Client.CancelPendingRequests();
             });
         }
 
@@ -82,8 +82,8 @@ namespace GodotModules
 
         public async Task ListServers()
         {
-            GameManager.WebClient.TaskGetServers = GameManager.WebClient.Get<LobbyListing[]>("servers/get");
-            var res = await GameManager.WebClient.TaskGetServers;
+            NetworkManager.WebClient.TaskGetServers = NetworkManager.WebClient.Get<LobbyListing[]>("servers/get");
+            var res = await NetworkManager.WebClient.TaskGetServers;
 
             if (res.Status == WebServerStatus.ERROR)
                 return;
@@ -99,7 +99,7 @@ namespace GodotModules
 
         public async void PostServer(LobbyListing info)
         {
-            var res = await GameManager.WebClient.Post("servers/post", new Dictionary<string, string>
+            var res = await NetworkManager.WebClient.Post("servers/post", new Dictionary<string, string>
             {
                 { "Name", info.Name },
                 { "Ip", info.Ip },
