@@ -14,10 +14,7 @@ namespace GodotModules
             Instance = this;
             UtilOptions.InitOptions();
 
-            LoadScene("Menu");
-            LoadScene("GameServers");
-            LoadScene("Lobby");
-            LoadScene("Game");
+            LoadAllScenes();
 
             ChangeScene("Menu");
         }
@@ -28,6 +25,29 @@ namespace GodotModules
             if (Instance.GetChildCount() != 0)
                 Instance.GetChild(0).QueueFree();
             Instance.AddChild(Scenes[scene].Instance());
+        }
+
+        private void LoadAllScenes()
+        {
+            var dir = new Godot.Directory();
+            var path = "res://Scenes/Scenes";
+            var error = dir.Open(path);
+
+            if (error != Error.Ok)
+                GD.PrintErr($"Failed to open {path}");
+
+            dir.ListDirBegin(true);
+            var fileName = dir.GetNext();
+            while (fileName != "") 
+            {
+                if (!dir.CurrentIsDir()) 
+                {
+                    LoadScene(fileName.Replace(".tscn", ""));
+                }
+
+                fileName = dir.GetNext();
+            }
+            dir.ListDirEnd();
         }
 
         private void LoadScene(string scene) => Scenes[scene] = ResourceLoader.Load<PackedScene>($"res://Scenes/Scenes/{scene}.tscn");
