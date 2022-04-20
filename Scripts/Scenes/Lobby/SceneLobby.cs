@@ -75,7 +75,7 @@ namespace GodotModules.Netcode
             if (GameManager.GameClient.Players.ContainsKey(id))
             {
                 GD.Print($"Players contains id: '{id}' already");
-                GD.Print(Utils.StringifyDict(GameManager.GameClient.Players));
+                GD.Print(GameManager.GameClient.Players.Print());
                 return;
             }
 
