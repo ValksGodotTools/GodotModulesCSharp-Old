@@ -4,6 +4,7 @@ using GodotModules.Netcode.Client;
 using GodotModules.Settings;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 
 namespace GodotModules
@@ -152,6 +153,8 @@ namespace GodotModules
             NetworkManager.StartClient(localIp, port);
             await NetworkManager.ClientConnecting();
             await NetworkManager.WaitForHostToConnectToServer();
+
+            GD.Print("Sending lobby join packet");
             await ENetClient.Send(ClientPacketOpcode.LobbyJoin, new WPacketLobbyJoin {
                 Username = GameManager.Options.OnlineUsername
             });

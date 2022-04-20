@@ -85,6 +85,7 @@ namespace GodotModules.Netcode.Client
                     // Outgoing
                     while (Outgoing.TryGetValue(OutgoingId--, out ClientPacket clientPacket))
                     {
+                        Log("Sending a packet: " + (ClientPacketOpcode)clientPacket.Opcode);
                         byte channelID = 0; // The channel all networking traffic will be going through
                         var packet = default(Packet);
                         packet.Create(clientPacket.Data, clientPacket.PacketFlags);
