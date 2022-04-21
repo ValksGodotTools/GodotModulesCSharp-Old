@@ -29,9 +29,8 @@ In games usually when you press Esc a popup menu comes up asking if you want to 
 ### Tech Tree (coming soon)
 Tech tree where nodes in tree are positioned automatically via script
 
-## Utils
-On top of all the modules there are also useful manager / utility scripts in `res://Global/` and `res://Scripts/`
-
+## Scripts
+### Music Manager
 ```cs
 // Load and play music
 MusicManager.Load("menu theme", pathToMusic);
@@ -39,23 +38,73 @@ MusicManager.Play("menu theme");
 MusicManager.SetVolume(50) // value ranges from 0 to 100
 MusicManager.Pause();
 MusicManager.Resume();
+```
 
+### File Manager
+```cs
 // FileManager
-FileManager.GetProjectPath(); // non-exported = "res://", exported = next to the game exe
-FileManager.GetConfig(path);
-FileManager.WriteConfig<T>(path);
-FileManager.WriteConfig(path, data);
+SystemFileManager.GetProjectPath(); // non-exported = "res://", exported = next to the game exe
+SystemFileManager.GetConfig(path);
+SystemFileManager.WriteConfig<T>(path);
+SystemFileManager.WriteConfig(path, data);
+SystemFileManager.GetGameDataPath(); // gets AppData/Local/GameName/ path
 
-// Utils
+// non-exported release returns res:// and exported release returns path next to games exe
+GodotFileManager.GetProjectPath(); 
+
+// all main scenes are put into res://Scenes/Scenes directory
+var loadedScenes = GodotFileManager.LoadDir("Scenes/Scenes", (dir, fileName) =>
+{
+    if (!dir.CurrentIsDir())
+        LoadScene(fileName.Replace(".tscn", ""));
+});
+
+if (loadedScenes)
+    ChangeScene("Menu");
+```
+
+### Scene Manager
+```cs
+// All scenes are changed through the scene mananger, this allows for persistent nodes throughout scenes. 
+(for e.g. a debugger console that pops up when pressing F12)
+
+SceneManager.ChangeScene("Menu");
+SceneManager.ChangeScene("Game");
+```
+
+### Game Manager
+```cs
+// spawns a popup message in the center of the screen
+GameManager.SpawnPopupMessage(string message);
+
+// spawns a error message in the center of the screen
+GameManager.SpawnPopupError(Exception e);
+
+// Exit and do proper clean up (perhaps this should be under SceneManager)
+GameManager.Exit();
+```
+
+### Utils
+```cs
+// Change scene to menu scene when ESC is pressed (perhaps this should be under SceneManager)
+Utils.EscapeToScene("Menu", () => {
+    // optional code here
+});
+
+"hello world".ToTitleCase(); // Hello World
+"helloWorld".AddSpaceBeforeEachCapitol(); // hello World
+
+var list = new List<int>{1,2,3};
+list.Print(); // 1, 2, 3
+
+var dict = new Dictionary<int, int>{ {1,1}, {2,3} };
+dict.Print(); // 1 1, 2 3
+
 var someValue = 24f;
 someValue.Remap(0, 100, -40, 80); //remap someValue from range 0-100 to range -40-80
 
-// Encryption (this is not meant to be secure, it's just another annoyance to add to make mischief slightly harder)
 var encryptedPassword = EncryptionHelper.Encrypt("epicPa55w0rd");
 var password = EncryptionHelper.Decrypt(encryptedPassword);
-
-// Exit and do clean up
-GameManager.Exit();
 ```
 
 ## Contributing
