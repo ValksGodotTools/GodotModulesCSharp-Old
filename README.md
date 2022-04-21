@@ -1,10 +1,9 @@
 # Godot Modules
 ## About
-A collection of useful modules and scripts that can easily be ported into other C# Godot games.
+A collection of useful modules and scripts for C# Godot games.
 
-The goal of this project is to figure out all the tedious / not-so-obvious stuff in game development to make game development much easier.
-
-I was thinking to myself, I want to make a bullet hell game, but I'm also going to be making more then just one game in the future, so that's why I created this project, so I don't have to redo the same things over and over again. If I want multiplayer, I can just grab it from here. If I want a modloader, I can find it here. That is my motivation behind this project.
+## Why make this?
+I was thinking to myself, I want to make a bullet hell game, but I am also going to be making more then just one game in the future. I do not want to redo the same things over again. If I want multiplayer, I can just grab it from here. If I want a modloader, I can find it here. That is the motivation behind this project.
 
 ## Table of Contents
 - [Modules](#modules)
