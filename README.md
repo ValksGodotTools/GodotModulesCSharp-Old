@@ -66,7 +66,7 @@ if (loadedScenes)
 ### Scene Manager
 ```cs
 // All scenes are changed through the scene mananger, this allows for persistent nodes throughout scenes. 
-(for e.g. a debugger console that pops up when pressing F12)
+// (for e.g. a debugger console that pops up when pressing F12)
 
 SceneManager.ChangeScene("Menu");
 SceneManager.ChangeScene("Game");
