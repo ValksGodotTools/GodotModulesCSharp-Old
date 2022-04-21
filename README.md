@@ -166,7 +166,7 @@ namespace GodotModules.Netcode
 }
 
 // Since packets are being enqueued to a ConcurrentQueue they can be called from any thread
-Send(ClientPacketOpcode.PlayerData, new WPacketPlayerData {
+GameClient.Send(ClientPacketOpcode.PlayerData, new WPacketPlayerData {
     PlayerId = 0,
     PlayerHealth = 100,
     PlayerName = "Steve"
