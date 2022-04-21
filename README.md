@@ -184,7 +184,7 @@ Consider size of data types when sending them over the network https://condor.de
 ### Tech Tree (coming soon)
 Tech tree where nodes in tree are positioned automatically via script
 
-### [Options](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/OPTIONS.md)  
+### Options
 ![image](https://user-images.githubusercontent.com/6277739/163117944-e350b70c-aaaa-426f-8719-3c28648d5747.png)  
 
 ### Popup Menu (coming soon)
