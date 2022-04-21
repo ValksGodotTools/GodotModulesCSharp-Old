@@ -128,7 +128,7 @@ var password = EncryptionHelper.Decrypt(encryptedPassword);
 ```
 
 ## Contributing
-See [CONTRIBUTING.md](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/CONTRIBUTING.md) for setup instructions.
+[Setup Instructions](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/CONTRIBUTING.md)
 
 The following scripts need a peer review / major refactor. They look super messy and unorganized in their current state.
 - [UICreateLobby.cs](https://github.com/valkyrienyanko/GodotModules/blob/main/Scripts/Scenes/Game%20Servers/UICreateLobby.cs)
