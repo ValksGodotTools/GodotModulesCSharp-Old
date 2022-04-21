@@ -86,7 +86,9 @@ GameManager.Exit();
 
 ### Utils
 ```cs
-// Change scene to menu scene when ESC is pressed (perhaps this should be under SceneManager)
+// Change scene to menu scene when ESC is pressed 
+(perhaps this should be under SceneManager)
+
 Utils.EscapeToScene("Menu", () => {
     // optional code here
 });
