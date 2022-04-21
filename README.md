@@ -115,13 +115,13 @@ var password = EncryptionHelper.Decrypt(encryptedPassword);
 ```
 
 ## Contributing
-See [CONTRIBUTING.md](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/CONTRIBUTING.md)
+Please see [CONTRIBUTING.md](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/CONTRIBUTING.md)
 
-Have a look at all the issues marked with -> [`Good First Issue`](https://github.com/valkyrienyanko/GodotModules/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
+The following scripts need a peer review / major refactor. They look super messy and unorganized in their current state.
+- [UICreateLobby.cs](https://github.com/valkyrienyanko/GodotModules/blob/main/Scripts/Scenes/Game%20Servers/UICreateLobby.cs)
+- [Validator.cs](https://github.com/valkyrienyanko/GodotModules/blob/main/Scripts/Utils/Validator.cs)
 
-A lot of this is overwhelming at times, just making a minor contribution here and there is a huge motivator for me. Talk to me through Discord valk#9904 if you need more info on something.
-
-Another way to contact me is by joining this [Discord](https://discord.gg/866cg8yfxZ)
+[Godot Modules Discord](https://discord.gg/866cg8yfxZ)
 
 ## Credit
 Thank you to [LazerGoat](https://github.com/LazerGoat) for pointing out bugs here and there
