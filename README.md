@@ -14,6 +14,8 @@ I was thinking to myself, I want to make a bullet hell game, but I'm also going 
 ![image](https://user-images.githubusercontent.com/6277739/163117944-e350b70c-aaaa-426f-8719-3c28648d5747.png)  
 
 ### [Netcode](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/NETCODE.md) (wip)
+![image](https://user-images.githubusercontent.com/6277739/164519290-fcd96048-3267-4278-bbd9-34bd7c0a86c0.png)
+![image](https://user-images.githubusercontent.com/6277739/164519339-a23cc3be-29dd-4df8-ad3b-e975508f5ec8.png)
 - [x] Server is shipped with client
 - [x] Server browser
 - [x] Join, leave lobbies
