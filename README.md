@@ -65,8 +65,6 @@ Have a look at all the issues marked with -> [`Good First Issue`](https://github
 
 A lot of this is overwhelming at times, just making a minor contribution here and there is a huge motivator for me. Talk to me through Discord valk#9904 if you need more info on something.
 
-I stream at https://www.twitch.tv/valkyrienyanko whenever I work on this, come stop by and say hello :)
-
 Another way to contact me is by joining this [Discord](https://discord.gg/866cg8yfxZ)
 
 ## Credit
