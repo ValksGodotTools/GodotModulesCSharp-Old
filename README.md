@@ -127,7 +127,7 @@ Just found out that this is a thing https://docs.godotengine.org/en/3.4/tutorial
 
 ---
 
-### [Netcode](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/NETCODE.md)
+### Netcode
 ![image](https://user-images.githubusercontent.com/6277739/164519290-fcd96048-3267-4278-bbd9-34bd7c0a86c0.png)
 ![image](https://user-images.githubusercontent.com/6277739/164519339-a23cc3be-29dd-4df8-ad3b-e975508f5ec8.png)
 - [x] Server is shipped with client
@@ -138,6 +138,48 @@ Just found out that this is a thing https://docs.godotengine.org/en/3.4/tutorial
 - [ ] Player positions
 - [ ] Game events like player spawn, player bullet spawn, enemy bullet spawn events
 - [ ] Fix all bugs
+
+#### Threads
+The client runs on 2 threads; the Godot thread and the ENet thread. Never run Godot code in the ENet thread and likewise never run ENet code in the Godot thread. If you ever need to communicate between the threads, use the proper `ConcurrentQueue`'s in `ENetClient.cs`.
+
+#### Networking
+The netcode utilizes [ENet-CSharp](https://github.com/SoftwareGuy/ENet-CSharp/blob/master/DOCUMENTATION.md), a reliable UDP networking library.
+
+Never give the client any authority, the server always has the final say in everything. This should always be thought of when sending new packets.
+
+Packets are sent like this (the way packets are read has a very similar setup)
+```cs
+// WPacketChatMessage.cs
+namespace Client.Netcode
+{
+    public class WPacketPlayerData : IWritable
+    {
+        public uint PlayerId { get; set; }
+        public uint PlayerHealth { get; set; }
+        public string PlayerName { get; set; }
+
+        public void Write(PacketWriter writer)
+        {
+            writer.Write(PlayerId);
+            writer.Write(PlayerHealth);
+            writer.Write(PlayerName);
+        }
+    }
+}
+
+// Since packets are being enqueued to a ConcurrentQueue they can be called from any thread
+ENetClient.Outgoing.Enqueue(new ClientPacket((byte)ClientPacketOpcode.PlayerData, new WPacketPlayerData {
+    PlayerId = 0,
+    PlayerHealth = 100,
+    PlayerName = "Steve"
+}));
+```
+
+Consider size of data types when sending them over the network https://condor.depaul.edu/sjost/nwdp/notes/cs1/CSDatatypes.htm (the smaller the better but keep it practical)
+
+- [x] Post created servers to [NodeJS web server](https://github.com/valkyrienyanko/GodotListServers) / fetch all servers
+
+---
 
 ### Tech Tree (coming soon)
 Tech tree where nodes in tree are positioned automatically via script
