@@ -84,6 +84,9 @@ GameManager.SpawnPopupError(Exception e);
 GameManager.Exit();
 ```
 
+![image](https://user-images.githubusercontent.com/6277739/164518782-328291c5-f96d-4ca1-b980-c01180ec6eb2.png)
+![image](https://user-images.githubusercontent.com/6277739/164518875-4f769eb1-5c1e-44df-bf20-938b37843677.png)
+
 ### Utils
 ```cs
 // Change scene to menu scene when ESC is pressed 
