@@ -148,8 +148,7 @@ Never give the client any authority, the server always has the final say in ever
 
 Packets are sent like this (the way packets are read has a very similar setup)
 ```cs
-// WPacketChatMessage.cs
-namespace Client.Netcode
+namespace GodotModules.Netcode
 {
     public class WPacketPlayerData : IWritable
     {
@@ -167,11 +166,11 @@ namespace Client.Netcode
 }
 
 // Since packets are being enqueued to a ConcurrentQueue they can be called from any thread
-ENetClient.Outgoing.Enqueue(new ClientPacket((byte)ClientPacketOpcode.PlayerData, new WPacketPlayerData {
+Send(ClientPacketOpcode.PlayerData, new WPacketPlayerData {
     PlayerId = 0,
     PlayerHealth = 100,
     PlayerName = "Steve"
-}));
+});
 ```
 
 Consider size of data types when sending them over the network https://condor.depaul.edu/sjost/nwdp/notes/cs1/CSDatatypes.htm (the smaller the better but keep it practical)
