@@ -68,3 +68,6 @@ A lot of this is overwhelming at times, just making a minor contribution here an
 I stream at https://www.twitch.tv/valkyrienyanko whenever I work on this, come stop by and say hello :)
 
 Another way to contact me is by joining this [Discord](https://discord.gg/866cg8yfxZ)
+
+## Credit
+Thank you to [LazerGoat](https://github.com/LazerGoat) for pointing out bugs here and there
