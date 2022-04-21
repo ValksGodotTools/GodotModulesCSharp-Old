@@ -127,6 +127,7 @@ Just found out that this is a thing https://docs.godotengine.org/en/3.4/tutorial
 ---
 
 ### Netcode
+![image](https://user-images.githubusercontent.com/6277739/164528687-8ce3891f-2aa2-4c43-b9d2-404620aefad2.png)
 ![image](https://user-images.githubusercontent.com/6277739/164519290-fcd96048-3267-4278-bbd9-34bd7c0a86c0.png)
 ![image](https://user-images.githubusercontent.com/6277739/164519339-a23cc3be-29dd-4df8-ad3b-e975508f5ec8.png)
 - [x] Server is shipped with client
