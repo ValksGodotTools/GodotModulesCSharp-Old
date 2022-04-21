@@ -18,7 +18,7 @@ I was thinking to myself, I want to make a bullet hell game, but I'm also going 
 - [x] Server browser
 - [x] Join, leave lobbies
 - [x] Lobbies are broadcasted to master nodejs server
-- [ ] Lobby chat
+- [x] Lobby chat
 - [ ] Player positions
 - [ ] Game events like player spawn, player bullet spawn, enemy bullet spawn events
 - [ ] Fix all bugs
@@ -65,6 +65,7 @@ Have a look at all the issues marked with -> [`Good First Issue`](https://github
 
 A lot of this is overwhelming at times, just making a minor contribution here and there is a huge motivator for me. Talk to me through Discord valk#9904 if you need more info on something.
 
-I stream at https://www.twitch.tv/valkyrienyanko whenever I work on this, come stop by and say hello :)
-
 Another way to contact me is by joining this [Discord](https://discord.gg/866cg8yfxZ)
+
+## Credit
+Thank you to [LazerGoat](https://github.com/LazerGoat) for pointing out bugs here and there
