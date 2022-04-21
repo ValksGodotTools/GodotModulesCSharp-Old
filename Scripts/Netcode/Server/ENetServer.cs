@@ -120,7 +120,7 @@ namespace GodotModules.Netcode.Server
                             var packetReader = new PacketReader(packet);
                             var opcode = (ClientPacketOpcode)packetReader.ReadByte();
 
-                            Log($"Received new client packet: {opcode}");
+                            Log($"Received packet: {opcode}");
                             HandlePacket[opcode].Handle(netEvent.Peer, packetReader);
 
                             packetReader.Dispose();
@@ -178,7 +178,6 @@ namespace GodotModules.Netcode.Server
                 return;
             }
 
-            Log("Starting server");
             CancelTokenSource = new CancellationTokenSource();
 
             try
@@ -206,7 +205,6 @@ namespace GodotModules.Netcode.Server
 
             Running = false;
             CancelTokenSource.Cancel();
-            Log("Stopping server");
 
             KickAll(DisconnectOpcode.Stopping);
 
@@ -227,7 +225,6 @@ namespace GodotModules.Netcode.Server
 
             KickAll(DisconnectOpcode.Restarting);
 
-            Log("Restarting server");
             QueueRestart = true;
         }
 
@@ -252,7 +249,7 @@ namespace GodotModules.Netcode.Server
             if (threadName == "Server")
                 NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessageServer, obj));
             else
-                Utils.Log($"{obj}", LogsColor);
+                Utils.Log($"[Server]: {obj}", LogsColor);
         }
 
         /// <summary>

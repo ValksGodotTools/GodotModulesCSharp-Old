@@ -34,26 +34,28 @@ namespace GodotModules
                     case GodotOpcode.PopupMessage:
                         GameManager.SpawnPopupMessage((string)cmd.Data);
                         break;
-                    case GodotOpcode.LogMessageServer:
-                        Utils.Log($"[Server]: {cmd.Data}", ENetServer.LogsColor);
-                        break;
+
                     case GodotOpcode.ENetPacket:
                         var packetReader = (PacketReader)cmd.Data;
                         var opcode = (ServerPacketOpcode)packetReader.ReadByte();
-
-                        Utils.Log($"Received new server packet: {opcode}", ENetClient.LogsColor);
 
                         ENetClient.HandlePacket[opcode].Handle(packetReader);
 
                         packetReader.Dispose();
                         break;
 
+                    case GodotOpcode.LogMessageServer:
+                        Utils.Log($"[Server]: {cmd.Data}", ENetServer.LogsColor);
+                        break;
+
                     case GodotOpcode.LogMessageClient:
                         Utils.Log($"[Client]: {cmd.Data}", ENetClient.LogsColor);
                         break;
+
                     case GodotOpcode.ChangeScene:
                         SceneManager.ChangeScene($"{cmd.Data}");
                         break;
+                        
                     case GodotOpcode.PopupError:
                         GameManager.SpawnPopupError((Exception)cmd.Data);
                         break;

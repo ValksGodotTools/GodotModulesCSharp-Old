@@ -11,8 +11,6 @@ namespace GodotModules.Netcode.Server
         {
             var data = new RPacketLobbyJoin(reader);
 
-            Log("Received LobbyJoin Packet");
-
             // Check if data.Username is appropriate username
             // TODO
 

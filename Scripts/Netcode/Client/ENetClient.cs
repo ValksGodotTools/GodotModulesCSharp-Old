@@ -85,7 +85,7 @@ namespace GodotModules.Netcode.Client
                     // Outgoing
                     while (Outgoing.TryGetValue(OutgoingId--, out ClientPacket clientPacket))
                     {
-                        Log("Sending a packet: " + (ClientPacketOpcode)clientPacket.Opcode);
+                        Log("Sent packet: " + (ClientPacketOpcode)clientPacket.Opcode);
                         byte channelID = 0; // The channel all networking traffic will be going through
                         var packet = default(Packet);
                         packet.Create(clientPacket.Data, clientPacket.PacketFlags);
@@ -105,7 +105,6 @@ namespace GodotModules.Netcode.Client
                         switch (netEvent.Type)
                         {
                             case EventType.Connect:
-                                Console.WriteLine("Connected");
                                 Connected = true;
                                 Connect(netEvent);
                                 break;
@@ -230,7 +229,7 @@ namespace GodotModules.Netcode.Client
             if (threadName == "Client")
                 NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessageClient, obj));
             else
-                Utils.Log($"{obj}", LogsColor);
+                Utils.Log($"[Client]: {obj}", LogsColor);
         }
 
         /// <summary>

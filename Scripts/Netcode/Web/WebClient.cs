@@ -20,7 +20,7 @@ namespace GodotModules.Netcode
         private static int FailedPingAttempts { get; set; }
         private const string WEB_SERVER_IP = "localhost:4000";
         public const int WEB_PING_INTERVAL = 10000;
-        private bool LogExceptions = true;
+        private bool LogExceptions = false;
         public Timer TimerPingMasterServer { get; set; }
 
         public WebClient()
