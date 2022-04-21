@@ -13,6 +13,11 @@ I was thinking to myself, I want to make a bullet hell game, but I'm also going 
   - [Options](#options)
 - [Scripts](#scripts)
   - [Music Manager](#music-manager)
+  - [File Manager](#file-manager)
+  - [Scene Manager](#scene-manager)
+  - [Game Manager](#game-manager)
+  - [Utils](#utils)
+- [Contributing](#contributing)
 
 ## Modules
 ### [ModLoader](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/MOD_LOADER.md)  
