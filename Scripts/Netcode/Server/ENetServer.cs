@@ -39,140 +39,134 @@ namespace GodotModules.Netcode.Server
         /// </summary>
         /// <param name="port"></param>
         /// <param name="maxClients"></param>
-        public async void ENetThreadWorker(ushort port, int maxClients)
+        public async Task ENetThreadWorker(ushort port, int maxClients)
         {
-            try
+            Thread.CurrentThread.Name = "Server";
+            if (SceneLobby.CurrentLobby.Public)
+                NetworkManager.WebClient.TimerPingMasterServer.Start();
+
+            Library.Initialize();
+
+            using (Host server = new Host())
             {
-                Thread.CurrentThread.Name = "Server";
-                if (SceneLobby.CurrentLobby.Public)
-                    NetworkManager.WebClient.TimerPingMasterServer.Start();
+                Address address = new Address();
+                address.Port = port;
 
-                Library.Initialize();
-
-                using (Host server = new Host())
+                try
                 {
-                    Address address = new Address();
-                    address.Port = port;
-
-                    try
-                    {
-                        server.Create(address, maxClients);
-                    }
-                    catch (Exception e)
-                    {
-                        var message = $"A server is running on port {port} already! {e.Message}";
-                        Log(message);
-                        NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.PopupMessage, message));
-                        await GodotModules.Netcode.Client.ENetClient.Stop();
-                        await Stop();
-                        return;
-                    }
-
-                    Log($"Server listening on port {port}");
-                    Running = true;
-
-                    while (!CancelTokenSource.IsCancellationRequested)
-                    {
-                        bool polled = false;
-
-                        // ENet Cmds
-                        while (ENetCmds.TryDequeue(out ENetCmd cmd))
-                        {
-                            var opcode = cmd.Opcode;
-
-                            // Host client wants to stop the server
-                            if (opcode == ENetOpcode.ClientWantsToExitApp)
-                            {
-                                CancelTokenSource.Cancel();
-                                KickAll(DisconnectOpcode.Stopping);
-                            }
-                        }
-
-                        // Outgoing
-                        while (Outgoing.TryDequeue(out ServerPacket packet))
-                        {
-                            foreach (var peer in packet.Peers)
-                                Send(packet, peer);
-                        }
-
-                        while (!polled)
-                        {
-                            if (server.CheckEvents(out Event netEvent) <= 0)
-                            {
-                                if (server.Service(15, out netEvent) <= 0)
-                                    break;
-
-                                polled = true;
-                            }
-
-                            var peer = netEvent.Peer;
-                            var eventType = netEvent.Type;
-
-                            if (eventType == EventType.Receive)
-                            {
-                                // Receive
-                                var packet = netEvent.Packet;
-                                if (packet.Length > GamePacket.MaxSize)
-                                {
-                                    Log($"Tried to read packet from server of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
-                                    packet.Dispose();
-                                    continue;
-                                }
-
-                                var packetReader = new PacketReader(packet);
-                                var opcode = (ClientPacketOpcode)packetReader.ReadByte();
-
-                                Log($"Received packet: {opcode}");
-
-                                var handlePacket = HandlePacket[opcode];
-                                handlePacket.Read(packetReader);
-                                handlePacket.Handle(netEvent.Peer);
-
-                                packetReader.Dispose();
-                            }
-                            else if (eventType == EventType.Connect)
-                            {
-                                // Connect
-                                SomeoneConnected = true;
-                                Peers.Add(netEvent.Peer.ID, netEvent.Peer);
-                                Connect(netEvent);
-                            }
-                            else if (eventType == EventType.Disconnect)
-                            {
-                                // Disconnect
-                                Peers.Remove(netEvent.Peer.ID);
-                                Disconnect(netEvent);
-                            }
-                            else if (eventType == EventType.Timeout)
-                            {
-                                // Timeout
-                                Peers.Remove(netEvent.Peer.ID);
-                                Timeout(netEvent);
-                            }
-                        }
-                    }
-
-                    server.Flush();
+                    server.Create(address, maxClients);
+                }
+                catch (Exception e)
+                {
+                    var message = $"A server is running on port {port} already! {e.Message}";
+                    Log(message);
+                    NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.PopupMessage, message));
+                    await GodotModules.Netcode.Client.ENetClient.Stop();
+                    await Stop();
+                    return;
                 }
 
-                Log("Server stopped");
+                Log($"Server listening on port {port}");
+                Running = true;
 
-                while (ConcurrentQueuesWorking())
-                    await Task.Delay(100);
-
-                Stopped();
-
-                if (QueueRestart)
+                while (!CancelTokenSource.IsCancellationRequested)
                 {
-                    QueueRestart = false;
-                    //Start();
-                    NetworkManager.StartServer(port, maxClients);
+                    bool polled = false;
+
+                    // ENet Cmds
+                    while (ENetCmds.TryDequeue(out ENetCmd cmd))
+                    {
+                        var opcode = cmd.Opcode;
+
+                        // Host client wants to stop the server
+                        if (opcode == ENetOpcode.ClientWantsToExitApp)
+                        {
+                            CancelTokenSource.Cancel();
+                            KickAll(DisconnectOpcode.Stopping);
+                        }
+                    }
+
+                    // Outgoing
+                    while (Outgoing.TryDequeue(out ServerPacket packet))
+                    {
+                        foreach (var peer in packet.Peers)
+                            Send(packet, peer);
+                    }
+
+                    while (!polled)
+                    {
+                        if (server.CheckEvents(out Event netEvent) <= 0)
+                        {
+                            if (server.Service(15, out netEvent) <= 0)
+                                break;
+
+                            polled = true;
+                        }
+
+                        var peer = netEvent.Peer;
+                        var eventType = netEvent.Type;
+
+                        if (eventType == EventType.Receive)
+                        {
+                            // Receive
+                            var packet = netEvent.Packet;
+                            if (packet.Length > GamePacket.MaxSize)
+                            {
+                                Log($"Tried to read packet from server of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
+                                packet.Dispose();
+                                continue;
+                            }
+
+                            var packetReader = new PacketReader(packet);
+                            var opcode = (ClientPacketOpcode)packetReader.ReadByte();
+
+                            Log($"Received packet: {opcode}");
+
+                            var handlePacket = HandlePacket[opcode];
+                            handlePacket.Read(packetReader);
+                            handlePacket.Handle(netEvent.Peer);
+
+                            packetReader.Dispose();
+                        }
+                        else if (eventType == EventType.Connect)
+                        {
+                            // Connect
+                            SomeoneConnected = true;
+                            Peers.Add(netEvent.Peer.ID, netEvent.Peer);
+                            Connect(netEvent);
+                        }
+                        else if (eventType == EventType.Disconnect)
+                        {
+                            // Disconnect
+                            Peers.Remove(netEvent.Peer.ID);
+                            Disconnect(netEvent);
+                        }
+                        else if (eventType == EventType.Timeout)
+                        {
+                            // Timeout
+                            Peers.Remove(netEvent.Peer.ID);
+                            Timeout(netEvent);
+                        }
+                    }
                 }
+
+                server.Flush();
             }
-            catch (Exception e)
+
+            Log("Server stopped");
+
+            while (ConcurrentQueuesWorking())
+                await Task.Delay(100);
+
+            Stopped();
+
+            if (QueueRestart)
             {
-                NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.Error, e));
+                QueueRestart = false;
+                //Start();
+                NetworkManager.StartServer(port, maxClients);
             }
+
         }
 
         private bool ConcurrentQueuesWorking() => NetworkManager.GodotCmds.Count != 0 || ENetCmds.Count != 0 || Outgoing.Count != 0;
@@ -190,8 +184,15 @@ namespace GodotModules.Netcode.Server
 
             CancelTokenSource = new CancellationTokenSource();
 
-            WorkerServer = Task.Run(() => ENetThreadWorker(port, maxClients), CancelTokenSource.Token);
-            await WorkerServer;
+            try
+            {
+                WorkerServer = Task.Run(() => ENetThreadWorker(port, maxClients), CancelTokenSource.Token);
+                await WorkerServer;
+            }
+            catch (Exception e)
+            {
+                NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.Error, e));
+            }
         }
 
         /// <summary>

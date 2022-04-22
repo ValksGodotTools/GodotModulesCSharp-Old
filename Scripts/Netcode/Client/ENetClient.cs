@@ -39,121 +39,114 @@ namespace GodotModules.Netcode.Client
         /// </summary>
         /// <param name="ip"></param>
         /// <param name="port"></param>
-        private async void ENetThreadWorker(string ip, ushort port)
+        private async Task ENetThreadWorker(string ip, ushort port)
         {
-            try
+            Thread.CurrentThread.Name = "Client";
+            Library.Initialize();
+
+            using (var client = new Host())
             {
-                Thread.CurrentThread.Name = "Client";
-                Library.Initialize();
+                var address = new Address();
 
-                using (var client = new Host())
+                address.SetHost(ip);
+                address.Port = port;
+                client.Create();
+
+                //GDLog("Attempting to connect to the game server...");
+                var peer = client.Connect(address);
+
+                uint pingInterval = 1000; // Pings are used both to monitor the liveness of the connection and also to dynamically adjust the throttle during periods of low traffic so that the throttle has reasonable responsiveness during traffic spikes.
+                uint timeout = 5000; // Will be ignored if maximum timeout is exceeded
+                uint timeoutMinimum = 5000; // The timeout for server not sending the packet to the client sent from the server
+                uint timeoutMaximum = 5000; // The timeout for server not receiving the packet sent from the client
+
+                peer.PingInterval(pingInterval);
+                peer.Timeout(timeout, timeoutMinimum, timeoutMaximum);
+
+                Running = true;
+
+                while (!CancelTokenSource.IsCancellationRequested)
                 {
-                    var address = new Address();
+                    var polled = false;
 
-                    address.SetHost(ip);
-                    address.Port = port;
-                    client.Create();
-
-                    //GDLog("Attempting to connect to the game server...");
-                    var peer = client.Connect(address);
-
-                    uint pingInterval = 1000; // Pings are used both to monitor the liveness of the connection and also to dynamically adjust the throttle during periods of low traffic so that the throttle has reasonable responsiveness during traffic spikes.
-                    uint timeout = 5000; // Will be ignored if maximum timeout is exceeded
-                    uint timeoutMinimum = 5000; // The timeout for server not sending the packet to the client sent from the server
-                    uint timeoutMaximum = 5000; // The timeout for server not receiving the packet sent from the client
-
-                    peer.PingInterval(pingInterval);
-                    peer.Timeout(timeout, timeoutMinimum, timeoutMaximum);
-
-                    Running = true;
-
-                    while (!CancelTokenSource.IsCancellationRequested)
+                    // ENet Cmds from Godot Thread
+                    while (ENetCmds.TryDequeue(out ENetCmd cmd))
                     {
-                        var polled = false;
-
-                        // ENet Cmds from Godot Thread
-                        while (ENetCmds.TryDequeue(out ENetCmd cmd))
+                        switch (cmd.Opcode)
                         {
-                            switch (cmd.Opcode)
-                            {
-                                case ENetOpcode.ClientWantsToExitApp:
-                                case ENetOpcode.ClientWantsToDisconnect:
-                                    peer.Disconnect(0);
-                                    CancelTokenSource.Cancel();
-                                    break;
-                            }
-                        }
-
-                        // Outgoing
-                        while (Outgoing.TryGetValue(OutgoingId--, out ClientPacket clientPacket))
-                        {
-                            Log("Sent packet: " + (ClientPacketOpcode)clientPacket.Opcode);
-                            byte channelID = 0; // The channel all networking traffic will be going through
-                            var packet = default(Packet);
-                            packet.Create(clientPacket.Data, clientPacket.PacketFlags);
-                            peer.Send(channelID, ref packet);
-                        }
-
-                        while (!polled)
-                        {
-                            if (client.CheckEvents(out Event netEvent) <= 0)
-                            {
-                                if (client.Service(15, out netEvent) <= 0)
-                                    break;
-
-                                polled = true;
-                            }
-
-                            switch (netEvent.Type)
-                            {
-                                case EventType.Connect:
-                                    Connected = true;
-                                    Connect(netEvent);
-                                    break;
-
-                                case EventType.Receive:
-                                    // Receive
-                                    var packet = netEvent.Packet;
-                                    if (packet.Length > GamePacket.MaxSize)
-                                    {
-                                        Log($"Tried to read packet from server of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
-                                        packet.Dispose();
-                                        continue;
-                                    }
-
-                                    NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.ENetPacket, new PacketReader(packet)));
-                                    break;
-
-                                case EventType.Timeout:
-                                    HandlePeerLeave(DisconnectOpcode.Timeout);
-                                    Timeout(netEvent);
-                                    break;
-
-                                case EventType.Disconnect:
-                                    HandlePeerLeave((DisconnectOpcode)netEvent.Data);
-                                    Disconnect(netEvent);
-                                    break;
-                            }
+                            case ENetOpcode.ClientWantsToExitApp:
+                            case ENetOpcode.ClientWantsToDisconnect:
+                                peer.Disconnect(0);
+                                CancelTokenSource.Cancel();
+                                break;
                         }
                     }
 
-                    client.Flush();
+                    // Outgoing
+                    while (Outgoing.TryGetValue(OutgoingId--, out ClientPacket clientPacket))
+                    {
+                        Log("Sent packet: " + (ClientPacketOpcode)clientPacket.Opcode);
+                        byte channelID = 0; // The channel all networking traffic will be going through
+                        var packet = default(Packet);
+                        packet.Create(clientPacket.Data, clientPacket.PacketFlags);
+                        peer.Send(channelID, ref packet);
+                    }
+
+                    while (!polled)
+                    {
+                        if (client.CheckEvents(out Event netEvent) <= 0)
+                        {
+                            if (client.Service(15, out netEvent) <= 0)
+                                break;
+
+                            polled = true;
+                        }
+
+                        switch (netEvent.Type)
+                        {
+                            case EventType.Connect:
+                                Connected = true;
+                                Connect(netEvent);
+                                break;
+
+                            case EventType.Receive:
+                                // Receive
+                                var packet = netEvent.Packet;
+                                if (packet.Length > GamePacket.MaxSize)
+                                {
+                                    Log($"Tried to read packet from server of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
+                                    packet.Dispose();
+                                    continue;
+                                }
+
+                                NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.ENetPacket, new PacketReader(packet)));
+                                break;
+
+                            case EventType.Timeout:
+                                HandlePeerLeave(DisconnectOpcode.Timeout);
+                                Timeout(netEvent);
+                                break;
+
+                            case EventType.Disconnect:
+                                HandlePeerLeave((DisconnectOpcode)netEvent.Data);
+                                Disconnect(netEvent);
+                                break;
+                        }
+                    }
                 }
 
-                Library.Deinitialize();
-                ENetThreadRunning = false;
-
-                Log("Client stopped");
-
-                while (ConcurrentQueuesWorking())
-                    await Task.Delay(100);
-
-                Running = false;
+                client.Flush();
             }
-            catch (Exception e)
-            {
-                NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.Error, e));
-            }
+
+            Library.Deinitialize();
+            ENetThreadRunning = false;
+
+            Log("Client stopped");
+
+            while (ConcurrentQueuesWorking())
+                await Task.Delay(100);
+
+            Running = false;
         }
 
         private void HandlePeerLeave(DisconnectOpcode opcode)
@@ -200,8 +193,15 @@ namespace GodotModules.Netcode.Client
             ENetThreadRunning = true;
             CancelTokenSource = new CancellationTokenSource();
 
-            WorkerClient = Task.Run(() => ENetThreadWorker(ip, port), CancelTokenSource.Token);
-            await WorkerClient;
+            try
+            {
+                WorkerClient = Task.Run(() => ENetThreadWorker(ip, port), CancelTokenSource.Token);
+                await WorkerClient;
+            }
+            catch (Exception e)
+            {
+                NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.Error, e));
+            }
         }
 
         /// <summary>
