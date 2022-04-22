@@ -21,7 +21,7 @@ namespace GodotModules.Netcode.Server
         public static bool Running { get; set; }
         private static ConcurrentQueue<ServerPacket> Outgoing { get; set; }
         public static Dictionary<uint, Peer> Peers { get; set; }
-        private static readonly Dictionary<ClientPacketOpcode, HandlePacket> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, HandlePacket, ENetServer>();
+        private static readonly Dictionary<ClientPacketOpcode, IPacketClient> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, IPacketClient>("CPacket");
         public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
         private bool QueueRestart { get; set; }
 
@@ -121,7 +121,10 @@ namespace GodotModules.Netcode.Server
                             var opcode = (ClientPacketOpcode)packetReader.ReadByte();
 
                             Log($"Received packet: {opcode}");
-                            HandlePacket[opcode].Handle(netEvent.Peer, packetReader);
+
+                            var handlePacket = HandlePacket[opcode];
+                            handlePacket.Read(packetReader);
+                            handlePacket.Handle(netEvent.Peer);
 
                             packetReader.Dispose();
                         }
@@ -228,7 +231,7 @@ namespace GodotModules.Netcode.Server
             QueueRestart = true;
         }
 
-        protected static Peer[] GetOtherPeers(uint id)
+        public static Peer[] GetOtherPeers(uint id)
         {
             var otherPeers = new Dictionary<uint, Peer>(Peers);
             otherPeers.Remove(id);

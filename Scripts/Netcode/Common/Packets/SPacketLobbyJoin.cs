@@ -1,6 +1,8 @@
+using GodotModules.Netcode.Client;
+
 namespace GodotModules.Netcode 
 {
-    public class SPacketLobbyJoin : IPacket
+    public class SPacketLobbyJoin : IPacketServer
     {
         public uint Id { get; set; }
         public string Username { get; set; }
@@ -15,6 +17,13 @@ namespace GodotModules.Netcode
         {
             Id = reader.ReadUInt16();
             Username = reader.ReadString();
+        }
+
+        public void Handle()
+        {
+            SceneLobby.AddPlayer(Id, Username);
+
+            ENetClient.Log($"Player with username {Username} id: {Id} joined the lobby");
         }
     }
 }

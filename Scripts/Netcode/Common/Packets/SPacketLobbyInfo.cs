@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using GodotModules.Netcode.Client;
 
 namespace GodotModules.Netcode 
 {
-    public class SPacketLobbyInfo : IPacket
+    public class SPacketLobbyInfo : IPacketServer
     {
         public uint Id { get; set; }
         public Dictionary<uint, string> Players { get; set; }
@@ -30,6 +31,18 @@ namespace GodotModules.Netcode
 
                 Players.Add(id, name);
             }
+        }
+
+        public void Handle()
+        {
+            ENetClient.Log($"{GameManager.Options.OnlineUsername} joined lobby with id {Id} also other players in lobby are {Players.Print()}");
+
+            SceneLobby.AddPlayer(Id, GameManager.Options.OnlineUsername);
+
+            foreach (var player in Players)
+                SceneLobby.AddPlayer(player.Key, player.Value);
+
+            SceneManager.ChangeScene("Lobby");
         }
     }
 }

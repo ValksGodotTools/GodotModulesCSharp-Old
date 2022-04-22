@@ -1,6 +1,10 @@
+using System;
+using ENet;
+using GodotModules.Netcode.Server;
+
 namespace GodotModules.Netcode 
 {
-    public class CPacketLobbyChatMessage : IPacket
+    public class CPacketLobbyChatMessage : IPacketClient
     {
         public string Message { get; set; }
 
@@ -12,6 +16,14 @@ namespace GodotModules.Netcode
         public void Read(PacketReader reader)
         {
             Message = reader.ReadString();
+        }
+
+        public void Handle(Peer peer)
+        {
+            ENetServer.Send(ServerPacketOpcode.LobbyChatMessage, new SPacketLobbyChatMessage {
+                Id = peer.ID,
+                Message = Message
+            }, GameServer.GetAllPlayerPeers());
         }
     }
 }

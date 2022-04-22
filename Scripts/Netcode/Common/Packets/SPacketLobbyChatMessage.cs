@@ -1,6 +1,6 @@
 namespace GodotModules.Netcode 
 {
-    public class SPacketLobbyChatMessage : IPacket
+    public class SPacketLobbyChatMessage : IPacketServer
     {
         public uint Id { get; set; }
         public string Message { get; set; }
@@ -15,6 +15,11 @@ namespace GodotModules.Netcode
         {
             Id = reader.ReadUInt16();
             Message = reader.ReadString();
+        }
+
+        public void Handle()
+        {
+            SceneLobby.Log(Id, Message);
         }
     }
 }

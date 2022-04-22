@@ -39,7 +39,9 @@ namespace GodotModules
                         var packetReader = (PacketReader)cmd.Data;
                         var opcode = (ServerPacketOpcode)packetReader.ReadByte();
 
-                        ENetClient.HandlePacket[opcode].Handle(packetReader);
+                        var handlePacket = ENetClient.HandlePacket[opcode];
+                        handlePacket.Read(packetReader);
+                        handlePacket.Handle();
 
                         packetReader.Dispose();
                         break;

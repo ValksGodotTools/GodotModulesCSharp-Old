@@ -20,7 +20,7 @@ namespace GodotModules.Netcode.Client
         private static int OutgoingId { get; set; }
         private static ConcurrentDictionary<int, ClientPacket> Outgoing { get; set; }
         public static DisconnectOpcode DisconnectOpcode { get; set; }
-        public static readonly Dictionary<ServerPacketOpcode, HandlePacket> HandlePacket = ReflectionUtils.LoadInstances<ServerPacketOpcode, HandlePacket, ENetClient>();
+        public static readonly Dictionary<ServerPacketOpcode, IPacketServer> HandlePacket = ReflectionUtils.LoadInstances<ServerPacketOpcode, IPacketServer>("SPacket");
         public static bool Connected { get; set; }
         public static bool Running { get; set; }
         protected bool ENetThreadRunning;
@@ -222,7 +222,7 @@ namespace GodotModules.Netcode.Client
         /// Checks thread name, if its Client send request to log on Godot thread otherwise log on Godot thread directly
         /// </summary>
         /// <param name="obj">The object to log</param>
-        protected void Log(object obj) 
+        public static void Log(object obj) 
         {
             var threadName = Thread.CurrentThread.Name;
 
