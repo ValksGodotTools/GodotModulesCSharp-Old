@@ -211,7 +211,7 @@ namespace GodotModules.Netcode.Server
 
             KickAll(DisconnectOpcode.Stopping);
 
-            while (!ENetServer.WorkerServer.IsCompleted)
+            while (!CancelTokenSource.IsCancellationRequested)
                 await Task.Delay(100);
         }
 
