@@ -52,6 +52,7 @@ namespace GodotModules
                         
                     case GodotOpcode.Error:
                         var e = (Exception)cmd.Data;
+                        UIDebugger.AddException(e);
                         Utils.Log(e, ConsoleColor.Red);
                         GameManager.SpawnPopupError(e);
                         break;

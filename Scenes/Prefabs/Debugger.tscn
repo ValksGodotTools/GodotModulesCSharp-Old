@@ -1,19 +1,15 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Themes/Main.tres" type="Theme" id=1]
 [ext_resource path="res://Scripts/Msc/UIDebugger.cs" type="Script" id=2]
 
 [sub_resource type="StyleBoxEmpty" id=1]
 
-[sub_resource type="StyleBoxFlat" id=2]
-bg_color = Color( 0, 0, 0, 0.784314 )
+[sub_resource type="StyleBoxEmpty" id=7]
 
-[sub_resource type="StyleBoxFlat" id=4]
-bg_color = Color( 0, 0, 0, 0.784314 )
+[sub_resource type="StyleBoxEmpty" id=6]
 
-[sub_resource type="StyleBoxEmpty" id=3]
-
-[sub_resource type="StyleBoxFlat" id=5]
+[sub_resource type="StyleBoxFlat" id=8]
 bg_color = Color( 0, 0, 0, 0.784314 )
 
 [node name="Debugger" type="PanelContainer"]
@@ -31,39 +27,12 @@ NodePathLogs = NodePath("TextEdit")
 margin_right = 1024.0
 margin_bottom = 600.0
 size_flags_vertical = 3
-custom_styles/read_only = SubResource( 2 )
-custom_styles/focus = SubResource( 4 )
-custom_styles/normal = SubResource( 3 )
-custom_styles/completion = SubResource( 5 )
-text = "public class ExceptionTest
-{
-    static double SafeDivision(double x, double y)
-    {
-        if (y == 0)
-            throw new DivideByZeroException();
-        return x / y;
-    }
-
-    public static void Main()
-    {
-        // Input for test purposes. Change the values to see
-        // exception handling behavior.
-        double a = 98, b = 0;
-        double result;
-
-        try
-        {
-            result = SafeDivision(a, b);
-            Console.WriteLine(\"{0} divided by {1} = {2}\", a, b, result);
-        }
-        catch (DivideByZeroException)
-        {
-            Console.WriteLine(\"Attempted divide by zero.\");
-        }
-    }
-}"
+custom_styles/read_only = SubResource( 7 )
+custom_styles/focus = SubResource( 6 )
+custom_styles/normal = SubResource( 8 )
 readonly = true
 syntax_highlighting = true
 show_line_numbers = true
 highlight_all_occurrences = true
-wrap_enabled = true
+smooth_scrolling = true
+minimap_draw = true

@@ -16,7 +16,8 @@ public class UIDebugger : Control
 
     public static void AddException(Exception e)
     {
-        Logs.Text += e;
+        Logs.Text += $"{e.Message}\n{e.StackTrace}\n\n";
+        Logs.ScrollVertical = Mathf.Inf;
     }
  
     public static void ToggleVisibility()

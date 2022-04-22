@@ -109,6 +109,7 @@ namespace GodotModules.ModLoader
                 catch (ScriptRuntimeException e)
                 {
                     // Mod script did not run right
+                    UIDebugger.AddException(e);
                     LogErr(e.DecoratedMessage);
                     continue;
                 }
@@ -126,6 +127,7 @@ namespace GodotModules.ModLoader
             }
             catch (ScriptRuntimeException e)
             {
+                UIDebugger.AddException(e);
                 LogErr(e.DecoratedMessage);
             }
         }
