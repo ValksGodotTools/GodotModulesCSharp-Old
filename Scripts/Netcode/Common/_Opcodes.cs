@@ -52,7 +52,7 @@
         LogMessageServer,
         ChangeScene,
         PopupMessage,
-        PopupError
+        Error
     }
 
     public class ENetCmd

@@ -31,10 +31,6 @@ namespace GodotModules
             {
                 switch (cmd.Opcode)
                 {
-                    case GodotOpcode.PopupMessage:
-                        GameManager.SpawnPopupMessage((string)cmd.Data);
-                        break;
-
                     case GodotOpcode.ENetPacket:
                         var packetReader = (PacketReader)cmd.Data;
                         var opcode = (ServerPacketOpcode)packetReader.ReadByte();
@@ -53,13 +49,19 @@ namespace GodotModules
                     case GodotOpcode.LogMessageClient:
                         Utils.Log($"[Client]: {cmd.Data}", ENetClient.LogsColor);
                         break;
+                        
+                    case GodotOpcode.Error:
+                        var e = (Exception)cmd.Data;
+                        Utils.Log(e, ConsoleColor.Red);
+                        GameManager.SpawnPopupError(e);
+                        break;
+
+                    case GodotOpcode.PopupMessage:
+                        GameManager.SpawnPopupMessage((string)cmd.Data);
+                        break;
 
                     case GodotOpcode.ChangeScene:
                         SceneManager.ChangeScene($"{cmd.Data}");
-                        break;
-                        
-                    case GodotOpcode.PopupError:
-                        GameManager.SpawnPopupError((Exception)cmd.Data);
                         break;
                 }
             }

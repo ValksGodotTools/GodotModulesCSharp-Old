@@ -6,7 +6,7 @@ namespace GodotModules
     {
         public override void _Input(InputEvent @event)
         {
-            if (Input.IsActionJustPressed("ui_debug"))
+            if (Input.IsActionJustPressed("ui_test"))
             {
                 GetTree().Root.PrintStrayNodes();
             }
