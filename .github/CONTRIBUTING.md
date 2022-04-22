@@ -1,5 +1,4 @@
-[Common Mistakes](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/COMMON_MISTAKES.md)  
-
+# Contributing
 ## Setup
 ### Godot Mono (C#)
 1. Install [Godot Mono 64 Bit](https://godotengine.org)
@@ -9,6 +8,8 @@
 5. In Godot Editor > Editor Settings > Mono > Builds > Make sure `Build Tool` is set to `dotnet CLI`
 
 If the startup scene is the main menu, the [game server](https://github.com/Raccoons-Rise-Up/server/blob/main/.github/CONTRIBUTING.md#setup) and [web server](https://github.com/Raccoons-Rise-Up/website/blob/main/.github/CONTRIBUTING.md) will need to be running to get past the login screen to the main game scene, otherwise you can change the startup scene to the main game scene by going to `Godot > Project Settings > Application > Run > Main Scene`.
+
+[Common Mistakes](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/COMMON_MISTAKES.md)  
 
 ### VSCode
 VSCode is a UI friendly text editor for developers
