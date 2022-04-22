@@ -173,7 +173,7 @@ namespace GodotModules.Netcode.Server
         /// <summary>
         /// Start the server, can be called from the Godot thread
         /// </summary>
-        public async void Start(ushort port, int maxClients)
+        public async Task Start(ushort port, int maxClients)
         {
             if (Running)
             {

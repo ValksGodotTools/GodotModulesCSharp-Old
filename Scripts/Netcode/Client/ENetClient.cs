@@ -180,7 +180,7 @@ namespace GodotModules.Netcode.Client
         /// </summary>
         /// <param name="ip"></param>
         /// <param name="port"></param>
-        public async void Connect(string ip, ushort port)
+        public async Task Connect(string ip, ushort port)
         {
             if (ENetThreadRunning)
             {
