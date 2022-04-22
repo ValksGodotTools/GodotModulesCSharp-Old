@@ -14,14 +14,19 @@ public class UIDebugger : Control
         Logs = GetNode<TextEdit>(NodePathLogs);    
     }
 
-    public static void AddException(Exception e)
+    public static void AddException(Exception e) => AddMessage($"{e.Message}\n{e.StackTrace}");
+
+    public static void AddMessage(object message)
     {
-        Logs.Text += $"{e.Message}\n{e.StackTrace}\n\n";
-        Logs.ScrollVertical = Mathf.Inf;
+        Logs.Text += $"{message}\n";
+        ScrollToBottom();
     }
  
-    public static void ToggleVisibility()
+    public static void ToggleVisibility() 
     {
         Instance.Visible = !Instance.Visible;
+        ScrollToBottom();
     }
+
+    private static void ScrollToBottom() => Logs.ScrollVertical = Mathf.Inf;
 }

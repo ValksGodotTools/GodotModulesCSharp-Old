@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=13 format=2]
+[gd_resource type="Theme" load_steps=14 format=2]
 
 [ext_resource path="res://Themes/Fonts/Roboto.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Themes/Button/Btn_Hover.tres" type="StyleBox" id=2]
@@ -8,19 +8,20 @@
 [ext_resource path="res://Themes/Button/Btn_Normal.tres" type="StyleBox" id=6]
 [ext_resource path="res://Themes/Slider/Slider_Grabber_Area.tres" type="StyleBox" id=7]
 [ext_resource path="res://Themes/TextEdit/TextEdit_Normal.tres" type="StyleBox" id=8]
+[ext_resource path="res://Themes/LineEdit/LineEdit_Normal.tres" type="StyleBox" id=9]
 [ext_resource path="res://Themes/ScrollBar/ScrollBar_Grabber.tres" type="StyleBox" id=10]
 
 [sub_resource type="StyleBoxFlat" id=5]
 border_width_top = 2
 border_color = Color( 0, 0, 0, 1 )
 
-[sub_resource type="StyleBoxFlat" id=4]
+[sub_resource type="StyleBoxFlat" id=6]
 bg_color = Color( 0.164706, 0.164706, 0.164706, 1 )
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color( 0.121569, 0.121569, 0.121569, 1 )
+border_color = Color( 1, 0.619608, 0.976471, 1 )
 border_blend = true
 corner_radius_top_left = 1
 corner_radius_top_right = 1
@@ -50,7 +51,8 @@ HScrollBar/styles/scroll = SubResource( 5 )
 HSlider/styles/grabber_area = ExtResource( 7 )
 HSlider/styles/grabber_area_highlight = ExtResource( 7 )
 Label/fonts/font = ExtResource( 1 )
-LineEdit/styles/normal = SubResource( 4 )
+LineEdit/styles/focus = SubResource( 6 )
+LineEdit/styles/normal = ExtResource( 9 )
 PanelContainer/styles/panel = SubResource( 1 )
 RichTextLabel/constants/line_separation = 4
 TextEdit/colors/brace_mismatch_color = Color( 0.372549, 0.372549, 0.372549, 1 )
