@@ -153,7 +153,7 @@ namespace GodotModules
             NetworkManager.StartClient(localIp, port);
             await NetworkManager.ClientConnecting();
             await NetworkManager.WaitForHostToConnectToServer();
-            await ENetClient.Send(ClientPacketOpcode.LobbyJoin, new WPacketLobbyJoin {
+            await ENetClient.Send(ClientPacketOpcode.LobbyJoin, new CPacketLobbyJoin {
                 Username = GameManager.Options.OnlineUsername
             });
         }

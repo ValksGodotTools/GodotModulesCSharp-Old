@@ -1,6 +1,6 @@
 namespace GodotModules.Netcode
 {
-    public interface IWritable
+    public interface IPacket
     {
         void Write(PacketWriter writer);
     }

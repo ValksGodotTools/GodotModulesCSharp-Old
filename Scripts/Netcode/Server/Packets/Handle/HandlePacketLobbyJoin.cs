@@ -9,7 +9,8 @@ namespace GodotModules.Netcode.Server
     {
         public override void Handle(Peer peer, PacketReader reader)
         {
-            var data = new RPacketLobbyJoin(reader);
+            var data = new CPacketLobbyJoin();
+            data.Read(reader);
 
             // Check if data.Username is appropriate username
             // TODO
@@ -24,13 +25,13 @@ namespace GodotModules.Netcode.Server
             Players.Add(peer.ID, data.Username);
 
             // tell joining player their Id and tell them about other players in lobby
-            Send(ServerPacketOpcode.LobbyInfo, new WPacketLobbyInfo {
+            Send(ServerPacketOpcode.LobbyInfo, new SPacketLobbyInfo {
                 Id = peer.ID,
                 Players = GetOtherPlayers(peer.ID)
             }, peer);
 
             // tell other players about new player that joined
-            Send(ServerPacketOpcode.LobbyJoin, new WPacketLobbyJoin {
+            Send(ServerPacketOpcode.LobbyJoin, new SPacketLobbyJoin {
                 Id = peer.ID,
                 Username = data.Username
             }, GetOtherPeers(peer.ID));

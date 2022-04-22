@@ -236,7 +236,7 @@ namespace GodotModules.Netcode.Server
         }
 
         public static void Send(ServerPacketOpcode opcode, params Peer[] peers) => Send(opcode, null, peers);
-        public static void Send(ServerPacketOpcode opcode, IWritable data, params Peer[] peers) => Outgoing.Enqueue(new ServerPacket((byte)opcode, data, peers));
+        public static void Send(ServerPacketOpcode opcode, IPacket data, params Peer[] peers) => Outgoing.Enqueue(new ServerPacket((byte)opcode, data, peers));
 
         /// <summary>
         /// Provides a way to log a message on the Godot thread from the ENet thread

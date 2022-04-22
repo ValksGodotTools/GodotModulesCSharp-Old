@@ -9,7 +9,8 @@ namespace GodotModules.Netcode.Client
     {
         public override void Handle(PacketReader reader)
         {
-            var data = new RPacketLobbyInfo(reader);
+            var data = new SPacketLobbyInfo();
+            data.Read(reader);
 
             Log($"{GameManager.Options.OnlineUsername} joined lobby with id {data.Id} also other players in lobby are {data.Players.Print()}");
 

@@ -180,7 +180,7 @@ namespace GodotModules
             ChatInput.Clear();
             if (!string.IsNullOrWhiteSpace(text))
             {
-                await GameClient.Send(ClientPacketOpcode.LobbyChatMessage, new GodotModules.Netcode.Client.WPacketLobbyChatMessage {
+                await GameClient.Send(ClientPacketOpcode.LobbyChatMessage, new CPacketLobbyChatMessage {
                     Message = text.Trim()
                 });
             }

@@ -10,7 +10,8 @@ namespace GodotModules.Netcode.Client
     {
         public override void Handle(PacketReader reader)
         {
-            var data = new RPacketLobbyJoin(reader);
+            var data = new SPacketLobbyJoin();
+            data.Read(reader);
 
             SceneLobby.AddPlayer(data.Id, data.Username);
 

@@ -164,7 +164,7 @@ namespace GodotModules.Netcode.Client
         /// <param name="opcode">The opcode of the packet</param>
         /// <param name="data">The data if any</param>
         /// <returns></returns>
-        public static async Task Send(ClientPacketOpcode opcode, IWritable data = null)
+        public static async Task Send(ClientPacketOpcode opcode, IPacket data = null)
         {
             OutgoingId++;
 

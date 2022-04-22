@@ -48,7 +48,7 @@ namespace GodotModules
             GD.Print("Connecting to lobby...");
             NetworkManager.StartClient(Info.Ip, Info.Port);
             await NetworkManager.ClientConnecting();
-            await ENetClient.Send(ClientPacketOpcode.LobbyJoin, new WPacketLobbyJoin {
+            await ENetClient.Send(ClientPacketOpcode.LobbyJoin, new CPacketLobbyJoin {
                 Username = GameManager.Options.OnlineUsername
             });
         }

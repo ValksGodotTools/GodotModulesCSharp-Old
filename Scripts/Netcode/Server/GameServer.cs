@@ -37,7 +37,7 @@ namespace GodotModules.Netcode.Server
         private void HandlePlayerLeave(uint id)
         {
             // tell other players that this player left lobby
-            Send(ServerPacketOpcode.LobbyLeave, new WPacketLobbyLeave { Id = id}, GetOtherPeers(id));
+            Send(ServerPacketOpcode.LobbyLeave, new SPacketLobbyLeave { Id = id}, GetOtherPeers(id));
 
             if (Players.ContainsKey(id))
                 Players.Remove(id);

@@ -1,8 +1,6 @@
-using GodotModules.Netcode;
-
-namespace GodotModules.Netcode.Server
+namespace GodotModules.Netcode 
 {
-    public class WPacketLobbyChatMessage : IWritable 
+    public class SPacketLobbyChatMessage : IPacket
     {
         public uint Id { get; set; }
         public string Message { get; set; }
@@ -11,6 +9,12 @@ namespace GodotModules.Netcode.Server
         {
             writer.Write((ushort)Id);
             writer.Write((string)Message);
+        }
+
+        public void Read(PacketReader reader)
+        {
+            Id = reader.ReadUInt16();
+            Message = reader.ReadString();
         }
     }
 }

@@ -10,7 +10,8 @@ namespace GodotModules.Netcode.Client
     {
         public override void Handle(PacketReader reader)
         {
-            var data = new RPacketLobbyLeave(reader);
+            var data = new SPacketLobbyLeave();
+            data.Read(reader);
 
             if (!NetworkManager.GameClient.Players.ContainsKey(data.Id))
             {

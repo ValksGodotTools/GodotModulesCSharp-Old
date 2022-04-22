@@ -6,7 +6,8 @@ namespace GodotModules.Netcode.Client
     {
         public override void Handle(PacketReader reader)
         {
-            var data = new RPacketLobbyChatMessage(reader);
+            var data = new SPacketLobbyChatMessage();
+            data.Read(reader);
 
             SceneLobby.Log(data.Id, data.Message);
         }

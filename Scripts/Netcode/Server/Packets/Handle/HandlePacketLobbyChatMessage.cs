@@ -9,9 +9,10 @@ namespace GodotModules.Netcode.Server
     {
         public override void Handle(Peer peer, PacketReader reader)
         {
-            var data = new RPacketLobbyChatMessage(reader);
+            var data = new CPacketLobbyChatMessage();
+            data.Read(reader);
 
-            Send(ServerPacketOpcode.LobbyChatMessage, new WPacketLobbyChatMessage {
+            Send(ServerPacketOpcode.LobbyChatMessage, new SPacketLobbyChatMessage {
                 Id = peer.ID,
                 Message = data.Message
             }, GetAllPlayerPeers());
