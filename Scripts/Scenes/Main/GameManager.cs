@@ -30,11 +30,9 @@ namespace GodotModules
         {
             if (Input.IsActionJustPressed("ui_debug")) 
             {
-
+                UIDebugger.ToggleVisibility();
             }
         }
-
-        public static void SpawnDebugger(){}
 
         public static void SpawnPopupMessage(string message)
         {
