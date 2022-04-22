@@ -13,7 +13,6 @@ namespace GodotModules.Netcode.Client
 {
     public abstract class ENetClient
     {
-        public static Task WorkerClient { get; set; }
         public static CancellationTokenSource CancelTokenSource { get; private set; }
         public static ConsoleColor LogsColor = ConsoleColor.Yellow;
         public static ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
@@ -195,8 +194,7 @@ namespace GodotModules.Netcode.Client
 
             try
             {
-                WorkerClient = Task.Run(() => ENetThreadWorker(ip, port), CancelTokenSource.Token);
-                await WorkerClient;
+                await Task.Run(() => ENetThreadWorker(ip, port), CancelTokenSource.Token);
             }
             catch (Exception e)
             {

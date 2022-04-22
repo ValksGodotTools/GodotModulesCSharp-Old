@@ -14,7 +14,6 @@ namespace GodotModules.Netcode.Server
 {
     public abstract class ENetServer
     {
-        public static Task WorkerServer { get; set; }
         public static CancellationTokenSource CancelTokenSource { get; private set; }
         public static ConsoleColor LogsColor = ConsoleColor.Cyan;
         public static bool SomeoneConnected { get; set; }
@@ -186,8 +185,7 @@ namespace GodotModules.Netcode.Server
 
             try
             {
-                WorkerServer = Task.Run(() => ENetThreadWorker(port, maxClients), CancelTokenSource.Token);
-                await WorkerServer;
+                await Task.Run(() => ENetThreadWorker(port, maxClients), CancelTokenSource.Token);
             }
             catch (Exception e)
             {
