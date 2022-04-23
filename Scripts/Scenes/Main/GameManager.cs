@@ -49,6 +49,7 @@ namespace GodotModules
         public static void SpawnPopupError(Exception e)
         {
             var notifyError = GameManager.PrefabNotifyError.Instance<UINotifyError>();
+            notifyError.Init(1);
             Instance.GetTree().CurrentScene.AddChild(notifyError);
 
             var popupError = GameManager.PrefabPopupError.Instance<UIPopupError>();

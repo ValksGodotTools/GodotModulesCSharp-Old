@@ -46,7 +46,6 @@ namespace GodotModules.Netcode.Client
             using (var client = new Host())
             {
                 var address = new Address();
-
                 address.SetHost(ip);
                 address.Port = port;
                 client.Create();
