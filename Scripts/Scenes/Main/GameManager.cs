@@ -25,13 +25,15 @@ namespace GodotModules
         public override void _Ready()
         {
             Instance = this;
+            ErrorNotifier.StartInterval(2);
         }
 
         public override void _Input(InputEvent @event)
         {
-            if (Input.IsActionJustPressed("ui_debug")) 
+            if (Input.IsActionJustPressed("ui_debug"))
             {
                 UIDebugger.ToggleVisibility();
+                ErrorNotifier.IncrementErrorCount();
             }
 
             if (Input.IsActionJustPressed("ui_fullscreen"))
@@ -48,14 +50,19 @@ namespace GodotModules
 
         public static void SpawnPopupError(Exception e)
         {
-            var notifyError = GameManager.PrefabNotifyError.Instance<UINotifyError>();
-            notifyError.Init(1);
-            Instance.GetTree().CurrentScene.AddChild(notifyError);
+            ErrorNotifier.IncrementErrorCount();
 
             var popupError = GameManager.PrefabPopupError.Instance<UIPopupError>();
             popupError.Init(e.Message, e.StackTrace);
             Instance.GetTree().CurrentScene.AddChild(popupError);
             popupError.PopupCentered();
+        }
+
+        public static void NotifyError(int errorCount)
+        {
+            var notifyError = PrefabNotifyError.Instance<UINotifyError>();
+            notifyError.Init(errorCount);
+            Instance.CallDeferred("add_child", notifyError);
         }
 
         /// <summary>
