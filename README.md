@@ -37,26 +37,6 @@ Learn MoonSharp: https://www.moonsharp.org/getting_started.html
 - Individual mods can be enabled or disabled
 - Mod name, description, author, version, game versions, dependencies displayed in UI
 
-#### Todo
-- [x] Figure out how to do something like `player:setHealth(x)` from Lua
-- [x] Figure out how to add something like Godots `_process(float delta)` in Lua so modders can call a function every frame if so desired
-- [x] Do not add mod if lua scripts did not compile and give some kind of feedback in console about this
-- [x] Do not add mod if info.json does not exist
-- [x] Lua debugger
-- [x] Allow mods to interact with each other without overwriting one another
-- [x] Callbacks with params
-- [x] Figure out mod load order
-- [x] Figure out mod dependencies
-- [x] Display mods in menu
-- [x] Add button to load mods
-- [x] Add buttons to disable/enable individual mods
-- [x] Give better feedback about mod dependencies
-- [x] Rearrange project folder structure so it can easily be ported to another game
-- [x] Toggling mod dependency in mod info page should also toggle the mod dependency in the mod list (left side) (and vice versa)
-- [x] Add a ModLoader logger
-- [ ] Add button to toggle debug server
-- [ ] Add website for displaying user-defined Lua documentation
-
 #### Hooks
 ```cs
 public override void _Ready()
