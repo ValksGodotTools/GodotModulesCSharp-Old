@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Themes/Main.tres" type="Theme" id=1]
 [ext_resource path="res://Scripts/Scenes/Lobby/SceneLobby.cs" type="Script" id=2]
+[ext_resource path="res://Themes/PanelNoBorder.tres" type="Theme" id=3]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -22,15 +23,14 @@ NodePathBtnStart = NodePath("PanelContainer/Nav/HBoxContainer/Start")
 [node name="PanelContainer" type="PanelContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Players" type="MarginContainer" parent="PanelContainer"]
-margin_left = 1.0
-margin_top = 1.0
-margin_right = 441.0
-margin_bottom = 141.0
+margin_right = 440.0
+margin_bottom = 140.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
 custom_constants/margin_right = 20
@@ -46,20 +46,17 @@ margin_bottom = 120.0
 rect_min_size = Vector2( 400, 100 )
 
 [node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/Players/PanelContainer"]
-margin_left = 1.0
-margin_top = 1.0
-margin_right = 399.0
-margin_bottom = 99.0
+margin_right = 400.0
+margin_bottom = 100.0
 
 [node name="Players" type="VBoxContainer" parent="PanelContainer/Players/PanelContainer/ScrollContainer"]
-margin_right = 398.0
+margin_right = 400.0
 size_flags_horizontal = 3
 
 [node name="Chat" type="MarginContainer" parent="PanelContainer"]
-margin_left = 1.0
-margin_top = 432.0
-margin_right = 353.0
-margin_bottom = 599.0
+margin_top = 435.0
+margin_right = 350.0
+margin_bottom = 600.0
 size_flags_horizontal = 0
 size_flags_vertical = 8
 custom_constants/margin_right = 20
@@ -70,14 +67,12 @@ custom_constants/margin_bottom = 20
 [node name="PanelContainer" type="PanelContainer" parent="PanelContainer/Chat"]
 margin_left = 20.0
 margin_top = 20.0
-margin_right = 332.0
-margin_bottom = 147.0
+margin_right = 330.0
+margin_bottom = 145.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/Chat/PanelContainer"]
-margin_left = 1.0
-margin_top = 1.0
-margin_right = 311.0
-margin_bottom = 126.0
+margin_right = 310.0
+margin_bottom = 125.0
 
 [node name="MarginContainer" type="MarginContainer" parent="PanelContainer/Chat/PanelContainer/VBoxContainer"]
 margin_right = 310.0
@@ -100,10 +95,10 @@ margin_right = 310.0
 margin_bottom = 125.0
 
 [node name="Nav" type="MarginContainer" parent="PanelContainer"]
-margin_left = 871.0
-margin_top = 536.0
-margin_right = 1023.0
-margin_bottom = 599.0
+margin_left = 872.0
+margin_top = 537.0
+margin_right = 1024.0
+margin_bottom = 600.0
 size_flags_horizontal = 8
 size_flags_vertical = 8
 custom_constants/margin_right = 20
@@ -129,10 +124,9 @@ margin_bottom = 23.0
 text = "Start"
 
 [node name="Info" type="MarginContainer" parent="PanelContainer"]
-margin_left = 783.0
-margin_top = 1.0
-margin_right = 1023.0
-margin_bottom = 91.0
+margin_left = 784.0
+margin_right = 1024.0
+margin_bottom = 88.0
 size_flags_horizontal = 8
 size_flags_vertical = 0
 custom_constants/margin_right = 20
@@ -144,14 +138,12 @@ custom_constants/margin_bottom = 20
 margin_left = 20.0
 margin_top = 20.0
 margin_right = 220.0
-margin_bottom = 70.0
+margin_bottom = 68.0
 rect_min_size = Vector2( 200, 0 )
 
 [node name="MarginContainer" type="MarginContainer" parent="PanelContainer/Info/PanelContainer"]
-margin_left = 1.0
-margin_top = 1.0
-margin_right = 199.0
-margin_bottom = 49.0
+margin_right = 200.0
+margin_bottom = 48.0
 custom_constants/margin_right = 5
 custom_constants/margin_top = 5
 custom_constants/margin_left = 5
@@ -160,11 +152,11 @@ custom_constants/margin_bottom = 5
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/Info/PanelContainer/MarginContainer"]
 margin_left = 5.0
 margin_top = 5.0
-margin_right = 193.0
+margin_right = 195.0
 margin_bottom = 43.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/Info/PanelContainer/MarginContainer/VBoxContainer"]
-margin_right = 188.0
+margin_right = 190.0
 margin_bottom = 17.0
 
 [node name="Label" type="Label" parent="PanelContainer/Info/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
@@ -173,15 +165,15 @@ margin_bottom = 17.0
 text = "Lobby Name:"
 
 [node name="Name" type="Label" parent="PanelContainer/Info/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
-margin_left = 153.0
-margin_right = 188.0
+margin_left = 155.0
+margin_right = 190.0
 margin_bottom = 17.0
 size_flags_horizontal = 10
 text = "Apple"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/Info/PanelContainer/MarginContainer/VBoxContainer"]
 margin_top = 21.0
-margin_right = 188.0
+margin_right = 190.0
 margin_bottom = 38.0
 
 [node name="Label" type="Label" parent="PanelContainer/Info/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
@@ -190,8 +182,8 @@ margin_bottom = 17.0
 text = "Max Players:"
 
 [node name="Max Players" type="Label" parent="PanelContainer/Info/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
-margin_left = 180.0
-margin_right = 188.0
+margin_left = 182.0
+margin_right = 190.0
 margin_bottom = 17.0
 size_flags_horizontal = 10
 text = "4"
