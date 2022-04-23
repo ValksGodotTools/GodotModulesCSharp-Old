@@ -22,7 +22,7 @@ namespace GodotModules
             if (ErrorCount == 0)
                 return;
 
-            var notifyError = GameManager.PrefabNotifyError.Instance<UINotifyError>();
+            var notifyError = Prefabs.NotifyError.Instance<UINotifyError>();
             notifyError.Init(ErrorCount);
             GameManager.Instance.CallDeferred("add_child", notifyError);
 

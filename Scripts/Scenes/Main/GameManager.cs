@@ -15,9 +15,6 @@ namespace GodotModules
     // GameManager is attached to Global.tscn which is in AutoLoad
     public class GameManager : Node
     {
-        public static PackedScene PrefabPopupMessage = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/PopupMessage.tscn");
-        public static PackedScene PrefabPopupError = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/PopupError.tscn");
-        public static PackedScene PrefabNotifyError = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/NotifyError.tscn");
         public static string GameName = "Godot Modules";
         public static OptionsData Options { get; set; }
         public static GameManager Instance { get; set; }
@@ -42,7 +39,7 @@ namespace GodotModules
 
         public static void SpawnPopupMessage(string message)
         {
-            var popupMessage = GameManager.PrefabPopupMessage.Instance<UIPopupMessage>();
+            var popupMessage = Prefabs.PopupMessage.Instance<UIPopupMessage>();
             popupMessage.Init(message);
             Instance.GetTree().CurrentScene.AddChild(popupMessage);
             popupMessage.PopupCentered();
@@ -52,7 +49,7 @@ namespace GodotModules
         {
             ErrorNotifier.IncrementErrorCount();
 
-            var popupError = GameManager.PrefabPopupError.Instance<UIPopupError>();
+            var popupError = Prefabs.PopupError.Instance<UIPopupError>();
             popupError.Init(e.Message, e.StackTrace);
             Instance.GetTree().CurrentScene.AddChild(popupError);
             popupError.PopupCentered();
