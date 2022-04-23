@@ -58,13 +58,6 @@ namespace GodotModules
             popupError.PopupCentered();
         }
 
-        public static void NotifyError(int errorCount)
-        {
-            var notifyError = PrefabNotifyError.Instance<UINotifyError>();
-            notifyError.Init(errorCount);
-            Instance.CallDeferred("add_child", notifyError);
-        }
-
         /// <summary>
         /// This should be used instead of GetTree().Quit() has it will handle cleanup and saving options
         /// Note that if the console is closed directly then the cleanup will never happen, this should be avoided.
