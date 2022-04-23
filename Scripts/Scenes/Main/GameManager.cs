@@ -17,6 +17,7 @@ namespace GodotModules
     {
         public static PackedScene PrefabPopupMessage = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/PopupMessage.tscn");
         public static PackedScene PrefabPopupError = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/PopupError.tscn");
+        public static PackedScene PrefabNotifyError = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/NotifyError.tscn");
         public static string GameName = "Godot Modules";
         public static OptionsData Options { get; set; }
         public static GameManager Instance { get; set; }
@@ -47,6 +48,9 @@ namespace GodotModules
 
         public static void SpawnPopupError(Exception e)
         {
+            var notifyError = GameManager.PrefabNotifyError.Instance<UINotifyError>();
+            Instance.GetTree().CurrentScene.AddChild(notifyError);
+
             var popupError = GameManager.PrefabPopupError.Instance<UIPopupError>();
             popupError.Init(e.Message, e.StackTrace);
             Instance.GetTree().CurrentScene.AddChild(popupError);

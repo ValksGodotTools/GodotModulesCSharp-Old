@@ -1,7 +1,8 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
-public class UINotifyError : Node
+public class UINotifyError : Control
 {
     [Export] public readonly NodePath NodePathErrorCount;
     [Export] public readonly NodePath NodePathAnimationPlayer;
@@ -13,7 +14,6 @@ public class UINotifyError : Node
     {
         ErrorCount = GetNode<Label>(NodePathErrorCount);
         AnimationPlayer = GetNode<AnimationPlayer>(NodePathAnimationPlayer);
-
         AnimationPlayer.Play("Move");
     }
 }
