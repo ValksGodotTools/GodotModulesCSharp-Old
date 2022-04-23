@@ -81,6 +81,23 @@ namespace GodotModules
             GameManager.Options.FullscreenMode = mode;
         }
 
+        public static void ToggleFullscreen()
+        {
+            // for when F11 or Alt+Enter are pressed
+            var mode = GameManager.Options.FullscreenMode;
+
+            switch (mode)
+            {
+                case FullscreenMode.Windowed:
+                    SetFullscreenMode(FullscreenMode.Borderless);
+                    break;
+                case FullscreenMode.Borderless:
+                case FullscreenMode.Fullscreen:
+                    SetFullscreenMode(FullscreenMode.Windowed);
+                    break;
+            }
+        }
+
         public static int CurrentResolution { get; set; }
 
         public static void SetWindowedMode()

@@ -32,6 +32,9 @@ namespace GodotModules
             {
                 UIDebugger.ToggleVisibility();
             }
+
+            if (Input.IsActionJustPressed("ui_fullscreen"))
+                UtilOptions.ToggleFullscreen();
         }
 
         public static void SpawnPopupMessage(string message)
