@@ -8,6 +8,11 @@
 
 [sub_resource type="StyleBoxFlat" id=5]
 bg_color = Color( 1, 0, 0, 1 )
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color( 0.733333, 0, 0, 1 )
 
 [sub_resource type="DynamicFont" id=2]
 use_filter = true
@@ -63,9 +68,9 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -100.0
+margin_left = -75.0
 margin_top = -30.0
-rect_min_size = Vector2( 100, 30 )
+rect_min_size = Vector2( 75, 30 )
 size_flags_horizontal = 8
 size_flags_vertical = 8
 theme = ExtResource( 2 )
@@ -78,7 +83,7 @@ NodePathErrorCount = NodePath("Pivot Bottom Right/Popup Error/Label")
 NodePathAnimationPlayer = NodePath("Pivot Bottom Right/Popup Error/AnimationPlayer")
 
 [node name="Pivot Bottom Right" type="Control" parent="."]
-margin_right = 100.0
+margin_right = 75.0
 margin_bottom = 30.0
 __meta__ = {
 "_edit_use_anchors_": false
@@ -95,8 +100,9 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="Pivot Bottom Right/Popup Error"]
+margin_left = 3.0
 margin_top = 5.0
-margin_right = 100.0
+margin_right = 72.0
 margin_bottom = 24.0
 custom_fonts/font = SubResource( 2 )
 text = "23"
