@@ -1,0 +1,62 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Themes/Main.tres" type="Theme" id=1]
+
+[node name="PopupDirectConnect" type="WindowDialog"]
+visible = true
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -150.0
+margin_top = -75.0
+margin_right = 150.0
+margin_bottom = 21.0
+rect_min_size = Vector2( 0, 100 )
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme = ExtResource( 1 )
+window_title = "Direct Connect"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Padding" type="MarginContainer" parent="PanelContainer"]
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 299.0
+margin_bottom = 99.0
+custom_constants/margin_top = 25
+
+[node name="LineEdit" type="LineEdit" parent="PanelContainer/Padding"]
+margin_left = 49.0
+margin_top = 25.0
+margin_right = 249.0
+margin_bottom = 41.0
+rect_min_size = Vector2( 200, 0 )
+size_flags_horizontal = 4
+size_flags_vertical = 0
+placeholder_text = "Enter IP to connect to"
+
+[node name="Padding2" type="MarginContainer" parent="PanelContainer"]
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 299.0
+margin_bottom = 99.0
+custom_constants/margin_bottom = 10
+
+[node name="Button" type="Button" parent="PanelContainer/Padding2"]
+margin_left = 120.0
+margin_top = 65.0
+margin_right = 178.0
+margin_bottom = 88.0
+size_flags_horizontal = 4
+size_flags_vertical = 8
+text = "Connect"
