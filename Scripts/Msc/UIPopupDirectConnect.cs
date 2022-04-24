@@ -25,7 +25,7 @@ namespace GodotModules
                 return;
             }
             
-            if (!Regex.IsMatch(text, "^[A-Za-z0-9:.]+$"))
+            if (!text.IsMatch("^[A-Za-z0-9:.]+$"))
             {
                 Ip.Text = previousText;
                 Ip.CaretPosition = text.Length;

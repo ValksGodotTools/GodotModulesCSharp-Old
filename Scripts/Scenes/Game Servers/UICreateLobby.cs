@@ -99,7 +99,7 @@ namespace GodotModules
 
         private void Validate(string key, string text, string pattern, string feedback)
         {
-            if (!Regex.IsMatch(text.Trim(), pattern))
+            if (!text.Trim().IsMatch(pattern))
                 Feedback[key] = feedback;
             else
                 Feedback[key] = "";
