@@ -5,7 +5,8 @@
     {
         LobbyJoin,
         LobbyLeave,
-        LobbyChatMessage
+        LobbyChatMessage,
+        LobbyReady
     }
 
     // Sent to Game Client
