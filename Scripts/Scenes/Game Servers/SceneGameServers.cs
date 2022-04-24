@@ -66,6 +66,21 @@ namespace GodotModules
             });
         }
 
+        public static async Task JoinServer(string ip, ushort port)
+        {
+            if (SceneGameServers.ConnectingToLobby)
+                return;
+
+            SceneGameServers.ConnectingToLobby = true;
+
+            GD.Print("Connecting to lobby...");
+            NetworkManager.StartClient(ip, port);
+            await NetworkManager.ClientConnecting();
+            await ENetClient.Send(ClientPacketOpcode.LobbyJoin, new CPacketLobbyJoin {
+                Username = GameManager.Options.OnlineUsername
+            });
+        }
+
         public void AddServer(LobbyListing info)
         {
             var lobby = PrefabLobbyListing.Instance<UILobbyListing>();

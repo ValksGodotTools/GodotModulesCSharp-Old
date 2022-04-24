@@ -1,6 +1,7 @@
 using GodotModules.Netcode;
 using GodotModules.Netcode.Client;
 using Godot;
+using System.Threading.Tasks;
 
 namespace GodotModules
 {
@@ -38,25 +39,15 @@ namespace GodotModules
             LabelPlayerCount.Text = "" + info.MaxPlayerCount;
         }
 
-        public async void Join()
+        public async Task Join()
         {
-            if (SceneGameServers.ConnectingToLobby)
-                return;
-
-            SceneGameServers.ConnectingToLobby = true;
-            //GD.Print($"Connecting to {Info.Ip}:{Info.Port}");
-            GD.Print("Connecting to lobby...");
-            NetworkManager.StartClient(Info.Ip, Info.Port);
-            await NetworkManager.ClientConnecting();
-            await ENetClient.Send(ClientPacketOpcode.LobbyJoin, new CPacketLobbyJoin {
-                Username = GameManager.Options.OnlineUsername
-            });
+            await SceneGameServers.JoinServer(Info.Ip, Info.Port);
         }
 
-        private void _on_Btn_pressed()
+        private async void _on_Btn_pressed()
         {
             SceneGameServers.SelectedLobbyInstance = this;
-            Join();
+            await Join();
         }
 
         private void _on_Btn_focus_entered()
