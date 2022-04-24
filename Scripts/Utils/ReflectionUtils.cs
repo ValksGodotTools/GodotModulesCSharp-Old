@@ -10,15 +10,9 @@ namespace GodotModules
         public static Dictionary<TKey, TValue> LoadInstances<TKey, TValue>(string prefix) =>
             Assembly.GetExecutingAssembly()
                 .GetTypes()
-                .Where(x => typeof(TValue).IsAssignableFrom(x) && !x.IsInterface)
+                .Where(x => typeof(TValue).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
                 .Select(Activator.CreateInstance).Cast<TValue>()
                 .ToDictionary(x => (TKey)Enum.Parse(typeof(TKey), x.GetType().Name.Replace(prefix, "")), x => x);
 
-        /*public static Dictionary<Key, Value> LoadInstances<Key, Value, Namespace>() =>
-            Assembly.GetExecutingAssembly()
-                .GetTypes()
-                .Where(x => typeof(Value).IsAssignableFrom(x) && !x.IsAbstract && x.Namespace == typeof(Namespace).Namespace)
-                .Select(Activator.CreateInstance).Cast<Value>()
-                .ToDictionary(x => (Key)Enum.Parse(typeof(Key), x.GetType().Name.Replace(typeof(Value).Name, "")), x => x);*/
     }
 }
