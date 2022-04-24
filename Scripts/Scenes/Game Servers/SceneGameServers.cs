@@ -20,13 +20,13 @@ namespace GodotModules
         [Export] public readonly NodePath NodePathServerCreationPopup;
 
         private VBoxContainer ServerList { get; set; }
-        public UICreateLobby ServerCreationPopup { get; set; }
+        public UIPopupCreateLobby ServerCreationPopup { get; set; }
 
         public override async void _Ready()
         {
             Instance = this;
             ServerList = GetNode<VBoxContainer>(NodePathServerList);
-            ServerCreationPopup = GetNode<UICreateLobby>(NodePathServerCreationPopup);
+            ServerCreationPopup = GetNode<UIPopupCreateLobby>(NodePathServerCreationPopup);
             LobbyListings = new Dictionary<string, LobbyListing>();
 
             if (Disconnected)

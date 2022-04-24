@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace GodotModules
 {
-    public class UICreateLobby : WindowDialog
+    public class UIPopupCreateLobby : WindowDialog
     {
         [Export] public readonly NodePath NodePathInputTitle;
         [Export] public readonly NodePath NodePathInputPort;
@@ -99,7 +99,7 @@ namespace GodotModules
 
         private void Validate(string key, string text, string pattern, string feedback)
         {
-            if (!text.Trim().IsMatch(pattern))
+            if (!Regex.IsMatch(text.Trim(), pattern))
                 Feedback[key] = feedback;
             else
                 Feedback[key] = "";
