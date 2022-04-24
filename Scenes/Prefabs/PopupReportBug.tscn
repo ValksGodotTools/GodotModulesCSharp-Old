@@ -1,0 +1,95 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Themes/Main.tres" type="Theme" id=1]
+
+[node name="PopupReportBug" type="WindowDialog"]
+visible = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -476.0
+margin_bottom = -255.0
+rect_min_size = Vector2( 550, 350 )
+theme = ExtResource( 1 )
+window_title = "Report Bug"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 549.0
+margin_bottom = 349.0
+
+[node name="MarginContainer2" type="MarginContainer" parent="PanelContainer/VBoxContainer"]
+margin_right = 548.0
+margin_bottom = 301.0
+size_flags_vertical = 3
+custom_constants/margin_right = 25
+custom_constants/margin_top = 10
+custom_constants/margin_left = 25
+custom_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/MarginContainer2"]
+margin_left = 25.0
+margin_top = 10.0
+margin_right = 523.0
+margin_bottom = 291.0
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/MarginContainer2/VBoxContainer"]
+margin_right = 498.0
+margin_bottom = 17.0
+text = "Error"
+align = 1
+
+[node name="Error" type="TextEdit" parent="PanelContainer/VBoxContainer/MarginContainer2/VBoxContainer"]
+margin_top = 21.0
+margin_right = 498.0
+margin_bottom = 131.0
+size_flags_vertical = 3
+readonly = true
+syntax_highlighting = true
+show_line_numbers = true
+highlight_all_occurrences = true
+wrap_enabled = true
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer/MarginContainer2/VBoxContainer"]
+margin_top = 135.0
+margin_right = 498.0
+margin_bottom = 167.0
+custom_constants/margin_top = 15
+
+[node name="Label2" type="Label" parent="PanelContainer/VBoxContainer/MarginContainer2/VBoxContainer/MarginContainer"]
+margin_top = 15.0
+margin_right = 498.0
+margin_bottom = 32.0
+text = "Give a description of what caused this bug"
+align = 1
+
+[node name="Description" type="TextEdit" parent="PanelContainer/VBoxContainer/MarginContainer2/VBoxContainer"]
+margin_top = 171.0
+margin_right = 498.0
+margin_bottom = 281.0
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer"]
+margin_top = 305.0
+margin_right = 548.0
+margin_bottom = 348.0
+custom_constants/margin_top = 10
+custom_constants/margin_bottom = 10
+
+[node name="Send" type="Button" parent="PanelContainer/VBoxContainer/MarginContainer"]
+margin_left = 255.0
+margin_top = 10.0
+margin_right = 292.0
+margin_bottom = 33.0
+size_flags_horizontal = 4
+text = "Send"
