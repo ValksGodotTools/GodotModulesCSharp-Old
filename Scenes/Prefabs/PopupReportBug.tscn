@@ -70,7 +70,7 @@ custom_constants/margin_top = 15
 margin_top = 15.0
 margin_right = 498.0
 margin_bottom = 32.0
-text = "Give a description of what caused this bug"
+text = "Please give a description of what caused this bug"
 align = 1
 
 [node name="Description" type="TextEdit" parent="PanelContainer/VBoxContainer/MarginContainer2/VBoxContainer"]
