@@ -2,21 +2,19 @@ using GodotModules.Netcode.Client;
 
 namespace GodotModules.Netcode 
 {
-    public class SPacketLobbyLeave : IPacketServer
+    public class SPacketLobbyLeave : PacketServerPeerId
     {
-        public uint Id { get; set; }
-
-        public void Write(PacketWriter writer)
+        public override void Write(PacketWriter writer)
         {
-            writer.Write((ushort)Id);
+            base.Write(writer);
         }
 
-        public void Read(PacketReader reader)
+        public override void Read(PacketReader reader)
         {
-            Id = reader.ReadUInt16();
+            base.Read(reader);
         }
 
-        public void Handle()
+        public override void Handle()
         {
             if (!NetworkManager.GameClient.Players.ContainsKey(Id))
             {

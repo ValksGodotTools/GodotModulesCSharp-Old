@@ -2,22 +2,21 @@ using GodotModules.Netcode.Client;
 
 namespace GodotModules.Netcode 
 {
-    public class SPacketLobbyReady : IPacketServer
+    public class SPacketLobbyReady : PacketServerPeerId
     {
-        public uint Id { get; set; }
         public bool Ready { get; set; }
 
-        public void Write(PacketWriter writer)
+        public override void Write(PacketWriter writer)
         {
             writer.Write(Ready);
         }
 
-        public void Read(PacketReader reader)
+        public override void Read(PacketReader reader)
         {
             Ready = reader.ReadBool();
         }
 
-        public void Handle()
+        public override void Handle()
         {
             
         }

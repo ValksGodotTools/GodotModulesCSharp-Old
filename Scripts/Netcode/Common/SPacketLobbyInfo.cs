@@ -3,14 +3,13 @@ using GodotModules.Netcode.Client;
 
 namespace GodotModules.Netcode 
 {
-    public class SPacketLobbyInfo : IPacketServer
+    public class SPacketLobbyInfo : PacketServerPeerId
     {
-        public uint Id { get; set; }
         public Dictionary<uint, DataPlayer> Players { get; set; }
 
-        public void Write(PacketWriter writer)
+        public override void Write(PacketWriter writer)
         {
-            writer.Write((ushort)Id);
+            base.Write(writer);
             writer.Write((ushort)Players.Count);
             foreach (var pair in Players)
             {
@@ -21,9 +20,9 @@ namespace GodotModules.Netcode
             }
         }
 
-        public void Read(PacketReader reader)
+        public override void Read(PacketReader reader)
         {
-            Id = reader.ReadUInt16();
+            base.Read(reader);
             var count = reader.ReadUInt16();
             Players = new Dictionary<uint, DataPlayer>();
             for (int i = 0; i < count; i++)
@@ -38,7 +37,7 @@ namespace GodotModules.Netcode
             }
         }
 
-        public void Handle()
+        public override void Handle()
         {
             ENetClient.PeerId = Id;
             ENetClient.Log($"{GameManager.Options.OnlineUsername} joined lobby with id {Id} also other players in lobby are {Players.Print()}");

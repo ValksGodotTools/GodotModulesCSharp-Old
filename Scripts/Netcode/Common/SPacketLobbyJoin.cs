@@ -2,24 +2,23 @@ using GodotModules.Netcode.Client;
 
 namespace GodotModules.Netcode 
 {
-    public class SPacketLobbyJoin : IPacketServer
+    public class SPacketLobbyJoin : PacketServerPeerId
     {
-        public uint Id { get; set; }
         public string Username { get; set; }
 
-        public void Write(PacketWriter writer)
+        public override void Write(PacketWriter writer)
         {
-            writer.Write((ushort)Id);
+            base.Write(writer);
             writer.Write((string)Username);
         }
 
-        public void Read(PacketReader reader)
+        public override void Read(PacketReader reader)
         {
-            Id = reader.ReadUInt16();
+            base.Read(reader);
             Username = reader.ReadString();
         }
 
-        public void Handle()
+        public override void Handle()
         {
             SceneLobby.AddPlayer(Id, Username);
 
