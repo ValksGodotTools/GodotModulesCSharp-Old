@@ -30,7 +30,6 @@ namespace GodotModules
             if (Input.IsActionJustPressed("ui_debug"))
             {
                 UIDebugger.ToggleVisibility();
-                ErrorNotifier.IncrementErrorCount();
             }
 
             if (Input.IsActionJustPressed("ui_fullscreen"))
