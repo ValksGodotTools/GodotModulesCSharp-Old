@@ -96,9 +96,11 @@ namespace GodotModules.Settings
             Options.VSync = enabled;
         }
 
+        private string previousTextOnlineUsername = "";
+
         private void _on_OnlineUsername_text_changed(string text)
         {
-            Options.OnlineUsername = text;
+            Options.OnlineUsername = text.Validate(ref previousTextOnlineUsername, InputUsername, () => text.IsMatch("^[A-Za-z]+$"));
         }
     }
 }

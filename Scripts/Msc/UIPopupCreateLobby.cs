@@ -41,13 +41,11 @@ namespace GodotModules
             Public = GetNode<CheckBox>(NodePathPublic);
             NumPingChecks = GetNode<LineEdit>(NodePathNumPingChecks);
             NumPingChecksEnabled = GetNode<CheckBox>(NodePathNumPingChecksEnabled);
-        }
 
-        private Label AddFeedback(string text)
-        {
-            var label = new Label { Text = text };
-            VBoxFeedback.AddChild(label);
-            return label;
+            ValidatedName = InputTitle.Text;
+            ValidatedDescription = InputDescription.Text;
+            ValidatedPort = int.Parse(InputPort.Text);
+            ValidatedMaxPlayerCount = int.Parse(InputMaxPlayerCount.Text);
         }
 
         public void ClearFields()
@@ -58,64 +56,30 @@ namespace GodotModules
             InputMaxPlayerCount.Text = "10";
         }
 
-        public void ClearFeedback()
-        {
-            foreach (Control child in VBoxFeedback.GetChildren())
-                child.QueueFree();
-        }
+        private int ValidatedMaxPlayerCount;
+        private int ValidatedPort;
+        private string ValidatedName { get; set; }
+        private string ValidatedDescription { get; set; }
 
-        private int ValidatedMaxPlayerCount = 10;
-        private int ValidatedNumPingAttempts = 3;
-        private int ValidatedPort = 7777;
+        private string previousTextTitle = "";
+        private string previousTextDescription = "";
 
-        private void _on_Title_text_changed(string text) => Validate("title", text, "^[A-Za-z ]{3,15}$", "Name must contain only letters and have length of 3 to 15 characters");
-
-        private void _on_Port_text_changed(string text) => Validator.ValidateNumber(InputPort, text, 65535, ref ValidatedPort);
-
-        private void _on_Max_Player_text_changed(string text) => Validator.ValidateNumber(InputMaxPlayerCount, text, 999, ref ValidatedMaxPlayerCount);
-
-        private void _on_NumAttempts_text_changed(string text) => Validator.ValidateNumber(NumPingChecks, text, 99, ref ValidatedNumPingAttempts);
-
-        private void _on_Description_text_changed()
-        {
-            if (InputDescription.Text.Trim().Length > 250)
-                Feedback["description"] = "Description exceeded max character limit of 250 characters";
-            else
-                Feedback["description"] = "";
-
-            UpdateFeedback();
-        }
-
-        private void UpdateFeedback()
-        {
-            ClearFeedback();
-
-            foreach (var text in Feedback.Values)
-                if (text != "")
-                    AddFeedback(text);
-        }
-
-        private bool IsValid() => VBoxFeedback.GetChildren().Count == 0;
-
-        private void Validate(string key, string text, string pattern, string feedback)
-        {
-            if (!Regex.IsMatch(text.Trim(), pattern))
-                Feedback[key] = feedback;
-            else
-                Feedback[key] = "";
-
-            UpdateFeedback();
-        }
+        private void _on_Title_text_changed(string text) =>
+            ValidatedName = text.Validate(ref previousTextTitle, InputTitle, () => text.IsMatch("^[A-Za-z ]+$"));
+        private void _on_Port_text_changed(string text) => text.ValidateNumber(InputPort, 1, 65535, ref ValidatedPort);
+        private void _on_Max_Player_text_changed(string text) => text.ValidateNumber(InputMaxPlayerCount, 1, 999, ref ValidatedMaxPlayerCount);
+        private void _on_Description_text_changed() =>
+            ValidatedDescription = InputDescription.Text.Validate(ref previousTextDescription, InputDescription, () => InputDescription.Text.Length <= 250);
 
         private async void _on_Create_pressed()
         {
             if (SceneGameServers.ConnectingToLobby)
                 return;
 
-            if (!IsValid())
+            if (ValidatedName == null || ValidatedDescription == null)
                 return;
 
-            var port = ushort.Parse(InputPort.Text.Trim());
+            var port = (ushort)ValidatedPort;
             var localIp = "127.0.0.1";
 
             // does not update fast enough to be reliable
@@ -138,22 +102,21 @@ namespace GodotModules
                 Description = InputDescription.Text.Trim(),
                 MaxPlayerCount = ValidatedMaxPlayerCount,
                 LobbyHost = GameManager.Options.OnlineUsername,
-                Public = Public.Pressed,
-                NumPingChecks = ValidatedNumPingAttempts,
-                NumPingChecksEnabled = NumPingChecksEnabled.Pressed
+                Public = Public.Pressed
             };
 
             SceneGameServers.Instance.AddServer(info);
             SceneGameServers.Instance.PostServer(info);
             SceneLobby.CurrentLobby = info;
-            
+
             Hide();
 
             NetworkManager.StartServer(port, ValidatedMaxPlayerCount);
             NetworkManager.StartClient(localIp, port);
             await NetworkManager.ClientConnecting();
             await NetworkManager.WaitForHostToConnectToServer();
-            await ENetClient.Send(ClientPacketOpcode.LobbyJoin, new CPacketLobbyJoin {
+            await ENetClient.Send(ClientPacketOpcode.LobbyJoin, new CPacketLobbyJoin
+            {
                 Username = GameManager.Options.OnlineUsername
             });
         }

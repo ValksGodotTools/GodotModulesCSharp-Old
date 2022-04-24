@@ -22,7 +22,6 @@ namespace GodotModules
                 return;
 
             popup.ClearFields();
-            popup.ClearFeedback();
             popup.PopupCentered();
         }
 
