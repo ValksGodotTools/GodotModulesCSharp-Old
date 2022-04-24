@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Globalization;
@@ -8,8 +9,7 @@ namespace GodotModules
 {
     public static class Extensions 
     {
-        public static string Print<T>(this List<T> value) => string.Join(", ", value);
-        public static string Print<TKey, TValue>(this Dictionary<TKey, TValue> value) => string.Join(", ", value);
+        public static string Print<T>(this IEnumerable<T> value, bool newLine = true) => string.Join(newLine ? "\n" : ", ", value);
         public static string AddSpaceBeforeEachCapital(this string value) => string.Concat(value.Select(x => char.IsUpper(x) ? " " + x : x.ToString())).TrimStart(' ');
         public static string ToTitleCase(this string value) => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value.ToLower());
         public static bool IsMatch(this string value, string expression) => Regex.IsMatch(value, expression);
