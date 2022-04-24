@@ -15,7 +15,8 @@
         LobbyJoin,
         LobbyLeave,
         LobbyInfo,
-        LobbyChatMessage
+        LobbyChatMessage,
+        LobbyReady
     }
 
     public enum DisconnectOpcode
