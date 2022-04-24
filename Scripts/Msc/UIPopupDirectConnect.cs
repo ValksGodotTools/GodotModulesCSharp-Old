@@ -17,23 +17,7 @@ namespace GodotModules
 
         private string previousText = "";
 
-        private void _on_Ip_text_changed(string text)
-        {
-            if (text.Empty()) 
-            {
-                Ip.Text = "";
-                return;
-            }
-            
-            if (!text.IsMatch("^[A-Za-z0-9:.]+$"))
-            {
-                Ip.Text = previousText;
-                Ip.CaretPosition = text.Length;
-                return;
-            }
-
-            previousText = text;
-        }
+        private void _on_Ip_text_changed(string text) => text.Validate(ref previousText, Ip, () => text.IsMatch("^[A-Za-z0-9:.]+$"));
 
         private async void _on_Ok_pressed()
         {
