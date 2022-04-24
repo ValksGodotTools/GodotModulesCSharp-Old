@@ -13,6 +13,7 @@ namespace GodotModules.Netcode.Client
 {
     public abstract class ENetClient
     {
+        public static uint PeerId { get; set; } // this clients peer id (grabbed from server at some point)
         public static CancellationTokenSource CancelTokenSource { get; private set; }
         public static ConsoleColor LogsColor = ConsoleColor.Yellow;
         public static ConcurrentQueue<ENetCmd> ENetCmds { get; set; }

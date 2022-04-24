@@ -8,9 +8,10 @@ namespace GodotModules
         [Export] public readonly NodePath NodePathStatus;
 
         private Label PlayerName { get; set; }
-        public Label Status { get; set; }
+        private Label Status { get; set; }
 
-        public LobbyPlayerListing Info { get; set; }
+        public string Username { get; private set; }
+        public bool Ready { get; private set; }
 
         public void Init()
         {
@@ -18,17 +19,16 @@ namespace GodotModules
             Status = GetNode<Label>(NodePathStatus);
         }
 
-        public void SetInfo(LobbyPlayerListing info)
+        public void SetUsername(string value) 
         {
-            Info = info;
-            PlayerName.Text = info.Name;
-            Status.Text = info.Ready ? "Ready" : "Not Ready";
+            PlayerName.Text = value;
+            Username = value;
         }
-    }
 
-    public struct LobbyPlayerListing
-    {
-        public string Name { get; set; }
-        public bool Ready { get; set; }
+        public void SetReady(bool value) 
+        {
+            Status.Text = value ? "Ready" : "Not Ready";
+            Ready = value;
+        }
     }
 }

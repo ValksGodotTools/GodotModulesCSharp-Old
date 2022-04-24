@@ -9,11 +9,11 @@ namespace GodotModules.Netcode.Server
     public class GameServer : ENetServer
     {
         // marking Players as static is okay as long as it is created a new in _Ready() (same goes for any other statics)
-        public static Dictionary<uint, string> Players { get; set; } // the players in a lobby
+        public static Dictionary<uint, DataPlayer> Players { get; set; } // the players in a lobby
 
         public GameServer()
         {
-            Players = new Dictionary<uint, string>();
+            Players = new Dictionary<uint, DataPlayer>();
         }
 
         protected override void Connect(Event netEvent)
@@ -43,9 +43,9 @@ namespace GodotModules.Netcode.Server
                 Players.Remove(id);
         }
 
-        public static Dictionary<uint, string> GetOtherPlayers(uint id)
+        public static Dictionary<uint, DataPlayer> GetOtherPlayers(uint id)
         {
-            var otherPlayers = new Dictionary<uint, string>(Players);
+            var otherPlayers = new Dictionary<uint, DataPlayer>(Players);
             otherPlayers.Remove(id);
             return otherPlayers;
         }

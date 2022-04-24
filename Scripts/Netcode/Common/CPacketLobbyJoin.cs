@@ -28,7 +28,10 @@ namespace GodotModules.Netcode
                 return;
             }
 
-            GameServer.Players.Add(peer.ID, Username);
+            GameServer.Players.Add(peer.ID, new DataPlayer {
+                Username = Username,
+                Ready = false
+            });
 
             // tell joining player their Id and tell them about other players in lobby
             GameServer.Send(ServerPacketOpcode.LobbyInfo, new SPacketLobbyInfo {

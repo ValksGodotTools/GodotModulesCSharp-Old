@@ -100,11 +100,8 @@ namespace GodotModules
         {
             var player = PrefabLobbyPlayerListing.Instance<UILobbyPlayerListing>();
             player.Init();
-            player.SetInfo(new LobbyPlayerListing
-            {
-                Name = name,
-                Ready = false
-            });
+            player.SetUsername(name);
+            player.SetReady(false);
 
             UIPlayers.Add(id, player);
             ListPlayers.AddChild(player);
@@ -112,13 +109,10 @@ namespace GodotModules
 
         private void _on_Ready_pressed()
         {
-            /*var player = UIPlayers[ClientUsername];
-            var info = player.Info;
-            info.Ready = !info.Ready;
-            player.Info = info;
-            player.Status.Text = info.Ready ? "Ready" : "Not Ready";
+            var player = UIPlayers[ENetClient.PeerId];
+            player.SetReady(!player.Ready);
 
-            BtnReady.Text = info.Ready ? "Ready" : "Not Ready";*/
+            BtnReady.Text = player.Ready ? "Ready" : "Not Ready";
         }
 
         private void _on_Start_pressed()
