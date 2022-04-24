@@ -1,4 +1,12 @@
 # Contributing
+Contributions / pull requests are very much welcomed. If you want to help contribute, get the project running on your PC and see how everything works. My code isn't the best and it would be nice if others peer reviewed it pointing out things I could do better. 
+
+The following scripts need a peer review / major refactor. They look super messy and unorganized in their current state.
+- [UICreateLobby.cs](https://github.com/valkyrienyanko/GodotModules/blob/main/Scripts/Scenes/Game%20Servers/UICreateLobby.cs)
+- [Validator.cs](https://github.com/valkyrienyanko/GodotModules/blob/main/Scripts/Utils/Validator.cs)
+
+[Godot Modules Discord](https://discord.gg/866cg8yfxZ) (if you have any questions, contact me (valk#9904) though here)
+
 ## Setup
 ### Godot Mono (C#)
 1. Install [Godot Mono 64 Bit](https://godotengine.org)
