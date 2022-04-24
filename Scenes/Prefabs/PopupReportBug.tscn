@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Themes/Main.tres" type="Theme" id=1]
+[ext_resource path="res://Scripts/Msc/UIPopupReportBug.cs" type="Script" id=2]
 
 [node name="PopupReportBug" type="WindowDialog"]
 visible = true
@@ -11,6 +12,7 @@ margin_bottom = -255.0
 rect_min_size = Vector2( 550, 350 )
 theme = ExtResource( 1 )
 window_title = "Report Bug"
+script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -93,3 +95,5 @@ margin_right = 292.0
 margin_bottom = 33.0
 size_flags_horizontal = 4
 text = "Send"
+
+[connection signal="pressed" from="PanelContainer/VBoxContainer/MarginContainer/Send" to="." method="_on_Send_pressed"]
