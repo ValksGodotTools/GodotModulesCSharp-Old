@@ -6,7 +6,7 @@ namespace GodotModules.Netcode
     {
         public override void Handle()
         {
-            Godot.GD.Print("GAME START");
+            SceneManager.ChangeScene("Game");
         }
     }
 }
