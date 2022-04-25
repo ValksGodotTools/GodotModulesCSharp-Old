@@ -8,11 +8,13 @@ namespace GodotModules.Netcode
 
         public override void Write(PacketWriter writer)
         {
+            base.Write(writer);
             writer.Write(Ready);
         }
 
         public override void Read(PacketReader reader)
         {
+            base.Read(reader);
             Ready = reader.ReadBool();
         }
 
