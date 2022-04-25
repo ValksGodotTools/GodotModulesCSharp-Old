@@ -1,6 +1,6 @@
 namespace GodotModules.Netcode 
 {
-    public class SPacketLobbyChatMessage : PacketServerPeerId
+    public class SPacketLobbyChatMessage : APacketServerPeerId
     {
         public string Message { get; set; }
 

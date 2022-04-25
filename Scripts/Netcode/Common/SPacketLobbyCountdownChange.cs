@@ -2,7 +2,7 @@ using GodotModules.Netcode.Client;
 
 namespace GodotModules.Netcode 
 {
-    public class SPacketLobbyCountdownChange : PacketServerPeerId
+    public class SPacketLobbyCountdownChange : APacketServerPeerId
     {
         public bool CountdownRunning { get; set; }
 

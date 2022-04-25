@@ -20,7 +20,7 @@ namespace GodotModules.Netcode.Server
         public static bool Running { get; set; }
         private static ConcurrentQueue<ServerPacket> Outgoing { get; set; }
         public static Dictionary<uint, Peer> Peers { get; set; }
-        private static readonly Dictionary<ClientPacketOpcode, IPacketClient> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, IPacketClient>("CPacket");
+        private static readonly Dictionary<ClientPacketOpcode, APacketClient> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, APacketClient>("CPacket");
         public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
         private bool QueueRestart { get; set; }
 
@@ -237,7 +237,7 @@ namespace GodotModules.Netcode.Server
         }
 
         public static void Send(ServerPacketOpcode opcode, params Peer[] peers) => Send(opcode, null, peers);
-        public static void Send(ServerPacketOpcode opcode, IPacket data, params Peer[] peers) => Outgoing.Enqueue(new ServerPacket((byte)opcode, data, peers));
+        public static void Send(ServerPacketOpcode opcode, APacket data, params Peer[] peers) => Outgoing.Enqueue(new ServerPacket((byte)opcode, data, peers));
 
         /// <summary>
         /// Provides a way to log a message on the Godot thread from the ENet thread

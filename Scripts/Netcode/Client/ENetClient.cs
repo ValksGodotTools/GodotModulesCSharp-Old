@@ -24,7 +24,7 @@ namespace GodotModules.Netcode.Client
         private static int OutgoingId { get; set; }
         private static ConcurrentDictionary<int, ClientPacket> Outgoing { get; set; }
         public static DisconnectOpcode DisconnectOpcode { get; set; }
-        public static readonly Dictionary<ServerPacketOpcode, IPacketServer> HandlePacket = ReflectionUtils.LoadInstances<ServerPacketOpcode, IPacketServer>("SPacket");
+        public static readonly Dictionary<ServerPacketOpcode, APacketServer> HandlePacket = ReflectionUtils.LoadInstances<ServerPacketOpcode, APacketServer>("SPacket");
         private static long Connected = 0;
         public static bool IsConnected { get => Interlocked.Read(ref Connected) == 1; } // thread safe
 
@@ -170,7 +170,7 @@ namespace GodotModules.Netcode.Client
         /// <param name="opcode">The opcode of the packet</param>
         /// <param name="data">The data if any</param>
         /// <returns></returns>
-        public static async Task Send(ClientPacketOpcode opcode, IPacket data = null)
+        public static async Task Send(ClientPacketOpcode opcode, APacket data = null)
         {
             OutgoingId++;
             var success = Outgoing.TryAdd(OutgoingId, new ClientPacket((byte)opcode, data));

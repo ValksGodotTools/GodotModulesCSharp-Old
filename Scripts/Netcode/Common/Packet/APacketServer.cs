@@ -1,10 +1,10 @@
 namespace GodotModules.Netcode
 {
-    public interface IPacketServer : IPacket
+    public abstract class APacketServer : APacket
     {
         /// <summary>
         /// The packet handled client-side
         /// </summary>
-        void Handle();
+        public abstract void Handle();
     }
 }

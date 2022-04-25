@@ -1,6 +1,6 @@
 namespace GodotModules.Netcode
 {
-    public interface IPacketClient : IPacket
+    public abstract class APacketClient : APacket
     {
         /// <summary>
         /// The packet handled server-side
@@ -9,6 +9,6 @@ namespace GodotModules.Netcode
         /// GameServer.Log() should be the only thing used to log values (System.Console.WriteLine() and Godot.GD.Print() will NOT work)
         /// </summary>
         /// <param name="peer">The client peer</param>
-        void Handle(ENet.Peer peer);
+        public abstract void Handle(ENet.Peer peer);
     }
 }

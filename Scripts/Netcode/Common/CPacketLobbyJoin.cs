@@ -3,21 +3,21 @@ using System.Linq;
 
 namespace GodotModules.Netcode 
 {
-    public class CPacketLobbyJoin : IPacketClient
+    public class CPacketLobbyJoin : APacketClient
     {
         public string Username { get; set; }
 
-        public void Write(PacketWriter writer)
+        public override void Write(PacketWriter writer)
         {
             writer.Write(Username);
         }
 
-        public void Read(PacketReader reader)
+        public override void Read(PacketReader reader)
         {
             Username = reader.ReadString();
         }
 
-        public void Handle(ENet.Peer peer)
+        public override void Handle(ENet.Peer peer)
         {
             // Check if data.Username is appropriate username
             // TODO

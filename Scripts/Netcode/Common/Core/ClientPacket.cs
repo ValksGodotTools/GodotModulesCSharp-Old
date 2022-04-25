@@ -2,7 +2,7 @@ namespace GodotModules.Netcode
 {
     public class ClientPacket : GamePacket
     {
-        public ClientPacket(byte opcode, IPacket writable = null)
+        public ClientPacket(byte opcode, APacket writable = null)
         {
             using (var writer = new PacketWriter())
             {

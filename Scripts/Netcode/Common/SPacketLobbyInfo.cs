@@ -3,7 +3,7 @@ using GodotModules.Netcode.Client;
 
 namespace GodotModules.Netcode 
 {
-    public class SPacketLobbyInfo : PacketServerPeerId
+    public class SPacketLobbyInfo : APacketServerPeerId
     {
         public bool IsHost { get; set; }
         public Dictionary<uint, DataPlayer> Players { get; set; }

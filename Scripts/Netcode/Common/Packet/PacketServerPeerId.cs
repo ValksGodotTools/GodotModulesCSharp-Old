@@ -1,11 +1,10 @@
 namespace GodotModules.Netcode 
 {
-    public abstract class PacketServerPeerId : IPacketServer
+    public abstract class APacketServerPeerId : APacketServer
     {
         public uint Id { get; set; }
 
-        public virtual void Write(PacketWriter writer) => writer.Write((ushort)Id);
-        public virtual void Read(PacketReader reader) => Id = reader.ReadUInt16();
-        public abstract void Handle();
+        public override void Write(PacketWriter writer) => writer.Write((ushort)Id);
+        public override void Read(PacketReader reader) => Id = reader.ReadUInt16();
     }
 }

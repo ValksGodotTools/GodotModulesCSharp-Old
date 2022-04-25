@@ -2,19 +2,9 @@ using GodotModules.Netcode.Client;
 
 namespace GodotModules.Netcode 
 {
-    public class SPacketLobbyGameStart : IPacketServer
+    public class SPacketLobbyGameStart : APacketServer
     {
-        public void Write(PacketWriter writer)
-        {
-
-        }
-
-        public void Read(PacketReader reader)
-        {
-
-        }
-
-        public void Handle()
+        public override void Handle()
         {
             Godot.GD.Print("GAME START");
         }

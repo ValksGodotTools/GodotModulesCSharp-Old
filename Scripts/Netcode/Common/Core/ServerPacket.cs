@@ -6,7 +6,7 @@ namespace GodotModules.Netcode
     {
         public Peer[] Peers { get; private set; }
 
-        public ServerPacket(byte opcode, IPacket writable = null, params Peer[] peers)
+        public ServerPacket(byte opcode, APacket writable = null, params Peer[] peers)
         {
             using (var writer = new PacketWriter())
             {

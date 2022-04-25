@@ -2,7 +2,7 @@ using GodotModules.Netcode.Client;
 
 namespace GodotModules.Netcode 
 {
-    public class SPacketLobbyJoin : PacketServerPeerId
+    public class SPacketLobbyJoin : APacketServerPeerId
     {
         public string Username { get; set; }
 

@@ -2,7 +2,7 @@ using GodotModules.Netcode.Client;
 
 namespace GodotModules.Netcode 
 {
-    public class SPacketLobbyLeave : PacketServerPeerId
+    public class SPacketLobbyLeave : APacketServerPeerId
     {
         public override void Write(PacketWriter writer)
         {
