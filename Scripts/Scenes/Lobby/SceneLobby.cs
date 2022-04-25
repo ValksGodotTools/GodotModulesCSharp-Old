@@ -36,7 +36,7 @@ namespace GodotModules
         public bool Start { get; set; }
 
         private System.Threading.Timer TimerCountdownGameStart { get; set; }
-        private int CountdownGameStart = 5;
+        private int CountdownGameStart = 2;
 
         private Dictionary<uint, UILobbyPlayerListing> UIPlayers { get; set; }
 
