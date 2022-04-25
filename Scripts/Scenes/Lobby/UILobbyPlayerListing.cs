@@ -12,6 +12,7 @@ namespace GodotModules
 
         public string Username { get; private set; }
         public bool Ready { get; private set; }
+        public bool Host { get; private set; }
 
         public override void _Ready()
         {
@@ -29,6 +30,11 @@ namespace GodotModules
         {
             Status.Text = value ? "Ready" : "Not Ready";
             Ready = value;
+        }
+
+        public void SetHost(bool value)
+        {
+            Host = value;
         }
     }
 }
