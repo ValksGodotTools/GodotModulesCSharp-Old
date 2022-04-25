@@ -12,7 +12,7 @@ using GodotModules.Netcode.Server;
 
 namespace GodotModules.Netcode 
 {
-    public class CPacketLobbyChatMessage : APacketClient
+    public class CPacketLobbyChatMessage : APacketClient // C = Client, A = abstract
     {
         public string Message { get; set; }
 
@@ -60,7 +60,7 @@ namespace GodotModules.Netcode
 {
     // only extend from APacketServerPeerId if you're telling other clients about
     // something that changed about a peer, otherwise extend from APacketServer
-    public class SPacketLobbyChatMessage : APacketServerPeerId
+    public class SPacketLobbyChatMessage : APacketServerPeerId // S = Server
     {
         public string Message { get; set; }
 
@@ -86,6 +86,8 @@ namespace GodotModules.Netcode
     }
 }
 ```
+
+Have a look at the other packets for more examples.
 
 Consider size of data types when sending them over the network https://condor.depaul.edu/sjost/nwdp/notes/cs1/CSDatatypes.htm (the smaller the better but keep it practical)
 
