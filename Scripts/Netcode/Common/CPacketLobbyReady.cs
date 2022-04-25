@@ -21,10 +21,10 @@ namespace GodotModules.Netcode
             var player = GameServer.Players[peer.ID];
             player.Ready = Ready;
 
-            GameServer.Send(ServerPacketOpcode.LobbyReady, new SPacketLobbyReady {
+            GameServer.SendToOtherPlayers(peer.ID, ServerPacketOpcode.LobbyReady, new SPacketLobbyReady {
                 Id = peer.ID,
                 Ready = Ready
-            }, GameServer.GetOtherPlayerPeers(peer.ID));
+            });
         }
     }
 }

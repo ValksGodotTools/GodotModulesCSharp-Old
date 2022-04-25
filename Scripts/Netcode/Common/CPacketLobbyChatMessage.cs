@@ -20,10 +20,10 @@ namespace GodotModules.Netcode
 
         public void Handle(Peer peer)
         {
-            ENetServer.Send(ServerPacketOpcode.LobbyChatMessage, new SPacketLobbyChatMessage {
+            GameServer.SendToAllPlayers(ServerPacketOpcode.LobbyChatMessage, new SPacketLobbyChatMessage {
                 Id = peer.ID,
                 Message = Message
-            }, GameServer.GetAllPlayerPeers());
+            });
         }
     }
 }

@@ -41,10 +41,10 @@ namespace GodotModules.Netcode
             }, peer);
 
             // tell other players about new player that joined
-            GameServer.Send(ServerPacketOpcode.LobbyJoin, new SPacketLobbyJoin {
+            GameServer.SendToOtherPeers(peer.ID, ServerPacketOpcode.LobbyJoin, new SPacketLobbyJoin {
                 Id = peer.ID,
                 Username = Username
-            }, GameServer.GetOtherPeers(peer.ID));
+            });
         }
     }
 }
