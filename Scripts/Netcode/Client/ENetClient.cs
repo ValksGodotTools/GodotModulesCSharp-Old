@@ -22,9 +22,10 @@ namespace GodotModules.Netcode.Client
         public static DisconnectOpcode DisconnectOpcode { get; set; }
         public static readonly Dictionary<ServerPacketOpcode, IPacketServer> HandlePacket = ReflectionUtils.LoadInstances<ServerPacketOpcode, IPacketServer>("SPacket");
         private static long Connected = 0;
-        private static long Setup = 0;
+        private static int ThreadLoops = 0;
         public static bool IsConnected { get => Interlocked.Read(ref Connected) == 1; } // thread safe
-        public static bool IsSetup { get => Interlocked.Read(ref Setup) == 1; } // thread safe
+        private const int SetupThreadLoops = 10;
+        public static bool IsSetup() => ThreadLoops == SetupThreadLoops;
 
         public static bool Running { get; set; }
         protected bool ENetThreadRunning;
@@ -96,7 +97,7 @@ namespace GodotModules.Netcode.Client
                     }
 
                     if (Connected == 1)
-                        Setup = 1;
+                        ThreadLoops = Mathf.Min(ThreadLoops + 1, SetupThreadLoops);
 
                     while (!polled)
                     {
@@ -161,6 +162,8 @@ namespace GodotModules.Netcode.Client
             SceneGameServers.Disconnected = true;
             Connected = 0;
             DisconnectOpcode = (DisconnectOpcode)opcode;
+            System.Console.WriteLine("CLIENT THREAD: CHANGING SCENE TO GAMESERVERS");
+            NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.ChangeScene, "GameServers"));
             CancelTokenSource.Cancel();
         }
 
