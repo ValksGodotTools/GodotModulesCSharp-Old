@@ -38,6 +38,7 @@ namespace GodotModules.Netcode.Client
             OutgoingId = 0;
             Outgoing = new ConcurrentDictionary<int, ClientPacket>();
             ENetCmds = new ConcurrentQueue<ENetCmd>();
+            DisconnectOpcode = DisconnectOpcode.Disconnected;
         }
 
         /// <summary>

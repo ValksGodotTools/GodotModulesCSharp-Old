@@ -7,7 +7,12 @@ namespace GodotModules.Netcode.Client
 {
     public class GameClient : ENetClient
     {
-        public Dictionary<uint, string> Players = new Dictionary<uint, string>();
+        public static Dictionary<uint, string> Players { get; set; }
+
+        public GameClient()
+        {
+            Players = new Dictionary<uint, string>();
+        }
 
         protected override void Connect(Event netEvent)
         {

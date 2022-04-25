@@ -60,7 +60,7 @@ namespace GodotModules
             if (!ENetClient.IsHost)
                 Instance.BtnStart.Disabled = true;
 
-            foreach (var player in NetworkManager.GameClient.Players)
+            foreach (var player in GameClient.Players)
                 UIAddPlayer(player.Key, player.Value);
         }
 
@@ -85,14 +85,14 @@ namespace GodotModules
 
         public static void AddPlayer(uint id, string name) 
         {
-            if (NetworkManager.GameClient.Players.ContainsKey(id))
+            if (GameClient.Players.ContainsKey(id))
             {
                 GD.Print($"Players contains id: '{id}' already");
-                GD.Print(NetworkManager.GameClient.Players.Print());
+                GD.Print(GameClient.Players.Print());
                 return;
             }
 
-            NetworkManager.GameClient.Players.Add(id, name);
+            GameClient.Players.Add(id, name);
 
             if (SceneManager.ActiveScene == "Lobby")
                 Instance.UIAddPlayer(id, name);
@@ -100,7 +100,7 @@ namespace GodotModules
 
         public static void RemovePlayer(uint id)
         {
-            NetworkManager.GameClient.Players.Remove(id);
+            GameClient.Players.Remove(id);
 
             if (SceneManager.ActiveScene == "Lobby")
             {
@@ -222,7 +222,7 @@ namespace GodotModules
             if (SceneManager.ActiveScene != "Lobby")
                 return;
 
-            var playerName = NetworkManager.GameClient.Players[peerId];
+            var playerName = GameClient.Players[peerId];
             Log($"{playerName}: {text}");
         }
 
