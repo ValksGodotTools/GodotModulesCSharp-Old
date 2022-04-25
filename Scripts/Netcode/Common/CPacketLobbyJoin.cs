@@ -40,9 +40,6 @@ namespace GodotModules.Netcode
                 Players = GameServer.GetOtherPlayers(peer.ID)
             }, peer);
 
-            System.Console.WriteLine($"DEBUG: CPacketLobbyJoin {peer.ID} {Username}");
-            System.Console.WriteLine(GameServer.GetOtherPeers(peer.ID).Select(x => x.ID).Print());
-
             // tell other players about new player that joined
             GameServer.Send(ServerPacketOpcode.LobbyJoin, new SPacketLobbyJoin {
                 Id = peer.ID,

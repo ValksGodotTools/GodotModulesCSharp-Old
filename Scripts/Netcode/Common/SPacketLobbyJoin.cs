@@ -20,7 +20,6 @@ namespace GodotModules.Netcode
 
         public override void Handle()
         {
-            System.Console.WriteLine($"DEBUG: SPacketLobbyJoin {Id} {Username}");
             SceneLobby.AddPlayer(Id, Username);
 
             ENetClient.Log($"Player with username {Username} id: {Id} joined the lobby");
