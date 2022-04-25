@@ -22,10 +22,7 @@ namespace GodotModules.Netcode.Client
         public static DisconnectOpcode DisconnectOpcode { get; set; }
         public static readonly Dictionary<ServerPacketOpcode, IPacketServer> HandlePacket = ReflectionUtils.LoadInstances<ServerPacketOpcode, IPacketServer>("SPacket");
         private static long Connected = 0;
-        private static int ThreadLoops = 0;
         public static bool IsConnected { get => Interlocked.Read(ref Connected) == 1; } // thread safe
-        private const int SetupThreadLoops = 10;
-        public static bool IsSetup() => ThreadLoops == SetupThreadLoops;
 
         public static bool Running { get; set; }
         protected bool ENetThreadRunning;
@@ -95,9 +92,6 @@ namespace GodotModules.Netcode.Client
                         packet.Create(clientPacket.Data, clientPacket.PacketFlags);
                         peer.Send(channelID, ref packet);
                     }
-
-                    if (Connected == 1)
-                        ThreadLoops = Mathf.Min(ThreadLoops + 1, SetupThreadLoops);
 
                     while (!polled)
                     {
