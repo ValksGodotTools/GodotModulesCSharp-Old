@@ -123,10 +123,10 @@ namespace GodotModules
                 await Task.Delay(200);
         }
 
-        public static async Task ClientConnecting()
+        public static async Task ClientSetup()
         {
-            while (!ENetClient.Connected)
-                await Task.Delay(200);
+            while (!ENetClient.IsSetup)
+                await Task.Delay(100);
         }
     }
 }

@@ -21,14 +21,18 @@ namespace GodotModules.Netcode.Client
         private static ConcurrentDictionary<int, ClientPacket> Outgoing { get; set; }
         public static DisconnectOpcode DisconnectOpcode { get; set; }
         public static readonly Dictionary<ServerPacketOpcode, IPacketServer> HandlePacket = ReflectionUtils.LoadInstances<ServerPacketOpcode, IPacketServer>("SPacket");
-        public static bool Connected { get; set; }
+        private static long Connected = 0;
+        private static long Setup = 0;
+        public static bool IsConnected { get => Interlocked.Read(ref Connected) == 1; } // thread safe
+        public static bool IsSetup { get => Interlocked.Read(ref Setup) == 1; } // thread safe
+
         public static bool Running { get; set; }
         protected bool ENetThreadRunning;
 
         public ENetClient()
         {
             Running = false;
-            Connected = false;
+            Connected = 0;
             OutgoingId = 0;
             Outgoing = new ConcurrentDictionary<int, ClientPacket>();
             ENetCmds = new ConcurrentQueue<ENetCmd>();
@@ -91,6 +95,9 @@ namespace GodotModules.Netcode.Client
                         peer.Send(channelID, ref packet);
                     }
 
+                    if (Connected == 1)
+                        Setup = 1;
+
                     while (!polled)
                     {
                         if (client.CheckEvents(out Event netEvent) <= 0)
@@ -104,7 +111,7 @@ namespace GodotModules.Netcode.Client
                         switch (netEvent.Type)
                         {
                             case EventType.Connect:
-                                Connected = true;
+                                Connected = 1;
                                 Connect(netEvent);
                                 break;
 
@@ -152,7 +159,7 @@ namespace GodotModules.Netcode.Client
         {
             SceneGameServers.ConnectingToLobby = false;
             SceneGameServers.Disconnected = true;
-            Connected = false;
+            Connected = 0;
             DisconnectOpcode = (DisconnectOpcode)opcode;
             CancelTokenSource.Cancel();
         }
