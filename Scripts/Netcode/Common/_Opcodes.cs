@@ -6,7 +6,8 @@
         LobbyJoin,
         LobbyLeave,
         LobbyChatMessage,
-        LobbyReady
+        LobbyReady,
+        LobbyCountdownChange
     }
 
     // Sent to Game Client
@@ -16,7 +17,8 @@
         LobbyLeave,
         LobbyInfo,
         LobbyChatMessage,
-        LobbyReady
+        LobbyReady,
+        LobbyCountdownChange
     }
 
     public enum DisconnectOpcode
