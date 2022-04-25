@@ -83,7 +83,7 @@ namespace GodotModules.Netcode.Client
                     }
 
                     // Outgoing
-                    while (Outgoing.TryGetValue(OutgoingId, out ClientPacket clientPacket))
+                    while (Outgoing.TryRemove(OutgoingId, out ClientPacket clientPacket))
                     {
                         OutgoingId--;
                         Log("Sent packet: " + (ClientPacketOpcode)clientPacket.Opcode);
@@ -217,6 +217,11 @@ namespace GodotModules.Netcode.Client
 
             while (!CancelTokenSource.IsCancellationRequested)
                 await Task.Delay(100);
+        }
+
+        public static void CancelTask()
+        {
+            CancelTokenSource.Cancel();
         }
 
         /// <summary>
