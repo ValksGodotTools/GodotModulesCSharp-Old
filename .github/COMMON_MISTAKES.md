@@ -3,6 +3,23 @@ THREAD SAFETY IS NO JOKE. Really really weird things will happen if you don't fo
 
 Note that tasks are surrounded with try catch so you will see error in console unlike with issue above.
 
+## Reading data from packets
+I make this mistake all the time, the app will continue to run like normal except you will always yet the default value of whatever type you are reading. In this case it is a bool, it would always be false.
+```cs
+public bool Ready { get; set; }
+
+public override void Write(PacketWriter writer)
+{
+    writer.Write(Ready);
+}
+
+public override void Read(PacketReader reader)
+{
+    // reader.ReadBool(); This is bad, do not do this!!!
+    Ready = reader.ReadBool(); // Do this!!
+}
+```
+
 ## Avoid static in netcode
 Static properties / fields should never be used unless you want something to be persistent even if the server / client gets destroyed but this is rarely the case. 
 
