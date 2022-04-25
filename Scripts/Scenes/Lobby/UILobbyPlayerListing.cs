@@ -13,7 +13,7 @@ namespace GodotModules
         public string Username { get; private set; }
         public bool Ready { get; private set; }
 
-        public void Init()
+        public override void _Ready()
         {
             PlayerName = GetNode<Label>(NodePathName);
             Status = GetNode<Label>(NodePathStatus);

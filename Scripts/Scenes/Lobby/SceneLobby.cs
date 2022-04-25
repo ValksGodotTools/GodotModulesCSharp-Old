@@ -100,12 +100,12 @@ namespace GodotModules
         public void UIAddPlayer(uint id, string name)
         {
             var player = PrefabLobbyPlayerListing.Instance<UILobbyPlayerListing>();
-            player.Init();
+            UIPlayers.Add(id, player);
+            
+            ListPlayers.AddChild(player);
+
             player.SetUsername(name);
             player.SetReady(false);
-
-            UIPlayers.Add(id, player);
-            ListPlayers.AddChild(player);
         }
 
         private async void _on_Ready_pressed()

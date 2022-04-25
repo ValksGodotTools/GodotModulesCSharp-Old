@@ -21,7 +21,7 @@ namespace GodotModules
 
         public LobbyListing Info { get; set; }
 
-        public void Init()
+        public override void _Ready()
         {
             SceneGameServers.ConnectingToLobby = false;
             LabelTitle = GetNode<Label>(NodePathLabelTitle);

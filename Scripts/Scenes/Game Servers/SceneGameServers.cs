@@ -84,9 +84,8 @@ namespace GodotModules
         public void AddServer(LobbyListing info)
         {
             var lobby = PrefabLobbyListing.Instance<UILobbyListing>();
-            lobby.Init();
-            lobby.SetInfo(info);
             ServerList.AddChild(lobby);
+            lobby.SetInfo(info);
         }
 
         public void ClearServers()
