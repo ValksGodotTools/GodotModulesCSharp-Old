@@ -1,8 +1,11 @@
+using Timer = System.Threading.Timer;
+
 using Godot;
 using GodotModules.Netcode;
 using GodotModules.Netcode.Client;
 using GodotModules.Netcode.Server;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
 
@@ -137,13 +140,33 @@ namespace GodotModules
             }
         }
 
-        private void _on_Start_pressed()
+        public static void CancelGameCountdown()
+        {
+            if (SceneManager.ActiveScene == "Lobby")
+            {
+                Instance.TimerCountdownGameStart.Dispose();
+                Instance.CountdownGameStart = 5;
+                Instance.BtnReady.Disabled = false;
+                Log("Game start was cancelled");
+            }
+        }
+
+        public static void StartGameCountdown()
+        {
+            if (SceneManager.ActiveScene == "Lobby")
+            {
+                Instance.TimerCountdownGameStart = new Timer(Instance.TimerCountdownCallback, "state", 0, 1000);
+                Instance.BtnReady.Disabled = true;
+            }
+        }
+
+        private async void _on_Start_pressed()
         {
             // check if all players are ready
-            /*var playersNotReady = new List<string>();
+            var playersNotReady = new List<string>();
             foreach (var pair in UIPlayers)
-                if (!pair.Value.Info.Ready)
-                    playersNotReady.Add(pair.Key);
+                if (!pair.Value.Ready)
+                    playersNotReady.Add(pair.Value.Username);
 
             if (playersNotReady.Count > 0)
             {
@@ -157,16 +180,14 @@ namespace GodotModules
 
             if (Start)
             {
-                TimerCountdown = new System.Threading.Timer(TimerCountdownCallback, "state", 0, 1000);
-                BtnReady.Disabled = true;
+                await ENetClient.Send(ClientPacketOpcode.LobbyCountdownChange, new CPacketLobbyCountdownChange{ CountdownRunning = true });
+                StartGameCountdown();
             }
             else
             {
-                TimerCountdown.Dispose();
-                Countdown = 5;
-                Log("Game start was cancelled");
-                BtnReady.Disabled = false;
-            }*/
+                await ENetClient.Send(ClientPacketOpcode.LobbyCountdownChange, new CPacketLobbyCountdownChange{ CountdownRunning = false });
+                CancelGameCountdown();
+            }
         }
 
         private void TimerCountdownCallback(object state)
@@ -180,7 +201,11 @@ namespace GodotModules
             }
         }
 
-        public static void Log(string text) => ChatText.AddText(text);
+        public static void Log(string text) 
+        {
+            ChatText.AddText($"{text}\n");
+            ChatText.ScrollToLine(ChatText.GetLineCount() - 1);
+        }
 
         public static void Log(uint peerId, string text) 
         {
@@ -188,7 +213,7 @@ namespace GodotModules
                 return;
 
             var playerName = NetworkManager.GameClient.Players[peerId];
-            Log($"{playerName}: {text}\n");
+            Log($"{playerName}: {text}");
         }
 
         private async void _on_Chat_Input_text_entered(string text)
