@@ -48,9 +48,12 @@ namespace GodotModules.Netcode
             }
             catch (Exception e)
             {
-                UIDebugger.AddException(e);
-                if (LogExceptions)
-                    Utils.Log($"Failed to POST to http://{WEB_SERVER_IP}/api/{path} {e.Message}", ConsoleColor.Red);
+                if (LogExceptions) 
+                {
+                    var message = $"Failed to POST to http://{WEB_SERVER_IP}/api/{path} {e.Message}";
+                    UIDebugger.AddMessage(message);
+                    Utils.Log(message, ConsoleColor.Red);
+                }
                 return new WebServerResponse<string>
                 {
                     Status = WebServerStatus.ERROR,
@@ -74,9 +77,12 @@ namespace GodotModules.Netcode
             }
             catch (Exception e)
             {
-                UIDebugger.AddException(e);
-                if (LogExceptions)
-                    Utils.Log($"Failed to GET from http://{WEB_SERVER_IP}/api/{path} {e.Message}", ConsoleColor.Red);
+                if (LogExceptions) 
+                {
+                    var message = $"Failed to GET from http://{WEB_SERVER_IP}/api/{path} {e.Message}";
+                    UIDebugger.AddMessage(message);
+                    Utils.Log(message, ConsoleColor.Red);
+                }
                 return new WebServerResponse<T>
                 {
                     Status = WebServerStatus.ERROR,
