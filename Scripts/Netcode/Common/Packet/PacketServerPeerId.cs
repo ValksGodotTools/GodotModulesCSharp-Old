@@ -5,7 +5,7 @@ namespace GodotModules.Netcode
         public uint Id { get; set; }
 
         public virtual void Write(PacketWriter writer) => writer.Write((ushort)Id);
-        public virtual void Read(PacketReader reader) => reader.ReadUInt16();
+        public virtual void Read(PacketReader reader) => Id = reader.ReadUInt16();
         public abstract void Handle();
     }
 }
