@@ -58,19 +58,19 @@ private async void _on_Chat_Input_text_entered(string text)
 ```cs
 namespace GodotModules.Netcode 
 {
-    public class SPacketLobbyChatMessage : APacketServerPeerId
+    public class SPacketLobbyChatMessage : APacketServerPeerId // only extend from APacketServerPeerId if you're telling other clients about something that changed about a peer, otherwise extend from APacketServer
     {
         public string Message { get; set; }
 
         public override void Write(PacketWriter writer)
         {
-            base.Write(writer);
+            base.Write(writer); // write the peer id
             writer.Write((string)Message);
         }
 
         public override void Read(PacketReader reader)
         {
-            base.Read(reader);
+            base.Read(reader); // read the peer id
             Message = reader.ReadString();
         }
 
