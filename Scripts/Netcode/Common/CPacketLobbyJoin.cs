@@ -22,6 +22,11 @@ namespace GodotModules.Netcode
             // Check if data.Username is appropriate username
             // TODO
 
+            var isHost = false;
+
+            if (GameServer.Players.Count == 0)
+                isHost = true;
+
             // Keep track of joining player server side
             if (GameServer.Players.ContainsKey(peer.ID)) 
             {
@@ -31,12 +36,15 @@ namespace GodotModules.Netcode
 
             GameServer.Players.Add(peer.ID, new DataPlayer {
                 Username = Username,
-                Ready = false
+                Ready = false,
+                Host = isHost
             });
 
             // tell joining player their Id and tell them about other players in lobby
+            // also tell them if they are the host or not
             GameServer.Send(ServerPacketOpcode.LobbyInfo, new SPacketLobbyInfo {
                 Id = peer.ID,
+                IsHost = isHost,
                 Players = GameServer.GetOtherPlayers(peer.ID)
             }, peer);
 
