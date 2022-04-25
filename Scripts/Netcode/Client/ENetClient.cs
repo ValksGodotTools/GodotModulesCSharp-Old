@@ -81,7 +81,6 @@ namespace GodotModules.Netcode.Client
                             case ENetOpcode.ClientWantsToExitApp:
                             case ENetOpcode.ClientWantsToDisconnect:
                                 peer.Disconnect(0);
-                                CancelTokenSource.Cancel();
                                 break;
                         }
                     }
@@ -158,6 +157,7 @@ namespace GodotModules.Netcode.Client
 
         private void HandlePeerLeave(DisconnectOpcode opcode)
         {
+            System.Console.WriteLine("CODE REACHED THIS SPOT");
             SceneGameServers.ConnectingToLobby = false;
             SceneGameServers.Disconnected = true;
             Connected = 0;
@@ -220,8 +220,8 @@ namespace GodotModules.Netcode.Client
         /// </summary>
         public async static Task Stop()
         {
-            CancelTokenSource.Cancel();
-            //ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToDisconnect));
+            //CancelTokenSource.Cancel();
+            ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToDisconnect));
 
             while (!CancelTokenSource.IsCancellationRequested)
                 await Task.Delay(100);
