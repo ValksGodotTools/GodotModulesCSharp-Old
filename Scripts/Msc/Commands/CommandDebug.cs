@@ -21,6 +21,7 @@ namespace GodotModules
             if (players == null)
                 return;
 
+            Utils.Log("Players in Lobby: " + players.Count);
             foreach (var pair in players)
             {
                 var id = pair.Key;
@@ -30,7 +31,6 @@ namespace GodotModules
                 var username = player.Username;
                 var ready = player.Ready;
 
-                Utils.Log("Players in Lobby: " + players.Count);
                 Utils.Log($"{id} {username} {ready}");
             }
         }
