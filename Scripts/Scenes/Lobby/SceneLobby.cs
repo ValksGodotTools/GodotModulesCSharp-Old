@@ -120,6 +120,15 @@ namespace GodotModules
             });
         }
 
+        public static void SetReady(uint id, bool ready)
+        {
+            if (SceneManager.ActiveScene == "Lobby") 
+            {
+                var player = Instance.UIPlayers[id];
+                player.SetReady(ready);
+            }
+        }
+
         private void _on_Start_pressed()
         {
             // check if all players are ready
