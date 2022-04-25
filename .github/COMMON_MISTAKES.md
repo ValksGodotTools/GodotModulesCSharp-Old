@@ -20,6 +20,9 @@ public override void Read(PacketReader reader)
 }
 ```
 
+Also forgetting to extend from `PacketServerPeerId` if for example telling everyone else in the server about changes to a peer.
+And forgetting to write `base.Write(writer);` and `base.Read(reader);`
+
 ## Avoid static in netcode
 Static properties / fields should never be used unless you want something to be persistent even if the server / client gets destroyed but this is rarely the case. 
 
