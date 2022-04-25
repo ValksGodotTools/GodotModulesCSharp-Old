@@ -5,11 +5,13 @@ namespace GodotModules.Netcode
 {
     public class SPacketLobbyInfo : PacketServerPeerId
     {
+        public bool IsHost { get; set; }
         public Dictionary<uint, DataPlayer> Players { get; set; }
 
         public override void Write(PacketWriter writer)
         {
             base.Write(writer);
+            writer.Write(IsHost);
             writer.Write((ushort)Players.Count);
             foreach (var pair in Players)
             {
@@ -23,6 +25,7 @@ namespace GodotModules.Netcode
         public override void Read(PacketReader reader)
         {
             base.Read(reader);
+            IsHost = reader.ReadBool();
             var count = reader.ReadUInt16();
             Players = new Dictionary<uint, DataPlayer>();
             for (int i = 0; i < count; i++)
@@ -40,8 +43,8 @@ namespace GodotModules.Netcode
         public override void Handle()
         {
             ENetClient.PeerId = Id;
+            ENetClient.IsHost = IsHost;
             ENetClient.Log($"{GameManager.Options.OnlineUsername} joined lobby with id {Id} also other players in lobby are {Players.Print()}");
-
             SceneLobby.AddPlayer(Id, GameManager.Options.OnlineUsername);
 
             foreach (var pair in Players)
