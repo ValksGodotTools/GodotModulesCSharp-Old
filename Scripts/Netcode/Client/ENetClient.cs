@@ -86,8 +86,9 @@ namespace GodotModules.Netcode.Client
                     }
 
                     // Outgoing
-                    while (Outgoing.TryGetValue(OutgoingId--, out ClientPacket clientPacket))
+                    while (Outgoing.TryGetValue(OutgoingId, out ClientPacket clientPacket))
                     {
+                        OutgoingId--;
                         Log("Sent packet: " + (ClientPacketOpcode)clientPacket.Opcode);
                         byte channelID = 0; // The channel all networking traffic will be going through
                         var packet = default(Packet);
@@ -174,7 +175,6 @@ namespace GodotModules.Netcode.Client
         public static async Task Send(ClientPacketOpcode opcode, IPacket data = null)
         {
             OutgoingId++;
-
             var success = Outgoing.TryAdd(OutgoingId, new ClientPacket((byte)opcode, data));
 
             if (!success)
