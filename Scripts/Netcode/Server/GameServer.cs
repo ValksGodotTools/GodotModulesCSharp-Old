@@ -52,5 +52,39 @@ namespace GodotModules.Netcode.Server
 
         public static Peer[] GetOtherPlayerPeers(uint id) => Players.Keys.Where(x => x != id).Select(x => Peers[x]).ToArray();
         public static Peer[] GetAllPlayerPeers() => Players.Keys.Select(x => Peers[x]).ToArray();
+
+        public static void SendToAllPlayers(ServerPacketOpcode opcode, IPacket data = null)
+        {
+            var allPlayers = GetAllPlayerPeers();
+
+            if (data == null)
+                Send(opcode, allPlayers);
+            else
+                Send(opcode, data, allPlayers);
+        }
+
+        public static void SendToOtherPeers(uint id, ServerPacketOpcode opcode, IPacket data = null)
+        {
+            var otherPeers = GetOtherPeers(id);
+            if (otherPeers.Length == 0)
+                return;
+
+            if (data == null)
+                Send(opcode, otherPeers);
+            else
+                Send(opcode, data, otherPeers);
+        }
+
+        public static void SendToOtherPlayers(uint id, ServerPacketOpcode opcode, IPacket data = null)
+        {
+            var otherPlayers = GetOtherPlayerPeers(id);
+            if (otherPlayers.Length == 0)
+                return;
+
+            if (data == null)
+                Send(opcode, otherPlayers);
+            else
+                Send(opcode, data, otherPlayers);
+        }
     }
 }
