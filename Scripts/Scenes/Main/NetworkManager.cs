@@ -120,7 +120,7 @@ namespace GodotModules
 
         public static async Task WaitForHostToConnectToServer()
         {
-            while (!ENetServer.SomeoneConnected)
+            while (!ENetServer.IsSetup)
                 await Task.Delay(200);
         }
 

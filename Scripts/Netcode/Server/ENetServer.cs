@@ -23,9 +23,12 @@ namespace GodotModules.Netcode.Server
         private static readonly Dictionary<ClientPacketOpcode, IPacketClient> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, IPacketClient>("CPacket");
         public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
         private bool QueueRestart { get; set; }
+        private static long Setup = 0;
+        public static bool IsSetup { get => Interlocked.Read(ref Setup) == 1; } // thread safe
 
         public ENetServer()
         {
+            Setup = 0;
             Running = false;
             SomeoneConnected = false;
             ENetCmds = new ConcurrentQueue<ENetCmd>();
@@ -91,6 +94,9 @@ namespace GodotModules.Netcode.Server
                         foreach (var peer in packet.Peers)
                             Send(packet, peer);
                     }
+
+                    if (SomeoneConnected)
+                        Setup = 1;
 
                     while (!polled)
                     {
