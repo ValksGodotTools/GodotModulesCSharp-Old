@@ -195,14 +195,19 @@ namespace GodotModules
             }
         }
 
-        private void TimerCountdownCallback(object state)
+        private async void TimerCountdownCallback(object state)
         {
             Log($"Game starting in {CountdownGameStart--}");
 
             if (CountdownGameStart == 0)
             {
                 TimerCountdownGameStart.Dispose();
-                // load game scene
+
+                if (ENetClient.IsHost)
+                {
+                    // tell everyone game has started
+                    await GameClient.Send(ClientPacketOpcode.LobbyGameStart);
+                }
             }
         }
 
