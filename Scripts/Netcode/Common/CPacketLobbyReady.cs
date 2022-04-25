@@ -13,7 +13,7 @@ namespace GodotModules.Netcode
 
         public void Read(PacketReader reader)
         {
-            reader.ReadBool();
+            Ready = reader.ReadBool();
         }
 
         public void Handle(ENet.Peer peer)
