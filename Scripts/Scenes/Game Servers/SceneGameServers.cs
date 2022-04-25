@@ -4,6 +4,7 @@ using GodotModules.Netcode.Client;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace GodotModules
 {
@@ -61,8 +62,10 @@ namespace GodotModules
 
         public override void _Input(InputEvent @event)
         {
-            Utils.EscapeToScene("Menu", () => {
+            Utils.EscapeToScene("Menu", () =>
+            {
                 NetworkManager.WebClient.Client.CancelPendingRequests();
+                NetworkManager.CancelClientConnectingTokenSource();
             });
         }
 
@@ -75,9 +78,13 @@ namespace GodotModules
 
             GD.Print("Connecting to lobby...");
             NetworkManager.StartClient(ip, port);
-            await NetworkManager.ClientSetup();
-            await ENetClient.Send(ClientPacketOpcode.LobbyJoin, new CPacketLobbyJoin {
-                Username = GameManager.Options.OnlineUsername
+
+            await NetworkManager.WaitForClientToConnect(3000, async () =>
+            {
+                await ENetClient.Send(ClientPacketOpcode.LobbyJoin, new CPacketLobbyJoin
+                {
+                    Username = GameManager.Options.OnlineUsername
+                });
             });
         }
 

@@ -6,17 +6,19 @@ using GodotModules.Settings;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace GodotModules 
+namespace GodotModules
 {
-    public class NetworkManager : Node 
+    public class NetworkManager : Node
     {
         public static ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
         public static GameServer GameServer { get; set; }
         public static GameClient GameClient { get; set; }
         public static WebClient WebClient { get; set; }
         public static NetworkManager Instance { get; set; }
+        private static CancellationTokenSource ClientConnectingTokenSource { get; set; }
 
         public override void _Ready()
         {
@@ -49,7 +51,7 @@ namespace GodotModules
                     case GodotOpcode.LogMessageClient:
                         Utils.Log($"[Client]: {cmd.Data}", ENetClient.LogsColor);
                         break;
-                        
+
                     case GodotOpcode.Error:
                         var e = (Exception)cmd.Data;
                         UIDebugger.AddException(e);
@@ -79,7 +81,7 @@ namespace GodotModules
                     await GameClient.Stop();
                 }
 
-                if (ENetServer.Running) 
+                if (ENetServer.Running)
                 {
                     GameServer.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToExitApp));
                     await GameServer.Stop();
@@ -97,6 +99,9 @@ namespace GodotModules
             UtilOptions.SaveOptions();
             WebClient.Client.Dispose();
             ErrorNotifier.Dispose();
+
+            if (ClientConnectingTokenSource != null)
+                ClientConnectingTokenSource.Dispose();
 
             if (ENetClient.CancelTokenSource != null)
                 ENetClient.CancelTokenSource.Dispose();
@@ -124,14 +129,34 @@ namespace GodotModules
                 await Task.Delay(200);
         }
 
-        public static async Task ClientSetup()
+        public static async Task WaitForClientToConnect(int timeoutMs, Action onClientConnected)
         {
-            while (!ENetClient.IsConnected) 
+            ClientConnectingTokenSource = new CancellationTokenSource();
+            ClientConnectingTokenSource.CancelAfter(timeoutMs);
+            await Task.Run(async () =>
             {
-                GD.Print("client is NOT setup yet");
-                await Task.Delay(100);
-            }
-            GD.Print("client is setup now");
+                while (!ENetClient.IsConnected)
+                {
+                    if (ClientConnectingTokenSource.IsCancellationRequested)
+                        break;
+
+                    await Task.Delay(100);
+                }
+            }, ClientConnectingTokenSource.Token).ContinueWith((task) =>
+            {
+                if (!ClientConnectingTokenSource.IsCancellationRequested)
+                    onClientConnected();
+            });
+        }
+
+        public static void CancelClientConnectingTokenSource()
+        {
+            if (ClientConnectingTokenSource == null)
+                return;
+            
+            SceneGameServers.ConnectingToLobby = false;
+            ClientConnectingTokenSource.Cancel();
+            GameClient.CancelTask();
         }
     }
 }
