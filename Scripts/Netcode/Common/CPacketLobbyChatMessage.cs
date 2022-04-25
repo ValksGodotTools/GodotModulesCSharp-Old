@@ -1,5 +1,3 @@
-using System;
-using ENet;
 using GodotModules.Netcode.Server;
 
 namespace GodotModules.Netcode 
@@ -18,7 +16,7 @@ namespace GodotModules.Netcode
             Message = reader.ReadString();
         }
 
-        public override void Handle(Peer peer)
+        public override void Handle(ENet.Peer peer)
         {
             GameServer.SendToAllPlayers(ServerPacketOpcode.LobbyChatMessage, new SPacketLobbyChatMessage {
                 Id = peer.ID,
