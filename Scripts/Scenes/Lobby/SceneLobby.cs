@@ -70,6 +70,14 @@ namespace GodotModules
             });
         }
 
+        public static Dictionary<uint, UILobbyPlayerListing> GetPlayers()
+        {
+            if (SceneManager.ActiveScene != "Lobby")
+                return null;
+
+            return Instance.UIPlayers;
+        }
+
         public static void AddPlayer(uint id, string name) 
         {
             if (NetworkManager.GameClient.Players.ContainsKey(id))
