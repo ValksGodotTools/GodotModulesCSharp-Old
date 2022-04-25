@@ -18,7 +18,7 @@ namespace GodotModules.Netcode
 
         public override void Handle()
         {
-            
+            Godot.GD.Print("Player " + Id + " is " + Ready);
         }
     }
 }

@@ -107,12 +107,16 @@ namespace GodotModules
             ListPlayers.AddChild(player);
         }
 
-        private void _on_Ready_pressed()
+        private async void _on_Ready_pressed()
         {
             var player = UIPlayers[ENetClient.PeerId];
             player.SetReady(!player.Ready);
 
             BtnReady.Text = player.Ready ? "Ready" : "Not Ready";
+
+            await ENetClient.Send(ClientPacketOpcode.LobbyReady, new CPacketLobbyReady {
+                Ready = player.Ready
+            });
         }
 
         private void _on_Start_pressed()

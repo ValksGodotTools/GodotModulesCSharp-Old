@@ -21,7 +21,10 @@ namespace GodotModules.Netcode
             var player = GameServer.Players[peer.ID];
             player.Ready = Ready;
 
-            // TODO: Tell all other players about ready status
+            GameServer.Send(ServerPacketOpcode.LobbyReady, new SPacketLobbyReady {
+                Id = peer.ID,
+                Ready = Ready
+            }, GameServer.GetOtherPlayerPeers(peer.ID));
         }
     }
 }

@@ -50,6 +50,7 @@ margin_bottom = 41.0
 rect_min_size = Vector2( 200, 0 )
 size_flags_horizontal = 4
 size_flags_vertical = 0
+text = "127.0.0.1:7777"
 placeholder_text = "Enter IP to connect to"
 
 [node name="MarginContainer2" type="MarginContainer" parent="PanelContainer/VBoxContainer"]

@@ -50,6 +50,7 @@ namespace GodotModules.Netcode.Server
             return otherPlayers;
         }
 
+        public static Peer[] GetOtherPlayerPeers(uint id) => Players.Keys.Where(x => x != id).Select(x => Peers[x]).ToArray();
         public static Peer[] GetAllPlayerPeers() => Players.Keys.Select(x => Peers[x]).ToArray();
     }
 }
