@@ -178,7 +178,7 @@ namespace GodotModules.Netcode.Client
             var success = Outgoing.TryAdd(OutgoingId, new ClientPacket((byte)opcode, data));
 
             if (!success)
-                System.Console.WriteLine("FAILED TO ADD OUTGOING KEY");
+                System.Console.WriteLine("Client: FAILED TO ADD OUTGOING KEY");
 
             while (Outgoing.ContainsKey(OutgoingId))
                 await Task.Delay(100);
