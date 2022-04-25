@@ -62,6 +62,7 @@ namespace GodotModules
                         break;
 
                     case GodotOpcode.ChangeScene:
+                        GD.Print("CHANGING SCENE TO " + cmd.Data);
                         SceneManager.ChangeScene($"{cmd.Data}");
                         break;
                 }
@@ -120,14 +121,18 @@ namespace GodotModules
 
         public static async Task WaitForHostToConnectToServer()
         {
-            while (!ENetServer.IsSetup)
+            while (!ENetServer.IsSetup())
                 await Task.Delay(200);
         }
 
         public static async Task ClientSetup()
         {
-            while (!ENetClient.IsSetup)
+            while (!ENetClient.IsSetup()) 
+            {
+                GD.Print("client is NOT setup yet");
                 await Task.Delay(100);
+            }
+            GD.Print("client is setup now");
         }
     }
 }
