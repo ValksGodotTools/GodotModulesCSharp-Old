@@ -62,7 +62,6 @@ namespace GodotModules
                         break;
 
                     case GodotOpcode.ChangeScene:
-                        GD.Print("CHANGING SCENE TO " + cmd.Data);
                         SceneManager.ChangeScene($"{cmd.Data}");
                         break;
                 }

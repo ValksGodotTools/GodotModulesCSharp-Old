@@ -157,12 +157,10 @@ namespace GodotModules.Netcode.Client
 
         private void HandlePeerLeave(DisconnectOpcode opcode)
         {
-            System.Console.WriteLine("CODE REACHED THIS SPOT");
             SceneGameServers.ConnectingToLobby = false;
             SceneGameServers.Disconnected = true;
             Connected = 0;
             DisconnectOpcode = (DisconnectOpcode)opcode;
-            System.Console.WriteLine("CLIENT THREAD: CHANGING SCENE TO GAMESERVERS");
             NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.ChangeScene, "GameServers"));
             CancelTokenSource.Cancel();
         }
