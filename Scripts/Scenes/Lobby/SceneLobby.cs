@@ -33,7 +33,6 @@ namespace GodotModules
         private Button BtnReady { get; set; }
         private Button BtnStart { get; set; }
 
-        public bool Ready { get; set; }
         public bool Start { get; set; }
 
         private System.Threading.Timer TimerCountdownGameStart { get; set; }
@@ -57,6 +56,9 @@ namespace GodotModules
             //var info = UIGameServers.Instance.CurrentLobby;
             //LobbyName.Text = info.Name;
             //LobbyMaxPlayers.Text = "" + info.MaxPlayerCount;
+
+            if (!ENetClient.IsHost)
+                Instance.BtnStart.Disabled = true;
 
             foreach (var player in NetworkManager.GameClient.Players)
                 UIAddPlayer(player.Key, player.Value);
@@ -162,6 +164,9 @@ namespace GodotModules
 
         private async void _on_Start_pressed()
         {
+            if (!ENetClient.IsHost)
+                return;
+
             // check if all players are ready
             var playersNotReady = new List<string>();
             foreach (var pair in UIPlayers)
