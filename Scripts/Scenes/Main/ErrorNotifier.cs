@@ -17,6 +17,8 @@ namespace GodotModules
             TimerErrorNotifier.Enabled = true;
         }
 
+        public static void Dispose() => TimerErrorNotifier.Dispose();
+
         private static void SpawnErrorNotification(System.Object source, ElapsedEventArgs args)
         {
             if (ErrorCount == 0)

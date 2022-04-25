@@ -96,6 +96,7 @@ namespace GodotModules
         {
             UtilOptions.SaveOptions();
             WebClient.Client.Dispose();
+            ErrorNotifier.Dispose();
 
             if (ENetClient.CancelTokenSource != null)
                 ENetClient.CancelTokenSource.Dispose();
