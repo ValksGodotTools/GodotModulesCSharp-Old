@@ -22,6 +22,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 NodePathLogs = NodePath("VBoxContainer/TextEdit")
+NodePathConsole = NodePath("VBoxContainer/Console")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 margin_right = 1024.0
@@ -42,7 +43,9 @@ smooth_scrolling = true
 wrap_enabled = true
 minimap_draw = true
 
-[node name="LineEdit" type="LineEdit" parent="VBoxContainer"]
+[node name="Console" type="LineEdit" parent="VBoxContainer"]
 margin_top = 584.0
 margin_right = 1024.0
 margin_bottom = 600.0
+
+[connection signal="text_entered" from="VBoxContainer/Console" to="." method="_on_Console_text_entered"]
