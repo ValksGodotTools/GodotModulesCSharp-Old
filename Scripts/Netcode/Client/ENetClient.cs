@@ -178,7 +178,7 @@ namespace GodotModules.Netcode.Client
             var success = Outgoing.TryAdd(OutgoingId, new ClientPacket((byte)opcode, data));
 
             if (!success)
-                System.Console.WriteLine("Client: FAILED TO ADD OUTGOING KEY");
+                Log($"Failed to add {opcode} to Outgoing queue because of duplicate key"); // this should never go off, however it's better to be safe then not safe at all
 
             while (Outgoing.ContainsKey(OutgoingId))
                 await Task.Delay(100);
