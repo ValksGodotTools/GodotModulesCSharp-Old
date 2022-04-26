@@ -9,7 +9,13 @@ namespace GodotModules
 {
     public static class Extensions 
     {
-        public static string Print<T>(this IEnumerable<T> value, bool newLine = true) => string.Join(newLine ? "\n" : ", ", value);
+        public static string Print<T>(this IEnumerable<T> value, bool newLine = true) 
+        {
+            if (value != null)
+                return string.Join(newLine ? "\n" : ", ", value);
+            else
+                return null;
+        }
         public static string AddSpaceBeforeEachCapital(this string value) => string.Concat(value.Select(x => char.IsUpper(x) ? " " + x : x.ToString())).TrimStart(' ');
         public static string ToTitleCase(this string value) => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value.ToLower());
         public static bool IsMatch(this string value, string expression) => Regex.IsMatch(value, expression);
