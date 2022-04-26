@@ -28,10 +28,13 @@ namespace Game
                 TimerNotifyServerClientPosition.AutoReset = true;
                 TimerNotifyServerClientPosition.Enabled = true;
 
-                TimerNotifyServerProcessDelta = new Timer(3000);
-                TimerNotifyServerProcessDelta.Elapsed += TimerNotifyServerProcessDeltaCallback;
-                TimerNotifyServerProcessDelta.AutoReset = true;
-                TimerNotifyServerProcessDelta.Enabled = true;
+                if (GameClient.IsHost)
+                {
+                    TimerNotifyServerProcessDelta = new Timer(3000);
+                    TimerNotifyServerProcessDelta.Elapsed += TimerNotifyServerProcessDeltaCallback;
+                    TimerNotifyServerProcessDelta.AutoReset = true;
+                    TimerNotifyServerProcessDelta.Enabled = true;
+                }
             }
         }
 
