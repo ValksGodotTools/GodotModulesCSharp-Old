@@ -8,7 +8,6 @@
 font_data = ExtResource( 1 )
 
 [node name="Player" type="Sprite"]
-position = Vector2( 475, 280 )
 texture = ExtResource( 3 )
 script = ExtResource( 2 )
 NodePathLabelUsername = NodePath("Username")
@@ -27,3 +26,6 @@ align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
