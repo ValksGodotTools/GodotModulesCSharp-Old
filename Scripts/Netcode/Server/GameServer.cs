@@ -32,7 +32,7 @@ namespace GodotModules.Netcode.Server
         {
             SendToAllPlayers(ServerPacketOpcode.PlayerPositions, new SPacketPlayerPositions {
                 PlayerPositions = Players.ToDictionary(x => x.Key, x => x.Value.Position)
-            });
+            }, PacketFlags.Reliable);
         }
 
         public void TimerGameLoopCallback(System.Object source, ElapsedEventArgs args) 
@@ -52,7 +52,9 @@ namespace GodotModules.Netcode.Server
                 if (player.PressedDown)
                     dir.y = 1;
 
-                player.Position += dir * 250 * Delta;
+                var delta = 0.016667f;
+
+                player.Position += dir * 250 * delta;
             }
         }
 
@@ -93,38 +95,38 @@ namespace GodotModules.Netcode.Server
         public static Peer[] GetOtherPlayerPeers(uint id) => Players.Keys.Where(x => x != id).Select(x => Peers[x]).ToArray();
         public static Peer[] GetAllPlayerPeers() => Players.Keys.Select(x => Peers[x]).ToArray();
 
-        public static void SendToAllPlayers(ServerPacketOpcode opcode, APacket data = null)
+        public static void SendToAllPlayers(ServerPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
         {
             var allPlayers = GetAllPlayerPeers();
 
             if (data == null)
-                Send(opcode, allPlayers);
+                Send(opcode, flags, allPlayers);
             else
-                Send(opcode, data, allPlayers);
+                Send(opcode, data, flags, allPlayers);
         }
 
-        public static void SendToOtherPeers(uint id, ServerPacketOpcode opcode, APacket data = null)
+        public static void SendToOtherPeers(uint id, ServerPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
         {
             var otherPeers = GetOtherPeers(id);
             if (otherPeers.Length == 0)
                 return;
 
             if (data == null)
-                Send(opcode, otherPeers);
+                Send(opcode, flags, otherPeers);
             else
-                Send(opcode, data, otherPeers);
+                Send(opcode, data, flags, otherPeers);
         }
 
-        public static void SendToOtherPlayers(uint id, ServerPacketOpcode opcode, APacket data = null)
+        public static void SendToOtherPlayers(uint id, ServerPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
         {
             var otherPlayers = GetOtherPlayerPeers(id);
             if (otherPlayers.Length == 0)
                 return;
 
             if (data == null)
-                Send(opcode, otherPlayers);
+                Send(opcode, flags, otherPlayers);
             else
-                Send(opcode, data, otherPlayers);
+                Send(opcode, data, flags, otherPlayers);
         }
 
         public static void UpdatePressed(uint id, Direction dir, bool pressed)

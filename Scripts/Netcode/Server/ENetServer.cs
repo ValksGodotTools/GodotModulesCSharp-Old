@@ -236,8 +236,10 @@ namespace GodotModules.Netcode.Server
             return otherPeers.Values.ToArray();
         }
 
-        public static void Send(ServerPacketOpcode opcode, params Peer[] peers) => Send(opcode, null, peers);
-        public static void Send(ServerPacketOpcode opcode, APacket data, params Peer[] peers) => Outgoing.Enqueue(new ServerPacket((byte)opcode, data, peers));
+        public static void Send(ServerPacketOpcode opcode, params Peer[] peers) => Send(opcode, null, PacketFlags.Reliable, peers);
+        public static void Send(ServerPacketOpcode opcode, APacket data, params Peer[] peers) => Send(opcode, data, PacketFlags.Reliable, peers);
+        public static void Send(ServerPacketOpcode opcode, PacketFlags flags = PacketFlags.Reliable, params Peer[] peers) => Send(opcode, null, flags, peers);
+        public static void Send(ServerPacketOpcode opcode, APacket data, PacketFlags flags = PacketFlags.Reliable, params Peer[] peers) => Outgoing.Enqueue(new ServerPacket((byte)opcode, flags, data, peers));
 
         /// <summary>
         /// Provides a way to log a message on the Godot thread from the ENet thread
