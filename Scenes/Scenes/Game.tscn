@@ -30,3 +30,53 @@ margin_top = 4.0
 margin_right = 71.0
 margin_bottom = 21.0
 text = "Health: 100"
+
+[node name="ColorRect" type="ColorRect" parent="."]
+margin_left = -220.0
+margin_top = -220.0
+margin_right = -180.0
+margin_bottom = -180.0
+color = Color( 1, 0.458824, 0.988235, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect2" type="ColorRect" parent="."]
+margin_left = 220.0
+margin_top = -220.0
+margin_right = 260.0
+margin_bottom = -180.0
+color = Color( 1, 0.329412, 0.329412, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect3" type="ColorRect" parent="."]
+margin_left = 220.0
+margin_top = 220.0
+margin_right = 260.0
+margin_bottom = 260.0
+color = Color( 0.298039, 0.309804, 1, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect4" type="ColorRect" parent="."]
+margin_left = -220.0
+margin_top = 220.0
+margin_right = -180.0
+margin_bottom = 260.0
+color = Color( 0.313726, 1, 0.466667, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect5" type="ColorRect" parent="."]
+margin_left = -20.0
+margin_top = -20.0
+margin_right = 20.0
+margin_bottom = 20.0
+color = Color( 1, 0.780392, 0.360784, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
