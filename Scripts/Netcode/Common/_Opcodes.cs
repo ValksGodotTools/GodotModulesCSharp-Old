@@ -11,7 +11,8 @@
         LobbyGameStart,
         PlayerDirectionPressed,
         PlayerDirectionReleased,
-        PlayerPosition
+        PlayerPosition,
+        ProcessDelta
     }
 
     // Sent to Game Client
