@@ -37,6 +37,12 @@ namespace GodotModules
                         var packetReader = (PacketReader)cmd.Data;
                         var opcode = (ServerPacketOpcode)packetReader.ReadByte();
 
+                        if (!ENetClient.HandlePacket.ContainsKey(opcode))
+                        {
+                            Utils.Log($"Received malformed opcode: {opcode} (Ignoring)");
+                            break;
+                        }
+
                         var handlePacket = ENetClient.HandlePacket[opcode];
                         handlePacket.Read(packetReader);
                         handlePacket.Handle();
