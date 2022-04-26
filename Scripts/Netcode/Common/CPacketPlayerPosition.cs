@@ -10,8 +10,11 @@ namespace GodotModules.Netcode
 
         public override void Write(PacketWriter writer)
         {
-            writer.Write(Math.Round(Position.x, 1));
-            writer.Write(Math.Round(Position.y, 1));
+            var x = (float)Math.Round(Position.x, 1);
+            var y = (float)Math.Round(Position.y, 1);
+
+            writer.Write(x);
+            writer.Write(y);
         }
 
         public override void Read(PacketReader reader)
