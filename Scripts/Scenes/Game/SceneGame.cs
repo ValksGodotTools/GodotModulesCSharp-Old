@@ -19,7 +19,7 @@ namespace Game
             Instance = this;
             LabelPlayerHealth = GetNode<Label>(NodePathLabelPlayerHealth);
             Player = Prefabs.ClientPlayer.Instance<ClientPlayer>();
-            Player.Position = OS.WindowSize / 2;
+            Player.Position = Vector2.Zero;
             AddChild(Player);
 
             // set game definitions
@@ -37,7 +37,7 @@ namespace Game
                         continue;
 
                     var otherPlayer = Prefabs.OtherPlayer.Instance<OtherPlayer>();
-                    otherPlayer.Position = OS.WindowSize / 2;
+                    otherPlayer.Position = Vector2.Zero;
                     AddChild(otherPlayer);
                     otherPlayer.SetUsername(pair.Value);
                 }
