@@ -21,9 +21,7 @@ namespace Game
             LabelPlayerHealth = GetNode<Label>(NodePathLabelPlayerHealth);
             Player = Prefabs.ClientPlayer.Instance<ClientPlayer>();
             Player.Position = OS.WindowSize / 2;
-            Player.Name = "Player";
             AddChild(Player);
-            Player.SetUsername(GameManager.Options.OnlineUsername);
 
             // set game definitions
             ModLoader.Script.Globals["Player", "setHealth"] = (Action<int>)SceneGame.Player.SetHealth;
@@ -32,6 +30,8 @@ namespace Game
 
             if (GameClient.Running)
             {
+                Player.SetUsername(GameManager.Options.OnlineUsername);
+
                 foreach (var pair in GameClient.Players)
                 {
                     if (pair.Key == GameClient.PeerId)
