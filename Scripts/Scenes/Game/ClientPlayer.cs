@@ -18,15 +18,20 @@ namespace Game
         {
             base._Ready();
             SetHealth(100);
-            TimerNotifyServerClientPosition = new Timer(2000);
-            TimerNotifyServerClientPosition.Elapsed += TimerNotifyServerClientPositionCallback;
-            TimerNotifyServerClientPosition.AutoReset = true;
-            TimerNotifyServerClientPosition.Enabled = true;
+
+            if (GameClient.Running)
+            {
+                TimerNotifyServerClientPosition = new Timer(2000);
+                TimerNotifyServerClientPosition.Elapsed += TimerNotifyServerClientPositionCallback;
+                TimerNotifyServerClientPosition.AutoReset = true;
+                TimerNotifyServerClientPosition.Enabled = true;
+            }
         }
 
         public async void TimerNotifyServerClientPositionCallback(System.Object source, ElapsedEventArgs args)
         {
-            await GameClient.Send(ClientPacketOpcode.PlayerPosition, new CPacketPlayerPosition {
+            await GameClient.Send(ClientPacketOpcode.PlayerPosition, new CPacketPlayerPosition
+            {
                 Position = Position
             });
         }
@@ -83,19 +88,23 @@ namespace Game
 
             // RELEASED
             if (Input.IsActionJustReleased("ui_left"))
-                await GameClient.Send(ClientPacketOpcode.PlayerDirectionReleased, new CPacketPlayerDirectionReleased{
+                await GameClient.Send(ClientPacketOpcode.PlayerDirectionReleased, new CPacketPlayerDirectionReleased
+                {
                     Direction = Direction.West
                 });
             if (Input.IsActionJustReleased("ui_right"))
-                await GameClient.Send(ClientPacketOpcode.PlayerDirectionReleased, new CPacketPlayerDirectionReleased{
+                await GameClient.Send(ClientPacketOpcode.PlayerDirectionReleased, new CPacketPlayerDirectionReleased
+                {
                     Direction = Direction.East
                 });
             if (Input.IsActionJustReleased("ui_up"))
-                await GameClient.Send(ClientPacketOpcode.PlayerDirectionReleased, new CPacketPlayerDirectionReleased{
+                await GameClient.Send(ClientPacketOpcode.PlayerDirectionReleased, new CPacketPlayerDirectionReleased
+                {
                     Direction = Direction.North
                 });
             if (Input.IsActionJustReleased("ui_down"))
-                await GameClient.Send(ClientPacketOpcode.PlayerDirectionReleased, new CPacketPlayerDirectionReleased{
+                await GameClient.Send(ClientPacketOpcode.PlayerDirectionReleased, new CPacketPlayerDirectionReleased
+                {
                     Direction = Direction.South
                 });
         }
