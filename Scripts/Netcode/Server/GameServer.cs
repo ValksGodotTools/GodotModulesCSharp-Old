@@ -1,19 +1,47 @@
+using Timer = System.Timers.Timer;
+
+using Godot;
 using GodotModules.Netcode;
 using ENet;
 using System.Collections.Generic;
 using System.Linq;
+using System.Timers;
 
 namespace GodotModules.Netcode.Server
 {
-    // All game specific logic will be put in here
     public class GameServer : ENetServer
     {
-        // marking Players as static is okay as long as it is created a new in _Ready() (same goes for any other statics)
-        public static Dictionary<uint, DataPlayer> Players { get; set; } // the players in a lobby
+        public static Dictionary<uint, DataPlayer> Players { get; set; }
+        public static Timer TimerGameLoop { get; set; }
+        public static float Delta { get; set; }
 
         public GameServer()
         {
             Players = new Dictionary<uint, DataPlayer>();
+            TimerGameLoop = new Timer(100);
+            TimerGameLoop.Elapsed += TimerGameLoopCallback;
+            TimerGameLoop.AutoReset = true;
+        }
+
+        public void TimerGameLoopCallback(System.Object source, ElapsedEventArgs args) 
+        {
+            foreach (var pair in Players)
+            {
+                var player = pair.Value;
+
+                var dir = new Vector2();
+
+                if (player.PressedLeft)
+                    dir.x = -1;
+                if (player.PressedRight)
+                    dir.x = 1;
+                if (player.PressedUp)
+                    dir.y = -1;
+                if (player.PressedDown)
+                    dir.y = 1;
+
+                player.Position += dir * 250 * Delta;
+            }
         }
 
         protected override void Connect(Event netEvent)
@@ -85,6 +113,32 @@ namespace GodotModules.Netcode.Server
                 Send(opcode, otherPlayers);
             else
                 Send(opcode, data, otherPlayers);
+        }
+
+        public static void UpdatePressed(uint id, Direction dir, bool pressed)
+        {
+            var player = Players[id];
+            switch (dir) 
+            {
+                case Direction.West:
+                    player.PressedLeft = pressed;
+                    break;
+                case Direction.East:
+                    player.PressedRight = pressed;
+                    break;
+                case Direction.North:
+                    player.PressedUp = pressed;
+                    break;
+                case Direction.South:
+                    player.PressedDown = pressed;
+                    break;
+            }
+        }
+
+        public static void CheckPosition(uint id, Vector2 position)
+        {
+            var player = Players[id];
+            Log("Distance: " + position.DistanceSquaredTo(player.Position));
         }
     }
 }
