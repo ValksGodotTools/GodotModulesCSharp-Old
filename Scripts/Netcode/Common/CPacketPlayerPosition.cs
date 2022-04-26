@@ -1,5 +1,6 @@
 using Godot;
 using GodotModules.Netcode.Server;
+using System;
 
 namespace GodotModules.Netcode 
 {
@@ -9,8 +10,8 @@ namespace GodotModules.Netcode
 
         public override void Write(PacketWriter writer)
         {
-            writer.Write(Position.x);
-            writer.Write(Position.y);
+            writer.Write(Math.Round(Position.x, 1));
+            writer.Write(Math.Round(Position.y, 1));
         }
 
         public override void Read(PacketReader reader)
