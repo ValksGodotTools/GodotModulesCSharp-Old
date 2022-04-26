@@ -1,8 +1,10 @@
+using ENet;
+
 namespace GodotModules.Netcode
 {
     public class ClientPacket : GamePacket
     {
-        public ClientPacket(byte opcode, APacket writable = null)
+        public ClientPacket(byte opcode, PacketFlags flags, APacket writable = null)
         {
             using (var writer = new PacketWriter())
             {
@@ -14,6 +16,7 @@ namespace GodotModules.Netcode
                 Size = stream.Length;
             }
 
+            PacketFlags = flags;
             Opcode = opcode;
         }
     }
