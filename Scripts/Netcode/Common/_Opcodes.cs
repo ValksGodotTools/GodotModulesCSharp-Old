@@ -24,7 +24,8 @@
         LobbyChatMessage,
         LobbyReady,
         LobbyCountdownChange,
-        LobbyGameStart
+        LobbyGameStart,
+        PlayerPositions
     }
 
     public enum DisconnectOpcode
