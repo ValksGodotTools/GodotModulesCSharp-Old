@@ -58,7 +58,14 @@ namespace Game
             foreach (var pair in playerPositions) 
             {
                 var player = Instance.Players[pair.Key];
-                player.Position = pair.Value;
+
+                if (pair.Key == GameClient.PeerId)
+                {
+                    if (player.Position.DistanceSquaredTo(pair.Value) > 250)
+                        player.Position = pair.Value;
+                }
+                else
+                    player.Position = pair.Value;
             }
         }
 
