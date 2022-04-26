@@ -11,6 +11,7 @@ font_data = ExtResource( 1 )
 texture = ExtResource( 3 )
 script = ExtResource( 2 )
 NodePathLabelUsername = NodePath("Username")
+NodePathLabelPosition = NodePath("Position")
 
 [node name="Username" type="Label" parent="."]
 anchor_left = 0.5
@@ -29,3 +30,20 @@ __meta__ = {
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
+
+[node name="Position" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -43.0
+margin_top = -11.0
+margin_right = 11.0
+margin_bottom = 3.0
+grow_horizontal = 2
+rect_min_size = Vector2( 300, 0 )
+text = "x: 0, y: 0"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
