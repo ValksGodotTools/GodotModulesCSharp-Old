@@ -27,7 +27,7 @@ namespace GodotModules.Netcode
 
         public override void Handle(ENet.Peer peer)
         {
-            GameServer.Log("Client position: " + Position);
+            GameServer.CheckPosition(peer.ID, Position);
         }
     }
 }
