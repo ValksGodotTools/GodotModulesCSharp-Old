@@ -13,7 +13,6 @@ namespace GodotModules
 {
     public class SceneLobby : Node
     {
-        private static PackedScene PrefabLobbyPlayerListing = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/LobbyPlayerListing.tscn");
         public static LobbyListing CurrentLobby { get; set; }
         private static SceneLobby Instance { get; set; }
         
@@ -112,7 +111,7 @@ namespace GodotModules
 
         public void UIAddPlayer(uint id, string name)
         {
-            var player = PrefabLobbyPlayerListing.Instance<UILobbyPlayerListing>();
+            var player = Prefabs.LobbyPlayerListing.Instance<UILobbyPlayerListing>();
             UIPlayers.Add(id, player);
             
             ListPlayers.AddChild(player);

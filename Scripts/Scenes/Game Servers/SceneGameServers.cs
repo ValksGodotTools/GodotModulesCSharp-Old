@@ -10,7 +10,6 @@ namespace GodotModules
 {
     public class SceneGameServers : Control
     {
-        private static PackedScene PrefabLobbyListing = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/LobbyListing.tscn");
         public static Dictionary<string, LobbyListing> LobbyListings { get; set; }
         public static SceneGameServers Instance { get; set; }
         public static UILobbyListing SelectedLobbyInstance { get; set; }
@@ -90,7 +89,7 @@ namespace GodotModules
 
         public void AddServer(LobbyListing info)
         {
-            var lobby = PrefabLobbyListing.Instance<UILobbyListing>();
+            var lobby = Prefabs.LobbyListing.Instance<UILobbyListing>();
             ServerList.AddChild(lobby);
             lobby.SetInfo(info);
         }

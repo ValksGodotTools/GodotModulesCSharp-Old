@@ -5,8 +5,6 @@ namespace GodotModules.ModLoader
 {
     public class UIModLoader : Control
     {
-        private static PackedScene PrefabModInfo = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/ModInfo.tscn");
-
         public static UIModLoader Instance { get; set; }
         
         [Export] public readonly NodePath NodePathModList;
@@ -103,7 +101,7 @@ namespace GodotModules.ModLoader
 
         private UIModInfo CreateModInfoInstance(string modName)
         {
-            var instance = PrefabModInfo.Instance<UIModInfo>();
+            var instance = Prefabs.ModInfo.Instance<UIModInfo>();
             instance.SetModName(modName);
 
             if (ModLoader.ModsEnabled.ContainsKey(modName))
