@@ -21,6 +21,7 @@ namespace GodotModules.Netcode
         public override void Handle(ENet.Peer peer)
         {
             GameServer.Delta = Delta;
+            GameServer.Log("Received delta: " + Delta);
         }
     }
 }
