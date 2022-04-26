@@ -18,7 +18,7 @@ namespace GodotModules.Netcode
 
         public override void Handle(ENet.Peer peer)
         {
-            GameServer.Log("Pressed: " + Direction);
+            GameServer.UpdatePressed(peer.ID, Direction, true);
         }
     }
 }
