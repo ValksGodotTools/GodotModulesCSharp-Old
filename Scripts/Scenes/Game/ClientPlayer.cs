@@ -1,6 +1,9 @@
+using Timer = System.Timers.Timer;
+
 using Godot;
 using GodotModules.Netcode;
 using GodotModules.Netcode.Client;
+using System.Timers;
 using System.Threading.Tasks;
 
 namespace Game
@@ -9,10 +12,23 @@ namespace Game
     {
         [Export] public float Speed = 250f;
 
+        private Timer TimerNotifyServerClientPosition { get; set; }
+
         public override void _Ready()
         {
             base._Ready();
             SetHealth(100);
+            TimerNotifyServerClientPosition = new Timer(2000);
+            TimerNotifyServerClientPosition.Elapsed += TimerNotifyServerClientPositionCallback;
+            TimerNotifyServerClientPosition.AutoReset = true;
+            TimerNotifyServerClientPosition.Enabled = true;
+        }
+
+        public async void TimerNotifyServerClientPositionCallback(System.Object source, ElapsedEventArgs args)
+        {
+            await GameClient.Send(ClientPacketOpcode.PlayerPosition, new CPacketPlayerPosition {
+                Position = Position
+            });
         }
 
         public override void _Process(float delta)

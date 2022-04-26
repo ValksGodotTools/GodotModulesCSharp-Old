@@ -10,7 +10,8 @@
         LobbyCountdownChange,
         LobbyGameStart,
         PlayerDirectionPressed,
-        PlayerDirectionReleased
+        PlayerDirectionReleased,
+        PlayerPosition
     }
 
     // Sent to Game Client

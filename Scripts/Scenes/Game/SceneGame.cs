@@ -14,7 +14,6 @@ namespace Game
         [Export] public readonly NodePath NodePathLabelPlayerHealth;
         public Label LabelPlayerHealth;
 
-
         public override void _Ready()
         {
             Instance = this;
