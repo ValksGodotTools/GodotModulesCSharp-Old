@@ -18,7 +18,7 @@ namespace GodotModules.Netcode.Server
         public GameServer()
         {
             Players = new Dictionary<uint, DataPlayer>();
-            TimerGameLoop = new Timer(100);
+            TimerGameLoop = new Timer(16.67);
             TimerGameLoop.Elapsed += TimerGameLoopCallback;
             TimerGameLoop.AutoReset = true;
         }
