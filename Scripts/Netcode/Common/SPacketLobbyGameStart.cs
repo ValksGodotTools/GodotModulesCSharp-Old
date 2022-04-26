@@ -7,8 +7,11 @@ namespace GodotModules.Netcode
     {
         public override void Handle()
         {
-            if (GameClient.IsHost)
+            if (GameClient.IsHost) 
+            {
                 GameServer.TimerGameLoop.Enabled = true;
+                GameServer.TimerNotifyClients.Enabled = true;
+            }
 
             SceneManager.ChangeScene("Game");
         }

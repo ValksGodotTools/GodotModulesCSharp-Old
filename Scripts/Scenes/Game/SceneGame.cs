@@ -3,6 +3,7 @@ using GodotModules;
 using GodotModules.ModLoader;
 using GodotModules.Netcode.Client;
 using System;
+using System.Collections.Generic;
 
 namespace Game
 {
@@ -14,12 +15,16 @@ namespace Game
         [Export] public readonly NodePath NodePathLabelPlayerHealth;
         public Label LabelPlayerHealth;
 
+        private Dictionary<uint, OtherPlayer> Players;
+
         public override void _Ready()
         {
+            Players = new Dictionary<uint, OtherPlayer>();
             Instance = this;
             LabelPlayerHealth = GetNode<Label>(NodePathLabelPlayerHealth);
             Player = Prefabs.ClientPlayer.Instance<ClientPlayer>();
             Player.Position = Vector2.Zero;
+            Players.Add(GameClient.PeerId, Player);
             AddChild(Player);
 
             // set game definitions
@@ -38,9 +43,22 @@ namespace Game
 
                     var otherPlayer = Prefabs.OtherPlayer.Instance<OtherPlayer>();
                     otherPlayer.Position = Vector2.Zero;
+                    Players.Add(pair.Key, otherPlayer);
                     AddChild(otherPlayer);
                     otherPlayer.SetUsername(pair.Value);
                 }
+            }
+        }
+
+        public static void UpdatePlayerPositions(Dictionary<uint, Vector2> playerPositions)
+        {
+            if (SceneManager.ActiveScene != "Game")
+                return;
+            
+            foreach (var pair in playerPositions) 
+            {
+                var player = Instance.Players[pair.Key];
+                player.Position = pair.Value;
             }
         }
 

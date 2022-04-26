@@ -13,6 +13,7 @@ namespace GodotModules.Netcode.Server
     {
         public static Dictionary<uint, DataPlayer> Players { get; set; }
         public static Timer TimerGameLoop { get; set; }
+        public static Timer TimerNotifyClients { get; set; }
         public static float Delta { get; set; }
 
         public GameServer()
@@ -21,6 +22,17 @@ namespace GodotModules.Netcode.Server
             TimerGameLoop = new Timer(16.67);
             TimerGameLoop.Elapsed += TimerGameLoopCallback;
             TimerGameLoop.AutoReset = true;
+
+            TimerNotifyClients = new Timer(1000);
+            TimerNotifyClients.Elapsed += TimerNotifyClientsCallback;
+            TimerNotifyClients.AutoReset = true;
+        }
+
+        public void TimerNotifyClientsCallback(System.Object source, ElapsedEventArgs args)
+        {
+            SendToAllPlayers(ServerPacketOpcode.PlayerPositions, new SPacketPlayerPositions {
+                PlayerPositions = Players.ToDictionary(x => x.Key, x => x.Value.Position)
+            });
         }
 
         public void TimerGameLoopCallback(System.Object source, ElapsedEventArgs args) 
