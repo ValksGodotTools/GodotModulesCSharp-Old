@@ -19,6 +19,8 @@ namespace Game
         private float Delta { get; set; }
         private Direction DirectionHorizontal { get; set; }
         private Direction DirectionVertical { get; set; }
+        private Direction PrevDirectionHorizontal { get; set; }
+        private Direction PrevDirectionVertical { get; set; }
 
         public override void _Ready()
         {
@@ -28,7 +30,7 @@ namespace Game
 
             if (GameClient.Running)
             {
-                NotifyServerPlayerDirection = new Timer(500);
+                NotifyServerPlayerDirection = new Timer(50);
                 NotifyServerPlayerDirection.Elapsed += NotifyServerPlayerDirectionCallback;
                 NotifyServerPlayerDirection.AutoReset = true;
                 NotifyServerPlayerDirection.Enabled = true;
@@ -37,10 +39,16 @@ namespace Game
 
         public async void NotifyServerPlayerDirectionCallback(System.Object source, ElapsedEventArgs args) 
         {
+            if (DirectionHorizontal == PrevDirectionHorizontal && DirectionVertical == PrevDirectionVertical)
+                return;
+
             await GameClient.Send(ClientPacketOpcode.PlayerDirectionPressed, new CPacketPlayerDirectionPressed {
                 DirectionHorizontal = DirectionHorizontal,
                 DirectionVertical = DirectionVertical
             });
+
+            PrevDirectionHorizontal = DirectionHorizontal;
+            PrevDirectionVertical = DirectionVertical;
         }
 
         public override void _PhysicsProcess(float delta)
