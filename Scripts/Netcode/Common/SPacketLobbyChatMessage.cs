@@ -18,6 +18,9 @@ namespace GodotModules.Netcode
 
         public override void Handle()
         {
+            if (!SceneManager.InLobby())
+                return;
+            
             SceneLobby.Log(Id, Message);
         }
     }

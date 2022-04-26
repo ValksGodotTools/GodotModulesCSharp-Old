@@ -7,6 +7,9 @@ namespace GodotModules.Netcode
     {
         public override void Handle()
         {
+            if (!SceneManager.InLobby())
+                return;
+
             if (GameClient.IsHost) 
             {
                 GameServer.TimerGameLoop.Enabled = true;

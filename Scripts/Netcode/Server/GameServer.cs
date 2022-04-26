@@ -12,6 +12,7 @@ namespace GodotModules.Netcode.Server
     public class GameServer : ENetServer
     {
         public static Dictionary<uint, DataPlayer> Players { get; set; }
+        public static Dictionary<uint, Vector2> LastSentPlayerPositions { get; set; }
         public static Timer TimerGameLoop { get; set; }
         public static Timer TimerNotifyClients { get; set; }
         public static float Delta { get; set; }
@@ -19,20 +20,26 @@ namespace GodotModules.Netcode.Server
         public GameServer()
         {
             Players = new Dictionary<uint, DataPlayer>();
+            LastSentPlayerPositions = new Dictionary<uint, Vector2>();
             TimerGameLoop = new Timer(16.67);
             TimerGameLoop.Elapsed += TimerGameLoopCallback;
             TimerGameLoop.AutoReset = true;
 
-            TimerNotifyClients = new Timer(1000);
+            TimerNotifyClients = new Timer(100);
             TimerNotifyClients.Elapsed += TimerNotifyClientsCallback;
             TimerNotifyClients.AutoReset = true;
         }
 
         public void TimerNotifyClientsCallback(System.Object source, ElapsedEventArgs args)
         {
+            var playerPositions = Players.ToDictionary(x => x.Key, x => x.Value.Position);
+            System.Console.WriteLine("DEBUG: " + playerPositions.Count);
+
             SendToAllPlayers(ServerPacketOpcode.PlayerPositions, new SPacketPlayerPositions {
-                PlayerPositions = Players.ToDictionary(x => x.Key, x => x.Value.Position)
+                PlayerPositions = playerPositions
             }, PacketFlags.Reliable);
+
+            LastSentPlayerPositions = playerPositions;
         }
 
         public void TimerGameLoopCallback(System.Object source, ElapsedEventArgs args) 

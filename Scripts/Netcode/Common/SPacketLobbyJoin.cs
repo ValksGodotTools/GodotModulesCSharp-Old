@@ -20,6 +20,9 @@ namespace GodotModules.Netcode
 
         public override void Handle()
         {
+            if (!SceneManager.InLobby())
+                return;
+
             SceneLobby.AddPlayer(Id, Username);
 
             ENetClient.Log($"Player with username {Username} id: {Id} joined the lobby");

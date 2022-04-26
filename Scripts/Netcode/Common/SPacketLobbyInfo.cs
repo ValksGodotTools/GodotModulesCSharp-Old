@@ -42,6 +42,9 @@ namespace GodotModules.Netcode
 
         public override void Handle()
         {
+            if (!SceneManager.InGameServers())
+                return;
+
             ENetClient.PeerId = Id;
             ENetClient.IsHost = IsHost;
             ENetClient.Log($"{GameManager.Options.OnlineUsername} joined lobby with id {Id} also other players in lobby are {Players.Print()}");

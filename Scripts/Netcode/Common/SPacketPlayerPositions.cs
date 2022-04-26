@@ -43,6 +43,9 @@ namespace GodotModules.Netcode
 
         public override void Handle()
         {
+            if (!SceneManager.InGame())
+                return;
+
             SceneGame.UpdatePlayerPositions(PlayerPositions);
         }
     }

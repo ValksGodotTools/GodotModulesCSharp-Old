@@ -20,6 +20,9 @@ namespace GodotModules.Netcode
 
         public override void Handle()
         {
+            if (!SceneManager.InLobby())
+                return;
+
             if (CountdownRunning)
                 SceneLobby.StartGameCountdown();
             else

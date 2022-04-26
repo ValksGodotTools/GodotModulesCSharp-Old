@@ -16,6 +16,9 @@ namespace GodotModules.Netcode
 
         public override void Handle()
         {
+            if (!SceneManager.InLobby())
+                return;
+                
             if (!GameClient.Players.ContainsKey(Id))
             {
                 ENetClient.Log($"Received LobbyLeave packet from server for id {Id}. Tried to remove from Players but does not exist in Players to begin with");
