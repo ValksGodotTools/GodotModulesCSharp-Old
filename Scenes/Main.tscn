@@ -23,5 +23,7 @@ script = ExtResource( 4 )
 [node name="SceneManager" type="Node" parent="."]
 script = ExtResource( 5 )
 
-[node name="Debugger" parent="." instance=ExtResource( 6 )]
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Debugger" parent="CanvasLayer" instance=ExtResource( 6 )]
 visible = false
