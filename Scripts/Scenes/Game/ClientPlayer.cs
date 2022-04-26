@@ -1,4 +1,7 @@
 using Godot;
+using GodotModules.Netcode;
+using GodotModules.Netcode.Client;
+using System.Threading.Tasks;
 
 namespace Game
 {
@@ -17,7 +20,7 @@ namespace Game
             HandleMovement(delta);
         }
 
-        private void HandleMovement(float delta)
+        private async void HandleMovement(float delta)
         {
             var dir = new Vector2();
 
@@ -31,6 +34,54 @@ namespace Game
                 dir.y += 1;
 
             Position += dir * Speed * delta;
+
+            await SendDirection();
+        }
+
+        private async Task SendDirection()
+        {
+            if (!GameClient.Running)
+                return;
+
+            // PRESSED
+            if (Input.IsActionJustPressed("ui_left"))
+                await GameClient.Send(ClientPacketOpcode.PlayerDirectionPressed, new CPacketPlayerDirectionPressed
+                {
+                    Direction = Direction.West
+                });
+            if (Input.IsActionJustPressed("ui_right"))
+                await GameClient.Send(ClientPacketOpcode.PlayerDirectionPressed, new CPacketPlayerDirectionPressed
+                {
+                    Direction = Direction.East
+                });
+            if (Input.IsActionJustPressed("ui_up"))
+                await GameClient.Send(ClientPacketOpcode.PlayerDirectionPressed, new CPacketPlayerDirectionPressed
+                {
+                    Direction = Direction.North
+                });
+            if (Input.IsActionJustPressed("ui_down"))
+                await GameClient.Send(ClientPacketOpcode.PlayerDirectionPressed, new CPacketPlayerDirectionPressed
+                {
+                    Direction = Direction.South
+                });
+
+            // RELEASED
+            if (Input.IsActionJustReleased("ui_left"))
+                await GameClient.Send(ClientPacketOpcode.PlayerDirectionReleased, new CPacketPlayerDirectionReleased{
+                    Direction = Direction.West
+                });
+            if (Input.IsActionJustReleased("ui_right"))
+                await GameClient.Send(ClientPacketOpcode.PlayerDirectionReleased, new CPacketPlayerDirectionReleased{
+                    Direction = Direction.East
+                });
+            if (Input.IsActionJustReleased("ui_up"))
+                await GameClient.Send(ClientPacketOpcode.PlayerDirectionReleased, new CPacketPlayerDirectionReleased{
+                    Direction = Direction.North
+                });
+            if (Input.IsActionJustReleased("ui_down"))
+                await GameClient.Send(ClientPacketOpcode.PlayerDirectionReleased, new CPacketPlayerDirectionReleased{
+                    Direction = Direction.South
+                });
         }
 
         public void SetHealth(int v)

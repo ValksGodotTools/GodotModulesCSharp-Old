@@ -8,7 +8,9 @@
         LobbyChatMessage,
         LobbyReady,
         LobbyCountdownChange,
-        LobbyGameStart
+        LobbyGameStart,
+        PlayerDirectionPressed,
+        PlayerDirectionReleased
     }
 
     // Sent to Game Client
@@ -32,6 +34,14 @@
         Stopping,
         Kicked,
         Banned
+    }
+
+    public enum Direction 
+    {
+        North,
+        South,
+        West,
+        East
     }
 
     public class GodotCmd
