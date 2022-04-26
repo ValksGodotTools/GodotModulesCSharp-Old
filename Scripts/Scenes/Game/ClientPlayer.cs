@@ -43,7 +43,7 @@ namespace Game
             });
         }
 
-        public override void _Process(float delta)
+        public override void _PhysicsProcess(float delta)
         {
             Delta = delta;
             LabelPosition.Text = $"X: {Mathf.RoundToInt(Position.x)} Y: {Mathf.RoundToInt(Position.y)}";
