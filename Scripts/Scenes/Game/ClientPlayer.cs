@@ -10,9 +10,11 @@ namespace Game
 {
     public class ClientPlayer : OtherPlayer
     {
-        [Export] public float Speed = 250f;
+        private float Speed = 250f;
 
         private Timer TimerNotifyServerClientPosition { get; set; }
+        private Timer TimerNotifyServerProcessDelta { get; set; }
+        private float Delta { get; set; }
 
         public override void _Ready()
         {
@@ -25,6 +27,11 @@ namespace Game
                 TimerNotifyServerClientPosition.Elapsed += TimerNotifyServerClientPositionCallback;
                 TimerNotifyServerClientPosition.AutoReset = true;
                 TimerNotifyServerClientPosition.Enabled = true;
+
+                TimerNotifyServerProcessDelta = new Timer(3000);
+                TimerNotifyServerProcessDelta.Elapsed += TimerNotifyServerProcessDeltaCallback;
+                TimerNotifyServerProcessDelta.AutoReset = true;
+                TimerNotifyServerProcessDelta.Enabled = true;
             }
         }
 
@@ -36,8 +43,17 @@ namespace Game
             });
         }
 
+        public async void TimerNotifyServerProcessDeltaCallback(System.Object source, ElapsedEventArgs args)
+        {
+            await GameClient.Send(ClientPacketOpcode.ProcessDelta, new CPacketProcessDelta
+            {
+                Delta = Delta
+            });
+        }
+
         public override void _Process(float delta)
         {
+            Delta = delta;
             HandleMovement(delta);
         }
 
