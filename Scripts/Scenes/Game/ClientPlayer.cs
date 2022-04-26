@@ -11,8 +11,6 @@ namespace Game
     public class ClientPlayer : OtherPlayer
     {
         private float Speed = 250f;
-
-        private Timer TimerNotifyServerClientPosition { get; set; }
         private Timer TimerNotifyServerProcessDelta { get; set; }
         private float Delta { get; set; }
 
@@ -23,11 +21,6 @@ namespace Game
 
             if (GameClient.Running)
             {
-                TimerNotifyServerClientPosition = new Timer(2000);
-                TimerNotifyServerClientPosition.Elapsed += TimerNotifyServerClientPositionCallback;
-                TimerNotifyServerClientPosition.AutoReset = true;
-                TimerNotifyServerClientPosition.Enabled = true;
-
                 if (GameClient.IsHost)
                 {
                     TimerNotifyServerProcessDelta = new Timer(3000);
@@ -36,14 +29,6 @@ namespace Game
                     TimerNotifyServerProcessDelta.Enabled = true;
                 }
             }
-        }
-
-        public async void TimerNotifyServerClientPositionCallback(System.Object source, ElapsedEventArgs args)
-        {
-            await GameClient.Send(ClientPacketOpcode.PlayerPosition, new CPacketPlayerPosition
-            {
-                Position = Position
-            });
         }
 
         public async void TimerNotifyServerProcessDeltaCallback(System.Object source, ElapsedEventArgs args)

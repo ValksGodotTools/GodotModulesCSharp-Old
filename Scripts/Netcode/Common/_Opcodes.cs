@@ -11,7 +11,6 @@
         LobbyGameStart,
         PlayerDirectionPressed,
         PlayerDirectionReleased,
-        PlayerPosition,
         ProcessDelta
     }
 
