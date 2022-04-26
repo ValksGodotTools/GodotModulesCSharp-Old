@@ -1,38 +1,25 @@
 using GodotModules.Netcode.Client;
+using GodotModules.Netcode.Server;
 using System.Collections.Generic;
+using System.Linq;
+using Game;
 
 namespace GodotModules 
 {
     public class CommandDebug : Command 
     {
-        public CommandDebug() => Aliases = new string[] { "d" };
+        public CommandDebug() => Aliases = new string[] { "x" };
 
         public override void Run(string[] args)
         {
-            var info = new string[] {
-                $"Username: {GameManager.Options.OnlineUsername}",
-                $"Id: {ENetClient.PeerId}"
-            };
-
-            Utils.Log(info.Print());
-
-            var players = SceneLobby.GetPlayers();
-
-            if (players == null)
+            if (args.Length == 0)
                 return;
 
-            Utils.Log("Players in Lobby: " + players.Count);
-            foreach (var pair in players)
-            {
-                var id = pair.Key;
-                
-                var player = pair.Value;
+            if (!int.TryParse(args[0], out int result))
+                return;
 
-                var username = player.Username;
-                var ready = player.Ready;
-
-                Utils.Log($"{id} {username} {ready}");
-            }
+            SceneGame.Test = result;
+            Utils.Log("updated test to " + result);
         }
     }
 }

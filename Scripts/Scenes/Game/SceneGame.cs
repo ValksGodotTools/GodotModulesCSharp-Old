@@ -51,6 +51,8 @@ namespace Game
             }
         }
 
+        public static int Test = 100;
+
         public static void UpdatePlayerPositions(Dictionary<uint, Vector2> playerPositions)
         {
             if (SceneManager.ActiveScene != "Game")
@@ -63,7 +65,7 @@ namespace Game
                 if (pair.Key == GameClient.PeerId)
                 {
                     GD.Print("CLIENT: " + player.Position);
-                    if (player.Position.DistanceSquaredTo(pair.Value) > 250)
+                    if (player.Position.DistanceTo(pair.Value) > Test)
                         player.Position = pair.Value;
                 }
                 else
