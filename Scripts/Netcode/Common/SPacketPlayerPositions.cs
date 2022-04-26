@@ -37,7 +37,7 @@ namespace GodotModules.Netcode
                 var x = reader.ReadFloat();
                 var y = reader.ReadFloat();
 
-                PlayerPositions.Add(id, new Vector2(x, y));
+                PlayerPositions[id] = new Vector2(x, y);
             }
         }
 
