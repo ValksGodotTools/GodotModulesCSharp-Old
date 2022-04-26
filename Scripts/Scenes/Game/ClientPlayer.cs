@@ -1,5 +1,6 @@
 using Timer = System.Timers.Timer;
 
+using ENet;
 using Godot;
 using GodotModules.Netcode;
 using GodotModules.Netcode.Client;
@@ -10,25 +11,29 @@ namespace Game
 {
     public class ClientPlayer : OtherPlayer
     {
+        [Export] public readonly NodePath NodePathLabelPosition;
+        private Label LabelPosition { get; set; }
+
         private float Speed = 250f;
         private Timer TimerNotifyServerProcessDelta { get; set; }
         private float Delta { get; set; }
 
-        public override async void _Ready()
+        public override void _Ready()
         {
             base._Ready();
             SetHealth(100);
+            LabelPosition = GetNode<Label>(NodePathLabelPosition);
 
             if (GameClient.Running)
             {
-                await NotifyServerOfProcessDelta();
+                //await NotifyServerOfProcessDelta();
 
                 if (GameClient.IsHost)
                 {
-                    TimerNotifyServerProcessDelta = new Timer(3000);
+                    /*TimerNotifyServerProcessDelta = new Timer(3000);
                     TimerNotifyServerProcessDelta.Elapsed += TimerNotifyServerProcessDeltaCallback;
                     TimerNotifyServerProcessDelta.AutoReset = true;
-                    TimerNotifyServerProcessDelta.Enabled = true;
+                    TimerNotifyServerProcessDelta.Enabled = true;*/
                 }
             }
         }
@@ -45,6 +50,7 @@ namespace Game
         public override void _Process(float delta)
         {
             Delta = delta;
+            LabelPosition.Text = $"X: {Mathf.RoundToInt(Position.x)} Y: {Mathf.RoundToInt(Position.y)}";
             HandleMovement(delta);
         }
 
