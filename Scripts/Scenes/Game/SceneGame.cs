@@ -51,7 +51,7 @@ namespace Game
             }
         }
 
-        public static int Test = 100;
+        public static Vector2 ServerPlayerPosition = Vector2.Zero;
 
         public static void UpdatePlayerPositions(Dictionary<uint, Vector2> playerPositions)
         {
@@ -65,13 +65,16 @@ namespace Game
                 if (pair.Key == GameClient.PeerId)
                 {
                     GD.Print("CLIENT: " + player.Position);
-                    if (player.Position.DistanceTo(pair.Value) > Test)
-                        player.Position = pair.Value;
+                    ServerPlayerPosition = pair.Value;
+                    //if (player.Position.DistanceTo(pair.Value) > Test)
+                        //player.Position = Utils.Lerp(player.Position, pair.Value, 0.1f);
                 }
                 else
                     player.Position = pair.Value;
             }
         }
+
+        public static int Test = 100;
 
         public override void _Process(float delta)
         {

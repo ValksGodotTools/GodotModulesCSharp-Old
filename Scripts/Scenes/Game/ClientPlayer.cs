@@ -2,6 +2,7 @@ using Timer = System.Timers.Timer;
 
 using ENet;
 using Godot;
+using GodotModules;
 using GodotModules.Netcode;
 using GodotModules.Netcode.Client;
 using System.Timers;
@@ -19,8 +20,6 @@ namespace Game
         private float Delta { get; set; }
         private Direction DirectionHorizontal { get; set; }
         private Direction DirectionVertical { get; set; }
-        private Direction PrevDirectionHorizontal { get; set; }
-        private Direction PrevDirectionVertical { get; set; }
 
         public override void _Ready()
         {
@@ -37,18 +36,19 @@ namespace Game
             }
         }
 
-        public async void NotifyServerPlayerDirectionCallback(System.Object source, ElapsedEventArgs args) 
-        {
-            if (DirectionHorizontal == PrevDirectionHorizontal && DirectionVertical == PrevDirectionVertical)
-                return;
+        private Direction prevHorz;
+        private Direction prevVert;
 
-            await GameClient.Send(ClientPacketOpcode.PlayerDirectionPressed, new CPacketPlayerDirectionPressed {
+        public async void NotifyServerPlayerDirectionCallback(System.Object source, ElapsedEventArgs args)
+        {
+            //if (DirectionHorizontal == Direction.None && DirectionVertical == Direction.None) 
+                //return;
+
+            await GameClient.Send(ClientPacketOpcode.PlayerDirectionPressed, new CPacketPlayerDirectionPressed
+            {
                 DirectionHorizontal = DirectionHorizontal,
                 DirectionVertical = DirectionVertical
             });
-
-            PrevDirectionHorizontal = DirectionHorizontal;
-            PrevDirectionVertical = DirectionVertical;
         }
 
         public override void _PhysicsProcess(float delta)
@@ -72,6 +72,11 @@ namespace Game
                 dir.y += 1;
 
             Position += dir * Speed * delta;
+
+            if (DirectionHorizontal == Direction.None && DirectionVertical == Direction.None)
+                Position = Utils.Lerp(Position, SceneGame.ServerPlayerPosition, 0.01f);
+            //else
+                //Position = Utils.Lerp(Position, SceneGame.ServerPlayerPosition, 0.05f);
 
             UpdateDirectionPressed();
         }

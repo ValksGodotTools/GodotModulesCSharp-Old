@@ -25,7 +25,7 @@ namespace GodotModules.Netcode.Server
             TimerGameLoop.Elapsed += TimerGameLoopCallback;
             TimerGameLoop.AutoReset = true;
 
-            TimerNotifyClients = new Timer(50);
+            TimerNotifyClients = new Timer(200);
             TimerNotifyClients.Elapsed += TimerNotifyClientsCallback;
             TimerNotifyClients.AutoReset = true;
         }
