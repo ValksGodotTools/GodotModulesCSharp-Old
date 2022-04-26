@@ -165,16 +165,10 @@ namespace GodotModules.Netcode.Client
             CancelTokenSource.Cancel();
         }
 
-        /// <summary>
-        /// Send a packet to the server
-        /// </summary>
-        /// <param name="opcode">The opcode of the packet</param>
-        /// <param name="data">The data if any</param>
-        /// <returns></returns>
-        public static async Task Send(ClientPacketOpcode opcode, APacket data = null)
+        public static async Task Send(ClientPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
         {
             OutgoingId++;
-            var success = Outgoing.TryAdd(OutgoingId, new ClientPacket((byte)opcode, data));
+            var success = Outgoing.TryAdd(OutgoingId, new ClientPacket((byte)opcode, flags, data));
 
             if (!success)
                 Log($"Failed to add {opcode} to Outgoing queue because of duplicate key"); // this should never go off, however it's better to be safe then not safe at all
