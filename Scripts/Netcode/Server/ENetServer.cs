@@ -119,7 +119,7 @@ namespace GodotModules.Netcode.Server
                             var packetReader = new PacketReader(packet);
                             var opcode = (ClientPacketOpcode)packetReader.ReadByte();
 
-                            Log($"Received packet: {opcode}");
+                            //Log($"Received packet: {opcode}");
 
                             var handlePacket = HandlePacket[opcode];
                             handlePacket.Read(packetReader);

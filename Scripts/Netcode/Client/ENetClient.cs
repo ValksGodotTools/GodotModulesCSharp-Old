@@ -91,7 +91,7 @@ namespace GodotModules.Netcode.Client
                     while (Outgoing.TryRemove(OutgoingId, out ClientPacket clientPacket))
                     {
                         OutgoingId--;
-                        Log("Sent packet: " + (ClientPacketOpcode)clientPacket.Opcode);
+                        //Log("Sent packet: " + (ClientPacketOpcode)clientPacket.Opcode);
                         byte channelID = 0; // The channel all networking traffic will be going through
                         var packet = default(Packet);
                         packet.Create(clientPacket.Data, clientPacket.PacketFlags);
