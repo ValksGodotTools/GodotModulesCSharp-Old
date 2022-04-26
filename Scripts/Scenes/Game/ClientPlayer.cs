@@ -14,13 +14,15 @@ namespace Game
         private Timer TimerNotifyServerProcessDelta { get; set; }
         private float Delta { get; set; }
 
-        public override void _Ready()
+        public override async void _Ready()
         {
             base._Ready();
             SetHealth(100);
 
             if (GameClient.Running)
             {
+                await NotifyServerOfProcessDelta();
+
                 if (GameClient.IsHost)
                 {
                     TimerNotifyServerProcessDelta = new Timer(3000);
@@ -31,13 +33,14 @@ namespace Game
             }
         }
 
-        public async void TimerNotifyServerProcessDeltaCallback(System.Object source, ElapsedEventArgs args)
-        {
+        public async void TimerNotifyServerProcessDeltaCallback(System.Object source, ElapsedEventArgs args) =>
+            await NotifyServerOfProcessDelta();
+
+        private async Task NotifyServerOfProcessDelta() =>
             await GameClient.Send(ClientPacketOpcode.ProcessDelta, new CPacketProcessDelta
             {
                 Delta = Delta
             });
-        }
 
         public override void _Process(float delta)
         {
