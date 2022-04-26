@@ -1,15 +1,14 @@
 using Godot;
 using GodotModules;
 using GodotModules.ModLoader;
+using GodotModules.Netcode.Client;
 using System;
 
 namespace Game
 {
-    // Master manages everything in the game (DEMO)
     public class SceneGame : Node
     {
-        private static PackedScene PrefabPlayer = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/Player.tscn");
-        public static Player Player { get; set; }
+        public static ClientPlayer Player { get; set; }
         public static SceneGame Instance { get; set; }
 
         [Export] public readonly NodePath NodePathLabelPlayerHealth;
@@ -20,25 +19,35 @@ namespace Game
         {
             Instance = this;
             LabelPlayerHealth = GetNode<Label>(NodePathLabelPlayerHealth);
-            InitPlayer();
+            Player = Prefabs.ClientPlayer.Instance<ClientPlayer>();
+            Player.Position = OS.WindowSize / 2;
+            Player.Name = "Player";
+            AddChild(Player);
+            Player.SetUsername(GameManager.Options.OnlineUsername);
 
             // set game definitions
             ModLoader.Script.Globals["Player", "setHealth"] = (Action<int>)SceneGame.Player.SetHealth;
 
             ModLoader.Call("OnGameInit");
+
+            if (GameClient.Running)
+            {
+                foreach (var pair in GameClient.Players)
+                {
+                    if (pair.Key == GameClient.PeerId)
+                        continue;
+
+                    var otherPlayer = Prefabs.OtherPlayer.Instance<OtherPlayer>();
+                    otherPlayer.Position = OS.WindowSize / 2;
+                    AddChild(otherPlayer);
+                    otherPlayer.SetUsername(pair.Value);
+                }
+            }
         }
 
         public override void _Process(float delta)
         {
             ModLoader.Call("OnGameUpdate", delta);
-        }
-
-        private void InitPlayer()
-        {
-            Player = PrefabPlayer.Instance<Player>();
-            Player.Position = OS.WindowSize / 2;
-            Player.Name = "Player";
-            AddChild(Player);
         }
     }
 }
