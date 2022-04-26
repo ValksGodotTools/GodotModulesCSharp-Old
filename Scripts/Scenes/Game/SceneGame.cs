@@ -62,6 +62,7 @@ namespace Game
 
                 if (pair.Key == GameClient.PeerId)
                 {
+                    GD.Print("CLIENT: " + player.Position);
                     if (player.Position.DistanceSquaredTo(pair.Value) > 250)
                         player.Position = pair.Value;
                 }

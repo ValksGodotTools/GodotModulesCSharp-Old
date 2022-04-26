@@ -4,21 +4,24 @@ namespace GodotModules.Netcode
 {
     public class CPacketPlayerDirectionPressed : APacketClient 
     {
-        public Direction Direction { get; set; }
+        public Direction DirectionHorizontal { get; set; }
+        public Direction DirectionVertical { get; set; }
 
         public override void Write(PacketWriter writer)
         {
-            writer.Write((sbyte)Direction);
+            writer.Write((sbyte)DirectionHorizontal);
+            writer.Write((sbyte)DirectionVertical);
         }
 
         public override void Read(PacketReader reader)
         {
-            Direction = (Direction)reader.ReadSByte();
+            DirectionHorizontal = (Direction)reader.ReadSByte();
+            DirectionVertical = (Direction)reader.ReadSByte();
         }
 
         public override void Handle(ENet.Peer peer)
         {
-            GameServer.UpdatePressed(peer.ID, Direction, true);
+            GameServer.UpdatePressed(peer.ID, DirectionHorizontal, DirectionVertical, true);
         }
     }
 }

@@ -7,10 +7,8 @@ namespace GodotModules.Netcode
         public string Username { get; set; }
         public bool Ready { get; set; }
         public bool Host { get; set; }
-        public bool PressedLeft { get; set; }
-        public bool PressedRight { get; set;}
-        public bool PressedDown { get; set; }
-        public bool PressedUp { get; set; }
+        public Direction DirectionHorizontal { get; set; }
+        public Direction DirectionVertical { get; set; }
         public Vector2 Position { get; set; }
     }
 }

@@ -15,8 +15,10 @@ namespace Game
         private Label LabelPosition { get; set; }
 
         private float Speed = 250f;
-        private Timer TimerNotifyServerProcessDelta { get; set; }
+        private Timer NotifyServerPlayerDirection { get; set; }
         private float Delta { get; set; }
+        private Direction DirectionHorizontal { get; set; }
+        private Direction DirectionVertical { get; set; }
 
         public override void _Ready()
         {
@@ -26,26 +28,20 @@ namespace Game
 
             if (GameClient.Running)
             {
-                //await NotifyServerOfProcessDelta();
-
-                if (GameClient.IsHost)
-                {
-                    /*TimerNotifyServerProcessDelta = new Timer(3000);
-                    TimerNotifyServerProcessDelta.Elapsed += TimerNotifyServerProcessDeltaCallback;
-                    TimerNotifyServerProcessDelta.AutoReset = true;
-                    TimerNotifyServerProcessDelta.Enabled = true;*/
-                }
+                NotifyServerPlayerDirection = new Timer(500);
+                NotifyServerPlayerDirection.Elapsed += NotifyServerPlayerDirectionCallback;
+                NotifyServerPlayerDirection.AutoReset = true;
+                NotifyServerPlayerDirection.Enabled = true;
             }
         }
 
-        public async void TimerNotifyServerProcessDeltaCallback(System.Object source, ElapsedEventArgs args) =>
-            await NotifyServerOfProcessDelta();
-
-        private async Task NotifyServerOfProcessDelta() =>
-            await GameClient.Send(ClientPacketOpcode.ProcessDelta, new CPacketProcessDelta
-            {
-                Delta = Delta
+        public async void NotifyServerPlayerDirectionCallback(System.Object source, ElapsedEventArgs args) 
+        {
+            await GameClient.Send(ClientPacketOpcode.PlayerDirectionPressed, new CPacketPlayerDirectionPressed {
+                DirectionHorizontal = DirectionHorizontal,
+                DirectionVertical = DirectionVertical
             });
+        }
 
         public override void _Process(float delta)
         {
@@ -54,7 +50,7 @@ namespace Game
             HandleMovement(delta);
         }
 
-        private async void HandleMovement(float delta)
+        private void HandleMovement(float delta)
         {
             var dir = new Vector2();
 
@@ -69,57 +65,33 @@ namespace Game
 
             Position += dir * Speed * delta;
 
-            await SendDirection();
+            UpdateDirectionPressed();
         }
 
-        private async Task SendDirection()
+        private void UpdateDirectionPressed()
         {
             if (!GameClient.Running)
                 return;
 
             // PRESSED
             if (Input.IsActionJustPressed("ui_left"))
-                await GameClient.Send(ClientPacketOpcode.PlayerDirectionPressed, new CPacketPlayerDirectionPressed
-                {
-                    Direction = Direction.West
-                });
+                DirectionHorizontal = Direction.West;
             if (Input.IsActionJustPressed("ui_right"))
-                await GameClient.Send(ClientPacketOpcode.PlayerDirectionPressed, new CPacketPlayerDirectionPressed
-                {
-                    Direction = Direction.East
-                });
+                DirectionHorizontal = Direction.East;
             if (Input.IsActionJustPressed("ui_up"))
-                await GameClient.Send(ClientPacketOpcode.PlayerDirectionPressed, new CPacketPlayerDirectionPressed
-                {
-                    Direction = Direction.North
-                });
+                DirectionVertical = Direction.North;
             if (Input.IsActionJustPressed("ui_down"))
-                await GameClient.Send(ClientPacketOpcode.PlayerDirectionPressed, new CPacketPlayerDirectionPressed
-                {
-                    Direction = Direction.South
-                });
+                DirectionVertical = Direction.South;
 
             // RELEASED
             if (Input.IsActionJustReleased("ui_left"))
-                await GameClient.Send(ClientPacketOpcode.PlayerDirectionReleased, new CPacketPlayerDirectionReleased
-                {
-                    Direction = Direction.West
-                });
+                DirectionHorizontal = Direction.None;
             if (Input.IsActionJustReleased("ui_right"))
-                await GameClient.Send(ClientPacketOpcode.PlayerDirectionReleased, new CPacketPlayerDirectionReleased
-                {
-                    Direction = Direction.East
-                });
+                DirectionHorizontal = Direction.None;
             if (Input.IsActionJustReleased("ui_up"))
-                await GameClient.Send(ClientPacketOpcode.PlayerDirectionReleased, new CPacketPlayerDirectionReleased
-                {
-                    Direction = Direction.North
-                });
+                DirectionVertical = Direction.None;
             if (Input.IsActionJustReleased("ui_down"))
-                await GameClient.Send(ClientPacketOpcode.PlayerDirectionReleased, new CPacketPlayerDirectionReleased
-                {
-                    Direction = Direction.South
-                });
+                DirectionVertical = Direction.None;
         }
 
         public void SetHealth(int v)

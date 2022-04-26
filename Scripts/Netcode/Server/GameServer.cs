@@ -25,7 +25,7 @@ namespace GodotModules.Netcode.Server
             TimerGameLoop.Elapsed += TimerGameLoopCallback;
             TimerGameLoop.AutoReset = true;
 
-            TimerNotifyClients = new Timer(100);
+            TimerNotifyClients = new Timer(2000);
             TimerNotifyClients.Elapsed += TimerNotifyClientsCallback;
             TimerNotifyClients.AutoReset = true;
         }
@@ -33,13 +33,14 @@ namespace GodotModules.Netcode.Server
         public void TimerNotifyClientsCallback(System.Object source, ElapsedEventArgs args)
         {
             var playerPositions = Players.ToDictionary(x => x.Key, x => x.Value.Position);
-            System.Console.WriteLine("DEBUG: " + playerPositions.Count);
 
             SendToAllPlayers(ServerPacketOpcode.PlayerPositions, new SPacketPlayerPositions {
                 PlayerPositions = playerPositions
             }, PacketFlags.Reliable);
 
             LastSentPlayerPositions = playerPositions;
+
+            System.Console.WriteLine("SERVER: " + playerPositions[0]);
         }
 
         public void TimerGameLoopCallback(System.Object source, ElapsedEventArgs args) 
@@ -50,14 +51,14 @@ namespace GodotModules.Netcode.Server
 
                 var dir = new Vector2();
 
-                if (player.PressedLeft)
-                    dir.x = -1;
-                if (player.PressedRight)
-                    dir.x = 1;
-                if (player.PressedUp)
-                    dir.y = -1;
-                if (player.PressedDown)
-                    dir.y = 1;
+                if (player.DirectionHorizontal == Direction.West)
+                    dir.x -= 1;
+                if (player.DirectionHorizontal == Direction.East)
+                    dir.x += 1;
+                if (player.DirectionVertical == Direction.North)
+                    dir.y -= 1;
+                if (player.DirectionVertical == Direction.South)
+                    dir.y += 1;
 
                 var delta = 0.016667f;
 
@@ -136,24 +137,11 @@ namespace GodotModules.Netcode.Server
                 Send(opcode, data, flags, otherPlayers);
         }
 
-        public static void UpdatePressed(uint id, Direction dir, bool pressed)
+        public static void UpdatePressed(uint id, Direction directionHorizontal, Direction directionVertical, bool pressed)
         {
             var player = Players[id];
-            switch (dir) 
-            {
-                case Direction.West:
-                    player.PressedLeft = pressed;
-                    break;
-                case Direction.East:
-                    player.PressedRight = pressed;
-                    break;
-                case Direction.North:
-                    player.PressedUp = pressed;
-                    break;
-                case Direction.South:
-                    player.PressedDown = pressed;
-                    break;
-            }
+            player.DirectionHorizontal = directionHorizontal;
+            player.DirectionVertical = directionVertical;
         }
 
         public static void CheckPosition(uint id, Vector2 position)

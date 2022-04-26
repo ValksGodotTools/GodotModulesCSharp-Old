@@ -21,7 +21,7 @@ namespace GodotModules.Netcode
                 var x = (float)Math.Round(pos.x, 1);
                 var y = (float)Math.Round(pos.y, 1);
 
-                writer.Write(pair.Key);
+                writer.Write(id);
                 writer.Write(x);
                 writer.Write(y);
             }
