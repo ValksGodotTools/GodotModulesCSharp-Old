@@ -30,10 +30,10 @@ namespace GodotModules.Netcode
         public override void Read(PacketReader reader)
         {
             PlayerPositions = new Dictionary<uint, Vector2>();
-            var count = reader.ReadUInt16();
+            var count = reader.ReadUShort();
             for (int i = 0; i < count; i++)
             {
-                var id = reader.ReadUInt32();
+                var id = reader.ReadUInt();
                 var x = reader.ReadFloat();
                 var y = reader.ReadFloat();
 

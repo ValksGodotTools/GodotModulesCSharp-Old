@@ -1,15 +1,38 @@
+using System;
 using System.IO;
 
 namespace GodotModules.Netcode
 {
-    public class PacketWriter : BinaryWriter
+    public class PacketWriter : IDisposable
     {
-        private static MemoryStream stream;
+        public MemoryStream Stream { get; set; }
+        public BinaryWriter Writer { get; set; }
 
-        public PacketWriter() : base(stream = new MemoryStream())
+        public PacketWriter()
         {
+            Stream = new MemoryStream();
+            Writer = new BinaryWriter(Stream);
         }
 
-        public MemoryStream GetStream() => stream;
+        public void Write(byte v) => Writer.Write(v);
+        public void Write(sbyte v) => Writer.Write(v);
+        public void Write(char v) => Writer.Write(v);
+        public void Write(string v) => Writer.Write(v);
+        public void Write(bool v) => Writer.Write(v);
+        public void Write(short v) => Writer.Write(v);
+        public void Write(ushort v) => Writer.Write(v);
+        public void Write(int v) => Writer.Write(v);
+        public void Write(uint v) => Writer.Write(v);
+        public void Write(float v) => Writer.Write(v);
+        public void Write(double v) => Writer.Write(v);
+        public void Write(long v) => Writer.Write(v);
+        public void Write(ulong v) => Writer.Write(v);
+        public void Write(byte[] v) => Writer.Write(v);
+
+        public void Dispose()
+        {
+            Stream.Dispose();
+            Writer.Dispose();
+        }
     }
 }

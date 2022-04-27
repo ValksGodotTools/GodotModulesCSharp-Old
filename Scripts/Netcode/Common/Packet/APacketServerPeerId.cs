@@ -1,3 +1,5 @@
+using System.IO;
+
 namespace GodotModules.Netcode 
 {
     public abstract class APacketServerPeerId : APacketServer
@@ -5,6 +7,6 @@ namespace GodotModules.Netcode
         public uint Id { get; set; }
 
         public override void Write(PacketWriter writer) => writer.Write((ushort)Id);
-        public override void Read(PacketReader reader) => Id = reader.ReadUInt16();
+        public override void Read(PacketReader reader) => Id = reader.ReadUShort();
     }
 }

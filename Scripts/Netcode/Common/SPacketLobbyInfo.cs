@@ -26,11 +26,11 @@ namespace GodotModules.Netcode
         {
             base.Read(reader);
             IsHost = reader.ReadBool();
-            var count = reader.ReadUInt16();
+            var count = reader.ReadUShort();
             Players = new Dictionary<uint, DataPlayer>();
             for (int i = 0; i < count; i++)
             {
-                var id = reader.ReadUInt16();
+                var id = reader.ReadUShort();
                 var name = reader.ReadString();
 
                 Players.Add(id, new DataPlayer {

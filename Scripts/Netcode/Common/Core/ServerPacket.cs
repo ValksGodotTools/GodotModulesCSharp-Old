@@ -1,4 +1,5 @@
 using ENet;
+using System.IO;
 
 namespace GodotModules.Netcode
 {
@@ -13,9 +14,8 @@ namespace GodotModules.Netcode
                 writer.Write(opcode);
                 if (writable != null) writable.Write(writer);
 
-                var stream = writer.GetStream();
-                Data = stream.ToArray();
-                Size = stream.Length;
+                Data = writer.Stream.ToArray();
+                Size = writer.Stream.Length;
             }
 
             Opcode = opcode;

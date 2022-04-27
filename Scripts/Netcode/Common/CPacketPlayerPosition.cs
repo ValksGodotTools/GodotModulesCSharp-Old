@@ -26,12 +26,12 @@ namespace GodotModules.Netcode
         {
             GameServer.Players[peer.ID].Position = Position;
 
-            foreach (var pair in GameServer.Players)
+            /*foreach (var pair in GameServer.Players)
             {
                 GameServer.Send(ServerPacketOpcode.PlayerPositions, new SPacketPlayerPositions {
                     PlayerPositions = GameServer.Players.Where(x => x.Key != pair.Key).ToDictionary(x => x.Key, x => x.Value.Position)
                 }, GameServer.Peers[pair.Key]);
-            }
+            }*/
         }
     }
 }

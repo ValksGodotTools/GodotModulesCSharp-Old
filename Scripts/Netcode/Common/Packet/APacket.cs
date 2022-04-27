@@ -1,3 +1,5 @@
+using System.IO;
+
 namespace GodotModules.Netcode
 {
     public abstract class APacket
