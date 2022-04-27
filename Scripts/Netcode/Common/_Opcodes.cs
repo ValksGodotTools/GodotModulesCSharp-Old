@@ -10,7 +10,6 @@
         LobbyCountdownChange,
         LobbyGameStart,
         PlayerDirectionPressed,
-        PlayerDirectionReleased,
         ProcessDelta
     }
 
