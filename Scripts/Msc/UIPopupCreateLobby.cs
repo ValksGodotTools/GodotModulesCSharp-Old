@@ -29,8 +29,6 @@ namespace GodotModules
         private LineEdit NumPingChecks { get; set; }
         private CheckBox NumPingChecksEnabled { get; set; }
 
-        private Dictionary<string, string> Feedback = new Dictionary<string, string>();
-
         public override void _Ready()
         {
             InputTitle = GetNode<LineEdit>(NodePathInputTitle);
