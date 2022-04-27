@@ -12,8 +12,7 @@ namespace GodotModules.Netcode
 
             if (GameClient.IsHost) 
             {
-                GameServer.TimerGameLoop.Enabled = true;
-                GameServer.TimerNotifyClients.Enabled = true;
+                GameServer.EmitClientPositions.Enabled = true;
             }
 
             SceneManager.ChangeScene("Game");

@@ -12,58 +12,25 @@ namespace GodotModules.Netcode.Server
     public class GameServer : ENetServer
     {
         public static Dictionary<uint, DataPlayer> Players { get; set; }
-        public static Dictionary<uint, Vector2> LastSentPlayerPositions { get; set; }
-        public static Timer TimerGameLoop { get; set; }
-        public static Timer TimerNotifyClients { get; set; }
+        public static Timer EmitClientPositions { get; set; }
         public static float Delta { get; set; }
 
         public GameServer()
         {
             Players = new Dictionary<uint, DataPlayer>();
-            LastSentPlayerPositions = new Dictionary<uint, Vector2>();
-            TimerGameLoop = new Timer(16.67);
-            TimerGameLoop.Elapsed += TimerGameLoopCallback;
-            TimerGameLoop.AutoReset = true;
 
-            TimerNotifyClients = new Timer(200);
-            TimerNotifyClients.Elapsed += TimerNotifyClientsCallback;
-            TimerNotifyClients.AutoReset = true;
+            EmitClientPositions = new Timer(200);
+            EmitClientPositions.Elapsed += EmitClientPositionsCallback;
+            EmitClientPositions.AutoReset = true;
         }
 
-        public void TimerNotifyClientsCallback(System.Object source, ElapsedEventArgs args)
+        public void EmitClientPositionsCallback(System.Object source, ElapsedEventArgs args)
         {
             var playerPositions = Players.ToDictionary(x => x.Key, x => x.Value.Position);
 
             SendToAllPlayers(ServerPacketOpcode.PlayerPositions, new SPacketPlayerPositions {
                 PlayerPositions = playerPositions
             }, PacketFlags.Reliable);
-
-            LastSentPlayerPositions = playerPositions;
-
-            //System.Console.WriteLine("SERVER: " + playerPositions[0]);
-        }
-
-        public void TimerGameLoopCallback(System.Object source, ElapsedEventArgs args) 
-        {
-            foreach (var pair in Players)
-            {
-                var player = pair.Value;
-
-                var dir = new Vector2();
-
-                if (player.DirectionHorizontal == Direction.West)
-                    dir.x -= 1;
-                if (player.DirectionHorizontal == Direction.East)
-                    dir.x += 1;
-                if (player.DirectionVertical == Direction.North)
-                    dir.y -= 1;
-                if (player.DirectionVertical == Direction.South)
-                    dir.y += 1;
-
-                var delta = 0.016667f;
-
-                player.Position += dir * 250 * delta;
-            }
         }
 
         protected override void Connect(Event netEvent)
@@ -135,19 +102,6 @@ namespace GodotModules.Netcode.Server
                 Send(opcode, flags, otherPlayers);
             else
                 Send(opcode, data, flags, otherPlayers);
-        }
-
-        public static void UpdatePressed(uint id, Direction directionHorizontal, Direction directionVertical, bool pressed)
-        {
-            var player = Players[id];
-            player.DirectionHorizontal = directionHorizontal;
-            player.DirectionVertical = directionVertical;
-        }
-
-        public static void CheckPosition(uint id, Vector2 position)
-        {
-            var player = Players[id];
-            Log("Distance: " + position.DistanceSquaredTo(player.Position));
         }
     }
 }

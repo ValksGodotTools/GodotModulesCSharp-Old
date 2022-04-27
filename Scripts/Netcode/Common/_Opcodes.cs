@@ -8,8 +8,7 @@
         LobbyChatMessage,
         LobbyReady,
         LobbyCountdownChange,
-        LobbyGameStart,
-        PlayerDirectionPressed
+        LobbyGameStart
     }
 
     // Sent to Game Client

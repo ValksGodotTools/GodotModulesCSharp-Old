@@ -60,21 +60,6 @@ namespace Game
                 return;
 
             ServerPlayerPositions = playerPositions;
-            
-            /*foreach (var pair in playerPositions) 
-            {
-                var player = Instance.Players[pair.Key];
-
-                if (pair.Key == GameClient.PeerId)
-                {
-                    //GD.Print("CLIENT: " + player.Position);
-                    ServerPlayerPosition = pair.Value;
-                    //if (player.Position.DistanceTo(pair.Value) > Test)
-                        //player.Position = Utils.Lerp(player.Position, pair.Value, 0.1f);
-                }
-                else
-                    player.Position = pair.Value;
-            }*/
         }
 
         public static int Test = 100;
@@ -86,9 +71,7 @@ namespace Game
             foreach (var pair in ServerPlayerPositions)
             {
                 var player = Players[pair.Key];
-
-                if (pair.Key != GameClient.PeerId)
-                    player.Position = Utils.Lerp(player.Position, pair.Value, 0.1f);
+                player.Position = Utils.Lerp(player.Position, pair.Value, 0.1f);
             }
         }
     }
