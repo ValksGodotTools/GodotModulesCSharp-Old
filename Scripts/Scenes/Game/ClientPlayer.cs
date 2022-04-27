@@ -16,7 +16,7 @@ namespace Game
         private Label LabelPosition { get; set; }
 
         private float Speed = 250f;
-        private static Timer EmitPosition { get; set; }
+        public static Timer EmitPosition { get; set; }
 
         public override void _Ready()
         {
@@ -26,7 +26,7 @@ namespace Game
 
             if (GameClient.Running)
             {
-                EmitPosition = new Timer(200);
+                EmitPosition = new Timer(1000);
                 EmitPosition.Elapsed += EmitPositionCallback;
                 EmitPosition.AutoReset = true;
                 EmitPosition.Enabled = true;

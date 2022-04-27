@@ -1,6 +1,7 @@
 using Godot;
 using GodotModules.Netcode.Server;
 using System;
+using System.Linq;
 
 namespace GodotModules.Netcode 
 {
@@ -24,6 +25,13 @@ namespace GodotModules.Netcode
         public override void Handle(ENet.Peer peer)
         {
             GameServer.Players[peer.ID].Position = Position;
+
+            foreach (var pair in GameServer.Players)
+            {
+                GameServer.Send(ServerPacketOpcode.PlayerPositions, new SPacketPlayerPositions {
+                    PlayerPositions = GameServer.Players.Where(x => x.Key != pair.Key).ToDictionary(x => x.Key, x => x.Value.Position)
+                }, GameServer.Peers[pair.Key]);
+            }
         }
     }
 }

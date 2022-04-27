@@ -130,7 +130,15 @@ namespace GodotModules.Netcode.Server
                             }
 
                             var handlePacket = HandlePacket[opcode];
-                            handlePacket.Read(packetReader);
+                            try
+                            {
+                                handlePacket.Read(packetReader);
+                            }
+                            catch (System.IO.EndOfStreamException)
+                            {
+                                Utils.LogErr($"[Server]: Received malformed opcode: {opcode} (Ignoring)");
+                                break;
+                            }
                             handlePacket.Handle(netEvent.Peer);
 
                             packetReader.Dispose();

@@ -8,6 +8,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Game;
 
 namespace GodotModules
 {
@@ -46,7 +47,15 @@ namespace GodotModules
                         }
 
                         var handlePacket = ENetClient.HandlePacket[opcode];
-                        handlePacket.Read(packetReader);
+                        try 
+                        {
+                            handlePacket.Read(packetReader);
+                        }
+                        catch (System.IO.EndOfStreamException)
+                        {
+                            Utils.LogErr($"[Client]: Received malformed opcode: {opcode} (Ignoring)");
+                            break;
+                        }
                         handlePacket.Handle();
 
                         packetReader.Dispose();
@@ -114,6 +123,9 @@ namespace GodotModules
                 ENetClient.CancelTokenSource.Dispose();
             if (ENetServer.CancelTokenSource != null)
                 ENetServer.CancelTokenSource.Dispose();
+
+            if (ClientPlayer.EmitPosition != null)
+                ClientPlayer.EmitPosition.Dispose();
 
             Instance.GetTree().Quit();
         }

@@ -19,19 +19,19 @@ namespace GodotModules.Netcode.Server
         {
             Players = new Dictionary<uint, DataPlayer>();
 
-            EmitClientPositions = new Timer(200);
+            EmitClientPositions = new Timer(1000);
             EmitClientPositions.Elapsed += EmitClientPositionsCallback;
             EmitClientPositions.AutoReset = true;
         }
 
         public void EmitClientPositionsCallback(System.Object source, ElapsedEventArgs args)
         {
-            foreach (var pair in Players)
+            /*foreach (var pair in GameServer.Players)
             {
-                Send(ServerPacketOpcode.PlayerPositions, new SPacketPlayerPositions {
-                    PlayerPositions = Players.Where(x => x.Key != pair.Key).ToDictionary(x => x.Key, x => x.Value.Position)
-                }, Peers[pair.Key]);
-            }
+                GameServer.Send(ServerPacketOpcode.PlayerPositions, new SPacketPlayerPositions {
+                    PlayerPositions = GameServer.Players.Where(x => x.Key != pair.Key).ToDictionary(x => x.Key, x => x.Value.Position)
+                }, GameServer.Peers[pair.Key]);
+            }*/
         }
 
         protected override void Connect(Event netEvent)
