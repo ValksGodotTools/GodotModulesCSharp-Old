@@ -71,7 +71,9 @@ namespace Game
             Position += dir * Speed * delta;
 
             if (DirectionHorizontal == Direction.None && DirectionVertical == Direction.None)
-                Position = Utils.Lerp(Position, SceneGame.ServerPlayerPosition, 0.01f);
+                Position = Utils.Lerp(Position, SceneGame.ServerPlayerPositions[GameClient.PeerId], 0.01f);
+
+
             //else
                 //Position = Utils.Lerp(Position, SceneGame.ServerPlayerPosition, 0.05f);
 
