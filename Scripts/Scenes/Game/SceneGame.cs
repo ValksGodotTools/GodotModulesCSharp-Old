@@ -23,7 +23,6 @@ namespace Game
         {
             Players = new();
             ServerPlayerPositions = new();
-            ServerPlayerPositions.Add(GameClient.PeerId, Vector2.Zero);
             Instance = this;
             LabelPlayerHealth = GetNode<Label>(NodePathLabelPlayerHealth);
             Player = Prefabs.ClientPlayer.Instance<ClientPlayer>();
