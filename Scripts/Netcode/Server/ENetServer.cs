@@ -247,15 +247,7 @@ namespace GodotModules.Netcode.Server
         /// Provides a way to log a message on the Godot thread from the ENet thread
         /// </summary>
         /// <param name="obj">The object to log</param>
-        public static void Log(object obj)
-        {
-            var threadName = Thread.CurrentThread.Name;
-
-            if (threadName == "Server")
-                NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessageServer, obj));
-            else
-                Utils.Log($"[Server]: {obj}", LogsColor);
-        }
+        public static void Log(object obj) => NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessageServer, obj));
 
         /// <summary>
         /// This is in the ENet thread, anything from the ENet thread can be used here
