@@ -109,9 +109,8 @@ namespace GodotModules.ModLoader
                 catch (ScriptRuntimeException e)
                 {
                     // Mod script did not run right
-                    ErrorNotifier.IncrementErrorCount();
                     UIModLoader.Instance.Log($"{e.DecoratedMessage}");
-                    Utils.Log($"[ModLoader]: {e}");
+                    Utils.LogErr($"[ModLoader]: {e}");
 
                     continue;
                 }
@@ -129,9 +128,8 @@ namespace GodotModules.ModLoader
             }
             catch (ScriptRuntimeException e)
             {
-                ErrorNotifier.IncrementErrorCount();
                 UIModLoader.Instance.Log($"{e.DecoratedMessage}");
-                Utils.Log($"[ModLoader]: {e}");
+                Utils.LogErr($"[ModLoader]: {e}");
             }
         }
 
@@ -168,7 +166,7 @@ namespace GodotModules.ModLoader
                     else 
                     {
                         UIModLoader.Instance.Log($"Could not open file: {absolutePath}");
-                        Utils.Log($"Could not open file: {absolutePath}");
+                        Utils.LogErr($"Could not open file: {absolutePath}");
                     }
                 }
             });

@@ -16,6 +16,12 @@ namespace GodotModules
             }
         }
 
+        public static void LogErr(object obj) 
+        {
+            ErrorNotifier.IncrementErrorCount();
+            Log(obj, ConsoleColor.Red);
+        }
+
         public static void Log(object obj, ConsoleColor color = ConsoleColor.Gray) 
         {
             if (obj is Exception)
@@ -34,7 +40,7 @@ namespace GodotModules
             watch.Start();
             code();
             watch.Stop();
-            System.Console.WriteLine($"Took {watch.ElapsedMilliseconds} ms");
+            Console.WriteLine($"Took {watch.ElapsedMilliseconds} ms");
         }
 
         public static Vector2 Lerp(Vector2 a, Vector2 b, float t) => new Vector2(Mathf.Lerp(a.x, b.x, t), Mathf.Lerp(a.y, b.y, t));

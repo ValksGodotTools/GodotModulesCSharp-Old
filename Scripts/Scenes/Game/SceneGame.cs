@@ -30,7 +30,6 @@ namespace Game
             // set game definitions
             ModLoader.Script.Globals["Player", "setHealth"] = (Action<int>)SceneGame.Player.SetHealth;
 
-            Utils.Log("SceneGame.cs _Ready()");
             ModLoader.Call("OnGameInit");
 
             if (GameClient.Running)

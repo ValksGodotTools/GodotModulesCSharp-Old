@@ -41,7 +41,7 @@ namespace GodotModules
 
                         if (!ENetClient.HandlePacket.ContainsKey(opcode))
                         {
-                            Utils.Log($"Received malformed opcode: {opcode} (Ignoring)");
+                            Utils.LogErr($"Received malformed opcode: {opcode} (Ignoring)");
                             break;
                         }
 
@@ -62,7 +62,7 @@ namespace GodotModules
 
                     case GodotOpcode.Error:
                         var e = (Exception)cmd.Data;
-                        Utils.Log(e, ConsoleColor.Red);
+                        Utils.LogErr(e);
                         GameManager.SpawnPopupError(e);
                         break;
 
