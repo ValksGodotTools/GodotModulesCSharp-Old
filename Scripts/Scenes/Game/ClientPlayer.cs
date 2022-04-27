@@ -36,9 +36,6 @@ namespace Game
             }
         }
 
-        private Direction prevHorz;
-        private Direction prevVert;
-
         public async void NotifyServerPlayerDirectionCallback(System.Object source, ElapsedEventArgs args)
         {
             //if (DirectionHorizontal == Direction.None && DirectionVertical == Direction.None) 
