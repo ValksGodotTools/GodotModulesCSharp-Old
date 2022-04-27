@@ -40,7 +40,7 @@ namespace GodotModules.Netcode.Server
 
             LastSentPlayerPositions = playerPositions;
 
-            System.Console.WriteLine("SERVER: " + playerPositions[0]);
+            //System.Console.WriteLine("SERVER: " + playerPositions[0]);
         }
 
         public void TimerGameLoopCallback(System.Object source, ElapsedEventArgs args) 

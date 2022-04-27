@@ -63,7 +63,7 @@ namespace Game
 
                 if (pair.Key == GameClient.PeerId)
                 {
-                    GD.Print("CLIENT: " + player.Position);
+                    //GD.Print("CLIENT: " + player.Position);
                     ServerPlayerPosition = pair.Value;
                     //if (player.Position.DistanceTo(pair.Value) > Test)
                         //player.Position = Utils.Lerp(player.Position, pair.Value, 0.1f);
