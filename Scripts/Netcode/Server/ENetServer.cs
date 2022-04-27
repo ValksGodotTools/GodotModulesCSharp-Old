@@ -78,10 +78,12 @@ namespace GodotModules.Netcode.Server
                         var opcode = cmd.Opcode;
 
                         // Host client wants to stop the server
-                        if (opcode == ENetOpcode.ClientWantsToExitApp)
+                        switch (opcode)
                         {
-                            CancelTokenSource.Cancel();
-                            KickAll(DisconnectOpcode.Stopping);
+                            case ENetOpcode.ClientWantsToExitApp:
+                                CancelTokenSource.Cancel();
+                                KickAll(DisconnectOpcode.Stopping);
+                                break;
                         }
                     }
 
