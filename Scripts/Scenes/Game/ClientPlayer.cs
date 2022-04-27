@@ -16,7 +16,7 @@ namespace Game
         private Label LabelPosition { get; set; }
 
         private float Speed = 250f;
-        private Timer EmitPosition { get; set; }
+        private static Timer EmitPosition { get; set; }
 
         public override void _Ready()
         {
@@ -35,7 +35,9 @@ namespace Game
 
         public async void EmitPositionCallback(System.Object source, ElapsedEventArgs args)
         {
-            
+            await GameClient.Send(ClientPacketOpcode.PlayerPosition, new CPacketPlayerPosition {
+                Position = Position
+            });
         }
 
         public override void _PhysicsProcess(float delta)

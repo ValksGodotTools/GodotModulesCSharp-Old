@@ -26,11 +26,12 @@ namespace GodotModules.Netcode.Server
 
         public void EmitClientPositionsCallback(System.Object source, ElapsedEventArgs args)
         {
-            var playerPositions = Players.ToDictionary(x => x.Key, x => x.Value.Position);
-
-            SendToAllPlayers(ServerPacketOpcode.PlayerPositions, new SPacketPlayerPositions {
-                PlayerPositions = playerPositions
-            }, PacketFlags.Reliable);
+            foreach (var pair in Players)
+            {
+                Send(ServerPacketOpcode.PlayerPositions, new SPacketPlayerPositions {
+                    PlayerPositions = Players.Where(x => x.Key != pair.Key).ToDictionary(x => x.Key, x => x.Value.Position)
+                }, Peers[pair.Key]);
+            }
         }
 
         protected override void Connect(Event netEvent)

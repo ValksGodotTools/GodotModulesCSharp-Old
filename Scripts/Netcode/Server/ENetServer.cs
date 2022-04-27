@@ -123,6 +123,12 @@ namespace GodotModules.Netcode.Server
 
                             //Log($"Received packet: {opcode}");
 
+                            if (!HandlePacket.ContainsKey(opcode))
+                            {
+                                Utils.LogErr($"[Server]: Received malformed opcode: {opcode} (Ignoring)");
+                                break;
+                            }
+
                             var handlePacket = HandlePacket[opcode];
                             handlePacket.Read(packetReader);
                             handlePacket.Handle(netEvent.Peer);

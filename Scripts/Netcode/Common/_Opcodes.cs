@@ -8,7 +8,8 @@
         LobbyChatMessage,
         LobbyReady,
         LobbyCountdownChange,
-        LobbyGameStart
+        LobbyGameStart,
+        PlayerPosition
     }
 
     // Sent to Game Client
