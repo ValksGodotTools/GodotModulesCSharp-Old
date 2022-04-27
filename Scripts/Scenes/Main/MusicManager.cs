@@ -12,7 +12,7 @@ namespace GodotModules
         public override void _Ready()
         {
             Instance = this;
-            Tracks = new Dictionary<string, AudioStream>();
+            Tracks = new();
         }
 
         /// <summary>

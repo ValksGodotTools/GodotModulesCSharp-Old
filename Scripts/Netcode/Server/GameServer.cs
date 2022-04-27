@@ -17,9 +17,9 @@ namespace GodotModules.Netcode.Server
 
         public GameServer()
         {
-            Players = new Dictionary<uint, DataPlayer>();
+            Players = new();
 
-            EmitClientPositions = new Timer(1000);
+            EmitClientPositions = new(1000);
             EmitClientPositions.Elapsed += EmitClientPositionsCallback;
             EmitClientPositions.AutoReset = true;
         }

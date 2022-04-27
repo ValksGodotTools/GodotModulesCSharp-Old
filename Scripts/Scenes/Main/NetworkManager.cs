@@ -24,8 +24,8 @@ namespace GodotModules
         public override void _Ready()
         {
             Instance = this;
-            WebClient = new WebClient();
-            GodotCmds = new ConcurrentQueue<GodotCmd>();
+            WebClient = new();
+            GodotCmds = new();
         }
 
         public override void _Process(float delta)

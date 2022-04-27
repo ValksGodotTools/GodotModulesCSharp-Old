@@ -50,7 +50,7 @@ namespace GodotModules
             BtnReady = GetNode<Button>(NodePathBtnReady);
             BtnStart = GetNode<Button>(NodePathBtnStart);
 
-            UIPlayers = new Dictionary<uint, UILobbyPlayerListing>();
+            UIPlayers = new();
 
             //var info = UIGameServers.Instance.CurrentLobby;
             //LobbyName.Text = info.Name;

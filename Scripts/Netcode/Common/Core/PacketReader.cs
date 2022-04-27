@@ -12,8 +12,8 @@ namespace GodotModules.Netcode
 
         public PacketReader(Packet packet)
         {
-            Stream = new MemoryStream(ReadBuffer);
-            Reader = new BinaryReader(Stream);
+            Stream = new(ReadBuffer);
+            Reader = new(Stream);
             packet.CopyTo(ReadBuffer);
             packet.Dispose();
         }

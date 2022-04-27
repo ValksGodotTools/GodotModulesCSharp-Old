@@ -21,8 +21,8 @@ namespace Game
 
         public override void _Ready()
         {
-            Players = new Dictionary<uint, OtherPlayer>();
-            ServerPlayerPositions = new Dictionary<uint, Vector2>();
+            Players = new();
+            ServerPlayerPositions = new();
             ServerPlayerPositions.Add(GameClient.PeerId, Vector2.Zero);
             Instance = this;
             LabelPlayerHealth = GetNode<Label>(NodePathLabelPlayerHealth);

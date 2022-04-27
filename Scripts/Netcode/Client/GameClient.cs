@@ -12,7 +12,7 @@ namespace GodotModules.Netcode.Client
 
         public GameClient()
         {
-            Players = new Dictionary<uint, string>();
+            Players = new();
         }
 
         protected override void Connect(Event netEvent)

@@ -11,7 +11,7 @@ namespace GodotModules
 
         public static void StartInterval(int seconds)
         {
-            TimerErrorNotifier = new Timer(seconds * 1000);
+            TimerErrorNotifier = new(seconds * 1000);
             TimerErrorNotifier.Elapsed += SpawnErrorNotification;
             TimerErrorNotifier.AutoReset = true;
             TimerErrorNotifier.Enabled = true;

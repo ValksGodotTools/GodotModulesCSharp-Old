@@ -10,8 +10,8 @@ namespace GodotModules.Netcode
 
         public PacketWriter()
         {
-            Stream = new MemoryStream();
-            Writer = new BinaryWriter(Stream);
+            Stream = new();
+            Writer = new(Stream);
         }
 
         public void Write(byte v) => Writer.Write(v);

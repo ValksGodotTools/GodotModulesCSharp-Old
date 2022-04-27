@@ -26,7 +26,7 @@ namespace Game
 
             if (GameClient.Running)
             {
-                EmitPosition = new Timer(1000);
+                EmitPosition = new(1000);
                 EmitPosition.Elapsed += EmitPositionCallback;
                 EmitPosition.AutoReset = true;
                 EmitPosition.Enabled = true;

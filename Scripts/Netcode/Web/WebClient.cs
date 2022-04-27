@@ -25,12 +25,12 @@ namespace GodotModules.Netcode
 
         public WebClient()
         {
-            Client = new HttpClient();
+            Client = new();
             Client.Timeout = TimeSpan.FromSeconds(5);
 
-            TimerPingMasterServer = new Timer(WebClient.WEB_PING_INTERVAL);
+            TimerPingMasterServer = new(WebClient.WEB_PING_INTERVAL);
             TimerPingMasterServer.AutoReset = true;
-            TimerPingMasterServer.Elapsed += new ElapsedEventHandler(OnTimerPingMasterServerEvent);
+            TimerPingMasterServer.Elapsed += new(OnTimerPingMasterServerEvent);
         }
 
         public async Task<WebServerResponse<string>> Post(string path, Dictionary<string, string> values)

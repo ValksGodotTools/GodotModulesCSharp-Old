@@ -27,7 +27,7 @@ namespace GodotModules
             Instance = this;
             ServerList = GetNode<VBoxContainer>(NodePathServerList);
             ServerCreationPopup = GetNode<UIPopupCreateLobby>(NodePathServerCreationPopup);
-            LobbyListings = new Dictionary<string, LobbyListing>();
+            LobbyListings = new();
 
             if (Disconnected)
             {

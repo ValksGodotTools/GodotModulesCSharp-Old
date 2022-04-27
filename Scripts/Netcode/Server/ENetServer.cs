@@ -28,9 +28,9 @@ namespace GodotModules.Netcode.Server
         {
             Running = false;
             SomeoneConnected = false;
-            ENetCmds = new ConcurrentQueue<ENetCmd>();
-            Outgoing = new ConcurrentQueue<ServerPacket>();
-            Peers = new Dictionary<uint, Peer>();
+            ENetCmds = new();
+            Outgoing = new();
+            Peers = new();
         }
 
         /// <summary>
