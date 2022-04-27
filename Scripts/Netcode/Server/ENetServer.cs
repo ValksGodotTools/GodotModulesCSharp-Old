@@ -171,6 +171,7 @@ namespace GodotModules.Netcode.Server
             while (ConcurrentQueuesWorking())
                 await Task.Delay(100);
 
+            Running = false;
             Stopped();
 
             if (QueueRestart)
@@ -218,12 +219,11 @@ namespace GodotModules.Netcode.Server
                 return;
             }
 
-            Running = false;
             CancelTokenSource.Cancel();
 
             KickAll(DisconnectOpcode.Stopping);
 
-            while (!CancelTokenSource.IsCancellationRequested)
+            while (Running)
                 await Task.Delay(100);
         }
 

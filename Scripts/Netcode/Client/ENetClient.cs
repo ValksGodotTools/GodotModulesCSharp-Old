@@ -212,7 +212,7 @@ namespace GodotModules.Netcode.Client
             //CancelTokenSource.Cancel();
             ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToDisconnect));
 
-            while (!CancelTokenSource.IsCancellationRequested)
+            while (Running)
                 await Task.Delay(100);
         }
 
