@@ -9,8 +9,7 @@
         LobbyReady,
         LobbyCountdownChange,
         LobbyGameStart,
-        PlayerDirectionPressed,
-        ProcessDelta
+        PlayerDirectionPressed
     }
 
     // Sent to Game Client
