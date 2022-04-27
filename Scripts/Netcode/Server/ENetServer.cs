@@ -46,127 +46,125 @@ namespace GodotModules.Netcode.Server
 
             Library.Initialize();
 
-            using (Host server = new Host())
+            using var server = new Host();
+            Address address = new Address();
+            address.Port = port;
+
+            try
             {
-                Address address = new Address();
-                address.Port = port;
-
-                try
-                {
-                    server.Create(address, maxClients);
-                }
-                catch (Exception e)
-                {
-                    var message = $"A server is running on port {port} already! {e.Message}";
-                    Log(message);
-                    NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.PopupMessage, message));
-                    await GodotModules.Netcode.Client.ENetClient.Stop();
-                    await Stop();
-                    return;
-                }
-
-                Log($"Server listening on port {port}");
-                Running = true;
-
-                while (!CancelTokenSource.IsCancellationRequested)
-                {
-                    bool polled = false;
-
-                    // ENet Cmds
-                    while (ENetCmds.TryDequeue(out ENetCmd cmd))
-                    {
-                        var opcode = cmd.Opcode;
-
-                        // Host client wants to stop the server
-                        switch (opcode)
-                        {
-                            case ENetOpcode.ClientWantsToExitApp:
-                                CancelTokenSource.Cancel();
-                                KickAll(DisconnectOpcode.Stopping);
-                                break;
-                        }
-                    }
-
-                    // Outgoing
-                    while (Outgoing.TryDequeue(out ServerPacket packet))
-                    {
-                        foreach (var peer in packet.Peers)
-                            Send(packet, peer);
-                    }
-
-                    while (!polled)
-                    {
-                        if (server.CheckEvents(out Event netEvent) <= 0)
-                        {
-                            if (server.Service(15, out netEvent) <= 0)
-                                break;
-
-                            polled = true;
-                        }
-
-                        var peer = netEvent.Peer;
-                        var eventType = netEvent.Type;
-
-                        if (eventType == EventType.Receive)
-                        {
-                            // Receive
-                            var packet = netEvent.Packet;
-                            if (packet.Length > GamePacket.MaxSize)
-                            {
-                                Log($"Tried to read packet from server of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
-                                packet.Dispose();
-                                continue;
-                            }
-
-                            var packetReader = new PacketReader(packet);
-                            var opcode = (ClientPacketOpcode)packetReader.ReadByte();
-
-                            //Log($"Received packet: {opcode}");
-
-                            if (!HandlePacket.ContainsKey(opcode))
-                            {
-                                Utils.LogErr($"[Server]: Received malformed opcode: {opcode} (Ignoring)");
-                                break;
-                            }
-
-                            var handlePacket = HandlePacket[opcode];
-                            try
-                            {
-                                handlePacket.Read(packetReader);
-                            }
-                            catch (System.IO.EndOfStreamException)
-                            {
-                                Utils.LogErr($"[Server]: Received malformed opcode: {opcode} (Ignoring)");
-                                break;
-                            }
-                            handlePacket.Handle(netEvent.Peer);
-
-                            packetReader.Dispose();
-                        }
-                        else if (eventType == EventType.Connect)
-                        {
-                            // Connect
-                            SomeoneConnected = true;
-                            Peers.Add(netEvent.Peer.ID, netEvent.Peer);
-                            Connect(netEvent);
-                        }
-                        else if (eventType == EventType.Disconnect)
-                        {
-                            // Disconnect
-                            Peers.Remove(netEvent.Peer.ID);
-                            Disconnect(netEvent);
-                        }
-                        else if (eventType == EventType.Timeout)
-                        {
-                            // Timeout
-                            Peers.Remove(netEvent.Peer.ID);
-                            Timeout(netEvent);
-                        }
-                    }
-                }
-
-                server.Flush();
+                server.Create(address, maxClients);
             }
+            catch (Exception e)
+            {
+                var message = $"A server is running on port {port} already! {e.Message}";
+                Log(message);
+                NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.PopupMessage, message));
+                await GodotModules.Netcode.Client.ENetClient.Stop();
+                await Stop();
+                return;
+            }
+
+            Log($"Server listening on port {port}");
+            Running = true;
+
+            while (!CancelTokenSource.IsCancellationRequested)
+            {
+                bool polled = false;
+
+                // ENet Cmds
+                while (ENetCmds.TryDequeue(out ENetCmd cmd))
+                {
+                    var opcode = cmd.Opcode;
+
+                    // Host client wants to stop the server
+                    switch (opcode)
+                    {
+                        case ENetOpcode.ClientWantsToExitApp:
+                            CancelTokenSource.Cancel();
+                            KickAll(DisconnectOpcode.Stopping);
+                            break;
+                    }
+                }
+
+                // Outgoing
+                while (Outgoing.TryDequeue(out ServerPacket packet))
+                {
+                    foreach (var peer in packet.Peers)
+                        Send(packet, peer);
+                }
+
+                while (!polled)
+                {
+                    if (server.CheckEvents(out Event netEvent) <= 0)
+                    {
+                        if (server.Service(15, out netEvent) <= 0)
+                            break;
+
+                        polled = true;
+                    }
+
+                    var peer = netEvent.Peer;
+                    var eventType = netEvent.Type;
+
+                    if (eventType == EventType.Receive)
+                    {
+                        // Receive
+                        var packet = netEvent.Packet;
+                        if (packet.Length > GamePacket.MaxSize)
+                        {
+                            Log($"Tried to read packet from server of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
+                            packet.Dispose();
+                            continue;
+                        }
+
+                        var packetReader = new PacketReader(packet);
+                        var opcode = (ClientPacketOpcode)packetReader.ReadByte();
+
+                        //Log($"Received packet: {opcode}");
+
+                        if (!HandlePacket.ContainsKey(opcode))
+                        {
+                            Utils.LogErr($"[Server]: Received malformed opcode: {opcode} (Ignoring)");
+                            break;
+                        }
+
+                        var handlePacket = HandlePacket[opcode];
+                        try
+                        {
+                            handlePacket.Read(packetReader);
+                        }
+                        catch (System.IO.EndOfStreamException)
+                        {
+                            Utils.LogErr($"[Server]: Received malformed opcode: {opcode} (Ignoring)");
+                            break;
+                        }
+                        handlePacket.Handle(netEvent.Peer);
+
+                        packetReader.Dispose();
+                    }
+                    else if (eventType == EventType.Connect)
+                    {
+                        // Connect
+                        SomeoneConnected = true;
+                        Peers.Add(netEvent.Peer.ID, netEvent.Peer);
+                        Connect(netEvent);
+                    }
+                    else if (eventType == EventType.Disconnect)
+                    {
+                        // Disconnect
+                        Peers.Remove(netEvent.Peer.ID);
+                        Disconnect(netEvent);
+                    }
+                    else if (eventType == EventType.Timeout)
+                    {
+                        // Timeout
+                        Peers.Remove(netEvent.Peer.ID);
+                        Timeout(netEvent);
+                    }
+                }
+            }
+
+            server.Flush();
 
             Log("Server stopped");
 
