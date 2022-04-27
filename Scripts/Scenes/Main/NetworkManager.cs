@@ -83,26 +83,26 @@ namespace GodotModules
             {
                 Instance.GetTree().SetAutoAcceptQuit(false);
 
-                if (ENetClient.Running)
-                {
-                    await GameClient.Stop();
-                }
-
-                if (ENetServer.Running)
-                {
-                    GameServer.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToExitApp));
-                    await GameServer.Stop();
-                }
-
-                ExitCleanup();
+                await ExitCleanup();
             }
         }
 
         /// <summary>
         /// All cleanup should be done in here
         /// </summary>
-        private static void ExitCleanup()
+        private static async Task ExitCleanup()
         {
+            if (ENetClient.Running)
+            {
+                await GameClient.Stop();
+            }
+
+            if (ENetServer.Running)
+            {
+                GameServer.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToExitApp));
+                await GameServer.Stop();
+            }
+
             UtilOptions.SaveOptions();
             WebClient.Client.Dispose();
             ErrorNotifier.Dispose();
@@ -160,7 +160,7 @@ namespace GodotModules
         {
             if (ClientConnectingTokenSource == null)
                 return;
-            
+
             SceneGameServers.ConnectingToLobby = false;
             ClientConnectingTokenSource.Cancel();
             GameClient.CancelTask();
