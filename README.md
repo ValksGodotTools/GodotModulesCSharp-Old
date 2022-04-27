@@ -14,7 +14,7 @@ I was thinking to myself, I want to make a bullet hell game, but I am also going
 ![image](https://user-images.githubusercontent.com/6277739/164519290-fcd96048-3267-4278-bbd9-34bd7c0a86c0.png)
 ![image](https://user-images.githubusercontent.com/6277739/164519339-a23cc3be-29dd-4df8-ad3b-e975508f5ec8.png)
 
-https://user-images.githubusercontent.com/6277739/165597810-dc3f5b04-7772-4b28-95fb-6cbae1c8256a.mp4
+https://user-images.githubusercontent.com/6277739/165597959-cb42938a-d680-45ec-99f0-d2ba4495a534.mp4
 
 ### Tech Tree (coming soon)
 Tech tree where nodes in tree are positioned automatically via script
