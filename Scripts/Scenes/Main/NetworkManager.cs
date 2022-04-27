@@ -116,16 +116,12 @@ namespace GodotModules
             WebClient.Client.Dispose();
             ErrorNotifier.Dispose();
 
-            if (ClientConnectingTokenSource != null)
-                ClientConnectingTokenSource.Dispose();
+            ClientConnectingTokenSource?.Dispose();
 
-            if (ENetClient.CancelTokenSource != null)
-                ENetClient.CancelTokenSource.Dispose();
-            if (ENetServer.CancelTokenSource != null)
-                ENetServer.CancelTokenSource.Dispose();
+            ENetClient.CancelTokenSource?.Dispose();
+            ENetServer.CancelTokenSource?.Dispose();
 
-            if (ClientPlayer.EmitPosition != null)
-                ClientPlayer.EmitPosition.Dispose();
+            ClientPlayer.EmitPosition?.Dispose();
 
             Instance.GetTree().Quit();
         }

@@ -12,7 +12,7 @@ namespace GodotModules.Netcode
             using (var writer = new PacketWriter())
             {
                 writer.Write(opcode);
-                if (writable != null) writable.Write(writer);
+                writable?.Write(writer);
 
                 Data = writer.Stream.ToArray();
                 Size = writer.Stream.Length;
