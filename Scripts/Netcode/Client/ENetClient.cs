@@ -228,15 +228,7 @@ namespace GodotModules.Netcode.Client
         /// Checks thread name, if its Client send request to log on Godot thread otherwise log on Godot thread directly
         /// </summary>
         /// <param name="obj">The object to log</param>
-        public static void Log(object obj)
-        {
-            var threadName = Thread.CurrentThread.Name;
-
-            if (threadName == "Client")
-                NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessageClient, obj));
-            else
-                Utils.Log($"[Client]: {obj}", LogsColor);
-        }
+        public static void Log(object obj) => NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessageClient, obj));
 
         /// <summary>
         /// This is in the ENet thread, anything from the ENet thread can be used here
