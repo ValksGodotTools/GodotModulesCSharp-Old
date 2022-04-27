@@ -51,7 +51,6 @@ namespace GodotModules.Netcode
                 if (LogExceptions) 
                 {
                     var message = $"Failed to POST to http://{WEB_SERVER_IP}/api/{path} {e.Message}";
-                    UIDebugger.AddMessage(message);
                     Utils.Log(message, ConsoleColor.Red);
                 }
                 return new WebServerResponse<string>
@@ -80,7 +79,6 @@ namespace GodotModules.Netcode
                 if (LogExceptions) 
                 {
                     var message = $"Failed to GET from http://{WEB_SERVER_IP}/api/{path} {e.Message}";
-                    UIDebugger.AddMessage(message);
                     Utils.Log(message, ConsoleColor.Red);
                 }
                 return new WebServerResponse<T>

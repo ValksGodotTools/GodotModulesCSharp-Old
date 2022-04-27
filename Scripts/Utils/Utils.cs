@@ -18,7 +18,11 @@ namespace GodotModules
 
         public static void Log(object obj, ConsoleColor color = ConsoleColor.Gray) 
         {
-            UIDebugger.AddMessage(obj);
+            if (obj is Exception)
+                UIDebugger.AddException((Exception)obj);
+            else
+                UIDebugger.AddMessage(obj);
+            
             Console.ForegroundColor = color;
             GD.Print(obj);
             Console.ResetColor();

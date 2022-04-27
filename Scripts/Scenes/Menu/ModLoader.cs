@@ -110,8 +110,9 @@ namespace GodotModules.ModLoader
                 {
                     // Mod script did not run right
                     ErrorNotifier.IncrementErrorCount();
-                    UIDebugger.AddException(e);
-                    LogErr(e.DecoratedMessage);
+                    UIModLoader.Instance.Log($"{e.DecoratedMessage}");
+                    Utils.Log($"[ModLoader]: {e}");
+
                     continue;
                 }
             }
@@ -129,8 +130,8 @@ namespace GodotModules.ModLoader
             catch (ScriptRuntimeException e)
             {
                 ErrorNotifier.IncrementErrorCount();
-                UIDebugger.AddException(e);
-                LogErr(e.DecoratedMessage);
+                UIModLoader.Instance.Log($"{e.DecoratedMessage}");
+                Utils.Log($"[ModLoader]: {e}");
             }
         }
 
@@ -150,12 +151,6 @@ namespace GodotModules.ModLoader
             UIModLoader.Instance.Log($"{obj}");
         }
 
-        private static void LogErr(object obj)
-        {
-            Godot.GD.PrintErr($"[ModLoader]: {obj}");
-            UIModLoader.Instance.Log($"{obj}");
-        }
-
         private static void LoadLuaScripts(string directory)
         {
             GodotFileManager.LoadDir(directory, (dir, fileName) => {
@@ -170,8 +165,11 @@ namespace GodotModules.ModLoader
 
                     if (err == Godot.Error.Ok)
                         Script.DoString(luaScript.GetAsText());
-                    else
-                        LogErr($"Could not open file: {absolutePath}");
+                    else 
+                    {
+                        UIModLoader.Instance.Log($"Could not open file: {absolutePath}");
+                        Utils.Log($"Could not open file: {absolutePath}");
+                    }
                 }
             });
         }
