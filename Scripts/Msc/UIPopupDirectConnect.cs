@@ -2,9 +2,9 @@ using Godot;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 
-namespace GodotModules 
+namespace GodotModules
 {
-    public class UIPopupDirectConnect : WindowDialog 
+    public class UIPopupDirectConnect : WindowDialog
     {
         [Export] public readonly NodePath NodePathIp;
 
@@ -28,13 +28,13 @@ namespace GodotModules
 
             var colonIndex = input.IndexOf(':');
 
-            if (colonIndex != -1)
+            if (colonIndex == -1)
+                return;
+
+            if (ushort.TryParse(input.Substring(colonIndex + 1), out ushort result))
             {
-                if (ushort.TryParse(input.Substring(colonIndex + 1), out ushort result))
-                {
-                    port = result;
-                    ip = input.Substring(0, colonIndex);
-                }
+                port = result;
+                ip = input.Substring(0, colonIndex);
             }
 
             Hide();
