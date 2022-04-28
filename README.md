@@ -31,4 +31,11 @@ In games usually when you press Esc a popup menu comes up asking if you want to 
 See [CONTRIBUTING.md](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/CONTRIBUTING.md)
 
 ## Credit
+### Programming
 Thank you to [LazerGoat](https://github.com/LazerGoat) for pointing out bugs here and there
+
+### Testers
+Thank you to the following testers.
+
+- LazerGoat [[GitHub]](https://github.com/LazerGoat)
+- SCUDSTORM [[Twitch]](https://www.twitch.tv/perezdispenser)
