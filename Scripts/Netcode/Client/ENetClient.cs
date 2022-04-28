@@ -11,14 +11,14 @@ using System.Threading.Tasks;
 
 namespace GodotModules.Netcode.Client
 {
-    public abstract class ENetClient
+    public abstract class ENetClient : IDisposable
     {
         // values grabbed from the server
         // =========================================================
         public static uint PeerId { get; set; } // this clients peer id (grabbed from server at some point)
         public static bool IsHost { get; set; }
         // =========================================================
-        public static CancellationTokenSource CancelTokenSource { get; private set; }
+        private static CancellationTokenSource CancelTokenSource { get; set; }
         public static ConsoleColor LogsColor = ConsoleColor.Yellow;
         public static ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
         private static int OutgoingId { get; set; }
@@ -245,5 +245,10 @@ namespace GodotModules.Netcode.Client
         /// </summary>
         /// <param name="netEvent"></param>
         protected virtual void Timeout(Event netEvent) { }
+
+        public void Dispose()
+        {
+            CancelTokenSource.Dispose();
+        }
     }
 }

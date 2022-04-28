@@ -118,22 +118,19 @@ namespace GodotModules
 
             ClientConnectingTokenSource?.Dispose();
 
-            ENetClient.CancelTokenSource?.Dispose();
-            ENetServer.CancelTokenSource?.Dispose();
-
-            //ClientPlayer.EmitPosition?.Dispose();
-
             Instance.GetTree().Quit();
         }
 
         public static async void StartClient(string ip, ushort port)
         {
+            GameClient?.Dispose();
             GameClient = new GameClient();
             await GameClient.Connect(ip, port);
         }
 
         public static async void StartServer(ushort port, int maxClients)
         {
+            GameServer?.Dispose();
             GameServer = new GameServer();
             await GameServer.Start(port, maxClients);
         }

@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace GodotModules.Netcode.Server
 {
-    public abstract class ENetServer
+    public abstract class ENetServer : IDisposable
     {
-        public static CancellationTokenSource CancelTokenSource { get; private set; }
+        private static CancellationTokenSource CancelTokenSource { get; set; }
         public static ConsoleColor LogsColor = ConsoleColor.Cyan;
         public static bool SomeoneConnected { get; set; }
         public static bool Running { get; set; }
@@ -318,6 +318,11 @@ namespace GodotModules.Netcode.Server
         {
             Peers[id].DisconnectNow((uint)opcode);
             Peers.Remove(id);
+        }
+
+        public void Dispose()
+        {
+            CancelTokenSource.Dispose();
         }
     }
 }
