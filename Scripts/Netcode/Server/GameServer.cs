@@ -19,7 +19,7 @@ namespace GodotModules.Netcode.Server
         {
             Players = new();
 
-            EmitClientPositions = new(200);
+            EmitClientPositions = new(CommandDebug.TestValue1);
             EmitClientPositions.Elapsed += EmitClientPositionsCallback;
             EmitClientPositions.AutoReset = true;
         }

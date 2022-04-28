@@ -13,6 +13,7 @@ namespace Game
         private Label LabelPosition { get; set; }
 
         private float Speed = 250f;
+        public static Timer Timer { get; set; }
 
         public override void _Ready()
         {
@@ -22,12 +23,14 @@ namespace Game
 
             if (GameClient.Running)
             {
-                var timer = new Timer();
-                timer.Connect("timeout", this, nameof(EmitPosition));
-                timer.WaitTime = 0.2f; // 200ms
-                timer.OneShot = false;
-                timer.Autostart = true;
-                AddChild(timer);
+                Timer = new Timer();
+                Timer.Connect("timeout", this, nameof(EmitPosition));
+
+                // timer.WaitTime takes a value in seconds
+                Timer.WaitTime = CommandDebug.TestValue1 / 1000f; // 200ms
+                Timer.OneShot = false;
+                Timer.Autostart = true;
+                AddChild(Timer);
             }
         }
 

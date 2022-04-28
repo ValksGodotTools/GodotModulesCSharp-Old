@@ -38,7 +38,7 @@ namespace GodotModules
                         var packetReader = (PacketReader)cmd.Data;
                         var opcode = (ServerPacketOpcode)packetReader.ReadByte();
 
-                        Utils.Log($"[Client]: Received {opcode}");
+                        //Utils.Log($"[Client]: Received {opcode}");
 
                         if (!ENetClient.HandlePacket.ContainsKey(opcode))
                         {
