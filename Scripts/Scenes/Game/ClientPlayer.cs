@@ -24,6 +24,7 @@ namespace Game
             {
                 var timer = new Timer();
                 timer.Connect("timeout", this, nameof(EmitPosition));
+                timer.WaitTime = 0.2f; // 200ms
                 timer.OneShot = false;
                 timer.Autostart = true;
                 AddChild(timer);
