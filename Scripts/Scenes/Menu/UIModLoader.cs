@@ -74,26 +74,24 @@ namespace GodotModules.ModLoader
 
             ModInfoDependencyList.Clear();
 
-            foreach (var dependency in modInfo.Dependencies)
-            {
+            modInfo.Dependencies.ForEach(dependency => {
                 var instance = CreateModInfoInstance(dependency);
                 instance.DisplayedInDependencies = true;
 
                 ModInfoDependencyList[dependency] = instance;
 
                 ModDependencies.AddChild(instance);
-            }
+            });
         }
 
         public void DisplayMods()
         {
             var modsEnabled = ModLoader.ModsEnabled;
-            foreach (var mod in ModLoader.LoadedMods)
-            {
+            ModLoader.LoadedMods.ForEach(mod => {
                 var modInfo = CreateModInfoInstance(mod.ModInfo.Name);
                 ModList.AddChild(modInfo);
                 ModInfoList[mod.ModInfo.Name] = modInfo;
-            }
+            });
 
             if (ModLoader.LoadedMods.Count > 0)
                 UpdateModInfo(ModLoader.LoadedMods[0].ModInfo.Name);

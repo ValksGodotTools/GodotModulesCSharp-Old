@@ -110,11 +110,10 @@ namespace GodotModules
 
             LobbyListings.Clear();
 
-            foreach (var server in res.Content)
-            {
+            res.Content.ForEach(server => {
                 LobbyListings.Add(server.Ip, server);
                 AddServer(server);
-            }
+            });
         }
 
         public async void PostServer(LobbyListing info)

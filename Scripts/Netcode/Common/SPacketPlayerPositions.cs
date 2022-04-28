@@ -13,18 +13,11 @@ namespace GodotModules.Netcode
         public override void Write(PacketWriter writer)
         {
             writer.Write((ushort)PlayerPositions.Count);
-            foreach (var pair in PlayerPositions)
-            {
-                var id = pair.Key;
-                var pos = pair.Value;
-
-                var x = (float)Math.Round(pos.x, 1);
-                var y = (float)Math.Round(pos.y, 1);
-
-                writer.Write(id);
-                writer.Write(x);
-                writer.Write(y);
-            }
+            PlayerPositions.ForEach(pair => {
+                writer.Write(pair.Key); // id
+                writer.Write((float)Math.Round(pair.Value.x, 1));
+                writer.Write((float)Math.Round(pair.Value.y, 1));
+            });
         }
 
         public override void Read(PacketReader reader)

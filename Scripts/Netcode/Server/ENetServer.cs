@@ -88,10 +88,7 @@ namespace GodotModules.Netcode.Server
 
                 // Outgoing
                 while (Outgoing.TryDequeue(out ServerPacket packet))
-                {
-                    foreach (var peer in packet.Peers)
-                        Send(packet, peer);
-                }
+                    packet.Peers.ForEach(peer => Send(packet, peer));
 
                 while (!polled)
                 {
@@ -303,9 +300,7 @@ namespace GodotModules.Netcode.Server
         /// <param name="opcode">Tells the client why they were kicked</param>
         private static void KickAll(DisconnectOpcode opcode)
         {
-            foreach (var peer in Peers.Values)
-                peer.DisconnectNow((uint)opcode);
-
+            Peers.Values.ForEach(peer => peer.DisconnectNow((uint)opcode));
             Peers.Clear();
         }
 

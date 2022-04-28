@@ -60,8 +60,7 @@ namespace GodotModules
             if (!ENetClient.IsHost)
                 Instance.BtnStart.Disabled = true;
 
-            foreach (var player in GameClient.Players)
-                UIAddPlayer(player.Key, player.Value);
+            GameClient.Players.ForEach(x => UIAddPlayer(x.Key, x.Value));
         }
 
         public override void _Input(InputEvent @event)
@@ -169,9 +168,7 @@ namespace GodotModules
 
             // check if all players are ready
             var playersNotReady = new List<string>();
-            foreach (var pair in UIPlayers)
-                if (!pair.Value.Ready)
-                    playersNotReady.Add(pair.Value.Username);
+            UIPlayers.Where(x => !x.Value.Ready).ForEach(pair => playersNotReady.Add(pair.Value.Username));
 
             if (playersNotReady.Count > 0)
             {

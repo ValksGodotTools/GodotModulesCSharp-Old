@@ -4,6 +4,7 @@ using GodotModules.ModLoader;
 using GodotModules.Netcode.Client;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Game
 {
@@ -38,21 +39,25 @@ namespace Game
             ModLoader.Call("OnGameInit");
 
             if (GameClient.Running)
-            {
-                Player.SetUsername(GameManager.Options.OnlineUsername);
+                InitMultiplayerStuff();
+        }
 
-                foreach (var pair in GameClient.Players)
+        private void InitMultiplayerStuff()
+        {
+            Player.SetUsername(GameManager.Options.OnlineUsername);
+
+            bool IsNotClient(uint id) => id != GameClient.PeerId;
+
+            GameClient.Players
+                .Where(x => IsNotClient(x.Key))
+                .ForEach(pair =>
                 {
-                    if (pair.Key == GameClient.PeerId)
-                        continue;
-
                     var otherPlayer = Prefabs.OtherPlayer.Instance<OtherPlayer>();
                     otherPlayer.Position = Vector2.Zero;
                     Players.Add(pair.Key, otherPlayer);
                     AddChild(otherPlayer);
                     otherPlayer.SetUsername(pair.Value);
-                }
-            }
+                });
         }
 
         private static List<Dictionary<uint, Vector2>> PlayerPositionQueue = new List<Dictionary<uint, Vector2>>();
@@ -66,7 +71,7 @@ namespace Game
 
             if (PlayerPositionQueue.Count > 2)
                 PlayerPositionQueue.RemoveAt(0);
-            
+
             progress = 0;
         }
 
@@ -84,11 +89,10 @@ namespace Game
                 return;
             }
 
-            foreach (var pair in PlayerPositionQueue[1])
-            {
+            PlayerPositionQueue[1].ForEach(pair => {
                 var player = Players[pair.Key];
                 player.Position = Utils.Lerp(PlayerPositionQueue[0][pair.Key], pair.Value, progress);
-            }
+            });
         }
     }
 }

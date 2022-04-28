@@ -13,13 +13,10 @@ namespace GodotModules.Netcode
             base.Write(writer);
             writer.Write(IsHost);
             writer.Write((ushort)Players.Count);
-            foreach (var pair in Players)
-            {
+            Players.ForEach(pair => {
                 writer.Write((ushort)pair.Key); // id
-
-                var player = pair.Value;
-                writer.Write((string)player.Username);
-            }
+                writer.Write((string)pair.Value.Username);
+            });
         }
 
         public override void Read(PacketReader reader)
@@ -50,8 +47,7 @@ namespace GodotModules.Netcode
             ENetClient.Log($"{GameManager.Options.OnlineUsername} joined lobby with id {Id} also other players in lobby are {Players.Print()}");
             SceneLobby.AddPlayer(Id, GameManager.Options.OnlineUsername);
 
-            foreach (var pair in Players)
-                SceneLobby.AddPlayer(pair.Key, pair.Value.Username);
+            Players.ForEach(pair => SceneLobby.AddPlayer(pair.Key, pair.Value.Username));
 
             SceneManager.ChangeScene("Lobby");
         }

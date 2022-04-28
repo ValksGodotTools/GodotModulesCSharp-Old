@@ -59,9 +59,7 @@ namespace GodotModules.Settings
         private void SetupResolutionOptions()
         {
             ResolutionOptions = GetNode<OptionButton>(NodePathResolutionOptions);
-
-            foreach (var res in UtilOptions.SupportedResolutions.Values)
-                ResolutionOptions.AddItem($"{res.x} x {res.y}");
+            UtilOptions.SupportedResolutions.Values.ForEach(res => ResolutionOptions.AddItem($"{res.x} x {res.y}"));
         }
 
         private void _on_Resolution_item_selected(int index)

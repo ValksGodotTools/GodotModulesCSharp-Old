@@ -3,6 +3,7 @@ using MoonSharp.VsCodeDebugger;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace GodotModules.ModLoader
 {
@@ -40,25 +41,29 @@ namespace GodotModules.ModLoader
             LoadedMods.Clear();
             ModInfo = FindAllMods();
 
-            foreach (var mod in ModInfo.Values)
+            ModInfo.Values.ForEach(mod =>
             {
                 if (!LoadedMods.Contains(mod))
                     LoadedMods.Add(mod);
 
                 var modIndex = LoadedMods.IndexOf(mod);
 
-                foreach (var dependency in mod.ModInfo.Dependencies)
-                {
-                    if (!ModInfo.ContainsKey(dependency))
+                mod.ModInfo.Dependencies
+                    .Where(dependency =>
                     {
-                        Log($"{mod.ModInfo.Name} is missing the dependency: {dependency}");
-                        continue;
-                    }
-
-                    if (!LoadedMods.Contains(ModInfo[dependency]))
-                        LoadedMods.Insert(modIndex, ModInfo[dependency]);
-                }
-            }
+                        if (!ModInfo.ContainsKey(dependency))
+                        {
+                            Log($"{mod.ModInfo.Name} is missing the dependency: {dependency}");
+                            return false;
+                        }
+                        else
+                            return true;
+                    }).ForEach(dependency =>
+                    {
+                        if (!LoadedMods.Contains(ModInfo[dependency]))
+                            LoadedMods.Insert(modIndex, ModInfo[dependency]);
+                    });
+            });
         }
 
         public static void LoadMods()
@@ -76,45 +81,37 @@ namespace GodotModules.ModLoader
             var modsEnabled = ModLoader.ModsEnabled;
             var modLoadedCount = 0;
 
-            foreach (var mod in LoadedMods)
+            bool ModIsEnabled(Mod mod) => modsEnabled[mod.ModInfo.Name];
+            bool ModHasAllDependenciesEnabled(Mod mod)
             {
-                // if mod is not enabled do not run it
-                if (!modsEnabled[mod.ModInfo.Name])
-                    continue;
-
                 var allDependenciesEnabled = true;
 
-                // check if mods dependencies are enabled
-                foreach (var dependency in mod.ModInfo.Dependencies)
-                {
-                    if (!modsEnabled[dependency])
-                    {
-                        Log($"{mod.ModInfo.Name} requires dependency {dependency} to be enabled");
-                        allDependenciesEnabled = false;
-                    }
-                }
+                mod.ModInfo.Dependencies.Where(dependency => !modsEnabled[dependency]).ForEach(dependency => {
+                    Log($"{mod.ModInfo.Name} requires dependency {dependency} to be enabled");
+                    allDependenciesEnabled = false;
+                });
 
-                // do not load mod if not all dependencies are loaded
-                if (!allDependenciesEnabled)
-                    continue;
-
-                // load the mod
-                modLoadedCount++;
-
-                try
-                {
-                    Script.DoFile(mod.PathScript);
-                    UIModLoader.Instance.Log($"Loaded {mod.ModInfo.Name}");
-                }
-                catch (ScriptRuntimeException e)
-                {
-                    // Mod script did not run right
-                    UIModLoader.Instance.Log($"{e.DecoratedMessage}");
-                    Utils.LogErr($"[ModLoader]: {e}");
-
-                    continue;
-                }
+                return allDependenciesEnabled;
             }
+
+            LoadedMods
+                .Where(ModIsEnabled)
+                .Where(ModHasAllDependenciesEnabled)
+                .ForEach(mod =>
+                {
+                    try
+                    {
+                        Script.DoFile(mod.PathScript);
+                        UIModLoader.Instance.Log($"Loaded {mod.ModInfo.Name}");
+                        modLoadedCount++;
+                    }
+                    catch (ScriptRuntimeException e)
+                    {
+                        // Mod script did not run right
+                        UIModLoader.Instance.Log($"{e.DecoratedMessage}");
+                        Utils.LogErr($"[ModLoader]: {e}");
+                    }
+                });
 
             if (modLoadedCount > 0)
                 UIModLoader.Instance.Log($"{modLoadedCount} mods have loaded successfully");
@@ -151,7 +148,8 @@ namespace GodotModules.ModLoader
 
         private static void LoadLuaScripts(string directory)
         {
-            GodotFileManager.LoadDir(directory, (dir, fileName) => {
+            GodotFileManager.LoadDir(directory, (dir, fileName) =>
+            {
                 var absolutePath = $"{dir.GetCurrentDir()}/{fileName}";
 
                 if (dir.CurrentIsDir())
@@ -163,7 +161,7 @@ namespace GodotModules.ModLoader
 
                     if (err == Godot.Error.Ok)
                         Script.DoString(luaScript.GetAsText());
-                    else 
+                    else
                     {
                         UIModLoader.Instance.Log($"Could not open file: {absolutePath}");
                         Utils.LogErr($"Could not open file: {absolutePath}");
