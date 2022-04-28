@@ -101,15 +101,15 @@ namespace GodotModules
         /// </summary>
         private static async Task ExitCleanup()
         {
-            if (ENetClient.Running)
-            {
-                await GameClient.Stop();
-            }
-
             if (ENetServer.Running)
             {
                 GameServer.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToExitApp));
                 await GameServer.Stop();
+            }
+
+            if (ENetClient.Running)
+            {
+                await GameClient.Stop();
             }
 
             UtilOptions.SaveOptions();
@@ -121,7 +121,7 @@ namespace GodotModules
             ENetClient.CancelTokenSource?.Dispose();
             ENetServer.CancelTokenSource?.Dispose();
 
-            ClientPlayer.EmitPosition?.Dispose();
+            //ClientPlayer.EmitPosition?.Dispose();
 
             Instance.GetTree().Quit();
         }
