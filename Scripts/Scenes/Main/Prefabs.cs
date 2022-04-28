@@ -5,16 +5,19 @@ namespace GodotModules
     public static class Prefabs 
     {
         // Game
-        public static PackedScene ClientPlayer = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/ClientPlayer.tscn");
-        public static PackedScene OtherPlayer = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/OtherPlayer.tscn");
+        public static PackedScene ClientPlayer = LoadPrefab("ClientPlayer");
+        public static PackedScene OtherPlayer = LoadPrefab($"OtherPlayer");
 
         // UI
-        public static PackedScene PopupDirectConnect = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/PopupDirectConnect.tscn");
-        public static PackedScene PopupError = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/PopupError.tscn");
-        public static PackedScene PopupMessage = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/PopupMessage.tscn");
-        public static PackedScene NotifyError = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/NotifyError.tscn");
-        public static PackedScene LobbyListing = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/LobbyListing.tscn");
-        public static PackedScene LobbyPlayerListing = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/LobbyPlayerListing.tscn");
-        public static PackedScene ModInfo = ResourceLoader.Load<PackedScene>("res://Scenes/Prefabs/ModInfo.tscn");
+        public static PackedScene PopupDirectConnect = LoadPrefab($"PopupDirectConnect");
+        public static PackedScene PopupError = LoadPrefab("PopupError");
+        public static PackedScene PopupMessage = LoadPrefab("PopupMessage");
+        public static PackedScene NotifyError = LoadPrefab("NotifyError");
+        public static PackedScene LobbyListing = LoadPrefab("LobbyListing");
+        public static PackedScene LobbyPlayerListing = LoadPrefab("LobbyPlayerListing");
+        public static PackedScene ModInfo = LoadPrefab("ModInfo");
+
+        private static PackedScene LoadPrefab(string prefab) =>
+            ResourceLoader.Load<PackedScene>($"res://Scenes/Prefabs/{prefab}.tscn");
     }
 }
