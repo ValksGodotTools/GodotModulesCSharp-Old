@@ -1,11 +1,8 @@
-using Timer = System.Timers.Timer;
-
 using ENet;
 using Godot;
 using GodotModules;
 using GodotModules.Netcode;
 using GodotModules.Netcode.Client;
-using System.Timers;
 using System.Threading.Tasks;
 
 namespace Game
@@ -16,7 +13,6 @@ namespace Game
         private Label LabelPosition { get; set; }
 
         private float Speed = 250f;
-        public static Timer EmitPosition { get; set; }
 
         public override void _Ready()
         {
@@ -26,14 +22,15 @@ namespace Game
 
             if (GameClient.Running)
             {
-                EmitPosition = new(1000);
-                EmitPosition.Elapsed += EmitPositionCallback;
-                EmitPosition.AutoReset = true;
-                EmitPosition.Enabled = true;
+                var timer = new Timer();
+                timer.Connect("timeout", this, nameof(EmitPosition));
+                timer.OneShot = false;
+                timer.Autostart = true;
+                AddChild(timer);
             }
         }
 
-        public async void EmitPositionCallback(System.Object source, ElapsedEventArgs args)
+        public async void EmitPosition()
         {
             await GameClient.Send(ClientPacketOpcode.PlayerPosition, new CPacketPlayerPosition {
                 Position = Position
