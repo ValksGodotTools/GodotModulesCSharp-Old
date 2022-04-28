@@ -22,7 +22,6 @@ namespace GodotModules
         public override void _Ready()
         {
             Instance = this;
-            ErrorNotifier.StartInterval(2);
         }
 
         public override void _Input(InputEvent @event)

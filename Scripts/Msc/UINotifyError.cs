@@ -11,10 +11,12 @@ public class UINotifyError : Control
     private Label ErrorCount { get; set; }
     private AnimationPlayer AnimationPlayer { get; set; }
 
-    public async void Init(int count)
+    public int Count { get; set; }
+
+    public override async void _Ready()
     {
         ErrorCount = GetNode<Label>(NodePathErrorCount);
-        ErrorCount.Text = $"{count}";
+        ErrorCount.Text = $"{Count}";
         AnimationPlayer = GetNode<AnimationPlayer>(NodePathAnimationPlayer);
         AnimationPlayer.Play("Appear");
         await Task.Delay(2000);
