@@ -113,7 +113,7 @@ namespace GodotModules
             }
 
             UtilOptions.SaveOptions();
-            WebClient.Client.Dispose();
+            WebClient.Dispose();
 
             ClientConnectingTokenSource?.Dispose();
 

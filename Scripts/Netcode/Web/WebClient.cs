@@ -12,7 +12,7 @@ using System.Timers;
 
 namespace GodotModules.Netcode
 {
-    public class WebClient
+    public class WebClient : IDisposable
     {
         public HttpClient Client { get; set; }
         public static string ExternalIp { get; set; }
@@ -115,6 +115,11 @@ namespace GodotModules.Netcode
         {
             string externalIpString = new System.Net.WebClient().DownloadString("http://icanhazip.com").Replace("\\r\\n", "").Replace("\\n", "").Trim();
             ExternalIp = IPAddress.Parse(externalIpString).ToString();
+        }
+
+        public void Dispose()
+        {
+            Client.Dispose();
         }
     }
 
