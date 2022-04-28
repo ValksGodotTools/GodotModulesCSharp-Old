@@ -12,14 +12,8 @@ namespace GodotModules
 
         public override void Run(string[] args)
         {
-            if (args.Length == 0)
-                return;
-
-            if (!int.TryParse(args[0], out int result))
-                return;
-
-            SceneGame.Test = result;
-            Utils.Log("updated test to " + result);
+            // debug command
+            // do debug stuff here
         }
     }
 }

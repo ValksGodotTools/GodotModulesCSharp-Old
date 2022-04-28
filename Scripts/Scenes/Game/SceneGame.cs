@@ -61,8 +61,6 @@ namespace Game
             ServerPlayerPositions = playerPositions;
         }
 
-        public static int Test = 100;
-
         public override void _Process(float delta)
         {
             ModLoader.Call("OnGameUpdate", delta);
