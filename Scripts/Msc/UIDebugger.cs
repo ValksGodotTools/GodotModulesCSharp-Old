@@ -29,21 +29,14 @@ namespace GodotModules
 
             if (string.IsNullOrWhiteSpace(cmd))
                 return;
-            
-            var cmdArgs = inputArr.Skip(1).ToArray();
 
-            var cmdExists = false;
+            var command = Command.Instances.FirstOrDefault(x => x.IsMatch(cmd));
 
-            foreach (var command in Command.Instances)
-                if (command.IsMatch(cmd)) 
-                {
-                    cmdExists = true;
-                    command.Run(cmdArgs);
-                }
-
-            if (!cmdExists)
+            if (command != null)
+                command.Run(inputArr.Skip(1).ToArray());
+            else
                 Utils.Log($"The command '{cmd}' does not exist");
-
+                
             Console.Clear();
         }
 

@@ -21,5 +21,10 @@ namespace GodotModules
         public static bool IsMatch(this string value, string expression) => Regex.IsMatch(value, expression);
         public static bool IsNum(this string value) => int.TryParse(value, out int _);
         public static float Remap(this float value, float from1, float to1, float from2, float to2) => (value - from1) / (to1 - from1) * (to2 - from2) + from2;
+        public static void ForEach<T>(this IEnumerable<T> value, Action<T> action) 
+        {
+            foreach (T element in value)
+                action(element);
+        }
     }
 }
