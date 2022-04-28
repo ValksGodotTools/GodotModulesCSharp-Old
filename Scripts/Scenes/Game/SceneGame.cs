@@ -17,12 +17,14 @@ namespace Game
 
         private Dictionary<uint, OtherPlayer> Players;
         public static Vector2 ServerPlayerPosition = Vector2.Zero;
-        public static Dictionary<uint, Vector2> ServerPlayerPositions { get; set; }
+        private static Dictionary<uint, Vector2> NextServerPlayerPositions { get; set; }
+        private static Dictionary<uint, Vector2> PrevServerPlayerPositions { get; set; }
 
         public override void _Ready()
         {
             Players = new();
-            ServerPlayerPositions = new();
+            NextServerPlayerPositions = new();
+            PrevServerPlayerPositions = new();
             Instance = this;
             LabelPlayerHealth = GetNode<Label>(NodePathLabelPlayerHealth);
             Player = Prefabs.ClientPlayer.Instance<ClientPlayer>();
@@ -53,22 +55,39 @@ namespace Game
             }
         }
 
+        private static List<Dictionary<uint, Vector2>> PlayerPositionQueue = new List<Dictionary<uint, Vector2>>();
+
         public static void UpdatePlayerPositions(Dictionary<uint, Vector2> playerPositions)
         {
             if (SceneManager.ActiveScene != "Game")
                 return;
 
-            ServerPlayerPositions = playerPositions;
+            PlayerPositionQueue.Add(playerPositions);
+
+            if (PlayerPositionQueue.Count > 2)
+                PlayerPositionQueue.RemoveAt(0);
+            
+            progress = 0;
         }
 
-        public override void _Process(float delta)
+        private static float progress = 0.0f;
+
+        public override void _PhysicsProcess(float delta)
         {
             ModLoader.Call("OnGameUpdate", delta);
 
-            foreach (var pair in ServerPlayerPositions)
+            progress += delta * (1000f / CommandDebug.TestValue1); // reach value of 1.0 every 200ms
+
+            if (PlayerPositionQueue.Count <= 1)
+            {
+                PrevServerPlayerPositions = NextServerPlayerPositions;
+                return;
+            }
+
+            foreach (var pair in PlayerPositionQueue[1])
             {
                 var player = Players[pair.Key];
-                player.Position = Utils.Lerp(player.Position, pair.Value, 0.1f);
+                player.Position = Utils.Lerp(PlayerPositionQueue[0][pair.Key], pair.Value, progress);
             }
         }
     }
