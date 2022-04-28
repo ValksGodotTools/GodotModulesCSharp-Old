@@ -20,18 +20,12 @@ namespace GodotModules.Netcode
             var pos = new Vector2();
             pos.x = reader.ReadFloat();
             pos.y = reader.ReadFloat();
+            Position = pos;
         }
 
         public override void Handle(ENet.Peer peer)
         {
             GameServer.Players[peer.ID].Position = Position;
-
-            /*foreach (var pair in GameServer.Players)
-            {
-                GameServer.Send(ServerPacketOpcode.PlayerPositions, new SPacketPlayerPositions {
-                    PlayerPositions = GameServer.Players.Where(x => x.Key != pair.Key).ToDictionary(x => x.Key, x => x.Value.Position)
-                }, GameServer.Peers[pair.Key]);
-            }*/
         }
     }
 }
