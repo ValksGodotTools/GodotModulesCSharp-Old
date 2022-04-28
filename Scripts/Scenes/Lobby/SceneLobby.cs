@@ -35,7 +35,8 @@ namespace GodotModules
         public bool Start { get; set; }
 
         private System.Threading.Timer TimerCountdownGameStart { get; set; }
-        private int CountdownGameStart = 2;
+        private const int COUNTDOWN_START_TIME = 2;
+        private int CountdownGameStart = COUNTDOWN_START_TIME;
 
         private Dictionary<uint, UILobbyPlayerListing> UIPlayers { get; set; }
 
@@ -146,7 +147,7 @@ namespace GodotModules
             if (SceneManager.ActiveScene == "Lobby")
             {
                 Instance.TimerCountdownGameStart.Dispose();
-                Instance.CountdownGameStart = 5;
+                Instance.CountdownGameStart = COUNTDOWN_START_TIME;
                 Instance.BtnReady.Disabled = false;
                 Log("Game start was cancelled");
             }
