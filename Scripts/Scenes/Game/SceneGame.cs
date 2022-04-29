@@ -60,7 +60,7 @@ namespace Game
                 });
         }
 
-        private static List<Dictionary<uint, Vector2>> PlayerPositionQueue = new List<Dictionary<uint, Vector2>>();
+        private static PositionQueue PlayerPositionQueue = new PositionQueue();
 
         public static void UpdatePlayerPositions(Dictionary<uint, Vector2> playerPositions)
         {
@@ -68,31 +68,47 @@ namespace Game
                 return;
 
             PlayerPositionQueue.Add(playerPositions);
-
-            if (PlayerPositionQueue.Count > 2)
-                PlayerPositionQueue.RemoveAt(0);
-
-            progress = 0;
         }
-
-        private static float progress = 0.0f;
 
         public override void _PhysicsProcess(float delta)
         {
             ModLoader.Call("OnGameUpdate", delta);
 
-            progress += delta * (1000f / CommandDebug.TestValue1); // reach value of 1.0 every 200ms
+            PlayerPositionQueue.UpdateProgress(delta);
 
-            if (PlayerPositionQueue.Count <= 1)
+            if (PlayerPositionQueue.NotReady)
             {
                 PrevServerPlayerPositions = NextServerPlayerPositions;
                 return;
             }
 
-            PlayerPositionQueue[1].ForEach(pair => {
+            PlayerPositionQueue.Current.ForEach(pair =>
+            {
                 var player = Players[pair.Key];
-                player.Position = Utils.Lerp(PlayerPositionQueue[0][pair.Key], pair.Value, progress);
+                player.Position = Utils.Lerp(PlayerPositionQueue.Previous[pair.Key], pair.Value, PlayerPositionQueue.Progress);
             });
         }
+    }
+
+    class PositionQueue
+    {
+        private List<Dictionary<uint, Vector2>> Data = new();
+        public float Progress { get; private set; }
+
+        public Dictionary<uint, Vector2> Previous => Data[0];
+        public Dictionary<uint, Vector2> Current => Data[1];
+
+        public bool NotReady => Data.Count <= 1;
+
+        public void Add(Dictionary<uint, Vector2> data) 
+        {
+            Progress = 0; // reset progress as this is new incoming data
+            Data.Add(data);
+
+            if (Data.Count > 2) // only keep track of previous and current
+                Data.RemoveAt(0);
+        }
+
+        public void UpdateProgress(float delta) => Progress += delta * (1000f / CommandDebug.SendReceiveDataInterval); // reach value of 1.0 every 200ms
     }
 }
