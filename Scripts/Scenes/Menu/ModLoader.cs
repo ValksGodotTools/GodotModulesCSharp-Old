@@ -41,27 +41,26 @@ namespace GodotModules.ModLoader
             LoadedMods.Clear();
             ModInfo = FindAllMods();
 
+            bool IsModMissingDependency(string dependency) => !ModInfo.ContainsKey(dependency);
+            bool ModHasDependency(string dependency) => ModInfo.ContainsKey(dependency);
+            
             ModInfo.Values.ForEach(mod =>
             {
                 if (!LoadedMods.Contains(mod))
                     LoadedMods.Add(mod);
 
+                var modInfo = mod.ModInfo;
                 var modIndex = LoadedMods.IndexOf(mod);
 
-                mod.ModInfo.Dependencies
-                    .Where(dependency =>
-                    {
-                        if (!ModInfo.ContainsKey(dependency))
-                        {
-                            Log($"{mod.ModInfo.Name} is missing the dependency: {dependency}");
-                            return false;
-                        }
-                        else
-                            return true;
-                    }).ForEach(dependency =>
-                    {
-                        if (!LoadedMods.Contains(ModInfo[dependency]))
-                            LoadedMods.Insert(modIndex, ModInfo[dependency]);
+                modInfo.Dependencies
+                    .Where(IsModMissingDependency)
+                    .ForEach(x => Log($"{mod.ModInfo.Name} is missing the dependency: {x}"));
+
+                modInfo.Dependencies
+                    .Where(ModHasDependency)
+                    .ForEach(x => {
+                        if (!LoadedMods.Contains(ModInfo[x]))
+                            LoadedMods.Insert(modIndex, ModInfo[x]);
                     });
             });
         }
