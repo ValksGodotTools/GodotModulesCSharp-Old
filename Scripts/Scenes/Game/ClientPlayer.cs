@@ -27,7 +27,7 @@ namespace Game
                 Timer.Connect("timeout", this, nameof(EmitPosition));
 
                 // timer.WaitTime takes a value in seconds
-                Timer.WaitTime = CommandDebug.TestValue1 / 1000f; // 200ms
+                Timer.WaitTime = CommandDebug.SendReceiveDataInterval / 1000f; // 200ms
                 Timer.OneShot = false;
                 Timer.Autostart = true;
                 AddChild(Timer);

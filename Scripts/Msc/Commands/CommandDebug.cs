@@ -10,7 +10,7 @@ namespace GodotModules
     {
         public CommandDebug() => Aliases = new string[] { "x" };
 
-        public static int TestValue1 = 200;
+        public static int SendReceiveDataInterval = 150;
 
         public override void Run(string[] args)
         {
@@ -22,20 +22,20 @@ namespace GodotModules
             if (!int.TryParse(args[0], out int result))
                 return;
 
-            TestValue1 = result;
+            SendReceiveDataInterval = result;
             Utils.Log("Set test value to " + result);
 
             if (GameServer.Running)
             {
                 GameServer.EmitClientPositions.Stop();
-                GameServer.EmitClientPositions.Interval = TestValue1;
+                GameServer.EmitClientPositions.Interval = SendReceiveDataInterval;
                 GameServer.EmitClientPositions.Start();
             }
 
             if (GameClient.Running)
             {
                 ClientPlayer.Timer.Stop();
-                ClientPlayer.Timer.WaitTime = CommandDebug.TestValue1 / 1000f;
+                ClientPlayer.Timer.WaitTime = CommandDebug.SendReceiveDataInterval / 1000f;
                 ClientPlayer.Timer.Start();
             }
 
