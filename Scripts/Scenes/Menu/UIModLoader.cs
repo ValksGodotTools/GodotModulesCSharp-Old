@@ -70,8 +70,6 @@ namespace GodotModules.ModLoader
             var description = modInfo.Description == null ? "" : modInfo.Description;
             ModDescription.Text = description;
 
-            var modsEnabled = ModLoader.ModsEnabled;
-
             ModInfoDependencyList.Clear();
 
             modInfo.Dependencies.ForEach(dependency => {
@@ -86,7 +84,6 @@ namespace GodotModules.ModLoader
 
         public void DisplayMods()
         {
-            var modsEnabled = ModLoader.ModsEnabled;
             ModLoader.LoadedMods.ForEach(mod => {
                 var modInfo = CreateModInfoInstance(mod.ModInfo.Name);
                 ModList.AddChild(modInfo);
@@ -102,8 +99,8 @@ namespace GodotModules.ModLoader
             var instance = Prefabs.ModInfo.Instance<UIModInfo>();
             instance.SetModName(modName);
 
-            if (ModLoader.ModsEnabled.ContainsKey(modName))
-                instance.SetModEnabled(ModLoader.ModsEnabled[modName]);
+            if (ModLoader.ModInfo[modName].ModInfo.Enabled)
+                instance.SetModEnabled(ModLoader.ModInfo[modName].ModInfo.Enabled);
             else
                 instance.SetModEnabled(false);
 
@@ -123,6 +120,14 @@ namespace GodotModules.ModLoader
 
         private void _on_Load_Mods_pressed()
         {
+            foreach (UIModInfo info in ModList.GetChildren())
+            {
+                var modName = info.ModName;
+                var modEnabled = info.Enabled;
+
+                ModLoader.ModInfo[modName].ModInfo.Enabled = modEnabled;
+            }
+
             ModLoader.SetModsEnabled();
             ModLoader.LoadMods();
         }

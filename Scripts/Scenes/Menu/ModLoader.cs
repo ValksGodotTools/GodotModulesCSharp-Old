@@ -11,7 +11,6 @@ namespace GodotModules.ModLoader
     {
         public static List<Mod> LoadedMods = new List<Mod>();
         public static Dictionary<string, Mod> ModInfo = new Dictionary<string, Mod>();
-        public static Dictionary<string, bool> ModsEnabled = new Dictionary<string, bool>();
         private static MoonSharpVsCodeDebugServer DebugServer { get; set; }
         public static string PathModsEnabled { get; set; }
         private static string PathMods { get; set; }
@@ -28,7 +27,6 @@ namespace GodotModules.ModLoader
             Directory.CreateDirectory(PathMods);
 
             SetupModsEnabled();
-            GetModsEnabled();
 
             //DebugServer = new MoonSharpVsCodeDebugServer();
             //DebugServer.Start();
@@ -40,6 +38,7 @@ namespace GodotModules.ModLoader
         {
             LoadedMods.Clear();
             ModInfo = FindAllMods();
+            GetModsEnabled();
 
             ModInfo.Values.ForEach(mod =>
             {
@@ -73,13 +72,50 @@ namespace GodotModules.ModLoader
 
             var modLoadedCount = 0;
 
+            // check dependencies
+            //LoadedMods.ForEach(x => DisableModsWithLackingDependencies(x, x, new List<string> { x.ModInfo.Name }));
+            DisableModsWithLackingDependencies();
+
             LoadedMods
-                .Where(ModIsEnabled)
-                .Where(ModHasAllDependenciesEnabled)
+                .Where(x => x.ModInfo.Enabled)
                 .ForEach(mod => LoadMod(mod, ref modLoadedCount));
 
             if (modLoadedCount > 0)
                 UIModLoader.Instance.Log($"{modLoadedCount} mods have loaded successfully");
+        }
+
+        private static void DisableModsWithLackingDependencies()
+        {
+            var modsToDisable = new List<ModInfo>();
+
+            foreach (var pair in ModInfo)
+            {
+                var mod = pair.Value;
+
+                if (pair.Value.ModInfo.Enabled)
+                    CheckAllDependenciesEnabled(mod.ModInfo, mod.ModInfo, new List<string> { pair.Key }, ref modsToDisable);
+            }
+
+            foreach (var mod in modsToDisable)
+                mod.Enabled = false;
+        }
+
+        private static void CheckAllDependenciesEnabled(ModInfo firstMod, ModInfo modInfo, List<string> checkedMods, ref List<ModInfo> modsToDisable) 
+        {
+            foreach (var dependency in modInfo.Dependencies) 
+            {
+                if (checkedMods.Contains(dependency))
+                    continue;
+
+                if (!ModInfo[dependency].ModInfo.Enabled) 
+                {
+                    if (!modsToDisable.Contains(firstMod))
+                        modsToDisable.Add(firstMod);
+                    UIModLoader.Instance.Log($"{firstMod.Name} requires dependency {dependency} to be enabled");
+                }
+                checkedMods.Add(dependency);
+                CheckAllDependenciesEnabled(firstMod, ModInfo[dependency].ModInfo, checkedMods, ref modsToDisable);
+            }
         }
 
         public static void Call(string v, params object[] args)
@@ -95,14 +131,26 @@ namespace GodotModules.ModLoader
             }
         }
 
-        public static void SetModsEnabled() => File.WriteAllText(PathModsEnabled, JsonConvert.SerializeObject(ModsEnabled, Formatting.Indented));
+        public static void SetModsEnabled() 
+        {
+            var modsEnabled = new Dictionary<string, bool>();
+            foreach (var mod in ModInfo)
+                modsEnabled.Add(mod.Key, mod.Value.ModInfo.Enabled);
+            
+            File.WriteAllText(PathModsEnabled, JsonConvert.SerializeObject(modsEnabled, Formatting.Indented));
+        }
 
         public static void GetModsEnabled()
         {
             if (!File.Exists(PathModsEnabled))
                 return;
 
-            ModsEnabled = JsonConvert.DeserializeObject<Dictionary<string, bool>>(File.ReadAllText(PathModsEnabled));
+            var modsEnabled = JsonConvert.DeserializeObject<Dictionary<string, bool>>(File.ReadAllText(PathModsEnabled));
+
+            foreach (var mod in modsEnabled) 
+            {
+                ModInfo[mod.Key].ModInfo.Enabled = mod.Value;
+            }
         }
 
         private static void Log(object obj)
@@ -174,6 +222,8 @@ namespace GodotModules.ModLoader
                 if (mods.ContainsKey(modInfo.Name))
                     continue;
 
+                modInfo.Enabled = true;
+
                 mods.Add(modInfo.Name, new Mod
                 {
                     ModInfo = modInfo,
@@ -210,15 +260,12 @@ namespace GodotModules.ModLoader
         private static bool RequiredModFilesExist(string folder, string pathInfo, string pathScriptLua) => File.Exists(pathInfo) && File.Exists(pathScriptLua);
         private static bool IsModMissingDependency(string dependency) => !ModInfo.ContainsKey(dependency);
         private static bool ModHasDependency(string dependency) => ModInfo.ContainsKey(dependency);
-        private static bool ModIsEnabled(Mod mod) => ModLoader.ModsEnabled[mod.ModInfo.Name];
-        private static bool ModIsEnabled(string mod) => ModLoader.ModsEnabled[mod];
-        private static bool ModIsNotEnabled(string dependency) => !ModLoader.ModsEnabled[dependency];
         private static bool ModHasAllDependenciesEnabled(Mod mod)
         {
             var allDependenciesEnabled = true;
 
             mod.ModInfo.Dependencies
-                .Where(ModIsNotEnabled)
+                .Where(x => !ModInfo[x].ModInfo.Enabled)
                 .ForEach(dependency =>
                 {
                     Log($"{mod.ModInfo.Name} requires dependency {dependency} to be enabled");
@@ -229,13 +276,13 @@ namespace GodotModules.ModLoader
         }
     }
 
-    public struct Mod
+    public class Mod
     {
         public ModInfo ModInfo { get; set; }
         public string PathScript { get; set; }
     }
 
-    public struct ModInfo
+    public class ModInfo
     {
         public string Name { get; set; }
         public string Author { get; set; }
@@ -243,5 +290,6 @@ namespace GodotModules.ModLoader
         public string Version { get; set; }
         public string[] GameVersions { get; set; }
         public string[] Dependencies { get; set; }
+        public bool Enabled { get; set; }
     }
 }
