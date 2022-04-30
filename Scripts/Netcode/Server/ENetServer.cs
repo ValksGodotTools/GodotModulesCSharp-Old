@@ -317,7 +317,7 @@ namespace GodotModules.Netcode.Server
             Peers.Remove(id);
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             CancelTokenSource.Dispose();
         }

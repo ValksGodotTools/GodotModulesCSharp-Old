@@ -8,26 +8,53 @@ namespace GodotModules.Netcode.Server
     public class GameServer : ENetServer
     {
         public static Dictionary<uint, DataPlayer> Players { get; set; }
-        public static Timer EmitClientPositions { get; set; }
-        public static float Delta { get; set; }
+        private static STimer EmitClientPositions { get; set; }
+        private static STimer ServerSimulation { get; set; }
 
         public GameServer()
         {
             Players = new();
 
-            EmitClientPositions = new(CommandDebug.SendReceiveDataInterval);
-            EmitClientPositions.Elapsed += EmitClientPositionsCallback;
-            EmitClientPositions.AutoReset = true;
+            EmitClientPositions = new(CommandDebug.SendReceiveDataInterval, () =>
+            {
+                SendToAllPlayers(ServerPacketOpcode.PlayerPositions, new SPacketPlayerPositions
+                {
+                    PlayerPositions = Players.ToDictionary(x => x.Key, x => x.Value.Position)
+                });
+            }, false);
+
+            const int oneSecondInMs = 1000;
+            const int fps = 60;
+            const float delta = 1f / fps;
+
+            ServerSimulation = new((double)oneSecondInMs / fps, () => {
+                Players.ForEach(x => {
+                    var player = x.Value;
+                    var directionVert = player.DirectionVert;
+                    var directionHorz = player.DirectionHorz;
+
+                    var dir = new Godot.Vector2();
+
+                    if (directionVert == Direction.Up)
+                        dir.y -= 1;
+                    if (directionVert == Direction.Down)
+                        dir.y += 1;
+                    if (directionHorz == Direction.Left)
+                        dir.x -= 1;
+                    if (directionHorz == Direction.Right)
+                        dir.x += 1;
+
+                    const int speed = 250;
+
+                    player.Position += dir * speed * delta;
+                });
+            }, false);
         }
 
-        public void EmitClientPositionsCallback(System.Object source, ElapsedEventArgs args)
+        public static void StartGame()
         {
-            Players.ForEach(pair =>
-                Send(ServerPacketOpcode.PlayerPositions, new SPacketPlayerPositions
-                {
-                    PlayerPositions = Players.Where(x => x.Key != pair.Key).ToDictionary(x => x.Key, x => x.Value.Position)
-                }, Peers[pair.Key])
-            );
+            EmitClientPositions.Start();
+            ServerSimulation.Start();
         }
 
         protected override void Connect(Event netEvent)
@@ -104,6 +131,12 @@ namespace GodotModules.Netcode.Server
                 Send(opcode, flags, otherPlayers);
             else
                 Send(opcode, data, flags, otherPlayers);
+        }
+
+        public override void Dispose()
+        {
+            EmitClientPositions.Dispose();
+            ServerSimulation.Dispose();
         }
     }
 }
