@@ -4,7 +4,8 @@
     public enum ClientPacketOpcode
     {
         Lobby,
-        PlayerPosition
+        PlayerPosition,
+        PlayerMovementDirections
     }
 
     // Sent to Game Client
@@ -39,10 +40,10 @@
     public enum Direction
     {
         None,
-        North,
-        South,
-        West,
-        East
+        Up,
+        Down,
+        Left,
+        Right
     }
 
     public class GodotCmd
