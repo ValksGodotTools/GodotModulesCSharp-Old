@@ -8,13 +8,13 @@ namespace GodotModules.Netcode
 
         public override void Write(PacketWriter writer)
         {
-            base.Write(writer);
+            //base.Write(writer);
             writer.Write(CountdownRunning);
         }
 
         public override void Read(PacketReader reader)
         {
-            base.Read(reader);
+            //base.Read(reader);
             CountdownRunning = reader.ReadBool();
         }
 
