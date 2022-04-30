@@ -7,9 +7,9 @@ namespace GodotModules
     {
         private Timer Timer = new Timer();
 
-        public GTimer(float delayMs, bool loop = true, bool autoStart = true)
+        public GTimer(int delayMs, bool loop = true, bool autoStart = true)
         {
-            Timer.WaitTime = delayMs / 1000;
+            Timer.WaitTime = delayMs / 1000f;
             Timer.OneShot = !loop;
             Timer.Autostart = autoStart;
         }

@@ -34,7 +34,7 @@ namespace GodotModules
 
         public bool Start { get; set; }
 
-        private System.Threading.Timer TimerCountdownGameStart { get; set; }
+        private STimer TimerCountdownGameStart { get; set; }
         private const int COUNTDOWN_START_TIME = 2;
         private int CountdownGameStart = COUNTDOWN_START_TIME;
 
@@ -159,7 +159,7 @@ namespace GodotModules
         {
             if (SceneManager.ActiveScene == "Lobby")
             {
-                Instance.TimerCountdownGameStart = new Timer(Instance.TimerCountdownCallback, "state", 0, 1000);
+                Instance.TimerCountdownGameStart = new STimer(1000, Instance.TimerCountdownCallback);
                 Instance.BtnReady.Disabled = true;
             }
         }
@@ -203,7 +203,7 @@ namespace GodotModules
             }
         }
 
-        private async void TimerCountdownCallback(object state)
+        private async void TimerCountdownCallback()
         {
             Log($"Game starting in {CountdownGameStart--}");
 
