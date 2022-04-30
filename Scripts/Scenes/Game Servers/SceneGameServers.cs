@@ -80,8 +80,9 @@ namespace GodotModules
 
             await NetworkManager.WaitForClientToConnect(3000, async () =>
             {
-                await ENetClient.Send(ClientPacketOpcode.LobbyJoin, new CPacketLobbyJoin
+                await ENetClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
                 {
+                    LobbyOpcode = LobbyOpcode.LobbyJoin,
                     Username = GameManager.Options.OnlineUsername
                 });
             });

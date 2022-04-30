@@ -15,7 +15,7 @@ namespace GodotModules
     {
         public static LobbyListing CurrentLobby { get; set; }
         private static SceneLobby Instance { get; set; }
-        
+
         [Export] public readonly NodePath NodePathPlayers;
         [Export] public readonly NodePath NodePathChatText;
         [Export] public readonly NodePath NodePathChatInput;
@@ -65,7 +65,8 @@ namespace GodotModules
 
         public override void _Input(InputEvent @event)
         {
-            Utils.EscapeToScene("GameServers", async () => {
+            Utils.EscapeToScene("GameServers", async () =>
+            {
                 NetworkManager.WebClient.Client.CancelPendingRequests();
                 NetworkManager.WebClient.TimerPingMasterServer.Stop();
                 await GameClient.Stop();
@@ -82,7 +83,7 @@ namespace GodotModules
             return Instance.UIPlayers;
         }
 
-        public static void AddPlayer(uint id, string name) 
+        public static void AddPlayer(uint id, string name)
         {
             if (GameClient.Players.ContainsKey(id))
             {
@@ -113,7 +114,7 @@ namespace GodotModules
         {
             var player = Prefabs.LobbyPlayerListing.Instance<UILobbyPlayerListing>();
             UIPlayers.Add(id, player);
-            
+
             ListPlayers.AddChild(player);
 
             player.SetUsername(name);
@@ -127,14 +128,16 @@ namespace GodotModules
 
             BtnReady.Text = player.Ready ? "Ready" : "Not Ready";
 
-            await ENetClient.Send(ClientPacketOpcode.LobbyReady, new CPacketLobbyReady {
+            await ENetClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
+            {
+                LobbyOpcode = LobbyOpcode.LobbyReady,
                 Ready = player.Ready
             });
         }
 
         public static void SetReady(uint id, bool ready)
         {
-            if (SceneManager.ActiveScene == "Lobby") 
+            if (SceneManager.ActiveScene == "Lobby")
             {
                 var player = Instance.UIPlayers[id];
                 player.SetReady(ready);
@@ -182,12 +185,20 @@ namespace GodotModules
 
             if (Start)
             {
-                await ENetClient.Send(ClientPacketOpcode.LobbyCountdownChange, new CPacketLobbyCountdownChange{ CountdownRunning = true });
+                await ENetClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
+                {
+                    LobbyOpcode = LobbyOpcode.LobbyCountdownChange,
+                    CountdownRunning = true
+                });
                 StartGameCountdown();
             }
             else
             {
-                await ENetClient.Send(ClientPacketOpcode.LobbyCountdownChange, new CPacketLobbyCountdownChange{ CountdownRunning = false });
+                await ENetClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
+                {
+                    LobbyOpcode = LobbyOpcode.LobbyCountdownChange,
+                    CountdownRunning = false
+                });
                 CancelGameCountdown();
             }
         }
@@ -203,18 +214,21 @@ namespace GodotModules
                 if (ENetClient.IsHost)
                 {
                     // tell everyone game has started
-                    await GameClient.Send(ClientPacketOpcode.LobbyGameStart);
+                    await GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
+                    {
+                        LobbyOpcode = LobbyOpcode.LobbyGameStart
+                    });
                 }
             }
         }
 
-        public static void Log(string text) 
+        public static void Log(string text)
         {
             ChatText.AddText($"{text}\n");
             ChatText.ScrollToLine(ChatText.GetLineCount() - 1);
         }
 
-        public static void Log(uint peerId, string text) 
+        public static void Log(uint peerId, string text)
         {
             if (SceneManager.ActiveScene != "Lobby")
                 return;
@@ -228,7 +242,9 @@ namespace GodotModules
             ChatInput.Clear();
             if (!string.IsNullOrWhiteSpace(text))
             {
-                await GameClient.Send(ClientPacketOpcode.LobbyChatMessage, new CPacketLobbyChatMessage {
+                await GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
+                {
+                    LobbyOpcode = LobbyOpcode.LobbyChatMessage,
                     Message = text.Trim()
                 });
             }

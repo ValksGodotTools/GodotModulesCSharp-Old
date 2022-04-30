@@ -3,12 +3,7 @@
     // Received from Game Client
     public enum ClientPacketOpcode
     {
-        LobbyJoin,
-        LobbyLeave,
-        LobbyChatMessage,
-        LobbyReady,
-        LobbyCountdownChange,
-        LobbyGameStart,
+        Lobby,
         PlayerPosition
     }
 
@@ -23,6 +18,16 @@
         LobbyCountdownChange,
         LobbyGameStart,
         PlayerPositions
+    }
+
+    public enum LobbyOpcode 
+    {
+        LobbyJoin,
+        LobbyLeave,
+        LobbyChatMessage,
+        LobbyReady,
+        LobbyCountdownChange,
+        LobbyGameStart
     }
 
     public enum DisconnectOpcode

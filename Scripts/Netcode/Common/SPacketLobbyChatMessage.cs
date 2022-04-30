@@ -2,6 +2,9 @@ namespace GodotModules.Netcode
 {
     public class SPacketLobbyChatMessage : APacketServerPeerId
     {
+        public LobbyOpcode LobbyOpcode { get; set; }
+
+        // Chat Message
         public string Message { get; set; }
 
         public override void Write(PacketWriter writer)
