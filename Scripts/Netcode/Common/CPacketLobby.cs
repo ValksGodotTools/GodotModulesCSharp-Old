@@ -86,7 +86,7 @@ namespace GodotModules.Netcode
 
         private void HandleChatMessage(Peer peer)
         {
-            GameServer.SendToAllPlayers(ServerPacketOpcode.Lobby, new SPacketLobby
+            NetworkManager.GameServer.SendToAllPlayers(ServerPacketOpcode.Lobby, new SPacketLobby
             {
                 LobbyOpcode = LobbyOpcode.LobbyChatMessage,
                 Id = peer.ID,
@@ -99,7 +99,7 @@ namespace GodotModules.Netcode
 
         private void HandleCountdownChange(Peer peer)
         {
-            GameServer.SendToOtherPlayers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby
+            NetworkManager.GameServer.SendToOtherPlayers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby
             {
                 LobbyOpcode = LobbyOpcode.LobbyCountdownChange,
                 CountdownRunning = CountdownRunning
@@ -109,7 +109,7 @@ namespace GodotModules.Netcode
         // LobbyGameStart
         private void HandleGameStart(Peer peer)
         {
-            GameServer.SendToAllPlayers(ServerPacketOpcode.Lobby, new SPacketLobby { LobbyOpcode = LobbyOpcode.LobbyGameStart });
+            NetworkManager.GameServer.SendToAllPlayers(ServerPacketOpcode.Lobby, new SPacketLobby { LobbyOpcode = LobbyOpcode.LobbyGameStart });
         }
 
         // LobbyJoin
@@ -122,17 +122,17 @@ namespace GodotModules.Netcode
 
             var isHost = false;
 
-            if (GameServer.Players.Count == 0)
+            if (NetworkManager.GameServer.Players.Count == 0)
                 isHost = true;
 
             // Keep track of joining player server side
-            if (GameServer.Players.ContainsKey(peer.ID))
+            if (NetworkManager.GameServer.Players.ContainsKey(peer.ID))
             {
-                GameServer.Log($"Received LobbyJoin packet from peer with id {peer.ID}. Tried to add id {peer.ID} to Players but exists already");
+                NetworkManager.GameServer.Log($"Received LobbyJoin packet from peer with id {peer.ID}. Tried to add id {peer.ID} to Players but exists already");
                 return;
             }
 
-            GameServer.Players.Add(peer.ID, new DataPlayer
+            NetworkManager.GameServer.Players.Add(peer.ID, new DataPlayer
             {
                 Username = Username,
                 Ready = false,
@@ -141,16 +141,16 @@ namespace GodotModules.Netcode
 
             // tell joining player their Id and tell them about other players in lobby
             // also tell them if they are the host or not
-            GameServer.Send(ServerPacketOpcode.Lobby, new SPacketLobby
+            NetworkManager.GameServer.Send(ServerPacketOpcode.Lobby, new SPacketLobby
             {
                 LobbyOpcode = LobbyOpcode.LobbyInfo,
                 Id = peer.ID,
                 IsHost = isHost,
-                Players = GameServer.GetOtherPlayers(peer.ID)
+                Players = NetworkManager.GameServer.GetOtherPlayers(peer.ID)
             }, peer);
 
             // tell other players about new player that joined
-            GameServer.SendToOtherPeers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby
+            NetworkManager.GameServer.SendToOtherPeers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby
             {
                 LobbyOpcode = LobbyOpcode.LobbyJoin,
                 Id = peer.ID,
@@ -163,10 +163,10 @@ namespace GodotModules.Netcode
 
         private void HandleReady(Peer peer)
         {
-            var player = GameServer.Players[peer.ID];
+            var player = NetworkManager.GameServer.Players[peer.ID];
             player.Ready = Ready;
 
-            GameServer.SendToOtherPlayers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby
+            NetworkManager.GameServer.SendToOtherPlayers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby
             {
                 LobbyOpcode = LobbyOpcode.LobbyReady,
                 Id = peer.ID,

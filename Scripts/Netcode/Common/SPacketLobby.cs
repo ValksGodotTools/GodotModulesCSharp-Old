@@ -155,7 +155,7 @@ namespace GodotModules.Netcode
         private void HandleGameStart()
         {
             if (NetworkManager.GameClient.IsHost)
-                GameServer.StartGame();
+                NetworkManager.GameServer.StartGame();
 
             SceneManager.ChangeScene("Game");
         }

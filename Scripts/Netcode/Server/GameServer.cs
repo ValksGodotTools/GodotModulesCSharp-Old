@@ -7,9 +7,9 @@ namespace GodotModules.Netcode.Server
 {
     public class GameServer : ENetServer
     {
-        public static Dictionary<uint, DataPlayer> Players { get; set; }
-        private static STimer EmitClientPositions { get; set; }
-        private static STimer ServerSimulation { get; set; }
+        public Dictionary<uint, DataPlayer> Players { get; set; }
+        private STimer EmitClientPositions { get; set; }
+        private STimer ServerSimulation { get; set; }
 
         public GameServer()
         {
@@ -51,7 +51,7 @@ namespace GodotModules.Netcode.Server
             }, false);
         }
 
-        public static void StartGame()
+        public void StartGame()
         {
             EmitClientPositions.Start();
             ServerSimulation.Start();
@@ -88,18 +88,18 @@ namespace GodotModules.Netcode.Server
                 Players.Remove(id);
         }
 
-        public static Dictionary<uint, DataPlayer> GetOtherPlayers(uint id)
+        public Dictionary<uint, DataPlayer> GetOtherPlayers(uint id)
         {
             var otherPlayers = new Dictionary<uint, DataPlayer>(Players);
             otherPlayers.Remove(id);
             return otherPlayers;
         }
 
-        public static Peer[] GetOtherPlayerPeers(uint id) => Players.Keys.Where(x => x != id).Select(x => Peers[x]).ToArray();
+        public Peer[] GetOtherPlayerPeers(uint id) => Players.Keys.Where(x => x != id).Select(x => Peers[x]).ToArray();
 
-        public static Peer[] GetAllPlayerPeers() => Players.Keys.Select(x => Peers[x]).ToArray();
+        public Peer[] GetAllPlayerPeers() => Players.Keys.Select(x => Peers[x]).ToArray();
 
-        public static void SendToAllPlayers(ServerPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
+        public void SendToAllPlayers(ServerPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
         {
             var allPlayers = GetAllPlayerPeers();
 
@@ -109,7 +109,7 @@ namespace GodotModules.Netcode.Server
                 Send(opcode, data, flags, allPlayers);
         }
 
-        public static void SendToOtherPeers(uint id, ServerPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
+        public void SendToOtherPeers(uint id, ServerPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
         {
             var otherPeers = GetOtherPeers(id);
             if (otherPeers.Length == 0)
@@ -121,7 +121,7 @@ namespace GodotModules.Netcode.Server
                 Send(opcode, data, flags, otherPeers);
         }
 
-        public static void SendToOtherPlayers(uint id, ServerPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
+        public void SendToOtherPlayers(uint id, ServerPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
         {
             var otherPlayers = GetOtherPlayerPeers(id);
             if (otherPlayers.Length == 0)

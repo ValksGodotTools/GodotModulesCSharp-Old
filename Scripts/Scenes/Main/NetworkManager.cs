@@ -98,7 +98,7 @@ namespace GodotModules
         /// </summary>
         private static async Task ExitCleanup()
         {
-            if (ENetServer.Running)
+            if (NetworkManager.GameServer.Running)
             {
                 GameServer.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToExitApp));
                 await GameServer.Stop();
@@ -134,7 +134,7 @@ namespace GodotModules
 
         public static async Task WaitForHostToConnectToServer()
         {
-            while (!ENetServer.SomeoneConnected)
+            while (!NetworkManager.GameServer.SomeoneConnected)
                 await Task.Delay(200);
         }
 

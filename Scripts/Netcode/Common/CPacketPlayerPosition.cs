@@ -24,7 +24,7 @@ namespace GodotModules.Netcode
 
         public override void Handle(ENet.Peer peer)
         {
-            GameServer.Players[peer.ID].Position = Position;
+            NetworkManager.GameServer.Players[peer.ID].Position = Position;
         }
     }
 }

@@ -59,8 +59,8 @@ namespace GodotModules
                 NetworkManager.WebClient.Client.CancelPendingRequests();
                 NetworkManager.WebClient.TimerPingMasterServer.Stop();
                 await NetworkManager.GameClient.Stop();
-                if (ENetServer.Running)
-                    await GameServer.Stop();
+                if (NetworkManager.GameServer.Running)
+                    await NetworkManager.GameServer.Stop();
             });
         }
 

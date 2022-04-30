@@ -9,13 +9,14 @@ namespace GodotModules.Netcode.Server
 {
     public abstract class ENetServer : IDisposable
     {
-        private static CancellationTokenSource CancelTokenSource { get; set; }
         public static ConsoleColor LogsColor = ConsoleColor.Cyan;
-        public static bool SomeoneConnected { get; set; }
-        public static bool Running { get; set; }
-        private static ConcurrentQueue<ServerPacket> Outgoing { get; set; }
-        public static Dictionary<uint, Peer> Peers { get; set; }
         private static readonly Dictionary<ClientPacketOpcode, APacketClient> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, APacketClient>("CPacket");
+        
+        private CancellationTokenSource CancelTokenSource { get; set; }
+        public bool SomeoneConnected { get; set; }
+        public bool Running { get; set; }
+        private ConcurrentQueue<ServerPacket> Outgoing { get; set; }
+        public Dictionary<uint, Peer> Peers { get; set; }
         public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
         private bool QueueRestart { get; set; }
 
@@ -206,7 +207,7 @@ namespace GodotModules.Netcode.Server
         /// <summary>
         /// Stop the server, can be called from the Godot thread
         /// </summary>
-        public static async Task Stop()
+        public async Task Stop()
         {
             if (CancelTokenSource.IsCancellationRequested)
             {
@@ -238,26 +239,26 @@ namespace GodotModules.Netcode.Server
             QueueRestart = true;
         }
 
-        public static Peer[] GetOtherPeers(uint id)
+        public Peer[] GetOtherPeers(uint id)
         {
             var otherPeers = new Dictionary<uint, Peer>(Peers);
             otherPeers.Remove(id);
             return otherPeers.Values.ToArray();
         }
 
-        public static void Send(ServerPacketOpcode opcode, params Peer[] peers) => Send(opcode, null, PacketFlags.Reliable, peers);
+        public void Send(ServerPacketOpcode opcode, params Peer[] peers) => Send(opcode, null, PacketFlags.Reliable, peers);
 
-        public static void Send(ServerPacketOpcode opcode, APacket data, params Peer[] peers) => Send(opcode, data, PacketFlags.Reliable, peers);
+        public void Send(ServerPacketOpcode opcode, APacket data, params Peer[] peers) => Send(opcode, data, PacketFlags.Reliable, peers);
 
-        public static void Send(ServerPacketOpcode opcode, PacketFlags flags = PacketFlags.Reliable, params Peer[] peers) => Send(opcode, null, flags, peers);
+        public void Send(ServerPacketOpcode opcode, PacketFlags flags = PacketFlags.Reliable, params Peer[] peers) => Send(opcode, null, flags, peers);
 
-        public static void Send(ServerPacketOpcode opcode, APacket data, PacketFlags flags = PacketFlags.Reliable, params Peer[] peers) => Outgoing.Enqueue(new ServerPacket((byte)opcode, flags, data, peers));
+        public void Send(ServerPacketOpcode opcode, APacket data, PacketFlags flags = PacketFlags.Reliable, params Peer[] peers) => Outgoing.Enqueue(new ServerPacket((byte)opcode, flags, data, peers));
 
         /// <summary>
         /// Provides a way to log a message on the Godot thread from the ENet thread
         /// </summary>
         /// <param name="obj">The object to log</param>
-        public static void Log(object obj) => NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessageServer, obj));
+        public void Log(object obj) => NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessageServer, obj));
 
         /// <summary>
         /// This is in the ENet thread, anything from the ENet thread can be used here
@@ -303,7 +304,7 @@ namespace GodotModules.Netcode.Server
         /// Kick all clients from the server
         /// </summary>
         /// <param name="opcode">Tells the client why they were kicked</param>
-        private static void KickAll(DisconnectOpcode opcode)
+        private void KickAll(DisconnectOpcode opcode)
         {
             Peers.Values.ForEach(peer => peer.DisconnectNow((uint)opcode));
             Peers.Clear();
@@ -314,7 +315,7 @@ namespace GodotModules.Netcode.Server
         /// </summary>
         /// <param name="id"></param>
         /// <param name="opcode">Tells the client why they were kicked</param>
-        private static void Kick(uint id, DisconnectOpcode opcode)
+        private void Kick(uint id, DisconnectOpcode opcode)
         {
             Peers[id].DisconnectNow((uint)opcode);
             Peers.Remove(id);
