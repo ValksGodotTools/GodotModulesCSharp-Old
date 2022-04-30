@@ -24,8 +24,8 @@ namespace GodotModules
         [Export] public readonly NodePath NodePathBtnReady;
         [Export] public readonly NodePath NodePathBtnStart;
 
-        private Control ListPlayers { get; set; }
         private static RichTextLabel ChatText { get; set; }
+        private Control ListPlayers { get; set; }
         private LineEdit ChatInput { get; set; }
         private Label LobbyName { get; set; }
         private Label LobbyMaxPlayers { get; set; }
@@ -34,9 +34,9 @@ namespace GodotModules
 
         public bool Start { get; set; }
 
-        private STimer TimerCountdownGameStart { get; set; }
         private const int COUNTDOWN_START_TIME = 2;
         private int CountdownGameStart = COUNTDOWN_START_TIME;
+        private STimer TimerCountdownGameStart { get; set; }
 
         private Dictionary<uint, UILobbyPlayerListing> UIPlayers { get; set; }
 
@@ -50,17 +50,12 @@ namespace GodotModules
             LobbyMaxPlayers = GetNode<Label>(NodePathLobbyMaxPlayers);
             BtnReady = GetNode<Button>(NodePathBtnReady);
             BtnStart = GetNode<Button>(NodePathBtnStart);
-
             UIPlayers = new();
-
-            //var info = UIGameServers.Instance.CurrentLobby;
-            //LobbyName.Text = info.Name;
-            //LobbyMaxPlayers.Text = "" + info.MaxPlayerCount;
 
             if (!ENetClient.IsHost)
                 Instance.BtnStart.Disabled = true;
 
-            GameClient.Players.ForEach(x => UIAddPlayer(x.Key, x.Value));
+            GameClient.Players.ForEach(x => AddPlayer(x.Key, x.Value));
         }
 
         public override void _Input(InputEvent @event)
@@ -75,47 +70,73 @@ namespace GodotModules
             });
         }
 
-        public static Dictionary<uint, UILobbyPlayerListing> GetPlayers()
-        {
-            return Instance.UIPlayers;
-        }
-
         public static void AddPlayer(uint id, string name)
         {
-            if (GameClient.Players.ContainsKey(id))
-            {
-                GD.Print($"Players contains id: '{id}' already");
-                GD.Print(GameClient.Players.Print());
-                return;
-            }
+            var player = Prefabs.LobbyPlayerListing.Instance<UILobbyPlayerListing>();
+            Instance.UIPlayers.Add(id, player);
 
-            GameClient.Players.Add(id, name);
+            Instance.ListPlayers.AddChild(player);
 
-            if (SceneManager.ActiveScene == "Lobby")
-                Instance.UIAddPlayer(id, name);
+            player.SetUsername(name);
+            player.SetReady(false);
         }
 
         public static void RemovePlayer(uint id)
         {
-            GameClient.Players.Remove(id);
+            var uiPlayer = Instance.UIPlayers[id];
+            uiPlayer.QueueFree();
+            Instance.UIPlayers.Remove(id);
+        }
 
-            if (SceneManager.ActiveScene == "Lobby")
+        public static void SetReady(uint id, bool ready)
+        {
+            var player = Instance.UIPlayers[id];
+            player.SetReady(ready);
+        }
+
+        public static void CancelGameCountdown()
+        {
+            Instance.TimerCountdownGameStart.Dispose();
+            Instance.CountdownGameStart = COUNTDOWN_START_TIME;
+            Instance.BtnReady.Disabled = false;
+            Log("Game start was cancelled");
+        }
+
+        public static void StartGameCountdown()
+        {
+            Instance.TimerCountdownGameStart = new STimer(1000, Instance.TimerCountdownCallback);
+            Instance.BtnReady.Disabled = true;
+        }
+
+        private async void TimerCountdownCallback()
+        {
+            Log($"Game starting in {CountdownGameStart--}");
+
+            if (CountdownGameStart == 0)
             {
-                var uiPlayer = Instance.UIPlayers[id];
-                uiPlayer.QueueFree();
-                Instance.UIPlayers.Remove(id);
+                TimerCountdownGameStart.Dispose();
+
+                if (ENetClient.IsHost)
+                {
+                    // tell everyone game has started
+                    await GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
+                    {
+                        LobbyOpcode = LobbyOpcode.LobbyGameStart
+                    });
+                }
             }
         }
 
-        public void UIAddPlayer(uint id, string name)
+        public static void Log(string text)
         {
-            var player = Prefabs.LobbyPlayerListing.Instance<UILobbyPlayerListing>();
-            UIPlayers.Add(id, player);
+            ChatText.AddText($"{text}\n");
+            ChatText.ScrollToLine(ChatText.GetLineCount() - 1);
+        }
 
-            ListPlayers.AddChild(player);
-
-            player.SetUsername(name);
-            player.SetReady(false);
+        public static void Log(uint peerId, string text)
+        {
+            var playerName = GameClient.Players[peerId];
+            Log($"{playerName}: {text}");
         }
 
         private async void _on_Ready_pressed()
@@ -130,35 +151,6 @@ namespace GodotModules
                 LobbyOpcode = LobbyOpcode.LobbyReady,
                 Ready = player.Ready
             });
-        }
-
-        public static void SetReady(uint id, bool ready)
-        {
-            if (SceneManager.ActiveScene == "Lobby")
-            {
-                var player = Instance.UIPlayers[id];
-                player.SetReady(ready);
-            }
-        }
-
-        public static void CancelGameCountdown()
-        {
-            if (SceneManager.ActiveScene == "Lobby")
-            {
-                Instance.TimerCountdownGameStart.Dispose();
-                Instance.CountdownGameStart = COUNTDOWN_START_TIME;
-                Instance.BtnReady.Disabled = false;
-                Log("Game start was cancelled");
-            }
-        }
-
-        public static void StartGameCountdown()
-        {
-            if (SceneManager.ActiveScene == "Lobby")
-            {
-                Instance.TimerCountdownGameStart = new STimer(1000, Instance.TimerCountdownCallback);
-                Instance.BtnReady.Disabled = true;
-            }
         }
 
         private async void _on_Start_pressed()
@@ -198,40 +190,6 @@ namespace GodotModules
                 });
                 CancelGameCountdown();
             }
-        }
-
-        private async void TimerCountdownCallback()
-        {
-            Log($"Game starting in {CountdownGameStart--}");
-
-            if (CountdownGameStart == 0)
-            {
-                TimerCountdownGameStart.Dispose();
-
-                if (ENetClient.IsHost)
-                {
-                    // tell everyone game has started
-                    await GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
-                    {
-                        LobbyOpcode = LobbyOpcode.LobbyGameStart
-                    });
-                }
-            }
-        }
-
-        public static void Log(string text)
-        {
-            ChatText.AddText($"{text}\n");
-            ChatText.ScrollToLine(ChatText.GetLineCount() - 1);
-        }
-
-        public static void Log(uint peerId, string text)
-        {
-            if (SceneManager.ActiveScene != "Lobby")
-                return;
-
-            var playerName = GameClient.Players[peerId];
-            Log($"{playerName}: {text}");
         }
 
         private async void _on_Chat_Input_text_entered(string text)

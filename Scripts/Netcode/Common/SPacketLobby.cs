@@ -125,24 +125,24 @@ namespace GodotModules.Netcode
                     SceneManager.ChangeScene("Game");
                     break;
                 case LobbyOpcode.LobbyInfo:
-                    ENetClient.PeerId = Id;
-                    ENetClient.IsHost = IsHost;
-                    ENetClient.Log($"{GameManager.Options.OnlineUsername} joined lobby with id {Id}");
-                    SceneLobby.AddPlayer(Id, GameManager.Options.OnlineUsername);
-
-                    Players.ForEach(pair => SceneLobby.AddPlayer(pair.Key, pair.Value.Username));
+                    GameClient.PeerId = Id;
+                    GameClient.IsHost = IsHost;
+                    GameClient.Log($"{GameManager.Options.OnlineUsername} joined lobby with id {Id}");
+                    GameClient.Players.Add(Id, GameManager.Options.OnlineUsername);
+                    Players.ForEach(pair => GameClient.Players.Add(pair.Key, pair.Value.Username));
 
                     SceneManager.ChangeScene("Lobby");
                     break;
                 case LobbyOpcode.LobbyJoin:
                     SceneLobby.AddPlayer(Id, Username);
+                    GameClient.Players.Add(Id, Username);
 
-                    ENetClient.Log($"Player with username {Username} id: {Id} joined the lobby");
+                    GameClient.Log($"Player with username {Username} id: {Id} joined the lobby");
                     break;
                 case LobbyOpcode.LobbyLeave:
                     SceneLobby.RemovePlayer(Id);
-
-                    ENetClient.Log($"Player with id: {Id} left the lobby");
+                    GameClient.Players.Remove(Id);
+                    GameClient.Log($"Player with id: {Id} left the lobby");
                     break;
                 case LobbyOpcode.LobbyReady:
                     SceneLobby.SetReady(Id, Ready);
