@@ -107,6 +107,7 @@ namespace GodotModules
             if (ENetClient.Running)
             {
                 await GameClient.Stop();
+                GameClient.Dispose();
             }
 
             UtilOptions.SaveOptions();
