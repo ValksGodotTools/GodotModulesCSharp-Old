@@ -7,14 +7,12 @@ namespace GodotModules
         private static int ErrorCount { get; set; }
         public static void IncrementErrorCount() => ErrorCount++;
 
+        private static GTimer Timer { get; set; }
+
         public override void _Ready()
         {
-            var timer = new Timer();
-            timer.Connect("timeout", this, nameof(SpawnErrorNotification));
-            timer.WaitTime = 1.5f;
-            timer.OneShot = false;
-            timer.Autostart = true;
-            AddChild(timer);
+            Timer = new GTimer(1500);
+            Timer.Connect(this, nameof(SpawnErrorNotification));
         }
 
         private static void SpawnErrorNotification()
