@@ -22,6 +22,23 @@ namespace GodotModules
             Console = GetNode<LineEdit>(NodePathConsole);
         }
 
+        public static void AddException(Exception e) => AddMessage($"{e.Message}\n{e.StackTrace}");
+
+        public static void AddMessage(object message)
+        {
+            Logs.Text += $"{message}\n";
+            ScrollToBottom();
+        }
+
+        public static void ToggleVisibility()
+        {
+            Instance.Visible = !Instance.Visible;
+            Instance.Console.GrabFocus();
+            ScrollToBottom();
+        }
+
+        private static void ScrollToBottom() => Logs.ScrollVertical = Mathf.Inf;
+
         private void _on_Console_text_entered(string text)
         {
             var inputArr = text.Trim().ToLower().Split(' ');
@@ -39,23 +56,6 @@ namespace GodotModules
                 
             Console.Clear();
         }
-
-        public static void AddException(Exception e) => AddMessage($"{e.Message}\n{e.StackTrace}");
-
-        public static void AddMessage(object message)
-        {
-            Logs.Text += $"{message}\n";
-            ScrollToBottom();
-        }
-
-        public static void ToggleVisibility()
-        {
-            Instance.Visible = !Instance.Visible;
-            Instance.Console.GrabFocus();
-            ScrollToBottom();
-        }
-
-        private static void ScrollToBottom() => Logs.ScrollVertical = Mathf.Inf;
     }
 
 }
