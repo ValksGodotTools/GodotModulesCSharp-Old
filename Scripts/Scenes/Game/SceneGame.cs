@@ -64,9 +64,6 @@ namespace Game
 
         public static void UpdatePlayerPositions(Dictionary<uint, Vector2> playerPositions)
         {
-            if (SceneManager.ActiveScene != "Game")
-                return;
-
             PlayerPositionQueue.Add(playerPositions);
         }
 

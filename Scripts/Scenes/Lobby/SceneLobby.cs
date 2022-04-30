@@ -77,9 +77,6 @@ namespace GodotModules
 
         public static Dictionary<uint, UILobbyPlayerListing> GetPlayers()
         {
-            if (SceneManager.ActiveScene != "Lobby")
-                return null;
-
             return Instance.UIPlayers;
         }
 
