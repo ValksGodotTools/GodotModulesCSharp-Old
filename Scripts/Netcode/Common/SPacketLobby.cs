@@ -110,38 +110,24 @@ namespace GodotModules.Netcode
             switch (LobbyOpcode)
             {
                 case LobbyOpcode.LobbyChatMessage:
-                    if (!SceneManager.InLobby())
-                        return;
-
                     SceneLobby.Log(Id, Message);
                     break;
                 case LobbyOpcode.LobbyCountdownChange:
-                    if (!SceneManager.InLobby())
-                        return;
-
                     if (CountdownRunning)
                         SceneLobby.StartGameCountdown();
                     else
                         SceneLobby.CancelGameCountdown();
                     break;
                 case LobbyOpcode.LobbyGameStart:
-                    if (!SceneManager.InLobby())
-                        return;
-
                     if (GameClient.IsHost)
-                    {
                         GameServer.EmitClientPositions.Enabled = true;
-                    }
 
                     SceneManager.ChangeScene("Game");
                     break;
                 case LobbyOpcode.LobbyInfo:
-                    if (!SceneManager.InGameServers())
-                        return;
-
                     ENetClient.PeerId = Id;
                     ENetClient.IsHost = IsHost;
-                    ENetClient.Log($"{GameManager.Options.OnlineUsername} joined lobby with id {Id} also other players in lobby are {Players.Print()}");
+                    ENetClient.Log($"{GameManager.Options.OnlineUsername} joined lobby with id {Id}");
                     SceneLobby.AddPlayer(Id, GameManager.Options.OnlineUsername);
 
                     Players.ForEach(pair => SceneLobby.AddPlayer(pair.Key, pair.Value.Username));
@@ -149,31 +135,16 @@ namespace GodotModules.Netcode
                     SceneManager.ChangeScene("Lobby");
                     break;
                 case LobbyOpcode.LobbyJoin:
-                    if (!SceneManager.InLobby())
-                        return;
-
                     SceneLobby.AddPlayer(Id, Username);
 
                     ENetClient.Log($"Player with username {Username} id: {Id} joined the lobby");
                     break;
                 case LobbyOpcode.LobbyLeave:
-                    if (!SceneManager.InLobby())
-                        return;
-
-                    if (!GameClient.Players.ContainsKey(Id))
-                    {
-                        ENetClient.Log($"Received LobbyLeave packet from server for id {Id}. Tried to remove from Players but does not exist in Players to begin with");
-                        return;
-                    }
-
                     SceneLobby.RemovePlayer(Id);
 
                     ENetClient.Log($"Player with id: {Id} left the lobby");
                     break;
                 case LobbyOpcode.LobbyReady:
-                    if (!SceneManager.InLobby())
-                        return;
-
                     SceneLobby.SetReady(Id, Ready);
                     break;
             }
