@@ -1,0 +1,33 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/Msc/UIPopupFileDialogMods.cs" type="Script" id=1]
+
+[node name="PopupFileDialogMods" type="MarginContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 30
+custom_constants/margin_top = 30
+custom_constants/margin_left = 30
+custom_constants/margin_bottom = 30
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+NodePathFileManager = NodePath("FileDialog")
+
+[node name="FileDialog" type="FileDialog" parent="."]
+visible = true
+margin_left = 30.0
+margin_top = 30.0
+margin_right = 994.0
+margin_bottom = 570.0
+window_title = ""
+mode = 3
+access = 2
+current_dir = "/Users/VALK-DESKTOP/Documents/Godot Projects/GodotLuaModdingTest"
+current_path = "/Users/VALK-DESKTOP/Documents/Godot Projects/GodotLuaModdingTest/"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="popup_hide" from="FileDialog" to="." method="_on_FileDialog_popup_hide"]

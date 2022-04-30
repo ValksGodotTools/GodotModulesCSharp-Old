@@ -1,5 +1,6 @@
 using Godot;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace GodotModules.ModLoader
 {
@@ -130,6 +131,15 @@ namespace GodotModules.ModLoader
 
             ModLoader.SetModsEnabled();
             ModLoader.LoadMods();
+        }
+
+        private void _on_Open_Mods_Folder_pressed()
+        {
+            //var fileDialogPopup = Prefabs.PopupFileDialogMods.Instance<UIPopupFileDialogMods>();
+            //AddChild(fileDialogPopup);
+            //fileDialogPopup.Open();
+
+            Process.Start(ModLoader.PathMods);
         }
     }
 }

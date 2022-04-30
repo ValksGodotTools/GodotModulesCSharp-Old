@@ -13,7 +13,7 @@ namespace GodotModules.ModLoader
         public static Dictionary<string, Mod> ModInfo = new Dictionary<string, Mod>();
         private static MoonSharpVsCodeDebugServer DebugServer { get; set; }
         public static string PathModsEnabled { get; set; }
-        private static string PathMods { get; set; }
+        public static string PathMods { get; set; }
         public static Script Script { get; set; }
         public static string LuaScriptsPath = "";
 

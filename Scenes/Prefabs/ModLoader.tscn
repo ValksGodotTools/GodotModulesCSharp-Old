@@ -21,8 +21,6 @@ NodePathModGameVersions = NodePath("VBoxContainer/Mod Loader Info/Mod Info/Mod I
 NodePathModDependencies = NodePath("VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer/VBoxContainer/PanelContainer/VBoxContainer/Dependencies")
 NodePathModDescription = NodePath("VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer/VBoxContainer/MarginContainer/Description")
 NodePathLogger = NodePath("VBoxContainer/Logger Container/MarginContainer/Logger")
-CustomLuaScriptsPath = ""
-CustomModsPath = ""
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 margin_left = 1.0
@@ -36,7 +34,7 @@ margin_bottom = 352.0
 size_flags_vertical = 3
 
 [node name="Mod List" type="MarginContainer" parent="VBoxContainer/Mod Loader Info"]
-margin_right = 147.0
+margin_right = 270.0
 margin_bottom = 352.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 3
@@ -46,11 +44,11 @@ custom_constants/margin_bottom = 3
 [node name="Mod List" type="VBoxContainer" parent="VBoxContainer/Mod Loader Info/Mod List"]
 margin_left = 3.0
 margin_top = 3.0
-margin_right = 137.0
+margin_right = 260.0
 margin_bottom = 349.0
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Mod Loader Info/Mod List/Mod List"]
-margin_right = 134.0
+margin_right = 257.0
 margin_bottom = 319.0
 size_flags_vertical = 3
 custom_constants/margin_right = 0
@@ -59,13 +57,13 @@ custom_constants/margin_left = 0
 custom_constants/margin_bottom = 5
 
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Mod Loader Info/Mod List/Mod List/MarginContainer"]
-margin_right = 134.0
+margin_right = 257.0
 margin_bottom = 314.0
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/Mod Loader Info/Mod List/Mod List/MarginContainer/PanelContainer"]
 margin_left = 1.0
 margin_top = 1.0
-margin_right = 133.0
+margin_right = 256.0
 margin_bottom = 313.0
 size_flags_vertical = 3
 scroll_horizontal_enabled = false
@@ -74,7 +72,7 @@ scroll_horizontal_enabled = false
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Mod Loader Info/Mod List/Mod List"]
 margin_top = 323.0
-margin_right = 134.0
+margin_right = 257.0
 margin_bottom = 346.0
 
 [node name="Refresh" type="Button" parent="VBoxContainer/Mod Loader Info/Mod List/Mod List/HBoxContainer"]
@@ -90,8 +88,14 @@ size_flags_horizontal = 0
 size_flags_vertical = 8
 text = "Load Mods"
 
+[node name="Open Mods Folder" type="Button" parent="VBoxContainer/Mod Loader Info/Mod List/Mod List/HBoxContainer"]
+margin_left = 138.0
+margin_right = 257.0
+margin_bottom = 23.0
+text = "Open Mods Folder"
+
 [node name="Mod Info" type="MarginContainer" parent="VBoxContainer/Mod Loader Info"]
-margin_left = 151.0
+margin_left = 274.0
 margin_right = 598.0
 margin_bottom = 352.0
 size_flags_horizontal = 3
@@ -102,47 +106,47 @@ custom_constants/margin_bottom = 5
 
 [node name="Mod Information" type="VBoxContainer" parent="VBoxContainer/Mod Loader Info/Mod Info"]
 margin_top = 5.0
-margin_right = 447.0
+margin_right = 324.0
 margin_bottom = 347.0
 size_flags_horizontal = 3
 
 [node name="Mod Name" type="Label" parent="VBoxContainer/Mod Loader Info/Mod Info/Mod Information"]
-margin_right = 447.0
+margin_right = 324.0
 margin_bottom = 17.0
 text = "Mod Name"
 align = 1
 
 [node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/Mod Loader Info/Mod Info/Mod Information"]
 margin_top = 21.0
-margin_right = 447.0
+margin_right = 324.0
 margin_bottom = 342.0
 size_flags_vertical = 3
 custom_constants/margin_top = 5
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2"]
 margin_top = 5.0
-margin_right = 447.0
+margin_right = 324.0
 margin_bottom = 321.0
 size_flags_vertical = 3
 
 [node name="Game Versions" type="Label" parent="VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2/VBoxContainer"]
-margin_right = 447.0
+margin_right = 324.0
 margin_bottom = 17.0
 text = "Game Version(s): 0.02, 0.01"
 
 [node name="MarginContainer" type="ScrollContainer" parent="VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2/VBoxContainer"]
 margin_top = 21.0
-margin_right = 447.0
+margin_right = 324.0
 margin_bottom = 316.0
 size_flags_vertical = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer"]
-margin_right = 447.0
+margin_right = 324.0
 margin_bottom = 54.0
 size_flags_horizontal = 3
 
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer/VBoxContainer"]
-margin_right = 447.0
+margin_right = 324.0
 margin_bottom = 28.0
 __meta__ = {
 "_edit_use_anchors_": false
@@ -151,11 +155,11 @@ __meta__ = {
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer/VBoxContainer/PanelContainer"]
 margin_left = 1.0
 margin_top = 1.0
-margin_right = 446.0
+margin_right = 323.0
 margin_bottom = 27.0
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer/VBoxContainer/PanelContainer/VBoxContainer"]
-margin_right = 445.0
+margin_right = 322.0
 margin_bottom = 22.0
 custom_constants/margin_top = 5
 custom_constants/margin_left = 5
@@ -163,18 +167,18 @@ custom_constants/margin_left = 5
 [node name="Label Dependencies" type="Label" parent="VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer/VBoxContainer/PanelContainer/VBoxContainer/MarginContainer"]
 margin_left = 5.0
 margin_top = 5.0
-margin_right = 445.0
+margin_right = 322.0
 margin_bottom = 22.0
 text = "Dependencies"
 
 [node name="Dependencies" type="VBoxContainer" parent="VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer/VBoxContainer/PanelContainer/VBoxContainer"]
 margin_top = 26.0
-margin_right = 445.0
+margin_right = 322.0
 margin_bottom = 26.0
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer/VBoxContainer"]
 margin_top = 32.0
-margin_right = 447.0
+margin_right = 324.0
 margin_bottom = 54.0
 custom_constants/margin_right = 0
 custom_constants/margin_top = 5
@@ -183,7 +187,7 @@ custom_constants/margin_bottom = 0
 
 [node name="Description" type="Label" parent="VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2/VBoxContainer/MarginContainer/VBoxContainer/MarginContainer"]
 margin_top = 5.0
-margin_right = 447.0
+margin_right = 324.0
 margin_bottom = 22.0
 text = "Mod description will go here"
 autowrap = true
@@ -214,5 +218,10 @@ text = "ModLoader will log useful information here"
 scroll_following = true
 selection_enabled = true
 
+[node name="FileDialog" type="FileDialog" parent="."]
+margin_right = 282.0
+margin_bottom = 131.0
+
 [connection signal="pressed" from="VBoxContainer/Mod Loader Info/Mod List/Mod List/HBoxContainer/Refresh" to="." method="_on_Refresh_pressed"]
 [connection signal="pressed" from="VBoxContainer/Mod Loader Info/Mod List/Mod List/HBoxContainer/Load Mods" to="." method="_on_Load_Mods_pressed"]
+[connection signal="pressed" from="VBoxContainer/Mod Loader Info/Mod List/Mod List/HBoxContainer/Open Mods Folder" to="." method="_on_Open_Mods_Folder_pressed"]

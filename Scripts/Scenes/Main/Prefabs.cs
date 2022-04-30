@@ -12,6 +12,7 @@ namespace GodotModules
         public static PackedScene PopupDirectConnect = LoadPrefab($"PopupDirectConnect");
         public static PackedScene PopupError = LoadPrefab("PopupError");
         public static PackedScene PopupMessage = LoadPrefab("PopupMessage");
+        public static PackedScene PopupFileDialogMods = LoadPrefab("PopupFileDialogMods");
         public static PackedScene NotifyError = LoadPrefab("NotifyError");
         public static PackedScene LobbyListing = LoadPrefab("LobbyListing");
         public static PackedScene LobbyPlayerListing = LoadPrefab("LobbyPlayerListing");

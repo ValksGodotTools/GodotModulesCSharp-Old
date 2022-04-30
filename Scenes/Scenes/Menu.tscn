@@ -34,22 +34,22 @@ margin_right = 1024.0
 margin_bottom = 600.0
 
 [node name="Grid" type="GridContainer" parent="PanelContainer/ScrollContainer"]
-margin_right = 804.0
-margin_bottom = 300.0
+margin_right = 1004.0
+margin_bottom = 500.0
 columns = 2
 
 [node name="ModLoader" parent="PanelContainer/ScrollContainer/Grid" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 400.0
-margin_bottom = 300.0
-rect_min_size = Vector2( 400, 300 )
+margin_right = 600.0
+margin_bottom = 500.0
+rect_min_size = Vector2( 600, 500 )
 
 [node name="Options" parent="PanelContainer/ScrollContainer/Grid" instance=ExtResource( 3 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 404.0
-margin_right = 804.0
+margin_left = 604.0
+margin_right = 1004.0
 margin_bottom = 212.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
