@@ -38,8 +38,8 @@ namespace GodotModules
         public static void SpawnPopupMessage(string message)
         {
             var popupMessage = Prefabs.PopupMessage.Instance<UIPopupMessage>();
-            popupMessage.Init(message);
             Instance.GetTree().CurrentScene.AddChild(popupMessage);
+            popupMessage.Init(message);
             popupMessage.PopupCentered();
         }
 
@@ -48,8 +48,8 @@ namespace GodotModules
             ErrorNotifier.IncrementErrorCount();
 
             var popupError = Prefabs.PopupError.Instance<UIPopupError>();
-            popupError.Init(e.Message, e.StackTrace);
             Instance.GetTree().CurrentScene.AddChild(popupError);
+            popupError.Init(e.Message, e.StackTrace);
             popupError.PopupCentered();
         }
 

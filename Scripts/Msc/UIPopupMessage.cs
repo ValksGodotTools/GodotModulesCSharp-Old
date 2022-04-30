@@ -9,9 +9,13 @@ namespace GodotModules
 
         private Label Message { get; set; }
 
-        public void Init(string message)
+        public override void _Ready()
         {
             Message = GetNode<Label>(NodePathMessage);
+        }
+
+        public void Init(string message)
+        {
             Message.Text = message;
         }
 

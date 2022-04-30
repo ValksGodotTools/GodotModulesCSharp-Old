@@ -9,9 +9,13 @@ namespace GodotModules
 
         private TextEdit StackTrace { get; set; }
 
-        public void Init(string errorMessage, string stackTrace)
+        public override void _Ready()
         {
             StackTrace = GetNode<TextEdit>(NodePathStackTrace);
+        }
+
+        public void Init(string errorMessage, string stackTrace)
+        {
             WindowTitle = errorMessage;
             StackTrace.Text = stackTrace;
         }
