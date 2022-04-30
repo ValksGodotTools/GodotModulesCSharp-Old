@@ -10,13 +10,7 @@
     // Sent to Game Client
     public enum ServerPacketOpcode
     {
-        LobbyJoin,
-        LobbyLeave,
-        LobbyInfo,
-        LobbyChatMessage,
-        LobbyReady,
-        LobbyCountdownChange,
-        LobbyGameStart,
+        Lobby,
         PlayerPositions
     }
 
@@ -24,6 +18,7 @@
     {
         LobbyJoin,
         LobbyLeave,
+        LobbyInfo,
         LobbyChatMessage,
         LobbyReady,
         LobbyCountdownChange,

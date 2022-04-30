@@ -27,7 +27,8 @@ namespace GodotModules.Netcode.Server
         public void EmitClientPositionsCallback(System.Object source, ElapsedEventArgs args)
         {
             Players.ForEach(pair =>
-                Send(ServerPacketOpcode.PlayerPositions, new SPacketPlayerPositions {
+                Send(ServerPacketOpcode.PlayerPositions, new SPacketPlayerPositions
+                {
                     PlayerPositions = Players.Where(x => x.Key != pair.Key).ToDictionary(x => x.Key, x => x.Value.Position)
                 }, Peers[pair.Key])
             );
@@ -54,7 +55,11 @@ namespace GodotModules.Netcode.Server
         private void HandlePlayerLeave(uint id)
         {
             // tell other players that this player left lobby
-            Send(ServerPacketOpcode.LobbyLeave, new SPacketLobbyLeave { Id = id}, GetOtherPeers(id));
+            Send(ServerPacketOpcode.Lobby, new SPacketLobby
+            {
+                LobbyOpcode = LobbyOpcode.LobbyLeave,
+                Id = id
+            }, GetOtherPeers(id));
 
             if (Players.ContainsKey(id))
                 Players.Remove(id);

@@ -66,21 +66,22 @@ namespace GodotModules.Netcode
             switch (LobbyOpcode)
             {
                 case LobbyOpcode.LobbyChatMessage:
-                    GameServer.SendToAllPlayers(ServerPacketOpcode.LobbyChatMessage, new SPacketLobbyChatMessage
+                    GameServer.SendToAllPlayers(ServerPacketOpcode.Lobby, new SPacketLobby
                     {
+                        LobbyOpcode = LobbyOpcode.LobbyChatMessage,
                         Id = peer.ID,
                         Message = Message
                     });
                     break;
                 case LobbyOpcode.LobbyCountdownChange:
-                    GameServer.SendToOtherPlayers(peer.ID, ServerPacketOpcode.LobbyCountdownChange, new SPacketLobbyCountdownChange
+                    GameServer.SendToOtherPlayers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby
                     {
-                        //Id = peer.ID,
+                        LobbyOpcode = LobbyOpcode.LobbyCountdownChange,
                         CountdownRunning = CountdownRunning
                     });
                     break;
                 case LobbyOpcode.LobbyGameStart:
-                    GameServer.SendToAllPlayers(ServerPacketOpcode.LobbyGameStart);
+                    GameServer.SendToAllPlayers(ServerPacketOpcode.Lobby, new SPacketLobby { LobbyOpcode = LobbyOpcode.LobbyGameStart });
                     break;
                 case LobbyOpcode.LobbyJoin:
                     // Check if data.Username is appropriate username
@@ -107,16 +108,18 @@ namespace GodotModules.Netcode
 
                     // tell joining player their Id and tell them about other players in lobby
                     // also tell them if they are the host or not
-                    GameServer.Send(ServerPacketOpcode.LobbyInfo, new SPacketLobbyInfo
+                    GameServer.Send(ServerPacketOpcode.Lobby, new SPacketLobby
                     {
+                        LobbyOpcode = LobbyOpcode.LobbyInfo,
                         Id = peer.ID,
                         IsHost = isHost,
                         Players = GameServer.GetOtherPlayers(peer.ID)
                     }, peer);
 
                     // tell other players about new player that joined
-                    GameServer.SendToOtherPeers(peer.ID, ServerPacketOpcode.LobbyJoin, new SPacketLobbyJoin
+                    GameServer.SendToOtherPeers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby
                     {
+                        LobbyOpcode = LobbyOpcode.LobbyJoin,
                         Id = peer.ID,
                         Username = Username
                     });
@@ -125,8 +128,9 @@ namespace GodotModules.Netcode
                     var player = GameServer.Players[peer.ID];
                     player.Ready = Ready;
 
-                    GameServer.SendToOtherPlayers(peer.ID, ServerPacketOpcode.LobbyReady, new SPacketLobbyReady
+                    GameServer.SendToOtherPlayers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby
                     {
+                        LobbyOpcode = LobbyOpcode.LobbyReady,
                         Id = peer.ID,
                         Ready = Ready
                     });
