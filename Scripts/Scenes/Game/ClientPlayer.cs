@@ -1,5 +1,4 @@
 using Godot;
-
 using GodotModules.Netcode;
 using GodotModules.Netcode.Client;
 
@@ -13,6 +12,11 @@ namespace Game
         private float Speed = 250f;
         public static GTimer Timer { get; set; }
 
+        private bool PressedUp { get; set; }
+        private bool PressedDown { get; set; }
+        private bool PressedLeft { get; set; }
+        private bool PressedRight { get; set; }
+
         public override void _Ready()
         {
             base._Ready();
@@ -21,39 +25,59 @@ namespace Game
 
             if (GameClient.Running)
             {
-                Timer = new GTimer(CommandDebug.SendReceiveDataInterval);
-                Timer.Connect(this, nameof(EmitPosition));
+                Timer = new GTimer(20);
+                Timer.Connect(this, nameof(EmitInput));
             }
         }
 
-        public async void EmitPosition()
+        public async void EmitInput()
         {
-            await GameClient.Send(ClientPacketOpcode.PlayerPosition, new CPacketPlayerPosition
+            var directionVert = Direction.None;
+            var directionHorz = Direction.None;
+
+            if (PressedUp) directionVert = Direction.Up;
+            if (PressedDown) directionVert = Direction.Down;
+            if (PressedLeft) directionHorz = Direction.Left;
+            if (PressedRight) directionHorz = Direction.Right;
+
+            await GameClient.Send(ClientPacketOpcode.PlayerMovementDirections, new CPacketPlayerMovementDirections
             {
-                Position = Position
-            });
+                DirectionVert = directionVert,
+                DirectionHorz = directionHorz
+            }, ENet.PacketFlags.None);
         }
 
         public override void _PhysicsProcess(float delta)
         {
             LabelPosition.Text = $"X: {Mathf.RoundToInt(Position.x)} Y: {Mathf.RoundToInt(Position.y)}";
             HandleMovement(delta);
+
+            if (GameClient.Running)
+                KeepTrackOfInputs();
         }
 
         private void HandleMovement(float delta)
         {
             var dir = new Vector2();
 
-            if (Input.IsActionPressed("ui_left"))
-                dir.x -= 1;
-            if (Input.IsActionPressed("ui_right"))
-                dir.x += 1;
             if (Input.IsActionPressed("ui_up"))
                 dir.y -= 1;
             if (Input.IsActionPressed("ui_down"))
                 dir.y += 1;
+            if (Input.IsActionPressed("ui_left"))
+                dir.x -= 1;
+            if (Input.IsActionPressed("ui_right"))
+                dir.x += 1;
 
             Position += dir * Speed * delta;
+        }
+
+        private void KeepTrackOfInputs()
+        {
+            PressedUp = Input.IsActionPressed("ui_up");
+            PressedDown = Input.IsActionPressed("ui_down");
+            PressedLeft = Input.IsActionPressed("ui_left");
+            PressedRight = Input.IsActionPressed("ui_right");
         }
 
         public void SetHealth(int v)
