@@ -8,22 +8,6 @@ namespace GodotModules.Netcode
     {
         public LobbyOpcode LobbyOpcode { get; set; }
 
-        // Chat Message
-        public string Message { get; set; }
-
-        // Countdown Change
-        public bool CountdownRunning { get; set; }
-
-        // Info
-        public bool IsHost { get; set; }
-        public Dictionary<uint, DataPlayer> Players { get; set; }
-
-        // Join
-        public string Username { get; set; }
-
-        // Ready
-        public bool Ready { get; set; }
-
         public override void Write(PacketWriter writer)
         {
             writer.Write((byte)LobbyOpcode);
@@ -110,44 +94,92 @@ namespace GodotModules.Netcode
             switch (LobbyOpcode)
             {
                 case LobbyOpcode.LobbyChatMessage:
-                    SceneLobby.Log(Id, Message);
+                    HandleChatMessage();
                     break;
                 case LobbyOpcode.LobbyCountdownChange:
-                    if (CountdownRunning)
-                        SceneLobby.StartGameCountdown();
-                    else
-                        SceneLobby.CancelGameCountdown();
+                    HandleCountdownChange();
                     break;
                 case LobbyOpcode.LobbyGameStart:
-                    if (GameClient.IsHost)
-                        GameServer.EmitClientPositions.Enabled = true;
-
-                    SceneManager.ChangeScene("Game");
+                    HandleGameStart();
                     break;
                 case LobbyOpcode.LobbyInfo:
-                    GameClient.PeerId = Id;
-                    GameClient.IsHost = IsHost;
-                    GameClient.Log($"{GameManager.Options.OnlineUsername} joined lobby with id {Id}");
-                    GameClient.Players.Add(Id, GameManager.Options.OnlineUsername);
-                    Players.ForEach(pair => GameClient.Players.Add(pair.Key, pair.Value.Username));
-
-                    SceneManager.ChangeScene("Lobby");
+                    HandleInfo();
                     break;
                 case LobbyOpcode.LobbyJoin:
-                    SceneLobby.AddPlayer(Id, Username);
-                    GameClient.Players.Add(Id, Username);
-
-                    GameClient.Log($"Player with username {Username} id: {Id} joined the lobby");
+                    HandleJoin();
                     break;
                 case LobbyOpcode.LobbyLeave:
-                    SceneLobby.RemovePlayer(Id);
-                    GameClient.Players.Remove(Id);
-                    GameClient.Log($"Player with id: {Id} left the lobby");
+                    HandleLeave();
                     break;
                 case LobbyOpcode.LobbyReady:
-                    SceneLobby.SetReady(Id, Ready);
+                    HandleReady();
                     break;
             }
+        }
+
+        // LobbyChatMessage
+        public string Message { get; set; }
+        private void HandleChatMessage()
+        {
+            SceneLobby.Log(Id, Message);
+        }
+
+        // LobbyCountdownChange
+        public bool CountdownRunning { get; set; }
+        private void HandleCountdownChange()
+        {
+            if (CountdownRunning)
+                SceneLobby.StartGameCountdown();
+            else
+                SceneLobby.CancelGameCountdown();
+        }
+
+        // LobbyGameStart
+        private void HandleGameStart()
+        {
+            if (GameClient.IsHost)
+                GameServer.EmitClientPositions.Enabled = true;
+
+            SceneManager.ChangeScene("Game");
+        }
+
+        // LobbyInfo
+        public bool IsHost { get; set; }
+        public Dictionary<uint, DataPlayer> Players { get; set; }
+        private void HandleInfo()
+        {
+            GameClient.PeerId = Id;
+            GameClient.IsHost = IsHost;
+            GameClient.Log($"{GameManager.Options.OnlineUsername} joined lobby with id {Id}");
+            GameClient.Players.Add(Id, GameManager.Options.OnlineUsername);
+            Players.ForEach(pair => GameClient.Players.Add(pair.Key, pair.Value.Username));
+
+            SceneManager.ChangeScene("Lobby");
+        }
+
+        // LobbyJoin
+        public string Username { get; set; }
+        private void HandleJoin()
+        {
+            SceneLobby.AddPlayer(Id, Username);
+            GameClient.Players.Add(Id, Username);
+
+            GameClient.Log($"Player with username {Username} id: {Id} joined the lobby");
+        }
+
+        // LobbyLeave
+        private void HandleLeave()
+        {
+            SceneLobby.RemovePlayer(Id);
+            GameClient.Players.Remove(Id);
+            GameClient.Log($"Player with id: {Id} left the lobby");
+        }
+
+        // LobbyReady
+        public bool Ready { get; set; }
+        private void HandleReady()
+        {
+            SceneLobby.SetReady(Id, Ready);
         }
     }
 }
