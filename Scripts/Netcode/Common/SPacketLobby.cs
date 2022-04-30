@@ -155,7 +155,7 @@ namespace GodotModules.Netcode
         private void HandleGameStart()
         {
             if (GameClient.IsHost)
-                GameServer.EmitClientPositions.Enabled = true;
+                GameServer.StartGame();
 
             SceneManager.ChangeScene("Game");
         }
