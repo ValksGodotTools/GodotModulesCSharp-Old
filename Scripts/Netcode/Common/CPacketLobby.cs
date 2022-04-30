@@ -1,23 +1,12 @@
 using GodotModules.Netcode.Server;
 using System.IO;
+using ENet;
 
 namespace GodotModules.Netcode
 {
     public class CPacketLobby : APacketClient
     {
         public LobbyOpcode LobbyOpcode { get; set; }
-
-        // ChatMessage
-        public string Message { get; set; }
-
-        // CountdownChange
-        public bool CountdownRunning { get; set; }
-
-        // Join
-        public string Username { get; set; }
-
-        // Ready
-        public bool Ready { get; set; }
 
         public override void Write(PacketWriter writer)
         {
@@ -61,81 +50,115 @@ namespace GodotModules.Netcode
             }
         }
 
-        public override void Handle(ENet.Peer peer)
+        public override void Handle(Peer peer)
         {
             switch (LobbyOpcode)
             {
                 case LobbyOpcode.LobbyChatMessage:
-                    GameServer.SendToAllPlayers(ServerPacketOpcode.Lobby, new SPacketLobby
-                    {
-                        LobbyOpcode = LobbyOpcode.LobbyChatMessage,
-                        Id = peer.ID,
-                        Message = Message
-                    });
+                    HandleChatMessage(peer);
                     break;
                 case LobbyOpcode.LobbyCountdownChange:
-                    GameServer.SendToOtherPlayers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby
-                    {
-                        LobbyOpcode = LobbyOpcode.LobbyCountdownChange,
-                        CountdownRunning = CountdownRunning
-                    });
+                    HandleCountdownChange(peer);
                     break;
                 case LobbyOpcode.LobbyGameStart:
-                    GameServer.SendToAllPlayers(ServerPacketOpcode.Lobby, new SPacketLobby { LobbyOpcode = LobbyOpcode.LobbyGameStart });
+                    HandleGameStart(peer);
                     break;
                 case LobbyOpcode.LobbyJoin:
-                    // Check if data.Username is appropriate username
-                    // TODO
-
-                    var isHost = false;
-
-                    if (GameServer.Players.Count == 0)
-                        isHost = true;
-
-                    // Keep track of joining player server side
-                    if (GameServer.Players.ContainsKey(peer.ID))
-                    {
-                        GameServer.Log($"Received LobbyJoin packet from peer with id {peer.ID}. Tried to add id {peer.ID} to Players but exists already");
-                        return;
-                    }
-
-                    GameServer.Players.Add(peer.ID, new DataPlayer
-                    {
-                        Username = Username,
-                        Ready = false,
-                        Host = isHost
-                    });
-
-                    // tell joining player their Id and tell them about other players in lobby
-                    // also tell them if they are the host or not
-                    GameServer.Send(ServerPacketOpcode.Lobby, new SPacketLobby
-                    {
-                        LobbyOpcode = LobbyOpcode.LobbyInfo,
-                        Id = peer.ID,
-                        IsHost = isHost,
-                        Players = GameServer.GetOtherPlayers(peer.ID)
-                    }, peer);
-
-                    // tell other players about new player that joined
-                    GameServer.SendToOtherPeers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby
-                    {
-                        LobbyOpcode = LobbyOpcode.LobbyJoin,
-                        Id = peer.ID,
-                        Username = Username
-                    });
+                    HandleJoin(peer);
                     break;
                 case LobbyOpcode.LobbyReady:
-                    var player = GameServer.Players[peer.ID];
-                    player.Ready = Ready;
-
-                    GameServer.SendToOtherPlayers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby
-                    {
-                        LobbyOpcode = LobbyOpcode.LobbyReady,
-                        Id = peer.ID,
-                        Ready = Ready
-                    });
+                    HandleReady(peer);
                     break;
             }
+        }
+
+        // LobbyChatMessage
+        public string Message { get; set; }
+        private void HandleChatMessage(Peer peer)
+        {
+            GameServer.SendToAllPlayers(ServerPacketOpcode.Lobby, new SPacketLobby
+            {
+                LobbyOpcode = LobbyOpcode.LobbyChatMessage,
+                Id = peer.ID,
+                Message = Message
+            });
+        }
+
+        // LobbyCountdownChange
+        public bool CountdownRunning { get; set; }
+        private void HandleCountdownChange(Peer peer)
+        {
+            GameServer.SendToOtherPlayers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby
+            {
+                LobbyOpcode = LobbyOpcode.LobbyCountdownChange,
+                CountdownRunning = CountdownRunning
+            });
+        }
+
+        // LobbyGameStart
+        private void HandleGameStart(Peer peer)
+        {
+            GameServer.SendToAllPlayers(ServerPacketOpcode.Lobby, new SPacketLobby { LobbyOpcode = LobbyOpcode.LobbyGameStart });
+        }
+
+        // LobbyJoin
+        public string Username { get; set; }
+        private void HandleJoin(Peer peer)
+        {
+            // Check if data.Username is appropriate username
+            // TODO
+
+            var isHost = false;
+
+            if (GameServer.Players.Count == 0)
+                isHost = true;
+
+            // Keep track of joining player server side
+            if (GameServer.Players.ContainsKey(peer.ID))
+            {
+                GameServer.Log($"Received LobbyJoin packet from peer with id {peer.ID}. Tried to add id {peer.ID} to Players but exists already");
+                return;
+            }
+
+            GameServer.Players.Add(peer.ID, new DataPlayer
+            {
+                Username = Username,
+                Ready = false,
+                Host = isHost
+            });
+
+            // tell joining player their Id and tell them about other players in lobby
+            // also tell them if they are the host or not
+            GameServer.Send(ServerPacketOpcode.Lobby, new SPacketLobby
+            {
+                LobbyOpcode = LobbyOpcode.LobbyInfo,
+                Id = peer.ID,
+                IsHost = isHost,
+                Players = GameServer.GetOtherPlayers(peer.ID)
+            }, peer);
+
+            // tell other players about new player that joined
+            GameServer.SendToOtherPeers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby
+            {
+                LobbyOpcode = LobbyOpcode.LobbyJoin,
+                Id = peer.ID,
+                Username = Username
+            });
+        }
+
+        // LobbyReady
+        public bool Ready { get; set; }
+        private void HandleReady(Peer peer)
+        {
+            var player = GameServer.Players[peer.ID];
+            player.Ready = Ready;
+
+            GameServer.SendToOtherPlayers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby
+            {
+                LobbyOpcode = LobbyOpcode.LobbyReady,
+                Id = peer.ID,
+                Ready = Ready
+            });
         }
     }
 }
