@@ -1,4 +1,5 @@
 using System;
+using GodotModules.Netcode.Client;
 
 namespace GodotModules
 {
@@ -7,18 +8,28 @@ namespace GodotModules
         public CommandDebug() => Aliases = new string[] { "x" };
 
         public static int SendReceiveDataInterval = 150;
+        private static List<ENetClient> dummyClients = new List<ENetClient>();
 
-        public override void Run(string[] args)
+        public override async void Run(string[] args)
         {
             // debug command
             // do debug stuff here
-
-            GameManager.SpawnPopupError(new Exception("lol beans"));
-
-            /*if (args.Length == 0)
+            if (args.Length == 0)
                 return;
 
-            if (!int.TryParse(args[0], out int result))
+            if (args[0] == "add")
+            {
+                var dummyClient = new ENetClient();
+                dummyClients.Add(dummyClient);
+                await dummyClient.Connect("127.0.0.1", 7777);
+            }
+
+            if (args[0] == "rem") 
+            {
+                dummyClients.ForEach(async x => await x.Stop());
+            }
+
+            /*if (!int.TryParse(args[0], out int result))
                 return;
 
             SendReceiveDataInterval = result;
