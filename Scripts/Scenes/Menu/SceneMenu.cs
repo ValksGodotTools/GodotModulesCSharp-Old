@@ -2,7 +2,6 @@ using Godot;
 using GodotModules;
 using GodotModules.Netcode;
 using GodotModules.Settings;
-using System.Collections.Generic;
 
 namespace Game
 {

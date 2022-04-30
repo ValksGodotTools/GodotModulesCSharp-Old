@@ -100,14 +100,14 @@ namespace GodotModules.ModLoader
                 mod.Enabled = false;
         }
 
-        private static void CheckAllDependenciesEnabled(ModInfo firstMod, ModInfo modInfo, List<string> checkedMods, ref List<ModInfo> modsToDisable) 
+        private static void CheckAllDependenciesEnabled(ModInfo firstMod, ModInfo modInfo, List<string> checkedMods, ref List<ModInfo> modsToDisable)
         {
-            foreach (var dependency in modInfo.Dependencies) 
+            foreach (var dependency in modInfo.Dependencies)
             {
                 if (checkedMods.Contains(dependency))
                     continue;
 
-                if (!ModInfo[dependency].ModInfo.Enabled) 
+                if (!ModInfo[dependency].ModInfo.Enabled)
                 {
                     if (!modsToDisable.Contains(firstMod))
                         modsToDisable.Add(firstMod);
@@ -131,12 +131,12 @@ namespace GodotModules.ModLoader
             }
         }
 
-        public static void SetModsEnabled() 
+        public static void SetModsEnabled()
         {
             var modsEnabled = new Dictionary<string, bool>();
             foreach (var mod in ModInfo)
                 modsEnabled.Add(mod.Key, mod.Value.ModInfo.Enabled);
-            
+
             File.WriteAllText(PathModsEnabled, JsonConvert.SerializeObject(modsEnabled, Formatting.Indented));
         }
 
@@ -147,7 +147,7 @@ namespace GodotModules.ModLoader
 
             var modsEnabled = JsonConvert.DeserializeObject<Dictionary<string, bool>>(File.ReadAllText(PathModsEnabled));
 
-            foreach (var mod in modsEnabled) 
+            foreach (var mod in modsEnabled)
             {
                 ModInfo[mod.Key].ModInfo.Enabled = mod.Value;
             }
@@ -257,9 +257,13 @@ namespace GodotModules.ModLoader
         }
 
         private static bool ModHasName(ModInfo modInfo) => modInfo.Name != null;
+
         private static bool RequiredModFilesExist(string folder, string pathInfo, string pathScriptLua) => File.Exists(pathInfo) && File.Exists(pathScriptLua);
+
         private static bool IsModMissingDependency(string dependency) => !ModInfo.ContainsKey(dependency);
+
         private static bool ModHasDependency(string dependency) => ModInfo.ContainsKey(dependency);
+
         private static bool ModHasAllDependenciesEnabled(Mod mod)
         {
             var allDependenciesEnabled = true;

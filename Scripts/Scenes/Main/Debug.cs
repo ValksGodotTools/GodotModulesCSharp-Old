@@ -1,9 +1,8 @@
 using Godot;
-using GodotModules.Netcode.Server;
 
-namespace GodotModules 
+namespace GodotModules
 {
-    public class Debug : Node 
+    public class Debug : Node
     {
         public override void _Input(InputEvent @event)
         {

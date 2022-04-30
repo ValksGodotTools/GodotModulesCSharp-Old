@@ -1,6 +1,6 @@
 using Godot;
-using System.Collections.Generic;
 using GodotModules.Settings;
+using System.Collections.Generic;
 
 namespace GodotModules
 {

@@ -1,8 +1,6 @@
-using System;
-
-namespace GodotModules 
+namespace GodotModules
 {
-    public class CommandExit : Command 
+    public class CommandExit : Command
     {
         public CommandExit() => Aliases = new string[] { "stop" };
 

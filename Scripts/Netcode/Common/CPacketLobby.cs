@@ -1,6 +1,5 @@
-using GodotModules.Netcode.Server;
-using System.IO;
 using ENet;
+using GodotModules.Netcode.Server;
 
 namespace GodotModules.Netcode
 {
@@ -17,12 +16,15 @@ namespace GodotModules.Netcode
                 case LobbyOpcode.LobbyChatMessage:
                     writer.Write(Message);
                     break;
+
                 case LobbyOpcode.LobbyCountdownChange:
                     writer.Write(CountdownRunning);
                     break;
+
                 case LobbyOpcode.LobbyJoin:
                     writer.Write(Username);
                     break;
+
                 case LobbyOpcode.LobbyReady:
                     writer.Write(Ready);
                     break;
@@ -38,12 +40,15 @@ namespace GodotModules.Netcode
                 case LobbyOpcode.LobbyChatMessage:
                     Message = reader.ReadString();
                     break;
+
                 case LobbyOpcode.LobbyCountdownChange:
                     CountdownRunning = reader.ReadBool();
                     break;
+
                 case LobbyOpcode.LobbyJoin:
                     Username = reader.ReadString();
                     break;
+
                 case LobbyOpcode.LobbyReady:
                     Ready = reader.ReadBool();
                     break;
@@ -57,15 +62,19 @@ namespace GodotModules.Netcode
                 case LobbyOpcode.LobbyChatMessage:
                     HandleChatMessage(peer);
                     break;
+
                 case LobbyOpcode.LobbyCountdownChange:
                     HandleCountdownChange(peer);
                     break;
+
                 case LobbyOpcode.LobbyGameStart:
                     HandleGameStart(peer);
                     break;
+
                 case LobbyOpcode.LobbyJoin:
                     HandleJoin(peer);
                     break;
+
                 case LobbyOpcode.LobbyReady:
                     HandleReady(peer);
                     break;
@@ -74,6 +83,7 @@ namespace GodotModules.Netcode
 
         // LobbyChatMessage
         public string Message { get; set; }
+
         private void HandleChatMessage(Peer peer)
         {
             GameServer.SendToAllPlayers(ServerPacketOpcode.Lobby, new SPacketLobby
@@ -86,6 +96,7 @@ namespace GodotModules.Netcode
 
         // LobbyCountdownChange
         public bool CountdownRunning { get; set; }
+
         private void HandleCountdownChange(Peer peer)
         {
             GameServer.SendToOtherPlayers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby
@@ -103,6 +114,7 @@ namespace GodotModules.Netcode
 
         // LobbyJoin
         public string Username { get; set; }
+
         private void HandleJoin(Peer peer)
         {
             // Check if data.Username is appropriate username
@@ -148,6 +160,7 @@ namespace GodotModules.Netcode
 
         // LobbyReady
         public bool Ready { get; set; }
+
         private void HandleReady(Peer peer)
         {
             var player = GameServer.Players[peer.ID];

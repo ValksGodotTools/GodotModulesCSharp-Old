@@ -1,9 +1,4 @@
-using GodotModules.Netcode.Client;
-using GodotModules.Netcode.Server;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using Game;
 
 namespace GodotModules
 {
@@ -19,7 +14,6 @@ namespace GodotModules
             // do debug stuff here
 
             GameManager.SpawnPopupError(new Exception("lol beans"));
-
 
             /*if (args.Length == 0)
                 return;
@@ -42,7 +36,6 @@ namespace GodotModules
                 ClientPlayer.Timer.Stop();
                 ClientPlayer.Timer.Start(CommandDebug.SendReceiveDataInterval);
             }*/
-
         }
     }
 }

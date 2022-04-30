@@ -91,6 +91,7 @@ namespace GodotModules
                 case FullscreenMode.Windowed:
                     SetFullscreenMode(FullscreenMode.Borderless);
                     break;
+
                 case FullscreenMode.Borderless:
                 case FullscreenMode.Fullscreen:
                     SetFullscreenMode(FullscreenMode.Windowed);

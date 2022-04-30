@@ -1,15 +1,17 @@
 using Godot;
 
-namespace GodotModules 
+namespace GodotModules
 {
-    public static class Prefabs 
+    public static class Prefabs
     {
         // Game
         public static PackedScene ClientPlayer = LoadPrefab("ClientPlayer");
+
         public static PackedScene OtherPlayer = LoadPrefab($"OtherPlayer");
 
         // UI
         public static PackedScene PopupDirectConnect = LoadPrefab($"PopupDirectConnect");
+
         public static PackedScene PopupError = LoadPrefab("PopupError");
         public static PackedScene PopupMessage = LoadPrefab("PopupMessage");
         public static PackedScene PopupFileDialogMods = LoadPrefab("PopupFileDialogMods");

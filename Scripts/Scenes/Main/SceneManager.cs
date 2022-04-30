@@ -1,5 +1,4 @@
 using Godot;
-using System;
 using System.Collections.Generic;
 
 namespace GodotModules
@@ -26,8 +25,11 @@ namespace GodotModules
         }
 
         public static bool InMainMenu() => ActiveScene == "Menu";
+
         public static bool InGameServers() => ActiveScene == "GameServers";
+
         public static bool InLobby() => ActiveScene == "Lobby";
+
         public static bool InGame() => ActiveScene == "Game";
 
         public static void ChangeScene(string scene)

@@ -1,11 +1,8 @@
-using Timer = System.Timers.Timer;
-
-using Godot;
-using GodotModules.Netcode;
 using ENet;
 using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
+using Timer = System.Timers.Timer;
 
 namespace GodotModules.Netcode.Server
 {
@@ -73,6 +70,7 @@ namespace GodotModules.Netcode.Server
         }
 
         public static Peer[] GetOtherPlayerPeers(uint id) => Players.Keys.Where(x => x != id).Select(x => Peers[x]).ToArray();
+
         public static Peer[] GetAllPlayerPeers() => Players.Keys.Select(x => Peers[x]).ToArray();
 
         public static void SendToAllPlayers(ServerPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)

@@ -1,13 +1,10 @@
-using Thread = System.Threading.Thread;
-
-using GodotModules.Netcode;
 using ENet;
-using Godot;
 using System;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Thread = System.Threading.Thread;
 
 namespace GodotModules.Netcode.Client
 {
@@ -16,9 +13,12 @@ namespace GodotModules.Netcode.Client
         // values grabbed from the server
         // =========================================================
         public static uint PeerId { get; set; } // this clients peer id (grabbed from server at some point)
+
         public static bool IsHost { get; set; }
+
         // =========================================================
         private static CancellationTokenSource CancelTokenSource { get; set; }
+
         public static ConsoleColor LogsColor = ConsoleColor.Yellow;
         public static ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
         private static int OutgoingId { get; set; }
@@ -207,7 +207,7 @@ namespace GodotModules.Netcode.Client
         /// <summary>
         /// Disconnect the client from the server, can be called from the Godot thread
         /// </summary>
-        public async static Task Stop()
+        public static async Task Stop()
         {
             //CancelTokenSource.Cancel();
             ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToDisconnect));
@@ -232,19 +232,22 @@ namespace GodotModules.Netcode.Client
         /// This is in the ENet thread, anything from the ENet thread can be used here
         /// </summary>
         /// <param name="netEvent"></param>
-        protected virtual void Connect(Event netEvent) { }
+        protected virtual void Connect(Event netEvent)
+        { }
 
         /// <summary>
         /// This is in the ENet thread, anything from the ENet thread can be used here
         /// </summary>
         /// <param name="netEvent"></param>
-        protected virtual void Disconnect(Event netEvent) { }
+        protected virtual void Disconnect(Event netEvent)
+        { }
 
         /// <summary>
         /// This is in the ENet thread, anything from the ENet thread can be used here
         /// </summary>
         /// <param name="netEvent"></param>
-        protected virtual void Timeout(Event netEvent) { }
+        protected virtual void Timeout(Event netEvent)
+        { }
 
         public void Dispose()
         {

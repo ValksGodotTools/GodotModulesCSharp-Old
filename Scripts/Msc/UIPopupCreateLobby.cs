@@ -1,11 +1,6 @@
 using Godot;
 using GodotModules.Netcode;
 using GodotModules.Netcode.Client;
-using GodotModules.Settings;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Text.RegularExpressions;
 
 namespace GodotModules
 {
@@ -64,8 +59,11 @@ namespace GodotModules
 
         private void _on_Title_text_changed(string text) =>
             ValidatedName = text.Validate(ref previousTextTitle, InputTitle, () => text.IsMatch("^[A-Za-z ]+$"));
+
         private void _on_Port_text_changed(string text) => text.ValidateNumber(InputPort, 1, 65535, ref ValidatedPort);
+
         private void _on_Max_Player_text_changed(string text) => text.ValidateNumber(InputMaxPlayerCount, 1, 999, ref ValidatedMaxPlayerCount);
+
         private void _on_Description_text_changed() =>
             ValidatedDescription = InputDescription.Text.Validate(ref previousTextDescription, InputDescription, () => InputDescription.Text.Length <= 250);
 
@@ -81,7 +79,7 @@ namespace GodotModules
             var localIp = "127.0.0.1";
 
             // does not update fast enough to be reliable
-            /*if (UIGameServers.LobbyListings.ContainsKey(externalIp)) 
+            /*if (UIGameServers.LobbyListings.ContainsKey(externalIp))
             {
                 var listing = UIGameServers.LobbyListings[externalIp];
 

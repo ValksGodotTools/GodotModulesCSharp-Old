@@ -1,18 +1,18 @@
 using Godot;
 using System;
 
-namespace GodotModules 
+namespace GodotModules
 {
-    public static class GodotExtensions 
+    public static class GodotExtensions
     {
-        public static string Validate(this string value, ref string previousValue, TextEdit input, Func<bool> condition) 
+        public static string Validate(this string value, ref string previousValue, TextEdit input, Func<bool> condition)
         {
-            if (value.Empty()) 
+            if (value.Empty())
             {
                 input.Text = "";
                 return null;
             }
-            
+
             if (!condition())
             {
                 input.Text = previousValue;
@@ -22,15 +22,15 @@ namespace GodotModules
             previousValue = value;
             return value;
         }
-        
-        public static string Validate(this string value, ref string previousValue, LineEdit input, Func<bool> condition) 
+
+        public static string Validate(this string value, ref string previousValue, LineEdit input, Func<bool> condition)
         {
-            if (value.Empty()) 
+            if (value.Empty())
             {
                 input.Text = "";
                 return null;
             }
-            
+
             if (!condition())
             {
                 input.Text = previousValue;

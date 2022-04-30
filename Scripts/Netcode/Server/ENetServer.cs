@@ -1,14 +1,11 @@
-using Thread = System.Threading.Thread;
-
-using GodotModules.Netcode;
 using ENet;
-using Godot;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Thread = System.Threading.Thread;
 
 namespace GodotModules.Netcode.Server
 {
@@ -177,7 +174,6 @@ namespace GodotModules.Netcode.Server
                 //Start();
                 NetworkManager.StartServer(port, maxClients);
             }
-
         }
 
         private bool ConcurrentQueuesWorking() => NetworkManager.GodotCmds.Count != 0 || ENetCmds.Count != 0 || Outgoing.Count != 0;
@@ -248,8 +244,11 @@ namespace GodotModules.Netcode.Server
         }
 
         public static void Send(ServerPacketOpcode opcode, params Peer[] peers) => Send(opcode, null, PacketFlags.Reliable, peers);
+
         public static void Send(ServerPacketOpcode opcode, APacket data, params Peer[] peers) => Send(opcode, data, PacketFlags.Reliable, peers);
+
         public static void Send(ServerPacketOpcode opcode, PacketFlags flags = PacketFlags.Reliable, params Peer[] peers) => Send(opcode, null, flags, peers);
+
         public static void Send(ServerPacketOpcode opcode, APacket data, PacketFlags flags = PacketFlags.Reliable, params Peer[] peers) => Outgoing.Enqueue(new ServerPacket((byte)opcode, flags, data, peers));
 
         /// <summary>
@@ -262,24 +261,28 @@ namespace GodotModules.Netcode.Server
         /// This is in the ENet thread, anything from the ENet thread can be used here
         /// </summary>
         /// <param name="netEvent"></param>
-        protected virtual void Connect(Event netEvent) { }
+        protected virtual void Connect(Event netEvent)
+        { }
 
         /// <summary>
         /// This is in the ENet thread, anything from the ENet thread can be used here
         /// </summary>
         /// <param name="netEvent"></param>
-        protected virtual void Disconnect(Event netEvent) { }
+        protected virtual void Disconnect(Event netEvent)
+        { }
 
         /// <summary>
         /// This is in the ENet thread, anything from the ENet thread can be used here
         /// </summary>
         /// <param name="netEvent"></param>
-        protected virtual void Timeout(Event netEvent) { }
+        protected virtual void Timeout(Event netEvent)
+        { }
 
         /// <summary>
         /// This is in the ENet thread, anything from the ENet thread can be used here
         /// </summary>
-        protected virtual void Stopped() { }
+        protected virtual void Stopped()
+        { }
 
         /// <summary>
         /// Send a packet to a client. This method is not meant to be used directly, see Outgoing ConcurrentQueue

@@ -1,10 +1,8 @@
 using Godot;
 using GodotModules.Netcode;
 using GodotModules.Netcode.Client;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Threading;
 
 namespace GodotModules
 {
@@ -39,15 +37,19 @@ namespace GodotModules
                     case DisconnectOpcode.Timeout:
                         message = "Timed out from server";
                         break;
+
                     case DisconnectOpcode.Restarting:
                         message = "Server is restarting..";
                         break;
+
                     case DisconnectOpcode.Stopping:
                         message = "Server was stopped";
                         break;
+
                     case DisconnectOpcode.Kicked:
                         message = "You were kicked";
                         break;
+
                     case DisconnectOpcode.Banned:
                         message = "You were banned";
                         break;
@@ -111,7 +113,8 @@ namespace GodotModules
 
             LobbyListings.Clear();
 
-            res.Content.ForEach(server => {
+            res.Content.ForEach(server =>
+            {
                 LobbyListings.Add(server.Ip, server);
                 AddServer(server);
             });

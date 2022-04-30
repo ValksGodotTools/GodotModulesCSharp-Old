@@ -1,8 +1,8 @@
 using Godot;
 
-namespace GodotModules.Netcode 
+namespace GodotModules.Netcode
 {
-    public class DataPlayer 
+    public class DataPlayer
     {
         public string Username { get; set; }
         public bool Ready { get; set; }

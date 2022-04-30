@@ -1,6 +1,4 @@
 using Godot;
-using System.Threading.Tasks;
-using System.Text.RegularExpressions;
 
 namespace GodotModules
 {

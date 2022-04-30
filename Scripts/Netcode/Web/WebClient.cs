@@ -1,7 +1,3 @@
-using Timer = System.Timers.Timer; // ambitious reference between Godot.Timer and System.Timers.Timer
-
-using Godot;
-using GodotModules.Netcode.Server;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Timers;
+using Timer = System.Timers.Timer; // ambitious reference between Godot.Timer and System.Timers.Timer
 
 namespace GodotModules.Netcode
 {
@@ -48,7 +45,7 @@ namespace GodotModules.Netcode
             }
             catch (Exception e)
             {
-                if (LogExceptions) 
+                if (LogExceptions)
                 {
                     var message = $"Failed to POST to http://{WEB_SERVER_IP}/api/{path} {e.Message}";
                     Utils.Log(message, ConsoleColor.Red); // no need to notify user of this kind of error
@@ -76,7 +73,7 @@ namespace GodotModules.Netcode
             }
             catch (Exception e)
             {
-                if (LogExceptions) 
+                if (LogExceptions)
                 {
                     var message = $"Failed to GET from http://{WEB_SERVER_IP}/api/{path} {e.Message}";
                     Utils.Log(message, ConsoleColor.Red); // no need to notify user of this kind of error
@@ -108,7 +105,6 @@ namespace GodotModules.Netcode
         private static System.Timers.Timer TimerPostAttempts { get; set; }
         public async static void OnTimerPostMasterServerEvent(System.Object source, ElapsedEventArgs e)
         {
-
         }*/
 
         public static void GetExternalIp()

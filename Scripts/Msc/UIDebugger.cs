@@ -1,8 +1,6 @@
 using Godot;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace GodotModules
 {
@@ -53,9 +51,8 @@ namespace GodotModules
                 command.Run(inputArr.Skip(1).ToArray());
             else
                 Utils.Log($"The command '{cmd}' does not exist");
-                
+
             Console.Clear();
         }
     }
-
 }

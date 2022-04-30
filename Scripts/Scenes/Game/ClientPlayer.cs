@@ -1,9 +1,7 @@
-using ENet;
 using Godot;
 using GodotModules;
 using GodotModules.Netcode;
 using GodotModules.Netcode.Client;
-using System.Threading.Tasks;
 
 namespace Game
 {
@@ -30,7 +28,8 @@ namespace Game
 
         public async void EmitPosition()
         {
-            await GameClient.Send(ClientPacketOpcode.PlayerPosition, new CPacketPlayerPosition {
+            await GameClient.Send(ClientPacketOpcode.PlayerPosition, new CPacketPlayerPosition
+            {
                 Position = Position
             });
         }

@@ -18,9 +18,11 @@ namespace GodotModules.Netcode
                     base.Write(writer);
                     writer.Write((string)Message);
                     break;
+
                 case LobbyOpcode.LobbyCountdownChange:
                     writer.Write(CountdownRunning);
                     break;
+
                 case LobbyOpcode.LobbyInfo:
                     base.Write(writer);
                     writer.Write(IsHost);
@@ -31,13 +33,16 @@ namespace GodotModules.Netcode
                         writer.Write((string)pair.Value.Username);
                     });
                     break;
+
                 case LobbyOpcode.LobbyJoin:
                     base.Write(writer);
                     writer.Write((string)Username);
                     break;
+
                 case LobbyOpcode.LobbyLeave:
                     base.Write(writer);
                     break;
+
                 case LobbyOpcode.LobbyReady:
                     base.Write(writer);
                     writer.Write(Ready);
@@ -55,9 +60,11 @@ namespace GodotModules.Netcode
                     base.Read(reader);
                     Message = reader.ReadString();
                     break;
+
                 case LobbyOpcode.LobbyCountdownChange:
                     CountdownRunning = reader.ReadBool();
                     break;
+
                 case LobbyOpcode.LobbyInfo:
                     base.Read(reader);
                     IsHost = reader.ReadBool();
@@ -75,13 +82,16 @@ namespace GodotModules.Netcode
                         });
                     }
                     break;
+
                 case LobbyOpcode.LobbyJoin:
                     base.Read(reader);
                     Username = reader.ReadString();
                     break;
+
                 case LobbyOpcode.LobbyLeave:
                     base.Read(reader);
                     break;
+
                 case LobbyOpcode.LobbyReady:
                     base.Read(reader);
                     Ready = reader.ReadBool();
@@ -96,21 +106,27 @@ namespace GodotModules.Netcode
                 case LobbyOpcode.LobbyChatMessage:
                     HandleChatMessage();
                     break;
+
                 case LobbyOpcode.LobbyCountdownChange:
                     HandleCountdownChange();
                     break;
+
                 case LobbyOpcode.LobbyGameStart:
                     HandleGameStart();
                     break;
+
                 case LobbyOpcode.LobbyInfo:
                     HandleInfo();
                     break;
+
                 case LobbyOpcode.LobbyJoin:
                     HandleJoin();
                     break;
+
                 case LobbyOpcode.LobbyLeave:
                     HandleLeave();
                     break;
+
                 case LobbyOpcode.LobbyReady:
                     HandleReady();
                     break;
@@ -119,6 +135,7 @@ namespace GodotModules.Netcode
 
         // LobbyChatMessage
         public string Message { get; set; }
+
         private void HandleChatMessage()
         {
             SceneLobby.Log(Id, Message);
@@ -126,6 +143,7 @@ namespace GodotModules.Netcode
 
         // LobbyCountdownChange
         public bool CountdownRunning { get; set; }
+
         private void HandleCountdownChange()
         {
             if (CountdownRunning)
@@ -145,7 +163,9 @@ namespace GodotModules.Netcode
 
         // LobbyInfo
         public bool IsHost { get; set; }
+
         public Dictionary<uint, DataPlayer> Players { get; set; }
+
         private void HandleInfo()
         {
             GameClient.PeerId = Id;
@@ -159,6 +179,7 @@ namespace GodotModules.Netcode
 
         // LobbyJoin
         public string Username { get; set; }
+
         private void HandleJoin()
         {
             SceneLobby.AddPlayer(Id, Username);
@@ -177,6 +198,7 @@ namespace GodotModules.Netcode
 
         // LobbyReady
         public bool Ready { get; set; }
+
         private void HandleReady()
         {
             SceneLobby.SetReady(Id, Ready);

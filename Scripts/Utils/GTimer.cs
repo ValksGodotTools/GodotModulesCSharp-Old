@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 namespace GodotModules
 {
@@ -20,14 +19,16 @@ namespace GodotModules
             target.AddChild(Timer);
         }
 
-        public void Start(float delayMs) 
+        public void Start(float delayMs)
         {
             Timer.WaitTime = delayMs / 1000;
             Start();
         }
-        
+
         public void Start() => Timer.Start();
+
         public void Stop() => Timer.Stop();
+
         public void QueueFree() => Timer.QueueFree();
     }
 }

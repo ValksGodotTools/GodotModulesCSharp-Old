@@ -1,5 +1,4 @@
 using ENet;
-using System.IO;
 
 namespace GodotModules.Netcode
 {

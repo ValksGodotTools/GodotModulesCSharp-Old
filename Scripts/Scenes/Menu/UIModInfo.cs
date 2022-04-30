@@ -12,6 +12,7 @@ namespace GodotModules.ModLoader
 
         // This mod info is displayed on the right side in the dependency mod list
         public bool DisplayedInDependencies { get; set; }
+
         public string ModName { get; set; }
         public bool Enabled { get; set; }
 

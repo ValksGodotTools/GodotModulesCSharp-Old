@@ -2,7 +2,7 @@ using Godot;
 
 namespace GodotModules
 {
-    public static class GodotFileManager 
+    public static class GodotFileManager
     {
         public static string GetProjectPath()
         {

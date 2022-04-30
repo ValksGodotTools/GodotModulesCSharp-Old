@@ -7,7 +7,7 @@ namespace GodotModules.ModLoader
     public class UIModLoader : Control
     {
         public static UIModLoader Instance { get; set; }
-        
+
         [Export] public readonly NodePath NodePathModList;
         [Export] public readonly NodePath NodePathModName;
         [Export] public readonly NodePath NodePathModGameVersions;
@@ -73,7 +73,8 @@ namespace GodotModules.ModLoader
 
             ModInfoDependencyList.Clear();
 
-            modInfo.Dependencies.ForEach(dependency => {
+            modInfo.Dependencies.ForEach(dependency =>
+            {
                 var instance = CreateModInfoInstance(dependency);
                 instance.DisplayedInDependencies = true;
 
@@ -85,7 +86,8 @@ namespace GodotModules.ModLoader
 
         public void DisplayMods()
         {
-            ModLoader.LoadedMods.ForEach(mod => {
+            ModLoader.LoadedMods.ForEach(mod =>
+            {
                 var modInfo = CreateModInfoInstance(mod.ModInfo.Name);
                 ModList.AddChild(modInfo);
                 ModInfoList[mod.ModInfo.Name] = modInfo;

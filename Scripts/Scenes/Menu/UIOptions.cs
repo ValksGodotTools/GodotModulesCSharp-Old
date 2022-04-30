@@ -1,12 +1,11 @@
 using Godot;
-using System.Collections.Generic;
 
 namespace GodotModules.Settings
 {
     public class UIOptions : Node
     {
         public static UIOptions Instance { get; set; }
-        
+
         [Export] public readonly NodePath NodePathFullscreenOptions;
         [Export] public readonly NodePath NodePathResolutionOptions;
         [Export] public readonly NodePath NodePathSliderMusic;

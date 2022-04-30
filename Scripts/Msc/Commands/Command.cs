@@ -1,6 +1,6 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace GodotModules
@@ -15,7 +15,7 @@ namespace GodotModules
 
         public string[] Aliases { get; set; }
 
-        public bool IsMatch(string cmd) 
+        public bool IsMatch(string cmd)
         {
             var cmdMatchesAlias = false;
             if (Aliases != null)

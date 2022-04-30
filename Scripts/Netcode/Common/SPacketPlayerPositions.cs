@@ -1,10 +1,9 @@
-using GodotModules.Netcode.Client;
-using System;
-using System.Collections.Generic;
 using Game;
 using Godot;
+using System;
+using System.Collections.Generic;
 
-namespace GodotModules.Netcode 
+namespace GodotModules.Netcode
 {
     public class SPacketPlayerPositions : APacketServer
     {
@@ -13,7 +12,8 @@ namespace GodotModules.Netcode
         public override void Write(PacketWriter writer)
         {
             writer.Write((ushort)PlayerPositions.Count);
-            PlayerPositions.ForEach(pair => {
+            PlayerPositions.ForEach(pair =>
+            {
                 writer.Write(pair.Key); // id
                 writer.Write((float)Math.Round(pair.Value.x, 1));
                 writer.Write((float)Math.Round(pair.Value.y, 1));

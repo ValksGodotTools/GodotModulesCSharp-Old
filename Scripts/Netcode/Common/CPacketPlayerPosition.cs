@@ -1,9 +1,8 @@
 using Godot;
 using GodotModules.Netcode.Server;
 using System;
-using System.Linq;
 
-namespace GodotModules.Netcode 
+namespace GodotModules.Netcode
 {
     public class CPacketPlayerPosition : APacketClient
     {

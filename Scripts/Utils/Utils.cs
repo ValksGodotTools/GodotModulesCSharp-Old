@@ -16,19 +16,19 @@ namespace GodotModules
             }
         }
 
-        public static void LogErr(object obj) 
+        public static void LogErr(object obj)
         {
             ErrorNotifier.IncrementErrorCount();
             Log(obj, ConsoleColor.Red);
         }
 
-        public static void Log(object obj, ConsoleColor color = ConsoleColor.Gray) 
+        public static void Log(object obj, ConsoleColor color = ConsoleColor.Gray)
         {
             if (obj is Exception)
                 UIDebugger.AddException((Exception)obj);
             else
                 UIDebugger.AddMessage(obj);
-            
+
             Console.ForegroundColor = color;
             GD.Print(obj);
             Console.ResetColor();

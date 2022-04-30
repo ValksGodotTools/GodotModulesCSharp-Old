@@ -5,6 +5,7 @@ namespace GodotModules
     public class ErrorNotifier : Node
     {
         private static int ErrorCount { get; set; }
+
         public static void IncrementErrorCount() => ErrorCount++;
 
         private static GTimer Timer { get; set; }

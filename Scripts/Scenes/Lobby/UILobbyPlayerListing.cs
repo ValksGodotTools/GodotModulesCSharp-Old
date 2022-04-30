@@ -20,13 +20,13 @@ namespace GodotModules
             Status = GetNode<Label>(NodePathStatus);
         }
 
-        public void SetUsername(string value) 
+        public void SetUsername(string value)
         {
             PlayerName.Text = value;
             Username = value;
         }
 
-        public void SetReady(bool value) 
+        public void SetReady(bool value)
         {
             Status.Text = value ? "Ready" : "Not Ready";
             Ready = value;

@@ -14,7 +14,7 @@
         PlayerPositions
     }
 
-    public enum LobbyOpcode 
+    public enum LobbyOpcode
     {
         LobbyJoin,
         LobbyLeave,
@@ -36,7 +36,7 @@
         Banned
     }
 
-    public enum Direction 
+    public enum Direction
     {
         None,
         North,
@@ -74,7 +74,7 @@
 
     public class ENetCmd
     {
-        public ENetCmd(ENetOpcode opcode) 
+        public ENetCmd(ENetOpcode opcode)
         {
             Opcode = opcode;
         }
