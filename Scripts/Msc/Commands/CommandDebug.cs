@@ -1,5 +1,6 @@
 using GodotModules.Netcode.Client;
 using GodotModules.Netcode.Server;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Game;
@@ -16,7 +17,11 @@ namespace GodotModules
         {
             // debug command
             // do debug stuff here
-            if (args.Length == 0)
+
+            GameManager.SpawnPopupError(new Exception("lol beans"));
+
+
+            /*if (args.Length == 0)
                 return;
 
             if (!int.TryParse(args[0], out int result))
@@ -35,9 +40,8 @@ namespace GodotModules
             if (GameClient.Running)
             {
                 ClientPlayer.Timer.Stop();
-                ClientPlayer.Timer.WaitTime = CommandDebug.SendReceiveDataInterval / 1000f;
-                ClientPlayer.Timer.Start();
-            }
+                ClientPlayer.Timer.Start(CommandDebug.SendReceiveDataInterval);
+            }*/
 
         }
     }

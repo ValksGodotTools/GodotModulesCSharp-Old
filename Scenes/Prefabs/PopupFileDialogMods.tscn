@@ -1,10 +1,13 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Scripts/Msc/UIPopupFileDialogMods.cs" type="Script" id=1]
+
+[sub_resource type="Theme" id=1]
 
 [node name="PopupFileDialogMods" type="MarginContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = SubResource( 1 )
 custom_constants/margin_right = 30
 custom_constants/margin_top = 30
 custom_constants/margin_left = 30
@@ -21,7 +24,7 @@ margin_left = 30.0
 margin_top = 30.0
 margin_right = 994.0
 margin_bottom = 570.0
-window_title = ""
+window_title = "Open a File or Directory"
 mode = 3
 access = 2
 current_dir = "/Users/VALK-DESKTOP/Documents/Godot Projects/GodotLuaModdingTest"

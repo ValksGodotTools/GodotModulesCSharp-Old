@@ -90,9 +90,8 @@ margin_bottom = 30.0
 custom_styles/panel = SubResource( 11 )
 
 [node name="Popup Error" type="PanelContainer" parent="Pivot Bottom Right"]
-margin_top = 30.0
 margin_right = 75.0
-margin_bottom = 60.0
+margin_bottom = 30.0
 custom_styles/panel = SubResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
