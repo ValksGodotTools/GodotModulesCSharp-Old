@@ -8,27 +8,26 @@ using Thread = System.Threading.Thread;
 
 namespace GodotModules.Netcode.Client
 {
-    public abstract class ENetClient : IDisposable
+    public class ENetClient : IDisposable
     {
+        public static ConsoleColor LogsColor = ConsoleColor.Yellow;
+        public static readonly Dictionary<ServerPacketOpcode, APacketServer> HandlePacket = ReflectionUtils.LoadInstances<ServerPacketOpcode, APacketServer>("SPacket");
+
         // values grabbed from the server
         // =========================================================
-        public static uint PeerId { get; set; } // this clients peer id (grabbed from server at some point)
-
-        public static bool IsHost { get; set; }
-
+        public uint PeerId { get; set; } // this clients peer id (grabbed from server at some point)
+        public bool IsHost { get; set; }
         // =========================================================
-        private static CancellationTokenSource CancelTokenSource { get; set; }
 
-        public static ConsoleColor LogsColor = ConsoleColor.Yellow;
-        public static ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
-        private static int OutgoingId { get; set; }
-        private static ConcurrentDictionary<int, ClientPacket> Outgoing { get; set; }
-        public static DisconnectOpcode DisconnectOpcode { get; set; }
-        public static readonly Dictionary<ServerPacketOpcode, APacketServer> HandlePacket = ReflectionUtils.LoadInstances<ServerPacketOpcode, APacketServer>("SPacket");
-        private static long Connected = 0;
-        public static bool IsConnected { get => Interlocked.Read(ref Connected) == 1; } // thread safe
+        private CancellationTokenSource CancelTokenSource { get; set; }
+        public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
+        private int OutgoingId { get; set; }
+        private ConcurrentDictionary<int, ClientPacket> Outgoing { get; set; }
+        public DisconnectOpcode DisconnectOpcode { get; set; }
+        private long Connected = 0;
+        public bool IsConnected { get => Interlocked.Read(ref Connected) == 1; } // thread safe
 
-        public static bool Running { get; set; }
+        public bool Running { get; set; }
         protected bool ENetThreadRunning;
 
         public ENetClient()
@@ -163,7 +162,7 @@ namespace GodotModules.Netcode.Client
             CancelTokenSource.Cancel();
         }
 
-        public static async Task Send(ClientPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
+        public async Task Send(ClientPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
         {
             OutgoingId++;
             var success = Outgoing.TryAdd(OutgoingId, new ClientPacket((byte)opcode, flags, data));
@@ -207,7 +206,7 @@ namespace GodotModules.Netcode.Client
         /// <summary>
         /// Disconnect the client from the server, can be called from the Godot thread
         /// </summary>
-        public static async Task Stop()
+        public async Task Stop()
         {
             //CancelTokenSource.Cancel();
             ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToDisconnect));
@@ -216,7 +215,7 @@ namespace GodotModules.Netcode.Client
                 await Task.Delay(100);
         }
 
-        public static void CancelTask()
+        public void CancelTask()
         {
             CancelTokenSource.Cancel();
         }
@@ -226,7 +225,7 @@ namespace GodotModules.Netcode.Client
         /// Checks thread name, if its Client send request to log on Godot thread otherwise log on Godot thread directly
         /// </summary>
         /// <param name="obj">The object to log</param>
-        public static void Log(object obj) => NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessageClient, obj));
+        public void Log(object obj) => NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessageClient, obj));
 
         /// <summary>
         /// This is in the ENet thread, anything from the ENet thread can be used here

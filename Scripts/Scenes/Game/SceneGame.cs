@@ -27,7 +27,7 @@ namespace Game
             LabelPlayerHealth = GetNode<Label>(NodePathLabelPlayerHealth);
             Player = Prefabs.ClientPlayer.Instance<ClientPlayer>();
             Player.Position = Vector2.Zero;
-            Players.Add(GameClient.PeerId, Player);
+            Players.Add(NetworkManager.GameClient.PeerId, Player);
             AddChild(Player);
 
             // set game definitions
@@ -35,7 +35,7 @@ namespace Game
 
             ModLoader.Call("OnGameInit");
 
-            if (GameClient.Running)
+            if (NetworkManager.GameClient.Running)
                 InitMultiplayerStuff();
         }
 
@@ -43,9 +43,9 @@ namespace Game
         {
             Player.SetUsername(GameManager.Options.OnlineUsername);
 
-            bool IsNotClient(uint id) => id != GameClient.PeerId;
+            bool IsNotClient(uint id) => id != NetworkManager.GameClient.PeerId;
 
-            GameClient.Players
+            NetworkManager.GameClient.Players
                 .Where(x => IsNotClient(x.Key))
                 .ForEach(pair =>
                 {

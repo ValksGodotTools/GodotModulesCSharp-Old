@@ -154,7 +154,7 @@ namespace GodotModules.Netcode
         // LobbyGameStart
         private void HandleGameStart()
         {
-            if (GameClient.IsHost)
+            if (NetworkManager.GameClient.IsHost)
                 GameServer.StartGame();
 
             SceneManager.ChangeScene("Game");
@@ -167,11 +167,11 @@ namespace GodotModules.Netcode
 
         private void HandleInfo()
         {
-            GameClient.PeerId = Id;
-            GameClient.IsHost = IsHost;
-            GameClient.Log($"{GameManager.Options.OnlineUsername} joined lobby with id {Id}");
-            GameClient.Players.Add(Id, GameManager.Options.OnlineUsername);
-            Players.ForEach(pair => GameClient.Players.Add(pair.Key, pair.Value.Username));
+            NetworkManager.GameClient.PeerId = Id;
+            NetworkManager.GameClient.IsHost = IsHost;
+            NetworkManager.GameClient.Log($"{GameManager.Options.OnlineUsername} joined lobby with id {Id}");
+            NetworkManager.GameClient.Players.Add(Id, GameManager.Options.OnlineUsername);
+            Players.ForEach(pair => NetworkManager.GameClient.Players.Add(pair.Key, pair.Value.Username));
 
             SceneManager.ChangeScene("Lobby");
         }
@@ -182,17 +182,17 @@ namespace GodotModules.Netcode
         private void HandleJoin()
         {
             SceneLobby.AddPlayer(Id, Username);
-            GameClient.Players.Add(Id, Username);
+            NetworkManager.GameClient.Players.Add(Id, Username);
 
-            GameClient.Log($"Player with username {Username} id: {Id} joined the lobby");
+            NetworkManager.GameClient.Log($"Player with username {Username} id: {Id} joined the lobby");
         }
 
         // LobbyLeave
         private void HandleLeave()
         {
             SceneLobby.RemovePlayer(Id);
-            GameClient.Players.Remove(Id);
-            GameClient.Log($"Player with id: {Id} left the lobby");
+            NetworkManager.GameClient.Players.Remove(Id);
+            NetworkManager.GameClient.Log($"Player with id: {Id} left the lobby");
         }
 
         // LobbyReady

@@ -46,10 +46,10 @@ namespace GodotModules
             BtnStart = GetNode<Button>(NodePathBtnStart);
             UIPlayers = new();
 
-            if (!ENetClient.IsHost)
+            if (!NetworkManager.GameClient.IsHost)
                 Instance.BtnStart.Disabled = true;
 
-            GameClient.Players.ForEach(x => AddPlayer(x.Key, x.Value));
+            NetworkManager.GameClient.Players.ForEach(x => AddPlayer(x.Key, x.Value));
         }
 
         public override void _Input(InputEvent @event)
@@ -58,7 +58,7 @@ namespace GodotModules
             {
                 NetworkManager.WebClient.Client.CancelPendingRequests();
                 NetworkManager.WebClient.TimerPingMasterServer.Stop();
-                await GameClient.Stop();
+                await NetworkManager.GameClient.Stop();
                 if (ENetServer.Running)
                     await GameServer.Stop();
             });
@@ -110,10 +110,10 @@ namespace GodotModules
             {
                 TimerCountdownGameStart.Dispose();
 
-                if (ENetClient.IsHost)
+                if (NetworkManager.GameClient.IsHost)
                 {
                     // tell everyone game has started
-                    await GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
+                    await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
                     {
                         LobbyOpcode = LobbyOpcode.LobbyGameStart
                     });
@@ -129,18 +129,18 @@ namespace GodotModules
 
         public static void Log(uint peerId, string text)
         {
-            var playerName = GameClient.Players[peerId];
+            var playerName = NetworkManager.GameClient.Players[peerId];
             Log($"{playerName}: {text}");
         }
 
         private async void _on_Ready_pressed()
         {
-            var player = UIPlayers[ENetClient.PeerId];
+            var player = UIPlayers[NetworkManager.GameClient.PeerId];
             player.SetReady(!player.Ready);
 
             BtnReady.Text = player.Ready ? "Ready" : "Not Ready";
 
-            await ENetClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
+            await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
             {
                 LobbyOpcode = LobbyOpcode.LobbyReady,
                 Ready = player.Ready
@@ -149,7 +149,7 @@ namespace GodotModules
 
         private async void _on_Start_pressed()
         {
-            if (!ENetClient.IsHost)
+            if (!NetworkManager.GameClient.IsHost)
                 return;
 
             // check if all players are ready
@@ -168,7 +168,7 @@ namespace GodotModules
 
             if (Start)
             {
-                await ENetClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
+                await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
                 {
                     LobbyOpcode = LobbyOpcode.LobbyCountdownChange,
                     CountdownRunning = true
@@ -177,7 +177,7 @@ namespace GodotModules
             }
             else
             {
-                await ENetClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
+                await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
                 {
                     LobbyOpcode = LobbyOpcode.LobbyCountdownChange,
                     CountdownRunning = false
@@ -191,7 +191,7 @@ namespace GodotModules
             ChatInput.Clear();
             if (!string.IsNullOrWhiteSpace(text))
             {
-                await GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
+                await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
                 {
                     LobbyOpcode = LobbyOpcode.LobbyChatMessage,
                     Message = text.Trim()

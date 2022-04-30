@@ -104,7 +104,7 @@ namespace GodotModules
                 await GameServer.Stop();
             }
 
-            if (ENetClient.Running)
+            if (NetworkManager.GameClient.Running)
             {
                 await GameClient.Stop();
                 GameClient.Dispose();
@@ -144,7 +144,7 @@ namespace GodotModules
             ClientConnectingTokenSource.CancelAfter(timeoutMs);
             await Task.Run(async () =>
             {
-                while (!ENetClient.IsConnected)
+                while (!NetworkManager.GameClient.IsConnected)
                 {
                     if (ClientConnectingTokenSource.IsCancellationRequested)
                         break;

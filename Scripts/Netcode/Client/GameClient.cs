@@ -4,7 +4,7 @@ namespace GodotModules.Netcode.Client
 {
     public class GameClient : ENetClient
     {
-        public static Dictionary<uint, string> Players { get; set; }
+        public Dictionary<uint, string> Players { get; set; }
 
         public GameClient()
         {

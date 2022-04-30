@@ -32,7 +32,7 @@ namespace GodotModules
                 Disconnected = false;
                 var message = "Disconnected";
 
-                switch (ENetClient.DisconnectOpcode)
+                switch (NetworkManager.GameClient.DisconnectOpcode)
                 {
                     case DisconnectOpcode.Timeout:
                         message = "Timed out from server";
@@ -82,7 +82,7 @@ namespace GodotModules
 
             await NetworkManager.WaitForClientToConnect(3000, async () =>
             {
-                await ENetClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
+                await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
                 {
                     LobbyOpcode = LobbyOpcode.LobbyJoin,
                     Username = GameManager.Options.OnlineUsername

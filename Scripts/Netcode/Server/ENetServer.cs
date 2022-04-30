@@ -1,7 +1,6 @@
 using ENet;
 using System;
 using System.Collections.Concurrent;
-
 using System.Threading;
 using System.Threading.Tasks;
 using Thread = System.Threading.Thread;
@@ -55,7 +54,7 @@ namespace GodotModules.Netcode.Server
                 var message = $"A server is running on port {port} already! {e.Message}";
                 Log(message);
                 NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.PopupMessage, message));
-                await GodotModules.Netcode.Client.ENetClient.Stop();
+                await NetworkManager.GameClient.Stop();
                 await Stop();
                 return;
             }
@@ -137,6 +136,8 @@ namespace GodotModules.Netcode.Server
                     }
                     else if (eventType == EventType.Connect)
                     {
+                        System.Console.WriteLine($"Client connected with id: {netEvent.Peer.ID}");
+
                         // Connect
                         SomeoneConnected = true;
                         Peers.Add(netEvent.Peer.ID, netEvent.Peer);
@@ -144,6 +145,8 @@ namespace GodotModules.Netcode.Server
                     }
                     else if (eventType == EventType.Disconnect)
                     {
+                        System.Console.WriteLine($"Client disconnected with id: {netEvent.Peer.ID}");
+
                         // Disconnect
                         Peers.Remove(netEvent.Peer.ID);
                         Disconnect(netEvent);

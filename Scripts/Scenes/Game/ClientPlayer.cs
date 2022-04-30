@@ -23,7 +23,7 @@ namespace Game
             SetHealth(100);
             LabelPosition = GetNode<Label>(NodePathLabelPosition);
 
-            if (GameClient.Running)
+            if (NetworkManager.GameClient.Running)
             {
                 Timer = new GTimer(20);
                 Timer.Connect(this, nameof(EmitInput));
@@ -40,7 +40,7 @@ namespace Game
             if (PressedLeft) directionHorz = Direction.Left;
             if (PressedRight) directionHorz = Direction.Right;
 
-            await GameClient.Send(ClientPacketOpcode.PlayerMovementDirections, new CPacketPlayerMovementDirections
+            await NetworkManager.GameClient.Send(ClientPacketOpcode.PlayerMovementDirections, new CPacketPlayerMovementDirections
             {
                 DirectionVert = directionVert,
                 DirectionHorz = directionHorz
@@ -52,7 +52,7 @@ namespace Game
             LabelPosition.Text = $"X: {Mathf.RoundToInt(Position.x)} Y: {Mathf.RoundToInt(Position.y)}";
             HandleMovement(delta);
 
-            if (GameClient.Running)
+            if (NetworkManager.GameClient.Running)
                 KeepTrackOfInputs();
         }
 
