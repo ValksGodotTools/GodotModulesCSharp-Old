@@ -19,12 +19,14 @@ namespace GodotModules.Netcode.Client
         public bool IsHost { get; set; }
         // =========================================================
 
-        private CancellationTokenSource CancelTokenSource { get; set; }
+        public uint Id { get; set; }
+
+        protected CancellationTokenSource CancelTokenSource { get; set; }
         public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
         private int OutgoingId { get; set; }
         private ConcurrentDictionary<int, ClientPacket> Outgoing { get; set; }
         public DisconnectOpcode DisconnectOpcode { get; set; }
-        private long Connected = 0;
+        protected long Connected = 0;
         public bool IsConnected { get => Interlocked.Read(ref Connected) == 1; } // thread safe
 
         public bool Running { get; set; }
@@ -109,6 +111,7 @@ namespace GodotModules.Netcode.Client
                     switch (netEvent.Type)
                     {
                         case EventType.Connect:
+                            Id = netEvent.Peer.ID;
                             Connected = 1;
                             Connect(netEvent);
                             break;
@@ -127,12 +130,10 @@ namespace GodotModules.Netcode.Client
                             break;
 
                         case EventType.Timeout:
-                            HandlePeerLeave(DisconnectOpcode.Timeout);
                             Timeout(netEvent);
                             break;
 
                         case EventType.Disconnect:
-                            HandlePeerLeave((DisconnectOpcode)netEvent.Data);
                             Disconnect(netEvent);
                             break;
                     }
@@ -144,22 +145,12 @@ namespace GodotModules.Netcode.Client
             Library.Deinitialize();
             ENetThreadRunning = false;
 
-            Log("Client stopped");
+            Log($"Client with id {Id} stopped");
 
             while (ConcurrentQueuesWorking())
                 await Task.Delay(100);
 
             Running = false;
-        }
-
-        private void HandlePeerLeave(DisconnectOpcode opcode)
-        {
-            SceneGameServers.ConnectingToLobby = false;
-            SceneGameServers.Disconnected = true;
-            Connected = 0;
-            DisconnectOpcode = (DisconnectOpcode)opcode;
-            NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.ChangeScene, "GameServers"));
-            CancelTokenSource.Cancel();
         }
 
         public async Task Send(ClientPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
@@ -178,23 +169,24 @@ namespace GodotModules.Netcode.Client
 
         /// <summary>
         /// Attempt to connect to the server, can be called from the Godot thread
+        /// Because Task is not returned we surround all code with try catch to catch exceptions
         /// </summary>
         /// <param name="ip"></param>
         /// <param name="port"></param>
-        public async Task Connect(string ip, ushort port)
+        public async void Start(string ip, ushort port)
         {
-            if (ENetThreadRunning)
-            {
-                SceneGameServers.ConnectingToLobby = false;
-                Log("ENet thread is running already");
-                return;
-            }
-
-            ENetThreadRunning = true;
-            CancelTokenSource = new CancellationTokenSource();
-
             try
             {
+                if (ENetThreadRunning)
+                {
+                    SceneGameServers.ConnectingToLobby = false;
+                    Log($"Client id {Id} is running already");
+                    return;
+                }
+
+                ENetThreadRunning = true;
+                CancelTokenSource = new CancellationTokenSource();
+
                 await Task.Run(() => ENetThreadWorker(ip, port), CancelTokenSource.Token);
             }
             catch (Exception e)
