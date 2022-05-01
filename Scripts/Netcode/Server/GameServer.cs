@@ -77,6 +77,9 @@ namespace GodotModules.Netcode.Server
 
         private void HandlePlayerLeave(uint id)
         {
+            if (!Players.ContainsKey((byte)id)) // because dummy clients can connect for ping test and are not actual players
+                return;
+
             // tell other players that this player left lobby
             Send(ServerPacketOpcode.Lobby, new SPacketLobby
             {
@@ -84,8 +87,7 @@ namespace GodotModules.Netcode.Server
                 Id = (byte)id
             }, GetOtherPeers(id));
 
-            if (Players.ContainsKey((byte)id))
-                Players.Remove((byte)id);
+            Players.Remove((byte)id);
         }
 
         public Dictionary<byte, DataPlayer> GetOtherPlayers(byte id)
