@@ -3,6 +3,7 @@
     // Received from Game Client
     public enum ClientPacketOpcode
     {
+        Ping,
         Lobby,
         PlayerPosition,
         PlayerMovementDirections
@@ -11,6 +12,7 @@
     // Sent to Game Client
     public enum ServerPacketOpcode
     {
+        Pong,
         Lobby,
         PlayerPositions
     }
