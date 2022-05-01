@@ -98,17 +98,19 @@ namespace GodotModules
         /// </summary>
         private static async Task ExitCleanup()
         {
-            if (NetworkManager.GameServer.Running)
-            {
-                GameServer.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToExitApp));
-                await GameServer.Stop();
-            }
+            if (NetworkManager.GameServer != null)
+                if (NetworkManager.GameServer.Running)
+                {
+                    GameServer.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToExitApp));
+                    await GameServer.Stop();
+                }
 
-            if (NetworkManager.GameClient.Running)
-            {
-                await GameClient.Stop();
-                GameClient.Dispose();
-            }
+            if (NetworkManager.GameClient != null)
+                if (NetworkManager.GameClient.Running)
+                {
+                    await GameClient.Stop();
+                    GameClient.Dispose();
+                }
 
             UtilOptions.SaveOptions();
             WebClient.Dispose();
