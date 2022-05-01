@@ -9,9 +9,8 @@ namespace GodotModules.Netcode
     {
         public override void Handle()
         {
-            var time = DateTime.Now - CommandDebug.timeSent;
-
-            NetworkManager.GameServer.Log($"Received pong, {time.Milliseconds}ms");
+            PingServers.PingMs = (DateTime.Now - PingServers.PingSent).Milliseconds;
+            PingServers.PingReceived = true;
         }
     }
 }
