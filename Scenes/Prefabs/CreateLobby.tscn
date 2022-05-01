@@ -126,7 +126,7 @@ text = "Max Players"
 margin_left = 80.0
 margin_right = 130.0
 margin_bottom = 17.0
-text = "10"
+text = "999"
 align = 1
 
 [node name="Public" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBox"]

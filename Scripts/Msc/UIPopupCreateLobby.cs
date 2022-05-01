@@ -46,7 +46,7 @@ namespace GodotModules
             InputTitle.Text = "Test";
             InputPort.Text = "7777";
             InputDescription.Text = "";
-            InputMaxPlayerCount.Text = "10";
+            InputMaxPlayerCount.Text = "999";
         }
 
         private int ValidatedMaxPlayerCount;
