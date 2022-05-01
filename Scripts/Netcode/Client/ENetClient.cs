@@ -195,13 +195,10 @@ namespace GodotModules.Netcode.Client
         /// <summary>
         /// Disconnect the client from the server, can be called from the Godot thread
         /// </summary>
-        public async Task Stop()
+        public void Stop()
         {
             //CancelTokenSource.Cancel();
             ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToDisconnect));
-
-            while (!CancelTokenSource.IsCancellationRequested)
-                await Task.Delay(100);
         }
 
         public void CancelTask()
