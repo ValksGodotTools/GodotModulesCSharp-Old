@@ -33,6 +33,9 @@ namespace GodotModules
 
         public static void ChangeScene(string scene)
         {
+            if (ActiveScene == scene)
+                return;
+                
             ActiveScene = scene;
             if (Instance.GetChildCount() != 0)
                 Instance.GetChild(0).QueueFree();
