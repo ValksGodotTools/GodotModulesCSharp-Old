@@ -64,44 +64,6 @@ namespace GodotModules
             });
         }
 
-        public static void AddPlayer(uint id, string name)
-        {
-            var player = Prefabs.LobbyPlayerListing.Instance<UILobbyPlayerListing>();
-            Instance.UIPlayers.Add(id, player);
-
-            Instance.ListPlayers.AddChild(player);
-
-            player.SetUsername(name);
-            player.SetReady(false);
-        }
-
-        public static void RemovePlayer(uint id)
-        {
-            var uiPlayer = Instance.UIPlayers[id];
-            uiPlayer.QueueFree();
-            Instance.UIPlayers.Remove(id);
-        }
-
-        public static void SetReady(uint id, bool ready)
-        {
-            var player = Instance.UIPlayers[id];
-            player.SetReady(ready);
-        }
-
-        public static void CancelGameCountdown()
-        {
-            Instance.TimerCountdownGameStart.Dispose();
-            Instance.CountdownGameStart = COUNTDOWN_START_TIME;
-            Instance.BtnReady.Disabled = false;
-            Log("Game start was cancelled");
-        }
-
-        public static void StartGameCountdown()
-        {
-            Instance.TimerCountdownGameStart = new STimer(1000, Instance.TimerCountdownCallback);
-            Instance.BtnReady.Disabled = true;
-        }
-
         private async void TimerCountdownCallback()
         {
             Log($"Game starting in {CountdownGameStart--}");
@@ -121,6 +83,53 @@ namespace GodotModules
             }
         }
 
+        public static void AddPlayer(uint id, string name)
+        {
+            if (Instance.UIPlayers.Duplicate(id))
+                return;
+
+            var player = Prefabs.LobbyPlayerListing.Instance<UILobbyPlayerListing>();
+            Instance.UIPlayers.Add(id, player);
+
+            Instance.ListPlayers.AddChild(player);
+
+            player.SetUsername(name);
+            player.SetReady(false);
+        }
+
+        public static void RemovePlayer(uint id)
+        {
+            if (Instance.UIPlayers.DoesNotHave(id))
+                return;
+            
+            var uiPlayer = Instance.UIPlayers[id];
+            uiPlayer.QueueFree();
+            Instance.UIPlayers.Remove(id);
+        }
+
+        public static void SetReady(uint id, bool ready)
+        {
+            if (Instance.UIPlayers.DoesNotHave(id))
+                return;
+
+            var player = Instance.UIPlayers[id];
+            player.SetReady(ready);
+        }
+
+        public static void CancelGameCountdown()
+        {
+            Instance.TimerCountdownGameStart.Dispose();
+            Instance.CountdownGameStart = COUNTDOWN_START_TIME;
+            Instance.BtnReady.Disabled = false;
+            Log("Game start was cancelled");
+        }
+
+        public static void StartGameCountdown()
+        {
+            Instance.TimerCountdownGameStart = new STimer(1000, Instance.TimerCountdownCallback);
+            Instance.BtnReady.Disabled = true;
+        }
+
         public static void Log(string text)
         {
             ChatText.AddText($"{text}\n");
@@ -129,6 +138,9 @@ namespace GodotModules
 
         public static void Log(uint peerId, string text)
         {
+            if (Instance.UIPlayers.DoesNotHave(peerId))
+                return;
+
             var playerName = NetworkManager.GameClient.Players[peerId];
             Log($"{playerName}: {text}");
         }
