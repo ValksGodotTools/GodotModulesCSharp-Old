@@ -137,7 +137,7 @@ namespace GodotModules.Netcode.Server
                     }
                     else if (eventType == EventType.Connect)
                     {
-                        System.Console.WriteLine($"Client connected with id: {netEvent.Peer.ID}");
+                        Log($"Client connected with id: {netEvent.Peer.ID}");
 
                         // Connect
                         SomeoneConnected = true;
@@ -146,7 +146,7 @@ namespace GodotModules.Netcode.Server
                     }
                     else if (eventType == EventType.Disconnect)
                     {
-                        System.Console.WriteLine($"Client disconnected with id: {netEvent.Peer.ID}");
+                        Log($"Client disconnected with id: {netEvent.Peer.ID}");
 
                         // Disconnect
                         Peers.Remove(netEvent.Peer.ID);
