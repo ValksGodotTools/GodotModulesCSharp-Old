@@ -19,8 +19,6 @@ namespace GodotModules.Netcode.Client
         public bool IsHost { get; set; }
         // =========================================================
 
-        public uint Id { get; set; }
-
         protected CancellationTokenSource CancelTokenSource { get; set; }
         public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
         private int OutgoingId { get; set; }
@@ -111,7 +109,6 @@ namespace GodotModules.Netcode.Client
                     switch (netEvent.Type)
                     {
                         case EventType.Connect:
-                            Id = netEvent.Peer.ID;
                             Connected = 1;
                             Connect(netEvent);
                             break;
@@ -145,7 +142,7 @@ namespace GodotModules.Netcode.Client
             Library.Deinitialize();
             ENetThreadRunning = false;
 
-            Log($"Client with id {Id} stopped");
+            Log($"Client stopped");
 
             while (ConcurrentQueuesWorking())
                 await Task.Delay(100);
@@ -180,7 +177,7 @@ namespace GodotModules.Netcode.Client
                 if (ENetThreadRunning)
                 {
                     SceneGameServers.ConnectingToLobby = false;
-                    Log($"Client id {Id} is running already");
+                    Log($"Client is running already");
                     return;
                 }
 
