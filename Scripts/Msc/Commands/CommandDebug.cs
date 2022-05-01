@@ -9,6 +9,7 @@ namespace GodotModules
 
         public static int SendReceiveDataInterval = 150;
         private static List<ENetClient> dummyClients = new List<ENetClient>();
+        public static DateTime timeSent;
 
         public override async void Run(string[] args)
         {
@@ -21,7 +22,13 @@ namespace GodotModules
             {
                 var dummyClient = new ENetClient();
                 dummyClients.Add(dummyClient);
-                await dummyClient.Connect("127.0.0.1", 7777);
+                dummyClient.Start("127.0.0.1", 7777);
+                timeSent = DateTime.Now;
+
+                while (!dummyClient.IsConnected)
+                    await System.Threading.Tasks.Task.Delay(100);
+
+                await dummyClient.Send(Netcode.ClientPacketOpcode.Ping);
             }
 
             if (args[0] == "rem") 
