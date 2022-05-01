@@ -120,11 +120,11 @@ namespace GodotModules
             Instance.GetTree().Quit();
         }
 
-        public static async void StartClient(string ip, ushort port)
+        public static void StartClient(string ip, ushort port)
         {
             GameClient?.Dispose();
             GameClient = new GameClient();
-            await GameClient.Connect(ip, port);
+            GameClient.Start(ip, port);
         }
 
         public static async void StartServer(ushort port, int maxClients)
