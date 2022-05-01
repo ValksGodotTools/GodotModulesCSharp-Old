@@ -172,6 +172,7 @@ namespace GodotModules.Netcode
             NetworkManager.GameClient.Log($"{GameManager.Options.OnlineUsername} joined lobby with id {Id}");
             NetworkManager.GameClient.Players.Add(Id, GameManager.Options.OnlineUsername);
             Players.ForEach(pair => NetworkManager.GameClient.Players.Add(pair.Key, pair.Value.Username));
+            PingServers.CancelTokenSource.Cancel();
 
             SceneManager.ChangeScene("Lobby");
         }
