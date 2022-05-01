@@ -10,7 +10,7 @@ namespace Game
         private Label LabelPosition { get; set; }
 
         private float Speed = 250f;
-        public static GTimer Timer { get; set; }
+        public GTimer Timer { get; set; }
 
         private bool PressedUp { get; set; }
         private bool PressedDown { get; set; }
