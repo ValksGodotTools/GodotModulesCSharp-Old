@@ -1,7 +1,8 @@
 using Godot;
 using GodotModules.Netcode;
 using GodotModules.Netcode.Client;
-
+using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace GodotModules
@@ -113,10 +114,18 @@ namespace GodotModules
 
             LobbyListings.Clear();
 
-            res.Content.ForEach(server =>
+            res.Content.ForEach(async server =>
             {
-                LobbyListings.Add(server.Ip, server);
-                AddServer(server);
+                PingServers.CancelTokenSource = new CancellationTokenSource();
+                PingServers.CancelTokenSource.CancelAfter(1000);
+                await Task.Run(() => PingServers.PingServer(), PingServers.CancelTokenSource.Token).ContinueWith((x) =>
+                {
+                    if (!PingServers.CancelTokenSource.IsCancellationRequested)
+                    {
+                        LobbyListings.Add(server.Ip, server);
+                        AddServer(server);
+                    }
+                });
             });
         }
 
