@@ -41,12 +41,14 @@ namespace GodotModules
             ValidatedMaxPlayerCount = int.Parse(InputMaxPlayerCount.Text);
         }
 
+        private const int MAX_PLAYER_COUNT = 256;
+
         public void ClearFields()
         {
             InputTitle.Text = "Test";
             InputPort.Text = "7777";
             InputDescription.Text = "";
-            InputMaxPlayerCount.Text = "256"; // byte values range from 0-255 (gives 256 ids) (should be noted dummy clients connect to ping servers and take up an id for a short duration)
+            InputMaxPlayerCount.Text = $"{MAX_PLAYER_COUNT}"; // byte values range from 0-255 (gives 256 ids) (should be noted dummy clients connect to ping servers and take up an id for a short duration)
         }
 
         private int ValidatedMaxPlayerCount;
@@ -62,7 +64,7 @@ namespace GodotModules
 
         private void _on_Port_text_changed(string text) => text.ValidateNumber(InputPort, 1, 65535, ref ValidatedPort);
 
-        private void _on_Max_Player_text_changed(string text) => text.ValidateNumber(InputMaxPlayerCount, 1, 256, ref ValidatedMaxPlayerCount);
+        private void _on_Max_Player_text_changed(string text) => text.ValidateNumber(InputMaxPlayerCount, 1, MAX_PLAYER_COUNT, ref ValidatedMaxPlayerCount);
 
         private void _on_Description_text_changed() =>
             ValidatedDescription = InputDescription.Text.Validate(ref previousTextDescription, InputDescription, () => InputDescription.Text.Length <= 250);
