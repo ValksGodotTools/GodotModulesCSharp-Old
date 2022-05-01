@@ -108,7 +108,7 @@ namespace GodotModules
             if (NetworkManager.GameClient != null)
                 if (NetworkManager.GameClient.Running)
                 {
-                    await GameClient.Stop();
+                    GameClient.Stop();
                     GameClient.Dispose();
                 }
 
