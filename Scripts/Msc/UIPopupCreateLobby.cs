@@ -62,7 +62,7 @@ namespace GodotModules
 
         private void _on_Port_text_changed(string text) => text.ValidateNumber(InputPort, 1, 65535, ref ValidatedPort);
 
-        private void _on_Max_Player_text_changed(string text) => text.ValidateNumber(InputMaxPlayerCount, 1, 999, ref ValidatedMaxPlayerCount);
+        private void _on_Max_Player_text_changed(string text) => text.ValidateNumber(InputMaxPlayerCount, 1, 256, ref ValidatedMaxPlayerCount);
 
         private void _on_Description_text_changed() =>
             ValidatedDescription = InputDescription.Text.Validate(ref previousTextDescription, InputDescription, () => InputDescription.Text.Length <= 250);
