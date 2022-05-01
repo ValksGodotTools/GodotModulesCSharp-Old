@@ -52,16 +52,16 @@ namespace GodotModules
             NetworkManager.GameClient.Players.ForEach(x => AddPlayer(x.Key, x.Value));
         }
 
-        public override void _Input(InputEvent @event)
+        public override async void _Input(InputEvent @event)
         {
-            Utils.EscapeToScene("GameServers", async () =>
+            if (Input.IsActionJustPressed("ui_cancel")) 
             {
                 WebClient.Client.CancelPendingRequests();
                 WebClient.TimerPingMasterServer.Stop();
-                await NetworkManager.GameClient.Stop();
+                NetworkManager.GameClient.Stop();
                 if (NetworkManager.GameServer.Running)
                     await NetworkManager.GameServer.Stop();
-            });
+            }
         }
 
         private async void TimerCountdownCallback()
