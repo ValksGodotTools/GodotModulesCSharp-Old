@@ -89,7 +89,7 @@ namespace GodotModules.Netcode
             NetworkManager.GameServer.SendToAllPlayers(ServerPacketOpcode.Lobby, new SPacketLobby
             {
                 LobbyOpcode = LobbyOpcode.LobbyChatMessage,
-                Id = peer.ID,
+                Id = (byte)peer.ID,
                 Message = Message
             });
         }
@@ -126,13 +126,13 @@ namespace GodotModules.Netcode
                 isHost = true;
 
             // Keep track of joining player server side
-            if (NetworkManager.GameServer.Players.ContainsKey(peer.ID))
+            if (NetworkManager.GameServer.Players.ContainsKey((byte)peer.ID))
             {
                 NetworkManager.GameServer.Log($"Received LobbyJoin packet from peer with id {peer.ID}. Tried to add id {peer.ID} to Players but exists already");
                 return;
             }
 
-            NetworkManager.GameServer.Players.Add(peer.ID, new DataPlayer
+            NetworkManager.GameServer.Players.Add((byte)peer.ID, new DataPlayer
             {
                 Username = Username,
                 Ready = false,
@@ -144,16 +144,16 @@ namespace GodotModules.Netcode
             NetworkManager.GameServer.Send(ServerPacketOpcode.Lobby, new SPacketLobby
             {
                 LobbyOpcode = LobbyOpcode.LobbyInfo,
-                Id = peer.ID,
+                Id = (byte)peer.ID,
                 IsHost = isHost,
-                Players = NetworkManager.GameServer.GetOtherPlayers(peer.ID)
+                Players = NetworkManager.GameServer.GetOtherPlayers((byte)peer.ID)
             }, peer);
 
             // tell other players about new player that joined
             NetworkManager.GameServer.SendToOtherPeers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby
             {
                 LobbyOpcode = LobbyOpcode.LobbyJoin,
-                Id = peer.ID,
+                Id = (byte)peer.ID,
                 Username = Username
             });
         }
@@ -163,13 +163,13 @@ namespace GodotModules.Netcode
 
         private void HandleReady(Peer peer)
         {
-            var player = NetworkManager.GameServer.Players[peer.ID];
+            var player = NetworkManager.GameServer.Players[(byte)peer.ID];
             player.Ready = Ready;
 
             NetworkManager.GameServer.SendToOtherPlayers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby
             {
                 LobbyOpcode = LobbyOpcode.LobbyReady,
-                Id = peer.ID,
+                Id = (byte)peer.ID,
                 Ready = Ready
             });
         }

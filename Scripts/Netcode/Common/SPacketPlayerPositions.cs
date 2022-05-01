@@ -6,14 +6,14 @@ namespace GodotModules.Netcode
 {
     public class SPacketPlayerPositions : APacketServer
     {
-        public Dictionary<uint, Vector2> PlayerPositions { get; set; }
+        public Dictionary<byte, Vector2> PlayerPositions { get; set; }
 
         public override void Write(PacketWriter writer)
         {
-            writer.Write((ushort)PlayerPositions.Count);
+            writer.Write((byte)PlayerPositions.Count);
             PlayerPositions.ForEach(pair =>
             {
-                writer.Write(pair.Key); // id
+                writer.Write((byte)pair.Key); // id
                 writer.Write((float)Math.Round(pair.Value.x, 1));
                 writer.Write((float)Math.Round(pair.Value.y, 1));
             });
@@ -21,11 +21,11 @@ namespace GodotModules.Netcode
 
         public override void Read(PacketReader reader)
         {
-            PlayerPositions = new Dictionary<uint, Vector2>();
-            var count = reader.ReadUShort();
+            PlayerPositions = new Dictionary<byte, Vector2>();
+            var count = reader.ReadByte();
             for (int i = 0; i < count; i++)
             {
-                var id = reader.ReadUInt();
+                var id = reader.ReadByte();
                 var x = reader.ReadFloat();
                 var y = reader.ReadFloat();
 

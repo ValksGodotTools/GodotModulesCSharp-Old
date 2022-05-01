@@ -25,10 +25,10 @@ namespace GodotModules.Netcode
                 case LobbyOpcode.LobbyInfo:
                     base.Write(writer);
                     writer.Write(IsHost);
-                    writer.Write((ushort)Players.Count);
+                    writer.Write((byte)Players.Count);
                     Players.ForEach(pair =>
                     {
-                        writer.Write((ushort)pair.Key); // id
+                        writer.Write((byte)pair.Key); // id
                         writer.Write((string)pair.Value.Username);
                     });
                     break;
@@ -67,11 +67,11 @@ namespace GodotModules.Netcode
                 case LobbyOpcode.LobbyInfo:
                     base.Read(reader);
                     IsHost = reader.ReadBool();
-                    var count = reader.ReadUShort();
-                    Players = new Dictionary<uint, DataPlayer>();
+                    var count = reader.ReadByte();
+                    Players = new Dictionary<byte, DataPlayer>();
                     for (int i = 0; i < count; i++)
                     {
-                        var id = reader.ReadUShort();
+                        var id = reader.ReadByte();
                         var name = reader.ReadString();
 
                         Players.Add(id, new DataPlayer
@@ -163,7 +163,7 @@ namespace GodotModules.Netcode
         // LobbyInfo
         public bool IsHost { get; set; }
 
-        public Dictionary<uint, DataPlayer> Players { get; set; }
+        public Dictionary<byte, DataPlayer> Players { get; set; }
 
         private void HandleInfo()
         {

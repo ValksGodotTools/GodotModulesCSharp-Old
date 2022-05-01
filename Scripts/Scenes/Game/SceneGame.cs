@@ -59,7 +59,7 @@ namespace Game
 
         private static PositionQueue PlayerPositionQueue = new PositionQueue();
 
-        public static void UpdatePlayerPositions(Dictionary<uint, Vector2> playerPositions)
+        public static void UpdatePlayerPositions(Dictionary<byte, Vector2> playerPositions)
         {
             PlayerPositionQueue.Add(playerPositions);
         }

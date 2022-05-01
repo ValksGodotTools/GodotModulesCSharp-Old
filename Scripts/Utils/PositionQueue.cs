@@ -4,15 +4,15 @@ namespace GodotModules
 {
     public class PositionQueue
     {
-        private List<Dictionary<uint, Vector2>> Data = new();
+        private List<Dictionary<byte, Vector2>> Data = new();
         public float Progress { get; private set; }
 
-        public Dictionary<uint, Vector2> Previous => Data[0];
-        public Dictionary<uint, Vector2> Current => Data[1];
+        public Dictionary<byte, Vector2> Previous => Data[0];
+        public Dictionary<byte, Vector2> Current => Data[1];
 
         public bool NotReady => Data.Count <= 1;
 
-        public void Add(Dictionary<uint, Vector2> data)
+        public void Add(Dictionary<byte, Vector2> data)
         {
             Progress = 0; // reset progress as this is new incoming data
             Data.Add(data);

@@ -7,7 +7,7 @@ namespace GodotModules.Netcode.Server
 {
     public class GameServer : ENetServer
     {
-        public Dictionary<uint, DataPlayer> Players { get; set; }
+        public Dictionary<byte, DataPlayer> Players { get; set; }
         private STimer EmitClientPositions { get; set; }
         private STimer ServerSimulation { get; set; }
 
@@ -81,16 +81,16 @@ namespace GodotModules.Netcode.Server
             Send(ServerPacketOpcode.Lobby, new SPacketLobby
             {
                 LobbyOpcode = LobbyOpcode.LobbyLeave,
-                Id = id
+                Id = (byte)id
             }, GetOtherPeers(id));
 
-            if (Players.ContainsKey(id))
-                Players.Remove(id);
+            if (Players.ContainsKey((byte)id))
+                Players.Remove((byte)id);
         }
 
-        public Dictionary<uint, DataPlayer> GetOtherPlayers(uint id)
+        public Dictionary<byte, DataPlayer> GetOtherPlayers(byte id)
         {
-            var otherPlayers = new Dictionary<uint, DataPlayer>(Players);
+            var otherPlayers = new Dictionary<byte, DataPlayer>(Players);
             otherPlayers.Remove(id);
             return otherPlayers;
         }

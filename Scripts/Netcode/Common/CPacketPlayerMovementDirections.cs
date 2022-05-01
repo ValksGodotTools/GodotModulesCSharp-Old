@@ -23,7 +23,7 @@ namespace GodotModules.Netcode
 
         public override void Handle(ENet.Peer peer)
         {
-            var player = NetworkManager.GameServer.Players[peer.ID];
+            var player = NetworkManager.GameServer.Players[(byte)peer.ID];
             player.DirectionHorz = DirectionHorz;
             player.DirectionVert = DirectionVert;
         }
