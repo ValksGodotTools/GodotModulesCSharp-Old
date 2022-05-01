@@ -18,12 +18,24 @@ namespace GodotModules.Netcode.Client
 
         protected override void Timeout(Event netEvent)
         {
+            HandlePeerLeave(DisconnectOpcode.Timeout);
             Log("Client connection timeout");
         }
 
         protected override void Disconnect(Event netEvent)
         {
+            HandlePeerLeave((DisconnectOpcode)netEvent.Data);
             Log("Client disconnected from server");
+        }
+
+        private void HandlePeerLeave(DisconnectOpcode opcode)
+        {
+            SceneGameServers.ConnectingToLobby = false;
+            SceneGameServers.Disconnected = true;
+            Connected = 0;
+            DisconnectOpcode = (DisconnectOpcode)opcode;
+            NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.ChangeScene, "GameServers"));
+            CancelTokenSource.Cancel();
         }
     }
 }
