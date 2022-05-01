@@ -46,7 +46,7 @@ namespace GodotModules
             InputTitle.Text = "Test";
             InputPort.Text = "7777";
             InputDescription.Text = "";
-            InputMaxPlayerCount.Text = "999";
+            InputMaxPlayerCount.Text = "256"; // byte values range from 0-255 (gives 256 ids) (should be noted dummy clients connect to ping servers and take up an id for a short duration)
         }
 
         private int ValidatedMaxPlayerCount;
