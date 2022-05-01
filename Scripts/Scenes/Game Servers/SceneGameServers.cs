@@ -65,7 +65,7 @@ namespace GodotModules
         {
             Utils.EscapeToScene("Menu", () =>
             {
-                NetworkManager.WebClient.Client.CancelPendingRequests();
+                WebClient.Client.CancelPendingRequests();
                 NetworkManager.CancelClientConnectingTokenSource();
             });
         }
@@ -105,8 +105,8 @@ namespace GodotModules
 
         public async Task ListServers()
         {
-            NetworkManager.WebClient.TaskGetServers = NetworkManager.WebClient.Get<LobbyListing[]>("servers/get");
-            var res = await NetworkManager.WebClient.TaskGetServers;
+            WebClient.TaskGetServers = WebClient.Get<LobbyListing[]>("servers/get");
+            var res = await WebClient.TaskGetServers;
 
             if (res.Status == WebServerStatus.ERROR)
                 return;
@@ -122,7 +122,7 @@ namespace GodotModules
 
         public async void PostServer(LobbyListing info)
         {
-            var res = await NetworkManager.WebClient.Post("servers/post", new Dictionary<string, string>
+            var res = await WebClient.Post("servers/post", new Dictionary<string, string>
             {
                 { "Name", info.Name },
                 { "Ip", info.Ip },

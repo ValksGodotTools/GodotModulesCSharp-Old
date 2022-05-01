@@ -1,4 +1,5 @@
 using Godot;
+using GodotModules.Netcode;
 
 namespace GodotModules
 {
@@ -21,7 +22,7 @@ namespace GodotModules
             if (string.IsNullOrWhiteSpace(Description.Text))
                 return;
 
-            await NetworkManager.WebClient.Post("errors/post", new Dictionary<string, string> {
+            await WebClient.Post("errors/post", new Dictionary<string, string> {
                 { "error", Error.Text },
                 { "description", Description.Text }
             });

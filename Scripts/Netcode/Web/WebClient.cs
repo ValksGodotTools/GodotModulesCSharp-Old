@@ -9,16 +9,16 @@ using Timer = System.Timers.Timer; // ambitious reference between Godot.Timer an
 
 namespace GodotModules.Netcode
 {
-    public class WebClient : IDisposable
+    public class WebClient
     {
-        public HttpClient Client { get; set; }
+        public static HttpClient Client { get; set; }
+        public static Task<WebServerResponse<LobbyListing[]>> TaskGetServers { get; set; }
         public static string ExternalIp { get; set; }
-        public Task<WebServerResponse<LobbyListing[]>> TaskGetServers { get; set; }
         private static int FailedPingAttempts { get; set; }
         private const string WEB_SERVER_IP = "localhost:4000";
-        public const int WEB_PING_INTERVAL = 10000;
-        private bool LogExceptions = false;
-        public Timer TimerPingMasterServer { get; set; }
+        private const int WEB_PING_INTERVAL = 10000;
+        private static bool LogExceptions = false;
+        public static Timer TimerPingMasterServer { get; set; }
 
         public WebClient()
         {
@@ -30,7 +30,7 @@ namespace GodotModules.Netcode
             TimerPingMasterServer.Elapsed += new(OnTimerPingMasterServerEvent);
         }
 
-        public async Task<WebServerResponse<string>> Post(string path, Dictionary<string, string> values)
+        public static async Task<WebServerResponse<string>> Post(string path, Dictionary<string, string> values)
         {
             try
             {
@@ -58,7 +58,7 @@ namespace GodotModules.Netcode
             }
         }
 
-        public async Task<WebServerResponse<T>> Get<T>(string path)
+        public static async Task<WebServerResponse<T>> Get<T>(string path)
         {
             try
             {
@@ -88,7 +88,7 @@ namespace GodotModules.Netcode
 
         public async void OnTimerPingMasterServerEvent(System.Object source, ElapsedEventArgs args)
         {
-            var res = await NetworkManager.WebClient.Post("ping", new Dictionary<string, string> { { "Name", SceneLobby.CurrentLobby.Name } });
+            var res = await WebClient.Post("ping", new Dictionary<string, string> { { "Name", SceneLobby.CurrentLobby.Name } });
             if (res.Status == WebServerStatus.ERROR)
             {
                 FailedPingAttempts++;
@@ -113,7 +113,7 @@ namespace GodotModules.Netcode
             ExternalIp = IPAddress.Parse(externalIpString).ToString();
         }
 
-        public void Dispose()
+        public static void Dispose()
         {
             Client.Dispose();
         }

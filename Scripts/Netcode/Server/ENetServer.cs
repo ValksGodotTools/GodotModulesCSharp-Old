@@ -38,7 +38,7 @@ namespace GodotModules.Netcode.Server
         {
             Thread.CurrentThread.Name = "Server";
             if (SceneLobby.CurrentLobby.Public)
-                NetworkManager.WebClient.TimerPingMasterServer.Start();
+                WebClient.TimerPingMasterServer.Start();
 
             Library.Initialize();
 

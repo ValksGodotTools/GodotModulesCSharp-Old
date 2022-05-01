@@ -14,15 +14,15 @@ namespace GodotModules
         public static ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
         public static GameServer GameServer { get; set; }
         public static GameClient GameClient { get; set; }
-        public static WebClient WebClient { get; set; }
+        private static WebClient WebClient { get; set; }
         public static NetworkManager Instance { get; set; }
         private static CancellationTokenSource ClientConnectingTokenSource { get; set; }
 
         public override void _Ready()
         {
             Instance = this;
-            WebClient = new();
             GodotCmds = new();
+            WebClient = new();
         }
 
         public override void _Process(float delta)

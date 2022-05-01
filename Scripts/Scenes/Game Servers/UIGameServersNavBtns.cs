@@ -1,4 +1,5 @@
 using Godot;
+using GodotModules.Netcode;
 
 namespace GodotModules
 {
@@ -27,7 +28,7 @@ namespace GodotModules
 
         private async void _on_Refresh_pressed()
         {
-            if (!NetworkManager.WebClient.TaskGetServers.IsCompleted)
+            if (!WebClient.TaskGetServers.IsCompleted)
                 return;
 
             SceneGameServers.Instance.ClearServers();

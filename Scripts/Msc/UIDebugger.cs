@@ -9,8 +9,9 @@ namespace GodotModules
         [Export] public readonly NodePath NodePathConsole;
 
         private static TextEdit Logs { get; set; }
-        private LineEdit Console { get; set; } // the console input
         private static UIDebugger Instance { get; set; }
+        
+        private LineEdit Console { get; set; } // the console input
 
         public override void _Ready()
         {
