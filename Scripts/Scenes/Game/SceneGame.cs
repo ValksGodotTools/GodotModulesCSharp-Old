@@ -7,16 +7,16 @@ namespace Game
 {
     public class SceneGame : Node
     {
-        public static ClientPlayer Player { get; set; }
         public static SceneGame Instance { get; set; }
+
+        public ClientPlayer Player { get; set; }
 
         [Export] public readonly NodePath NodePathLabelPlayerHealth;
         public Label LabelPlayerHealth;
 
         private Dictionary<uint, OtherPlayer> Players;
-        public static Vector2 ServerPlayerPosition = Vector2.Zero;
-        private static Dictionary<uint, Vector2> NextServerPlayerPositions { get; set; }
-        private static Dictionary<uint, Vector2> PrevServerPlayerPositions { get; set; }
+        private Dictionary<uint, Vector2> NextServerPlayerPositions { get; set; }
+        private Dictionary<uint, Vector2> PrevServerPlayerPositions { get; set; }
 
         public override void _Ready()
         {
@@ -31,7 +31,7 @@ namespace Game
             AddChild(Player);
 
             // set game definitions
-            ModLoader.Script.Globals["Player", "setHealth"] = (Action<int>)SceneGame.Player.SetHealth;
+            ModLoader.Script.Globals["Player", "setHealth"] = (Action<int>)Player.SetHealth;
 
             ModLoader.Call("OnGameInit");
 
