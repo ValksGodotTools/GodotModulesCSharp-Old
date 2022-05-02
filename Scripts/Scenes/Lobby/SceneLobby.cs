@@ -7,7 +7,7 @@ namespace GodotModules
 {
     public class SceneLobby : Node
     {
-        public static LobbyListing CurrentLobby { get; set; }
+        public static LobbyListing CurrentLobby { get; set; } // TODO: Check out stat ic here
         private static SceneLobby Instance { get; set; }
 
         [Export] public readonly NodePath NodePathPlayers;
@@ -50,6 +50,8 @@ namespace GodotModules
                 Instance.BtnStart.Disabled = true;
 
             NetworkManager.GameClient.Players.ForEach(x => AddPlayer(x.Key, x.Value));
+
+            LobbyName.Text = CurrentLobby.Name;
         }
 
         public override async void _Input(InputEvent @event)
@@ -59,7 +61,7 @@ namespace GodotModules
                 WebClient.Client.CancelPendingRequests();
                 WebClient.TimerPingMasterServer.Stop();
                 NetworkManager.GameClient.Stop();
-                if (NetworkManager.GameServer.Running)
+                if (NetworkManager.GameServer != null)
                     await NetworkManager.GameServer.Stop();
             }
         }
@@ -74,6 +76,9 @@ namespace GodotModules
 
                 if (NetworkManager.GameClient.IsHost)
                 {
+                    WebClient.TimerPingMasterServer.Stop();
+                    WebClient.TimerPingMasterServer.Dispose();
+
                     // tell everyone game has started
                     await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
                     {
