@@ -37,7 +37,11 @@ namespace GodotModules
 
             Hide();
 
-            await SceneGameServers.JoinServer(ip, port);
+            await SceneGameServers.JoinServer(new LobbyListing {
+                Ip = ip,
+                Port = port,
+                Name = "Unknown Name"
+            });
         }
 
         private void _on_PopupDirectConnect_popup_hide()
