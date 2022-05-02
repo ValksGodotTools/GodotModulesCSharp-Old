@@ -1,5 +1,6 @@
 using Godot;
 using GodotModules.ModLoader;
+using GodotModules.Netcode;
 using GodotModules.Netcode.Client;
 using System;
 

@@ -7,6 +7,7 @@
         Lobby,
         PlayerPosition,
         PlayerMovementDirections,
+        PlayerRotation,
         PlayerShoot
     }
 

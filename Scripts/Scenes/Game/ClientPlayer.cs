@@ -10,7 +10,6 @@ namespace Game
         private Label LabelPosition { get; set; }
 
         private float Speed = 250f;
-        public GTimer Timer { get; set; }
 
         private bool PressedUp { get; set; }
         private bool PressedDown { get; set; }
@@ -26,8 +25,11 @@ namespace Game
             if (NetworkManager.GameClient != null)
                 if (NetworkManager.GameClient.Running)
                 {
-                    Timer = new GTimer(20);
-                    Timer.Connect(this, nameof(EmitMovementDirection));
+                    var timer1 = new GTimer(20);
+                    timer1.Connect(this, nameof(EmitMovementDirection));
+
+                    var timer2 = new GTimer(200);
+                    timer2.Connect(this, nameof(EmitRotation));
                 }
         }
 
@@ -45,6 +47,13 @@ namespace Game
             {
                 DirectionVert = directionVert,
                 DirectionHorz = directionHorz
+            }, ENet.PacketFlags.None);
+        }
+
+        public async void EmitRotation()
+        {
+            await NetworkManager.GameClient.Send(ClientPacketOpcode.PlayerRotation, new CPacketPlayerRotation {
+                Rotation = Rotation
             }, ENet.PacketFlags.None);
         }
 
