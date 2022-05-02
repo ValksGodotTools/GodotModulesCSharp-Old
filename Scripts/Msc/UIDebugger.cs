@@ -3,6 +3,7 @@ using System;
 
 namespace GodotModules
 {
+    // This is the in game console which appears on pressing F12
     public class UIDebugger : Control
     {
         [Export] public readonly NodePath NodePathLogs;
