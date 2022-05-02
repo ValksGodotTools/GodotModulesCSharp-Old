@@ -8,6 +8,11 @@ namespace Game
     public class SceneGame : Node
     {
         public static SceneGame Instance { get; set; }
+        private static PositionQueue PlayerPositionQueue = new PositionQueue();
+        public static void UpdatePlayerPositions(Dictionary<byte, Vector2> playerPositions)
+        {
+            PlayerPositionQueue.Add(playerPositions);
+        }
 
         public ClientPlayer Player { get; set; }
 
@@ -39,6 +44,15 @@ namespace Game
                 InitMultiplayerStuff();
         }
 
+        public override async void _Input(InputEvent @event)
+        {
+            if (Input.IsActionJustPressed("ui_cancel")) 
+            {
+                NetworkManager.GameClient?.Stop();
+                await NetworkManager.GameServer?.Stop();
+            }
+        }
+
         private void InitMultiplayerStuff()
         {
             Player.SetUsername(GameManager.Options.OnlineUsername);
@@ -55,13 +69,6 @@ namespace Game
                     AddChild(otherPlayer);
                     otherPlayer.SetUsername(pair.Value);
                 });
-        }
-
-        private static PositionQueue PlayerPositionQueue = new PositionQueue();
-
-        public static void UpdatePlayerPositions(Dictionary<byte, Vector2> playerPositions)
-        {
-            PlayerPositionQueue.Add(playerPositions);
         }
 
         public override void _PhysicsProcess(float delta)
