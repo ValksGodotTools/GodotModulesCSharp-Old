@@ -1,5 +1,6 @@
 using Game;
 using Godot;
+using GodotModules.Netcode.Client;
 using System;
 
 namespace GodotModules.Netcode
@@ -33,7 +34,7 @@ namespace GodotModules.Netcode
             }
         }
 
-        public override void Handle()
+        public override void Handle(ENetClient client)
         {
             SceneGame.UpdatePlayerPositions(PlayerPositions);
         }

@@ -1,16 +1,17 @@
 using Game;
 using Godot;
 using GodotModules.Netcode.Server;
+using GodotModules.Netcode.Client;
 using System;
 
 namespace GodotModules.Netcode
 {
     public class SPacketPong : APacketServer
     {
-        public override void Handle()
+        public override void Handle(ENetClient client)
         {
-            PingServers.PingMs = (DateTime.Now - PingServers.PingSent).Milliseconds;
-            PingServers.PingReceived = true;
+            client.WasPingReceived = true;
+            client.PingMs = (DateTime.Now - client.PingSent).Milliseconds;
         }
     }
 }
