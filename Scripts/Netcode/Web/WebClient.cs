@@ -17,20 +17,23 @@ namespace GodotModules.Netcode
         private static int FailedPingAttempts { get; set; }
         private const string WEB_SERVER_IP = "localhost:4000";
         private const int WEB_PING_INTERVAL = 10000;
-        private static bool LogExceptions = false;
+        private static bool LogExceptions = true;
         public static Timer TimerPingMasterServer { get; set; }
 
         public WebClient()
         {
             Client = new();
-            Client.Timeout = TimeSpan.FromSeconds(5);
+            Client.Timeout = TimeSpan.FromMinutes(20);
+            Client.DefaultRequestHeaders.Accept.Clear();
+            Client.DefaultRequestHeaders.Add("Connection", "Keep-Alive");
+            Client.DefaultRequestHeaders.Add("Keep-Alive", "false");
 
             TimerPingMasterServer = new(WebClient.WEB_PING_INTERVAL);
             TimerPingMasterServer.AutoReset = true;
             TimerPingMasterServer.Elapsed += new(OnTimerPingMasterServerEvent);
         }
 
-        public static async Task<WebServerResponse<string>> Post(string path, Dictionary<string, string> values)
+        public async static Task<WebServerResponse<string>> Post(string path, Dictionary<string, string> values)
         {
             try
             {
@@ -48,7 +51,7 @@ namespace GodotModules.Netcode
                 if (LogExceptions)
                 {
                     var message = $"Failed to POST to http://{WEB_SERVER_IP}/api/{path} {e.Message}";
-                    Utils.Log(message, ConsoleColor.Red); // no need to notify user of this kind of error
+                    Utils.Log(message, ConsoleColor.Red); 
                 }
                 return new WebServerResponse<string>
                 {
@@ -88,9 +91,11 @@ namespace GodotModules.Netcode
 
         public async void OnTimerPingMasterServerEvent(System.Object source, ElapsedEventArgs args)
         {
+            Godot.GD.Print("SENT HEARTBEAT TO MASTER SERVER");
             var res = await WebClient.Post("ping", new Dictionary<string, string> { { "Name", SceneLobby.CurrentLobby.Name } });
             if (res.Status == WebServerStatus.ERROR)
             {
+                Godot.GD.Print("ERROR: " + FailedPingAttempts);
                 FailedPingAttempts++;
                 if (FailedPingAttempts >= 3)
                     TimerPingMasterServer.Stop();

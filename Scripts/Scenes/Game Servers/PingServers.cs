@@ -12,7 +12,7 @@ namespace GodotModules
         public static bool PingReceived { get; set; }
         public static int PingMs { get; set; }
         public static CancellationTokenSource CancelTokenSource = new CancellationTokenSource();
-        private static ENetClient DummyClient { get; set; }
+        public static ENetClient DummyClient { get; set; }
 
         public static async Task PingServer()
         {
@@ -20,35 +20,17 @@ namespace GodotModules
             DummyClient.Start("127.0.0.1", 7777);
 
             while (!DummyClient.IsConnected) 
-            {
-                if (CancelTokenSource.IsCancellationRequested)
-                {
-                    DummyClient.Stop();
-                    return;
-                }
-
-                await Task.Delay(100);
-            }
+                await Task.Delay(100, CancelTokenSource.Token);
 
             await DummyClient.Send(Netcode.ClientPacketOpcode.Ping);
 
             PingSent = DateTime.Now;
 
             while (!PingReceived) 
-            {
-                if (CancelTokenSource.IsCancellationRequested) 
-                {
-                    DummyClient.Stop();
-                    return;
-                }
-
-                await Task.Delay(1);
-            }
+                await Task.Delay(1, CancelTokenSource.Token);
 
             GD.Print($"Ping received ({PingMs}ms)");
             PingReceived = false;
-
-            DummyClient.Stop();
         }
     }
 }

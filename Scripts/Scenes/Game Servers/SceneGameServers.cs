@@ -59,7 +59,7 @@ namespace GodotModules
                 GameManager.SpawnPopupMessage(message);
             }
 
-            await ListServers();
+            //await ListServers();
         }
 
         public override void _Input(InputEvent @event)
@@ -126,6 +126,7 @@ namespace GodotModules
                         AddServer(server);
                     }
                 });
+                PingServers.DummyClient.Stop();
             });
         }
 
