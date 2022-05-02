@@ -1,3 +1,5 @@
+using GodotModules.Netcode.Client;
+
 namespace GodotModules.Netcode
 {
     public abstract class APacketServer : APacket
@@ -5,6 +7,6 @@ namespace GodotModules.Netcode
         /// <summary>
         /// The packet handled client-side
         /// </summary>
-        public abstract void Handle();
+        public abstract void Handle(ENetClient client);
     }
 }
