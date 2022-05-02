@@ -27,11 +27,11 @@ namespace Game
                 if (NetworkManager.GameClient.Running)
                 {
                     Timer = new GTimer(20);
-                    Timer.Connect(this, nameof(EmitInput));
+                    Timer.Connect(this, nameof(EmitMovementDirection));
                 }
         }
 
-        public async void EmitInput()
+        public async void EmitMovementDirection()
         {
             var directionVert = Direction.None;
             var directionHorz = Direction.None;
