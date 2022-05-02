@@ -32,7 +32,9 @@ namespace GodotModules
                 switch (cmd.Opcode)
                 {
                     case GodotOpcode.ENetPacket:
-                        var packetReader = (PacketReader)cmd.Data;
+                        var packetHandleData = (PacketHandleData)cmd.Data;
+                        var packetReader = packetHandleData.Reader;
+                        var client = packetHandleData.Client;
                         var opcode = (ServerPacketOpcode)packetReader.ReadByte();
 
                         //Utils.Log($"[Client]: Received {opcode}");
@@ -53,17 +55,17 @@ namespace GodotModules
                             Utils.LogErr($"[Client]: Received malformed opcode: {opcode} (Ignoring)");
                             break;
                         }
-                        handlePacket.Handle();
+                        handlePacket.Handle(client);
 
                         packetReader.Dispose();
                         break;
 
                     case GodotOpcode.LogMessageServer:
-                        Utils.Log($"[Server]: {cmd.Data}", ENetServer.LogsColor);
+                        Utils.Log($"[Server]: {cmd.Data}", ConsoleColor.Cyan);
                         break;
 
                     case GodotOpcode.LogMessageClient:
-                        Utils.Log($"[Client]: {cmd.Data}", ENetClient.LogsColor);
+                        Utils.Log($"[Client]: {cmd.Data}", ConsoleColor.Yellow);
                         break;
 
                     case GodotOpcode.Error:
@@ -117,13 +119,14 @@ namespace GodotModules
                 UtilOptions.SaveOptions();
                 WebClient.Dispose();
 
+                SceneGameServers.PingServersCTS?.Dispose();
                 ClientConnectingTokenSource?.Dispose();
 
                 Instance.GetTree().Quit();
             }
             catch (Exception e)
             {
-                GD.Print("Exception on game exit cleanup: " + e.Message);
+                GD.Print("Exception on game exit cleanup: " + e);
             }
         }
 

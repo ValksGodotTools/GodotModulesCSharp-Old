@@ -9,7 +9,6 @@ namespace GodotModules.Netcode.Server
 {
     public abstract class ENetServer : IDisposable
     {
-        public static ConsoleColor LogsColor = ConsoleColor.Cyan;
         private static readonly Dictionary<ClientPacketOpcode, APacketClient> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, APacketClient>("CPacket");
         
         private CancellationTokenSource CancelTokenSource { get; set; }
