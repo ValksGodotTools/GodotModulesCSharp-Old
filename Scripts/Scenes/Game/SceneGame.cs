@@ -9,7 +9,7 @@ namespace Game
     public class SceneGame : Node
     {
         public static SceneGame Instance { get; set; } // TODO: Move stat ic somewhere else
-        private static PositionQueue PlayerPositionQueue = new PositionQueue(); // TODO: Move stat ic somewhere else
+        private static PrevCurQueue<Dictionary<byte, Vector2>> PlayerPositionQueue = new PrevCurQueue<Dictionary<byte, Vector2>>(ServerIntervals.PlayerPositions); // TODO: Move stat ic somewhere else
         public static void UpdatePlayerPositions(Dictionary<byte, Vector2> playerPositions) // TODO: Move stat ic somewhere else
         {
             PlayerPositionQueue.Add(playerPositions);

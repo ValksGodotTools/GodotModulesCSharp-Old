@@ -1,5 +1,19 @@
 ﻿namespace GodotModules.Netcode
 {
+    // Intervals
+    public static class ClientIntervals 
+    {
+        public static int PlayerDirection = 20;
+        public static int PlayerPosition = 150;
+        public static int PlayerRotation = 300;
+    }
+
+    public static class ServerIntervals 
+    {
+        public static int PlayerPositions = 150;
+        public static int PlayerRotations = 300;
+    }
+
     // Received from Game Client
     public enum ClientPacketOpcode
     {

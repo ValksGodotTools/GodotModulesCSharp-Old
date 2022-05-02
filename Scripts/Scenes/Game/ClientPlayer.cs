@@ -25,10 +25,10 @@ namespace Game
             if (NetworkManager.GameClient != null)
                 if (NetworkManager.GameClient.Running)
                 {
-                    var timer1 = new GTimer(20);
+                    var timer1 = new GTimer(ClientIntervals.PlayerDirection);
                     timer1.Connect(this, nameof(EmitMovementDirection));
 
-                    var timer2 = new GTimer(200);
+                    var timer2 = new GTimer(ClientIntervals.PlayerRotation);
                     timer2.Connect(this, nameof(EmitRotation));
                 }
         }
