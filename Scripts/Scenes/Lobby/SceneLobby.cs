@@ -52,6 +52,7 @@ namespace GodotModules
             NetworkManager.GameClient.Players.ForEach(x => AddPlayer(x.Key, x.Value));
 
             LobbyName.Text = CurrentLobby.Name;
+            LobbyMaxPlayers.Text = "" + CurrentLobby.MaxPlayerCount;
         }
 
         public override async void _Input(InputEvent @event)
