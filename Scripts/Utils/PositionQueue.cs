@@ -2,17 +2,24 @@ using Godot;
 
 namespace GodotModules
 {
-    public class PositionQueue
+    public class PrevCurQueue<T>
     {
-        private List<Dictionary<byte, Vector2>> Data = new();
+        private List<T> Data = new();
         public float Progress { get; private set; }
 
-        public Dictionary<byte, Vector2> Previous => Data[0];
-        public Dictionary<byte, Vector2> Current => Data[1];
+        public T Previous => Data[0];
+        public T Current => Data[1];
 
         public bool NotReady => Data.Count <= 1;
 
-        public void Add(Dictionary<byte, Vector2> data)
+        private int Interval { get; set; }
+
+        public PrevCurQueue(int interval) 
+        {
+            Interval = interval;
+        }
+
+        public void Add(T data)
         {
             Progress = 0; // reset progress as this is new incoming data
             Data.Add(data);
@@ -21,6 +28,6 @@ namespace GodotModules
                 Data.RemoveAt(0);
         }
 
-        public void UpdateProgress(float delta) => Progress += delta * (1000f / CommandDebug.SendReceiveDataInterval); // reach value of 1.0 every 200ms
+        public void UpdateProgress(float delta) => Progress += delta * (1000f / Interval); // reach value of 1.0 every 150ms
     }
 }
