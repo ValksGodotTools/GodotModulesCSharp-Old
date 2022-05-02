@@ -53,7 +53,7 @@ namespace Game
         public async void EmitRotation()
         {
             await NetworkManager.GameClient.Send(ClientPacketOpcode.PlayerRotation, new CPacketPlayerRotation {
-                Rotation = Rotation
+                Rotation = PlayerSprite.Rotation
             }, ENet.PacketFlags.None);
         }
 
