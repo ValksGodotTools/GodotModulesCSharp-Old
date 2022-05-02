@@ -10,7 +10,6 @@ namespace GodotModules.Netcode.Client
 {
     public class ENetClient : IDisposable
     {
-        public static ConsoleColor LogsColor = ConsoleColor.Yellow;
         public static readonly Dictionary<ServerPacketOpcode, APacketServer> HandlePacket = ReflectionUtils.LoadInstances<ServerPacketOpcode, APacketServer>("SPacket");
 
         // values grabbed from the server
@@ -19,6 +18,9 @@ namespace GodotModules.Netcode.Client
         public bool IsHost { get; set; }
         // =========================================================
 
+        public DateTime PingSent { get; set; }
+        public int PingMs { get; set;}
+        public bool WasPingReceived { get; set; }
         protected CancellationTokenSource CancelTokenSource { get; set; }
         public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
         private int OutgoingId { get; set; }
@@ -94,6 +96,7 @@ namespace GodotModules.Netcode.Client
                     packet.Create(clientPacket.Data, clientPacket.PacketFlags);
                     //Log("Sent packet: " + (ClientPacketOpcode)clientPacket.Opcode);
                     peer.Send(channelID, ref packet);
+                    PingSent = DateTime.Now;
                 }
 
                 while (!polled)
@@ -123,7 +126,10 @@ namespace GodotModules.Netcode.Client
                                 continue;
                             }
 
-                            NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.ENetPacket, new PacketReader(packet)));
+                            NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.ENetPacket, new PacketHandleData {
+                                Reader = new PacketReader(packet),
+                                Client = this
+                            }));
                             break;
 
                         case EventType.Timeout:
@@ -238,5 +244,11 @@ namespace GodotModules.Netcode.Client
         {
             CancelTokenSource.Dispose();
         }
+    }
+
+    public struct PacketHandleData 
+    {
+        public ENetClient Client { get; set; }
+        public PacketReader Reader { get; set; }
     }
 }
