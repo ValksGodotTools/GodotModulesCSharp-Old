@@ -9,7 +9,17 @@ namespace GodotModules
 
         public STimer(double delayMs, Action action, bool enabled = true, bool autoreset = true)
         {
-            void Callback(Object source, ElapsedEventArgs e) => action();
+            void Callback(Object source, ElapsedEventArgs e)
+            {
+                try
+                {
+                    action();
+                }
+                catch (Exception err)
+                {
+                    Godot.GD.PrintErr(err);
+                }
+            }
             Timer = new Timer(delayMs);
             Timer.Enabled = enabled;
             Timer.AutoReset = autoreset;
