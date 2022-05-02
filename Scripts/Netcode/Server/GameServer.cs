@@ -8,6 +8,7 @@ namespace GodotModules.Netcode.Server
     public class GameServer : ENetServer
     {
         public Dictionary<byte, DataPlayer> Players { get; set; }
+        public Dictionary<ushort, DataBullet> Bullets { get; set; }
         private STimer EmitClientPositions { get; set; }
         private STimer ServerSimulation { get; set; }
 

@@ -23,8 +23,14 @@ namespace Game
         private Dictionary<uint, Vector2> NextServerPlayerPositions { get; set; }
         private Dictionary<uint, Vector2> PrevServerPlayerPositions { get; set; }
 
+        private List<Sprite> Bullets = new List<Sprite>();
+
         public override void _Ready()
         {
+            var bullet = Prefabs.Bullet.Instance<Sprite>();
+            Bullets.Add(bullet);
+            AddChild(bullet);
+
             Players = new();
             NextServerPlayerPositions = new();
             PrevServerPlayerPositions = new();
@@ -32,7 +38,7 @@ namespace Game
             LabelPlayerHealth = GetNode<Label>(NodePathLabelPlayerHealth);
             Player = Prefabs.ClientPlayer.Instance<ClientPlayer>();
             Player.Position = Vector2.Zero;
-            Players.Add(NetworkManager.GameClient.PeerId, Player);
+            
             AddChild(Player);
 
             // set game definitions
@@ -40,8 +46,9 @@ namespace Game
 
             ModLoader.Call("OnGameInit");
 
-            if (NetworkManager.GameClient.Running)
-                InitMultiplayerStuff();
+            if (NetworkManager.GameClient != null)
+                if (NetworkManager.GameClient.Running)
+                    InitMultiplayerStuff();
         }
 
         public override async void _Input(InputEvent @event)
@@ -55,6 +62,7 @@ namespace Game
 
         private void InitMultiplayerStuff()
         {
+            Players.Add(NetworkManager.GameClient.PeerId, Player);
             Player.SetUsername(GameManager.Options.OnlineUsername);
 
             bool IsNotClient(uint id) => id != NetworkManager.GameClient.PeerId;
@@ -73,6 +81,9 @@ namespace Game
 
         public override void _PhysicsProcess(float delta)
         {
+            foreach (var bullet in Bullets)
+                bullet.Position += new Vector2(0, -1f);
+
             ModLoader.Call("OnGameUpdate", delta);
 
             PlayerPositionQueue.UpdateProgress(delta);

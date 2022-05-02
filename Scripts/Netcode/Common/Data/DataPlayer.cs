@@ -9,6 +9,7 @@ namespace GodotModules.Netcode
         public bool Host { get; set; }
         public Direction DirectionHorz { get; set; }
         public Direction DirectionVert { get; set; }
+        public float Rotation { get; set; }
         public Vector2 Position { get; set; }
     }
 }

@@ -23,11 +23,12 @@ namespace Game
             SetHealth(100);
             LabelPosition = GetNode<Label>(NodePathLabelPosition);
 
-            if (NetworkManager.GameClient.Running)
-            {
-                Timer = new GTimer(20);
-                Timer.Connect(this, nameof(EmitInput));
-            }
+            if (NetworkManager.GameClient != null)
+                if (NetworkManager.GameClient.Running)
+                {
+                    Timer = new GTimer(20);
+                    Timer.Connect(this, nameof(EmitInput));
+                }
         }
 
         public async void EmitInput()
@@ -50,10 +51,14 @@ namespace Game
         public override void _PhysicsProcess(float delta)
         {
             LabelPosition.Text = $"X: {Mathf.RoundToInt(Position.x)} Y: {Mathf.RoundToInt(Position.y)}";
+
+            PlayerSprite.LookAt(GetGlobalMousePosition());
+
             HandleMovement(delta);
 
-            if (NetworkManager.GameClient.Running)
-                KeepTrackOfInputs();
+            if (NetworkManager.GameClient != null)
+                if (NetworkManager.GameClient.Running)
+                    KeepTrackOfInputs();
         }
 
         private void HandleMovement(float delta)

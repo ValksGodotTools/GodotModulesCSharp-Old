@@ -6,7 +6,8 @@
         Ping,
         Lobby,
         PlayerPosition,
-        PlayerMovementDirections
+        PlayerMovementDirections,
+        PlayerShoot
     }
 
     // Sent to Game Client
