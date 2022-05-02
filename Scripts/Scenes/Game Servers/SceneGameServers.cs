@@ -21,7 +21,7 @@ namespace GodotModules
         private VBoxContainer ServerList { get; set; }
         public UIPopupCreateLobby ServerCreationPopup { get; set; }
 
-        public override async void _Ready()
+        public override void _Ready()
         {
             Instance = this;
             ServerList = GetNode<VBoxContainer>(NodePathServerList);

@@ -98,26 +98,33 @@ namespace GodotModules
         /// </summary>
         private static async Task ExitCleanup()
         {
-            if (NetworkManager.GameServer != null)
-                if (NetworkManager.GameServer.Running)
-                {
-                    GameServer.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToExitApp));
-                    await GameServer.Stop();
-                }
+            try
+            {
+                if (NetworkManager.GameServer != null)
+                    if (NetworkManager.GameServer.Running)
+                    {
+                        GameServer.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToExitApp));
+                        await GameServer.Stop();
+                    }
 
-            if (NetworkManager.GameClient != null)
-                if (NetworkManager.GameClient.Running)
-                {
-                    GameClient.Stop();
-                    GameClient.Dispose();
-                }
+                if (NetworkManager.GameClient != null)
+                    if (NetworkManager.GameClient.Running)
+                    {
+                        GameClient.Stop();
+                        GameClient.Dispose();
+                    }
 
-            UtilOptions.SaveOptions();
-            WebClient.Dispose();
+                UtilOptions.SaveOptions();
+                WebClient.Dispose();
 
-            ClientConnectingTokenSource?.Dispose();
+                ClientConnectingTokenSource?.Dispose();
 
-            Instance.GetTree().Quit();
+                Instance.GetTree().Quit();
+            }
+            catch (Exception e)
+            {
+                GD.Print("Exception on game exit cleanup: " + e.Message);
+            }
         }
 
         public static void StartClient(string ip, ushort port)
