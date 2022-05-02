@@ -74,6 +74,7 @@ rect_min_size = Vector2( 0, 35 )
 size_flags_horizontal = 4
 size_flags_vertical = 0
 script = ExtResource( 3 )
+NodePathRefresh = NodePath("Refresh")
 
 [node name="Join Lobby" type="Button" parent="PanelContainer/VBoxContainer/MarginContainer2/Nav"]
 margin_right = 75.0

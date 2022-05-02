@@ -5,6 +5,14 @@ namespace GodotModules
 {
     public class UIGameServersNavBtns : Node
     {
+        [Export] public readonly NodePath NodePathRefresh;
+        public static Button BtnRefresh { get; set; }
+
+        public override void _Ready()
+        {
+            BtnRefresh = GetNode<Button>(NodePathRefresh);
+        }
+
         private async void _on_Join_Lobby_pressed()
         {
             var selected = SceneGameServers.SelectedLobbyInstance;
@@ -28,7 +36,7 @@ namespace GodotModules
 
         private async void _on_Refresh_pressed()
         {
-            if (!WebClient.TaskGetServers.IsCompleted)
+            if (SceneGameServers.GettingServers)
                 return;
 
             SceneGameServers.Instance.ClearServers();

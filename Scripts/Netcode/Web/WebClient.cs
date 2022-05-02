@@ -91,11 +91,9 @@ namespace GodotModules.Netcode
 
         public async void OnTimerPingMasterServerEvent(System.Object source, ElapsedEventArgs args)
         {
-            Godot.GD.Print("SENT HEARTBEAT TO MASTER SERVER");
             var res = await WebClient.Post("ping", new Dictionary<string, string> { { "Name", SceneLobby.CurrentLobby.Name } });
             if (res.Status == WebServerStatus.ERROR)
             {
-                Godot.GD.Print("ERROR: " + FailedPingAttempts);
                 FailedPingAttempts++;
                 if (FailedPingAttempts >= 3)
                     TimerPingMasterServer.Stop();

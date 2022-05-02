@@ -35,11 +35,12 @@ namespace GodotModules
             LabelTitle.Text = info.Name;
             LabelDescription.Text = info.Description;
             LabelPlayerCount.Text = "" + info.MaxPlayerCount;
+            LabelPing.Text = $"{info.Ping}ms";
         }
 
         public async Task Join()
         {
-            await SceneGameServers.JoinServer(Info.Ip, Info.Port);
+            await SceneGameServers.JoinServer(Info);
         }
 
         private async void _on_Btn_pressed()
@@ -60,6 +61,7 @@ namespace GodotModules
         public string Description { get; set; }
         public string Ip { get; set; }
         public ushort Port { get; set; }
+        public int Ping { get; set; }
         public string LobbyHost { get; set; }
         public int MaxPlayerCount { get; set; }
         public bool Public { get; set; }
