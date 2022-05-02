@@ -138,6 +138,7 @@ namespace GodotModules.Netcode.Server
 
         public override void Dispose()
         {
+            base.Dispose();
             EmitClientPositions.Dispose();
             ServerSimulation.Dispose();
         }
