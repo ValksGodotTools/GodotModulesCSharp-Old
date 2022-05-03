@@ -116,7 +116,7 @@ namespace GodotModules.Netcode.Server
 
                         if (!HandlePacket.ContainsKey(opcode))
                         {
-                            Utils.LogErr($"[Server]: Received malformed opcode: {opcode} (Ignoring)");
+                            Utils.LogWarning($"[Server]: Received malformed opcode: {opcode} (Ignoring)");
                             break;
                         }
 
@@ -127,7 +127,7 @@ namespace GodotModules.Netcode.Server
                         }
                         catch (System.IO.EndOfStreamException)
                         {
-                            Utils.LogErr($"[Server]: Received malformed opcode: {opcode} (Ignoring)");
+                            Utils.LogWarning($"[Server]: Received malformed opcode: {opcode} (Ignoring)");
                             break;
                         }
                         handlePacket.Handle(netEvent.Peer);

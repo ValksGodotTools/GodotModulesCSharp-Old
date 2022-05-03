@@ -30,18 +30,21 @@ namespace GodotModules
             }
         }
 
-        public static void LogErr(object obj)
+        public static void LogErr(Exception ex, string hint = "")
         {
             ErrorNotifier.IncrementErrorCount();
-            if (obj is Exception) 
-            {
-                var ex = (Exception)obj;
-                UIDebugger.AddMessage($"{ex.Message}\n{ex.StackTrace}");
-            }
-            else
-                UIDebugger.AddMessage(obj);
 
-            Colorize(() => GD.PrintErr(obj), ConsoleColor.Red);
+            var message = $"[Error]: {hint}{ex.Message}\n{ex.StackTrace}";
+            UIDebugger.AddMessage(message);
+
+            Colorize(() => GD.PrintErr(message), ConsoleColor.Red);
+        }
+
+        public static void LogWarning(object obj, ConsoleColor color = ConsoleColor.Yellow) 
+        {
+            var message = $"[Warning]: {obj}";
+            UIDebugger.AddMessage(message);
+            Colorize(() => GD.Print(message), color);
         }
 
         public static void Log(object obj, ConsoleColor color = ConsoleColor.Gray)
