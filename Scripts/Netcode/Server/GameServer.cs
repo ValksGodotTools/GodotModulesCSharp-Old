@@ -9,24 +9,19 @@ namespace GodotModules.Netcode.Server
     {
         public Dictionary<byte, DataPlayer> Players { get; set; }
         public Dictionary<ushort, DataBullet> Bullets { get; set; }
-        private STimer EmitClientPositions { get; set; }
-        private STimer EmitClientRotations { get; set; }
+        private STimer EmitClientTransforms { get; set; }
         private STimer ServerSimulation { get; set; }
 
         public GameServer()
         {
             Players = new();
 
-            EmitClientPositions = new(ServerIntervals.PlayerPositions, () =>
+            EmitClientTransforms = new(ServerIntervals.PlayerTransforms, () =>
             {
                 SendToAllPlayers(ServerPacketOpcode.PlayerTransforms, new SPacketPlayerTransforms
                 {
                     PlayerPositions = Players.ToDictionary(x => x.Key, x => x.Value.Position)
                 });
-            }, false);
-
-            EmitClientRotations = new (ServerIntervals.PlayerRotations, () => {
-
             }, false);
 
             const int oneSecondInMs = 1000;
@@ -59,8 +54,7 @@ namespace GodotModules.Netcode.Server
 
         public void StartGame()
         {
-            EmitClientPositions.Start();
-            EmitClientRotations.Start();
+            EmitClientTransforms.Start();
             ServerSimulation.Start();
         }
 
@@ -145,8 +139,7 @@ namespace GodotModules.Netcode.Server
         public override void Dispose()
         {
             base.Dispose();
-            EmitClientPositions.Dispose();
-            EmitClientRotations.Dispose();
+            EmitClientTransforms.Dispose();
             ServerSimulation.Dispose();
         }
     }
