@@ -5,7 +5,7 @@ using System;
 
 namespace GodotModules.Netcode
 {
-    public class SPacketPlayerPositions : APacketServer
+    public class SPacketPlayerTransforms : APacketServer
     {
         public Dictionary<byte, Vector2> PlayerPositions { get; set; }
 

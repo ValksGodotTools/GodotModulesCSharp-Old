@@ -30,7 +30,7 @@
     {
         Pong,
         Lobby,
-        PlayerPositions
+        PlayerTransforms
     }
 
     public enum LobbyOpcode

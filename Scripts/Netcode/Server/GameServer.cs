@@ -19,7 +19,7 @@ namespace GodotModules.Netcode.Server
 
             EmitClientPositions = new(ServerIntervals.PlayerPositions, () =>
             {
-                SendToAllPlayers(ServerPacketOpcode.PlayerPositions, new SPacketPlayerPositions
+                SendToAllPlayers(ServerPacketOpcode.PlayerTransforms, new SPacketPlayerTransforms
                 {
                     PlayerPositions = Players.ToDictionary(x => x.Key, x => x.Value.Position)
                 });
