@@ -78,7 +78,6 @@ namespace GodotModules
                 if (NetworkManager.GameClient.IsHost)
                 {
                     WebClient.TimerPingMasterServer.Stop();
-                    WebClient.TimerPingMasterServer.Dispose();
 
                     // tell everyone game has started
                     await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
