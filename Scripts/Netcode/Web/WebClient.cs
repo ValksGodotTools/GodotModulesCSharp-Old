@@ -9,7 +9,7 @@ using Timer = System.Timers.Timer; // ambitious reference between Godot.Timer an
 
 namespace GodotModules.Netcode
 {
-    public class WebClient
+    public class WebClient : IDisposable
     {
         public static HttpClient Client { get; set; }
         public static Task<WebServerResponse<LobbyListing[]>> TaskGetServers { get; set; }
@@ -116,7 +116,7 @@ namespace GodotModules.Netcode
             ExternalIp = IPAddress.Parse(externalIpString).ToString();
         }
 
-        public static void Dispose()
+        public void Dispose()
         {
             Client.Dispose();
         }

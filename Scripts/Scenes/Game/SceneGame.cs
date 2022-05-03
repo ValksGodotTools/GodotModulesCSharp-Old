@@ -20,9 +20,9 @@ namespace Game
         [Export] public readonly NodePath NodePathLabelPlayerHealth;
         public Label LabelPlayerHealth;
 
-        private Dictionary<uint, OtherPlayer> Players;
-        private Dictionary<uint, Vector2> NextServerPlayerPositions { get; set; }
-        private Dictionary<uint, Vector2> PrevServerPlayerPositions { get; set; }
+        private static Dictionary<uint, OtherPlayer> Players;
+        private static Dictionary<uint, Vector2> NextServerPlayerPositions { get; set; }
+        private static Dictionary<uint, Vector2> PrevServerPlayerPositions { get; set; }
 
         private List<Sprite> Bullets = new List<Sprite>();
 
@@ -56,9 +56,18 @@ namespace Game
         {
             if (Input.IsActionJustPressed("ui_cancel")) 
             {
-                NetworkManager.GameClient?.Stop();
-                await NetworkManager.GameServer?.Stop();
+                if (NetworkManager.GameClient != null)
+                    NetworkManager.GameClient.Stop();
+                if (NetworkManager.GameServer != null)
+                    await NetworkManager.GameServer.Stop();
             }
+        }
+
+        public static void RemovePlayer(byte id) 
+        {
+            var player = Players[id];
+            player.QueueFree();
+            Players.Remove(id);
         }
 
         private void InitMultiplayerStuff()
@@ -95,8 +104,11 @@ namespace Game
                 return;
             }
 
-            PlayerTransformQueue.Current.ForEach(pair =>
+            foreach (var pair in PlayerTransformQueue.Current)
             {
+                if (!Players.ContainsKey(pair.Key))
+                    continue;
+
                 var player = Players[pair.Key];
 
                 var prev = PlayerTransformQueue.Previous[pair.Key];
@@ -104,7 +116,7 @@ namespace Game
 
                 player.Position = Utils.Lerp(prev.Position, cur.Position, PlayerTransformQueue.Progress);
                 player.PlayerSprite.Rotation = Utils.LerpAngle(player.PlayerSprite.Rotation, cur.Rotation, 0.05f);
-            });
+            }
         }
     }
 }

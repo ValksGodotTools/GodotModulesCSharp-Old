@@ -1,5 +1,6 @@
 using GodotModules.Netcode.Client;
 using GodotModules.Netcode.Server;
+using Game;
 
 namespace GodotModules.Netcode
 {
@@ -197,6 +198,12 @@ namespace GodotModules.Netcode
         {
             if (SceneManager.InLobby())
                 SceneLobby.RemovePlayer(Id);
+
+            if (SceneManager.InGame())
+            {
+                SceneGame.RemovePlayer(Id);
+            }
+            
             NetworkManager.GameClient.Players.Remove(Id);
             NetworkManager.GameClient.Log($"Player with id: {Id} left the lobby");
         }

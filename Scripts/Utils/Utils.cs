@@ -9,12 +9,12 @@ namespace GodotModules
     {
         public static float DegreesToRadians(float degrees) => degrees * (Mathf.Pi / 180);
 
-        public static float LerpAngle(float from, float to, float weight) 
+        public static float LerpAngle(float from, float to, float weight)
         {
             return from + ShortAngleDistance(from, to) * weight;
         }
 
-        private static float ShortAngleDistance(float from, float to) 
+        private static float ShortAngleDistance(float from, float to)
         {
             var max_angle = Mathf.Pi * 2;
             var difference = (to - from) % (max_angle);
@@ -33,18 +33,24 @@ namespace GodotModules
         public static void LogErr(object obj)
         {
             ErrorNotifier.IncrementErrorCount();
-            Log(obj, ConsoleColor.Red);
-        }
-
-        public static void Log(object obj, ConsoleColor color = ConsoleColor.Gray)
-        {
             if (obj is Exception)
                 UIDebugger.AddException((Exception)obj);
             else
                 UIDebugger.AddMessage(obj);
 
+            Colorize(() => GD.PrintErr(obj), ConsoleColor.Red);
+        }
+
+        public static void Log(object obj, ConsoleColor color = ConsoleColor.Gray)
+        {
+            UIDebugger.AddMessage(obj);
+            Colorize(() => GD.Print(obj), color);
+        }
+
+        private static void Colorize(Action action, ConsoleColor color = ConsoleColor.Gray)
+        {
             Console.ForegroundColor = color;
-            GD.Print(obj);
+            action();
             Console.ResetColor();
         }
 

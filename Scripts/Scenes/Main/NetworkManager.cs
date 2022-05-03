@@ -107,6 +107,7 @@ namespace GodotModules
                     {
                         GameServer.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToExitApp));
                         await GameServer.Stop();
+                        GameServer.Dispose();
                     }
 
                 if (NetworkManager.GameClient != null)
@@ -119,8 +120,10 @@ namespace GodotModules
                 UtilOptions.SaveOptions();
                 WebClient.Dispose();
 
-                SceneGameServers.PingServersCTS?.Dispose();
-                ClientConnectingTokenSource?.Dispose();
+                if (SceneGameServers.PingServersCTS != null)
+                    SceneGameServers.PingServersCTS.Dispose();
+                if (ClientConnectingTokenSource != null)
+                    ClientConnectingTokenSource.Dispose();
 
                 Instance.GetTree().Quit();
             }
@@ -132,14 +135,16 @@ namespace GodotModules
 
         public static void StartClient(string ip, ushort port)
         {
-            GameClient?.Dispose();
+            if (GameClient != null)
+                GameClient.Dispose();
             GameClient = new GameClient();
             GameClient.Start(ip, port);
         }
 
         public static async void StartServer(ushort port, int maxClients)
         {
-            GameServer?.Dispose();
+            if (GameServer != null)
+                GameServer.Dispose();
             GameServer = new GameServer();
             await GameServer.Start(port, maxClients);
         }
