@@ -33,8 +33,11 @@ namespace GodotModules
         public static void LogErr(object obj)
         {
             ErrorNotifier.IncrementErrorCount();
-            if (obj is Exception)
-                UIDebugger.AddException((Exception)obj);
+            if (obj is Exception) 
+            {
+                var ex = (Exception)obj;
+                UIDebugger.AddMessage($"{ex.Message}\n{ex.StackTrace}");
+            }
             else
                 UIDebugger.AddMessage(obj);
 
