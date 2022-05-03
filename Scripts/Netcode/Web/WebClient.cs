@@ -118,6 +118,7 @@ namespace GodotModules.Netcode
 
         public void Dispose()
         {
+            TimerPingMasterServer.Dispose();
             Client.Dispose();
         }
     }
