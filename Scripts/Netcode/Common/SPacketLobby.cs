@@ -195,7 +195,8 @@ namespace GodotModules.Netcode
         // LobbyLeave
         private void HandleLeave()
         {
-            SceneLobby.RemovePlayer(Id);
+            if (SceneManager.InLobby())
+                SceneLobby.RemovePlayer(Id);
             NetworkManager.GameClient.Players.Remove(Id);
             NetworkManager.GameClient.Log($"Player with id: {Id} left the lobby");
         }
