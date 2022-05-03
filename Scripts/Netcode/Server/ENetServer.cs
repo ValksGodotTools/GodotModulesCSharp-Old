@@ -125,9 +125,9 @@ namespace GodotModules.Netcode.Server
                         {
                             handlePacket.Read(packetReader);
                         }
-                        catch (System.IO.EndOfStreamException)
+                        catch (System.IO.EndOfStreamException e)
                         {
-                            Utils.LogWarning($"[Server]: Received malformed opcode: {opcode} (Ignoring)");
+                            Utils.LogWarning($"[Server]: Received malformed opcode: {opcode} {e.Message} (Ignoring)");
                             break;
                         }
                         handlePacket.Handle(netEvent.Peer);

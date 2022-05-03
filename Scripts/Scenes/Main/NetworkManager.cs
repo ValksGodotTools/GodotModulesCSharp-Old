@@ -50,9 +50,9 @@ namespace GodotModules
                         {
                             handlePacket.Read(packetReader);
                         }
-                        catch (System.IO.EndOfStreamException)
+                        catch (System.IO.EndOfStreamException ex)
                         {
-                            Utils.LogWarning($"[Client]: Received malformed opcode: {opcode} (Ignoring)");
+                            Utils.LogWarning($"[Client]: Received malformed opcode: {opcode} {ex.Message} (Ignoring)");
                             break;
                         }
                         handlePacket.Handle(client);
