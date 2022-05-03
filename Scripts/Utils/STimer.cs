@@ -18,6 +18,7 @@ namespace GodotModules
 
         public void Start() => Timer.Enabled = true;
         public void Stop() => Timer.Enabled = false;
+        public void SetDelay(double delayMs) => Timer.Interval = delayMs;
 
         public void Dispose() => Timer.Dispose();
     }

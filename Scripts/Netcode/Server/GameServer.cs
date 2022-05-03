@@ -9,7 +9,7 @@ namespace GodotModules.Netcode.Server
     {
         public Dictionary<byte, DataPlayer> Players { get; set; }
         public Dictionary<ushort, DataBullet> Bullets { get; set; }
-        private STimer EmitClientTransforms { get; set; }
+        public STimer EmitClientTransforms { get; set; }
         private STimer ServerSimulation { get; set; }
 
         public GameServer()
@@ -20,7 +20,10 @@ namespace GodotModules.Netcode.Server
             {
                 SendToAllPlayers(ServerPacketOpcode.PlayerTransforms, new SPacketPlayerTransforms
                 {
-                    PlayerPositions = Players.ToDictionary(x => x.Key, x => x.Value.Position)
+                    PlayerTransforms = Players.ToDictionary(x => x.Key, x => new DataEntityTransform {
+                        Position = x.Value.Position,
+                        Rotation = x.Value.Rotation
+                    })
                 });
             }, false);
 

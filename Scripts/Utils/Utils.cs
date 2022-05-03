@@ -9,16 +9,9 @@ namespace GodotModules
     {
         public static float DegreesToRadians(float degrees) => degrees * (Mathf.Pi / 180);
 
-        /// <summary>
-        /// Lerp to an angle
-        /// </summary>
-        /// <param name="from">The start rotation in radians</param>
-        /// <param name="to">The target rotation in degrees</param>
-        /// <param name="weight"></param>
-        /// <returns></returns>
         public static float LerpAngle(float from, float to, float weight) 
         {
-            return from + ShortAngleDistance(from, DegreesToRadians(to)) * weight;
+            return from + ShortAngleDistance(from, to) * weight;
         }
 
         private static float ShortAngleDistance(float from, float to) 

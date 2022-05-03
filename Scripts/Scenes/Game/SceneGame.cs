@@ -9,10 +9,10 @@ namespace Game
     public class SceneGame : Node
     {
         public static SceneGame Instance { get; set; } // TODO: Move stat ic somewhere else
-        private static PrevCurQueue<Dictionary<byte, Vector2>> PlayerPositionQueue = new PrevCurQueue<Dictionary<byte, Vector2>>(ServerIntervals.PlayerTransforms); // TODO: Move stat ic somewhere else
-        public static void UpdatePlayerPositions(Dictionary<byte, Vector2> playerPositions) // TODO: Move stat ic somewhere else
+        private static PrevCurQueue<Dictionary<byte, DataEntityTransform>> PlayerTransformQueue = new PrevCurQueue<Dictionary<byte, DataEntityTransform>>(ServerIntervals.PlayerTransforms);
+        public static void UpdatePlayerPositions(Dictionary<byte, DataEntityTransform> playerTransforms) // TODO: Move stat ic somewhere else
         {
-            PlayerPositionQueue.Add(playerPositions);
+            PlayerTransformQueue.Add(playerTransforms);
         }
 
         public ClientPlayer Player { get; set; }
@@ -87,18 +87,23 @@ namespace Game
 
             ModLoader.Call("OnGameUpdate", delta);
 
-            PlayerPositionQueue.UpdateProgress(delta);
+            PlayerTransformQueue.UpdateProgress(delta);
 
-            if (PlayerPositionQueue.NotReady)
+            if (PlayerTransformQueue.NotReady)
             {
                 PrevServerPlayerPositions = NextServerPlayerPositions;
                 return;
             }
 
-            PlayerPositionQueue.Current.ForEach(pair =>
+            PlayerTransformQueue.Current.ForEach(pair =>
             {
                 var player = Players[pair.Key];
-                player.Position = Utils.Lerp(PlayerPositionQueue.Previous[pair.Key], pair.Value, PlayerPositionQueue.Progress);
+
+                var prev = PlayerTransformQueue.Previous[pair.Key];
+                var cur = pair.Value;
+
+                player.Position = Utils.Lerp(prev.Position, cur.Position, PlayerTransformQueue.Progress);
+                player.PlayerSprite.Rotation = Utils.LerpAngle(player.PlayerSprite.Rotation, cur.Rotation, 0.05f);
             });
         }
     }
