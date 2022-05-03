@@ -33,7 +33,7 @@ Launch the VSCode configuration `Play in Editor` (if configuration is set to thi
 While the C# debugger is running in the editor launch the VSCode configuration `MoonSharp Attach`
 
 ## Debugging Netcode
-Export a release of the game to a folder. Open cmd in this folder and run exe with --verbose flag. Do again for another client.
+Export a release of the game to a folder. Open cmd in this folder and run exe. Do again for another client.
 
 ## Exporting
 Do not forget to copy enet.dll to exported release folder
