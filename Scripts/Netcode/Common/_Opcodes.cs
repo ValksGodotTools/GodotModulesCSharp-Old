@@ -109,6 +109,7 @@
 
     public enum ENetOpcode
     {
+        StartGame,
         ClientWantsToExitApp,
         ClientWantsToDisconnect
     }

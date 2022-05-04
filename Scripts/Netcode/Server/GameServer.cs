@@ -61,12 +61,6 @@ namespace GodotModules.Netcode.Server
             }, false);
         }
 
-        public void StartGame()
-        {
-            EmitClientTransforms.Start();
-            ServerSimulation.Start();
-        }
-
         protected override void ServerCmds()
         {
             while (ENetCmds.TryDequeue(out ENetCmd cmd))
@@ -76,6 +70,11 @@ namespace GodotModules.Netcode.Server
                 // Host client wants to stop the server
                 switch (opcode)
                 {
+                    case ENetOpcode.StartGame:
+                        EmitClientTransforms.Start();
+                        ServerSimulation.Start();
+                        break;
+
                     case ENetOpcode.ClientWantsToExitApp:
                         CancelTokenSource.Cancel();
                         KickAll(DisconnectOpcode.Stopping);

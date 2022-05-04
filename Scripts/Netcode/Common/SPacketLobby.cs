@@ -202,7 +202,7 @@ namespace GodotModules.Netcode
         private async Task HandleGameStart()
         {
             if (Client.IsHost)
-                NetworkManager.GameServer.StartGame(); // THREAD SAFETY VIOLATION
+                NetworkManager.GameServer.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.StartGame));
 
             await SceneManager.ChangeScene("Game");
         }
