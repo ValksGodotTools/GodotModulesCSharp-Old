@@ -6,7 +6,7 @@ using System;
 
 namespace Game
 {
-    public class SceneGame : Node
+    public class SceneGame : AScene
     {
         public static SceneGame Instance { get; set; } // TODO: Move stat ic somewhere else
         private static PrevCurQueue<Dictionary<byte, DataEntityTransform>> PlayerTransformQueue = new PrevCurQueue<Dictionary<byte, DataEntityTransform>>(ServerIntervals.PlayerTransforms);
@@ -39,7 +39,7 @@ namespace Game
             LabelPlayerHealth = GetNode<Label>(NodePathLabelPlayerHealth);
             Player = Prefabs.ClientPlayer.Instance<ClientPlayer>();
             Player.Position = Vector2.Zero;
-            
+
             AddChild(Player);
 
             // set game definitions
@@ -54,16 +54,25 @@ namespace Game
 
         public override async void _Input(InputEvent @event)
         {
-            if (Input.IsActionJustPressed("ui_cancel")) 
+            if (Input.IsActionJustPressed("ui_cancel"))
             {
-                if (NetworkManager.GameClient != null)
-                    NetworkManager.GameClient.Stop();
-                if (NetworkManager.GameServer != null)
-                    await NetworkManager.GameServer.Stop();
+                if (SceneManager.PrevSceneName == "Menu")
+                {
+                    // Singleplayer
+                    await SceneManager.ChangeScene("Menu", false);
+                }
+                else
+                {
+                    // Multiplayer
+                    if (NetworkManager.GameClient != null)
+                        NetworkManager.GameClient.Stop();
+                    if (NetworkManager.GameServer != null)
+                        await NetworkManager.GameServer.Stop();
+                }
             }
         }
 
-        public static void RemovePlayer(byte id) 
+        public static void RemovePlayer(byte id)
         {
             var player = Players[id];
             player.QueueFree();
@@ -117,6 +126,11 @@ namespace Game
                 player.Position = Utils.Lerp(prev.Position, cur.Position, PlayerTransformQueue.Progress);
                 player.PlayerSprite.Rotation = Utils.LerpAngle(player.PlayerSprite.Rotation, cur.Rotation, 0.05f);
             }
+        }
+
+        public override void Cleanup()
+        {
+
         }
     }
 }
