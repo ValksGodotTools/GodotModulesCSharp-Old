@@ -25,7 +25,7 @@ namespace GodotModules
             WebClient = new();
         }
 
-        public override void _Process(float delta)
+        public override async void _Process(float delta)
         {
             while (GodotCmds.TryDequeue(out GodotCmd cmd))
             {
@@ -55,7 +55,7 @@ namespace GodotModules
                             Utils.LogWarning($"[Client]: Received malformed opcode: {opcode} {ex.Message} (Ignoring)");
                             break;
                         }
-                        handlePacket.Handle(client);
+                        await handlePacket.Handle(client);
 
                         packetReader.Dispose();
                         break;
@@ -79,7 +79,7 @@ namespace GodotModules
                         break;
 
                     case GodotOpcode.ChangeScene:
-                        SceneManager.ChangeScene($"{cmd.Data}");
+                        await SceneManager.ChangeScene($"{cmd.Data}");
                         break;
                 }
             }

@@ -6,7 +6,7 @@ using GodotModules.Settings;
 namespace Game
 {
     // DEMO
-    public class SceneMenu : Node
+    public class SceneMenu : AScene
     {
         [Export] public readonly NodePath NodePathSetupOnlineUsernamePopup;
 
@@ -20,9 +20,9 @@ namespace Game
             MusicManager.PlayTrack("Menu");
         }
 
-        private void _on_Play_pressed() => SceneManager.ChangeScene("Game");
+        private async void _on_Play_pressed() => await SceneManager.ChangeScene("Game");
 
-        private void _on_Multiplayer_pressed()
+        private async void _on_Multiplayer_pressed()
         {
             var onlineUsername = GameManager.Options.OnlineUsername;
 
@@ -34,12 +34,12 @@ namespace Game
                 return;
             }
 
-            SceneManager.ChangeScene("GameServers");
+            await SceneManager.ChangeScene("GameServers");
         }
 
         private void _on_Exit_pressed() => GameManager.Exit();
 
-        private void _on_Set_Online_Username_Popup_confirmed()
+        private async void _on_Set_Online_Username_Popup_confirmed()
         {
             var username = PopupOnlineUsername.InputUsername.Text;
 
@@ -53,7 +53,12 @@ namespace Game
             GameManager.Options.OnlineUsername = username;
             PopupOnlineUsername.Hide();
 
-            SceneManager.ChangeScene("GameServers");
+            await SceneManager.ChangeScene("GameServers");
+        }
+
+        public override void Cleanup()
+        {
+            
         }
     }
 }
