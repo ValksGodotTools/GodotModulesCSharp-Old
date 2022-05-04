@@ -18,7 +18,7 @@ namespace GodotModules.Netcode.Server
         public Dictionary<uint, Peer> Peers { get; set; }
         public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
         private bool QueueRestart { get; set; }
-        public byte MaxPlayers { get; set; }
+        public ushort MaxPlayers { get; set; }
 
         public ENetServer()
         {
@@ -40,7 +40,7 @@ namespace GodotModules.Netcode.Server
             if (SceneLobby.CurrentLobby.Public)
                 WebClient.TimerPingMasterServer.Start();
 
-            MaxPlayers = (byte)maxClients;
+            MaxPlayers = (ushort)maxClients;
 
             Library.Initialize();
 

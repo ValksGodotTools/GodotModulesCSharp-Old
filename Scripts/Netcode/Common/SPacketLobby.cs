@@ -71,7 +71,7 @@ namespace GodotModules.Netcode
                 case LobbyOpcode.LobbyCreate:
                     base.Read(reader);
                     break;
-                    
+
                 case LobbyOpcode.LobbyChatMessage:
                     base.Read(reader);
                     Message = reader.ReadString();
@@ -102,7 +102,7 @@ namespace GodotModules.Netcode
                         LobbyName = reader.ReadString();
                         LobbyDescription = reader.ReadString();
                         LobbyHostId = reader.ReadByte();
-                        LobbyMaxPlayerCount = reader.ReadByte();
+                        LobbyMaxPlayerCount = reader.ReadUShort();
                     }
                     break;
 
@@ -212,7 +212,7 @@ namespace GodotModules.Netcode
         public bool DirectConnect { get; set; }
         public string LobbyName { get; set; }
         public string LobbyDescription { get; set; }
-        public byte LobbyMaxPlayerCount { get; set; }
+        public ushort LobbyMaxPlayerCount { get; set; }
         public byte LobbyHostId { get; set; }
         private async Task HandleInfo()
         {
