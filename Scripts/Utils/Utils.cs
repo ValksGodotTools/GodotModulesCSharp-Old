@@ -38,6 +38,13 @@ namespace GodotModules
             Colorize(() => GD.Print(message), color);
         }
 
+        public static void LogDebug(string obj, ConsoleColor color = ConsoleColor.Magenta) 
+        {
+            var message = $"[Debug]: {obj}";
+            UIDebugger.AddMessage(message);
+            Colorize(() => GD.Print(message), color);
+        }
+
         public static void Log(string obj, ConsoleColor color = ConsoleColor.Gray)
         {
             UIDebugger.AddMessage(obj);
