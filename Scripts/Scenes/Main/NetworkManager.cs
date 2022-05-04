@@ -193,7 +193,6 @@ namespace GodotModules
             if (ClientConnectingTokenSource == null)
                 return;
 
-            //SceneGameServers.ConnectingToLobby = false;
             ClientConnectingTokenSource.Cancel();
             GameClient.CancelTask(); // THREAD SAFETY VIOLATION
         }
