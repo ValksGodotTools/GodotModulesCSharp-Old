@@ -1,4 +1,5 @@
 using GodotModules.Netcode.Client;
+using System.Threading.Tasks;
 
 namespace GodotModules.Netcode
 {
@@ -7,6 +8,6 @@ namespace GodotModules.Netcode
         /// <summary>
         /// The packet handled client-side
         /// </summary>
-        public abstract void Handle(ENetClient client);
+        public abstract Task Handle(ENetClient client);
     }
 }

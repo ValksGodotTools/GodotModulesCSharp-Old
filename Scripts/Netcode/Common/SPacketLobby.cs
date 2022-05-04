@@ -1,6 +1,7 @@
 using GodotModules.Netcode.Client;
 using GodotModules.Netcode.Server;
 using Game;
+using System.Threading.Tasks;
 
 namespace GodotModules.Netcode
 {
@@ -99,7 +100,7 @@ namespace GodotModules.Netcode
             }
         }
 
-        public override void Handle(ENetClient client)
+        public override async Task Handle(ENetClient client)
         {
             switch (LobbyOpcode)
             {
@@ -112,11 +113,11 @@ namespace GodotModules.Netcode
                     break;
 
                 case LobbyOpcode.LobbyGameStart:
-                    HandleGameStart();
+                    await HandleGameStart();
                     break;
 
                 case LobbyOpcode.LobbyInfo:
-                    HandleInfo();
+                    await HandleInfo();
                     break;
 
                 case LobbyOpcode.LobbyJoin:
@@ -153,12 +154,12 @@ namespace GodotModules.Netcode
         }
 
         // LobbyGameStart
-        private void HandleGameStart()
+        private async Task HandleGameStart()
         {
             if (NetworkManager.GameClient.IsHost)
                 NetworkManager.GameServer.StartGame();
 
-            SceneManager.ChangeScene("Game");
+            await SceneManager.ChangeScene("Game");
         }
 
         // LobbyInfo
@@ -166,7 +167,7 @@ namespace GodotModules.Netcode
 
         public Dictionary<byte, DataPlayer> Players { get; set; }
 
-        private void HandleInfo()
+        private async Task HandleInfo()
         {
             NetworkManager.GameClient.PeerId = Id;
             NetworkManager.GameClient.IsHost = IsHost;
@@ -179,7 +180,7 @@ namespace GodotModules.Netcode
             }
             catch (System.ObjectDisposedException) { }*/
 
-            SceneManager.ChangeScene("Lobby");
+            await SceneManager.ChangeScene("Lobby");
         }
 
         // LobbyJoin

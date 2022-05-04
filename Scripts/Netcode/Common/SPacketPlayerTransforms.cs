@@ -2,6 +2,7 @@ using Game;
 using Godot;
 using GodotModules.Netcode.Client;
 using System;
+using System.Threading.Tasks;
 
 namespace GodotModules.Netcode
 {
@@ -41,9 +42,10 @@ namespace GodotModules.Netcode
             }
         }
 
-        public override void Handle(ENetClient client)
+        public override async Task Handle(ENetClient client)
         {
             SceneGame.UpdatePlayerPositions(PlayerTransforms);
+            await Task.FromResult(1);
         }
     }
 }
