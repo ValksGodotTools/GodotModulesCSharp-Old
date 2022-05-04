@@ -1,8 +1,5 @@
 using ENet;
 
-using System.Timers;
-using Timer = System.Timers.Timer;
-
 namespace GodotModules.Netcode.Server
 {
     public class GameServer : ENetServer

@@ -16,7 +16,7 @@ namespace GodotModules.Netcode.Server
         public ushort MaxPlayers { get; set; }
 
         protected CancellationTokenSource CancelTokenSource { get; set; }
-        
+
         private static readonly Dictionary<ClientPacketOpcode, APacketClient> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, APacketClient>("CPacket");
         private ConcurrentQueue<ServerPacket> Outgoing { get; set; }
         private bool QueueRestart { get; set; }
@@ -58,7 +58,7 @@ namespace GodotModules.Netcode.Server
                 var message = $"A server is running on port {port} already! {e.Message}";
                 Log(message);
                 NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.PopupMessage, message));
-                NetworkManager.GameClient.Stop(); // THREAD SAFETY VIOLATION
+                NetworkManager.GameClient.Stop();
                 await Stop();
                 return;
             }
@@ -172,9 +172,6 @@ namespace GodotModules.Netcode.Server
 
         private bool ConcurrentQueuesWorking() => NetworkManager.GodotCmds.Count != 0 || ENetCmds.Count != 0 || Outgoing.Count != 0;
 
-        /// <summary>
-        /// Start the server, can be called from the Godot thread
-        /// </summary>
         public async Task Start(ushort port, int maxClients)
         {
             if (Running)
