@@ -180,7 +180,7 @@ namespace GodotModules.Netcode.Server
                 return;
             }
 
-            CancelTokenSource = new CancellationTokenSource(); // THREAD SAFETY VIOLATION
+            CancelTokenSource = new CancellationTokenSource();
 
             try
             {
