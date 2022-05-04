@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GodotModules
 {
-    public class SceneGameServers : Control
+    public class SceneGameServers : AScene
     {
         public static Dictionary<string, LobbyListing> LobbyListings { get; set; }  // TODO: Check out stat ic here
         public static SceneGameServers Instance { get; set; }
@@ -66,9 +66,9 @@ namespace GodotModules
             await ListServers();
         }
 
-        public override void _Input(InputEvent @event)
+        public override async void _Input(InputEvent @event)
         {
-            Utils.EscapeToScene("Menu", () =>
+            await SceneManager.EscapeToScene("Menu", () =>
             {
                 WebClient.Client.CancelPendingRequests();
                 NetworkManager.CancelClientConnectingTokenSource();
@@ -119,8 +119,15 @@ namespace GodotModules
             WebClient.TaskGetServers = WebClient.Get<LobbyListing[]>("servers/get");
             var res = await WebClient.TaskGetServers;
 
-            if (res.Status == WebServerStatus.ERROR)
+            if (!SceneManager.InGameServers())
                 return;
+
+            if (res.Status == WebServerStatus.ERROR)
+            {
+                SceneGameServers.GettingServers = false;
+                UIGameServersNavBtns.BtnRefresh.Disabled = false;
+                return;
+            }
 
             LobbyListings.Clear();
 
@@ -187,8 +194,13 @@ namespace GodotModules
 
         private void _on_Control_resized()
         {
-            if (ServerCreationPopup != null)
-                ServerCreationPopup.RectGlobalPosition = RectSize / 2 - ServerCreationPopup.RectSize / 2;
+            //if (ServerCreationPopup != null)
+                //ServerCreationPopup.RectGlobalPosition = RectSize / 2 - ServerCreationPopup.RectSize / 2;
+        }
+
+        public override void Cleanup()
+        {
+            
         }
     }
 }
