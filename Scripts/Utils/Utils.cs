@@ -1,7 +1,7 @@
 using Godot;
 using System;
-
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace GodotModules
 {
@@ -19,15 +19,6 @@ namespace GodotModules
             var max_angle = Mathf.Pi * 2;
             var difference = (to - from) % (max_angle);
             return ((2 * difference) % (max_angle)) - difference;
-        }
-
-        public static void EscapeToScene(string scene, Action action)
-        {
-            if (Input.IsActionJustPressed("ui_cancel"))
-            {
-                action();
-                SceneManager.ChangeScene(scene);
-            }
         }
 
         public static void LogErr(Exception ex, string hint = "")
