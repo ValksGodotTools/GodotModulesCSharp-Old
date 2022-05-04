@@ -41,7 +41,7 @@ namespace GodotModules
 
                         if (!ENetClient.HandlePacket.ContainsKey(opcode))
                         {
-                            Utils.LogWarning($"[Client]: Received malformed opcode: {opcode} (Ignoring)");
+                            Logger.LogWarning($"[Client]: Received malformed opcode: {opcode} (Ignoring)");
                             break;
                         }
 
@@ -52,7 +52,7 @@ namespace GodotModules
                         }
                         catch (System.IO.EndOfStreamException ex)
                         {
-                            Utils.LogWarning($"[Client]: Received malformed opcode: {opcode} {ex.Message} (Ignoring)");
+                            Logger.LogWarning($"[Client]: Received malformed opcode: {opcode} {ex.Message} (Ignoring)");
                             break;
                         }
                         await handlePacket.Handle(client);
@@ -60,18 +60,31 @@ namespace GodotModules
                         packetReader.Dispose();
                         break;
 
-                    case GodotOpcode.LogMessageServer:
-                        Utils.Log($"[Server]: {cmd.Data}", ConsoleColor.Cyan);
+                    case GodotOpcode.LogMessage:
+                        var message = (GodotMessage)cmd.Data;
+                        var text = message.Text;
+                        var color = message.Color;
+
+                        Console.ForegroundColor = color;
+                        GD.Print(text);
+                        Console.ResetColor();
+
+                        UIDebugger.AddMessage(text);
                         break;
 
-                    case GodotOpcode.LogMessageClient:
-                        Utils.Log($"[Client]: {cmd.Data}", ConsoleColor.Yellow);
-                        break;
+                    case GodotOpcode.LogError:
+                        var error = (GodotError)cmd.Data;
+                        var exception = error.Exception;
+                        var hint = error.Hint;
 
-                    case GodotOpcode.Error:
-                        var e = (Exception)cmd.Data;
-                        Utils.LogErr(e);
-                        GameManager.SpawnPopupError(e);
+                        var errorText = $"[Error]: {hint}{exception.Message}\n{exception.StackTrace}";
+
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        GD.PrintErr(exception);
+                        Console.ResetColor();
+                        
+                        ErrorNotifier.IncrementErrorCount();
+                        UIDebugger.AddMessage(errorText);
                         break;
 
                     case GodotOpcode.PopupMessage:
@@ -121,7 +134,7 @@ namespace GodotModules
                 WebClient.Dispose();
 
                 //if (SceneGameServers.PingServersCTS != null)
-                    //SceneGameServers.PingServersCTS.Dispose();
+                //SceneGameServers.PingServersCTS.Dispose();
                 if (ClientConnectingTokenSource != null)
                     ClientConnectingTokenSource.Dispose();
             }
@@ -184,5 +197,17 @@ namespace GodotModules
             ClientConnectingTokenSource.Cancel();
             GameClient.CancelTask();
         }
+    }
+
+    public struct GodotMessage
+    {
+        public string Text { get; set; }
+        public ConsoleColor Color { get; set; }
+    }
+
+    public struct GodotError
+    {
+        public Exception Exception { get; set; }
+        public string Hint { get; set; }
     }
 }

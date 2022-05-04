@@ -126,7 +126,7 @@ namespace GodotModules.ModLoader
             catch (ScriptRuntimeException e)
             {
                 UIModLoader.Instance.Log($"{e.DecoratedMessage}");
-                Utils.LogErr(e, $"[ModLoader]: ");
+                Logger.LogErr(e, $"[ModLoader]: ");
             }
         }
 
@@ -176,7 +176,7 @@ namespace GodotModules.ModLoader
                     else
                     {
                         UIModLoader.Instance.Log($"Could not open file: {absolutePath}");
-                        Utils.LogWarning($"Could not open file: {absolutePath}");
+                        Logger.LogWarning($"Could not open file: {absolutePath}");
                     }
                 }
             });
@@ -251,7 +251,7 @@ namespace GodotModules.ModLoader
             {
                 // Mod script did not run right
                 UIModLoader.Instance.Log($"{e.DecoratedMessage}");
-                Utils.LogErr(e, "[ModLoader]: ");
+                Logger.LogErr(e, "[ModLoader]: ");
             }
         }
 

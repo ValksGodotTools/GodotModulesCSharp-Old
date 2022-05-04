@@ -84,11 +84,10 @@
     public enum GodotOpcode
     {
         ENetPacket,
-        LogMessageClient,
-        LogMessageServer,
+        LogMessage,
+        LogError,
         ChangeScene,
-        PopupMessage,
-        Error
+        PopupMessage
     }
 
     public class ENetCmd

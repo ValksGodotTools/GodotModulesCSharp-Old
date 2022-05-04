@@ -51,7 +51,7 @@ namespace GodotModules
             if (command != null)
                 command.Run(inputArr.Skip(1).ToArray());
             else
-                Utils.Log($"The command '{cmd}' does not exist");
+                Logger.Log($"The command '{cmd}' does not exist");
 
             Console.Clear();
         }

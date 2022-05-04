@@ -12,6 +12,6 @@ namespace GodotModules
                 .Select(Activator.CreateInstance).Cast<Command>()
                 .Select(x => x.GetType().Name.Replace("Command", "").ToLower()).ToList();
 
-        public override void Run(string[] args) => Utils.Log($"Commands:\n{CommandNames.Print()}");
+        public override void Run(string[] args) => Logger.Log($"Commands:\n{CommandNames.Print()}");
     }
 }

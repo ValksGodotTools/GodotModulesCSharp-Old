@@ -190,7 +190,7 @@ namespace GodotModules.Netcode.Client
             }
             catch (Exception e)
             {
-                NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.Error, e));
+                Logger.LogErr(e, "Client");
             }
         }
 
@@ -208,12 +208,7 @@ namespace GodotModules.Netcode.Client
             CancelTokenSource.Cancel();
         }
 
-        /// <summary>
-        /// Provides a way to log a message on the Godot thread from the ENet thread
-        /// Checks thread name, if its Client send request to log on Godot thread otherwise log on Godot thread directly
-        /// </summary>
-        /// <param name="obj">The object to log</param>
-        public void Log(object obj) => NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessageClient, obj));
+        public void Log(object obj) => Logger.Log($"[Client]: {obj}", ConsoleColor.Yellow);
 
         /// <summary>
         /// This is in the ENet thread, anything from the ENet thread can be used here

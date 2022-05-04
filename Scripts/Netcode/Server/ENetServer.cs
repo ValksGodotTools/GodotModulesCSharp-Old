@@ -119,7 +119,7 @@ namespace GodotModules.Netcode.Server
 
                         if (!HandlePacket.ContainsKey(opcode))
                         {
-                            Utils.LogWarning($"[Server]: Received malformed opcode: {opcode} (Ignoring)");
+                            Logger.LogWarning($"[Server]: Received malformed opcode: {opcode} (Ignoring)");
                             break;
                         }
 
@@ -130,7 +130,7 @@ namespace GodotModules.Netcode.Server
                         }
                         catch (System.IO.EndOfStreamException e)
                         {
-                            Utils.LogWarning($"[Server]: Received malformed opcode: {opcode} {e.Message} (Ignoring)");
+                            Logger.LogWarning($"[Server]: Received malformed opcode: {opcode} {e.Message} (Ignoring)");
                             break;
                         }
                         handlePacket.Handle(netEvent.Peer);
@@ -202,7 +202,7 @@ namespace GodotModules.Netcode.Server
             }
             catch (Exception e)
             {
-                NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.Error, e));
+                Logger.LogErr(e, "Server");
             }
         }
 
@@ -256,11 +256,7 @@ namespace GodotModules.Netcode.Server
 
         public void Send(ServerPacketOpcode opcode, APacket data, PacketFlags flags = PacketFlags.Reliable, params Peer[] peers) => Outgoing.Enqueue(new ServerPacket((byte)opcode, flags, data, peers));
 
-        /// <summary>
-        /// Provides a way to log a message on the Godot thread from the ENet thread
-        /// </summary>
-        /// <param name="obj">The object to log</param>
-        public void Log(object obj) => NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessageServer, obj));
+        public void Log(object obj) => Logger.Log($"[Server]: {obj}", ConsoleColor.Cyan);
 
         /// <summary>
         /// This is in the ENet thread, anything from the ENet thread can be used here
