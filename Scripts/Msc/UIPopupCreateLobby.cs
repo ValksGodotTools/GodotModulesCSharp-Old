@@ -101,7 +101,7 @@ namespace GodotModules
 
             Hide();
 
-            NetworkManager.StartServer(port, ValidatedMaxPlayerCount);
+            NetworkManager.StartServer(port, (byte)ValidatedMaxPlayerCount);
             NetworkManager.StartClient(localIp, port);
 
             await NetworkManager.WaitForClientToConnect(3000, async () =>

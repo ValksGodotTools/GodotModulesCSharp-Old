@@ -34,7 +34,7 @@ namespace GodotModules.Netcode.Server
         /// </summary>
         /// <param name="port"></param>
         /// <param name="maxClients"></param>
-        public async Task ENetThreadWorker(ushort port, int maxClients)
+        public async Task ENetThreadWorker(ushort port, byte maxClients)
         {
             Thread.CurrentThread.Name = "Server";
             if (SceneLobby.CurrentLobby.Public)
@@ -186,7 +186,7 @@ namespace GodotModules.Netcode.Server
         /// <summary>
         /// Start the server, can be called from the Godot thread
         /// </summary>
-        public async Task Start(ushort port, int maxClients)
+        public async Task Start(ushort port, byte maxClients)
         {
             if (Running)
             {

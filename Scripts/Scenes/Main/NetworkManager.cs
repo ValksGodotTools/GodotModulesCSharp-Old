@@ -141,7 +141,7 @@ namespace GodotModules
             GameClient.Start(ip, port);
         }
 
-        public static async void StartServer(ushort port, int maxClients)
+        public static async void StartServer(ushort port, byte maxClients)
         {
             if (GameServer != null)
                 GameServer.Dispose();
