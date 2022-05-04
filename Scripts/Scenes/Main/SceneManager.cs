@@ -1,14 +1,18 @@
 using Godot;
+using System;
+using System.Threading.Tasks;
 
 namespace GodotModules
 {
     public class SceneManager : Node
     {
         private static Dictionary<string, PackedScene> Scenes = new Dictionary<string, PackedScene>();
-        public static string ActiveScene { get; set; }
+        public static string PrevSceneName { get; set; }
+        public static string CurSceneName { get; set; }
+        public static AScene ActiveScene { get; set; }
         public static SceneManager Instance { get; set; }
 
-        public override void _Ready()
+        public override async void _Ready()
         {
             Instance = this;
             UtilOptions.InitOptions();
@@ -20,26 +24,46 @@ namespace GodotModules
             });
 
             if (loadedScenes)
-                ChangeScene("Menu");
+                await ChangeScene("Menu");
         }
 
-        public static bool InMainMenu() => ActiveScene == "Menu";
+        public static bool InMainMenu() => CurSceneName == "Menu";
 
-        public static bool InGameServers() => ActiveScene == "GameServers";
+        public static bool InGameServers() => CurSceneName == "GameServers";
 
-        public static bool InLobby() => ActiveScene == "Lobby";
+        public static bool InLobby() => CurSceneName == "Lobby";
 
-        public static bool InGame() => ActiveScene == "Game";
+        public static bool InGame() => CurSceneName == "Game";
 
-        public static void ChangeScene(string scene)
+        public static async Task ChangeScene(string sceneName, bool instant = true)
         {
-            if (ActiveScene == scene)
+            if (CurSceneName == sceneName)
                 return;
                 
-            ActiveScene = scene;
-            if (Instance.GetChildCount() != 0)
-                Instance.GetChild(0).QueueFree();
-            Instance.AddChild(Scenes[scene].Instance());
+            PrevSceneName = CurSceneName;
+            CurSceneName = sceneName;
+
+            if (Instance.GetChildCount() != 0) 
+            {
+                var scene = (AScene)Instance.GetChild(0);
+                scene.Cleanup();
+                scene.QueueFree();
+            }
+
+            if (!instant)
+                await Task.Delay(1);
+
+            ActiveScene = (AScene)Scenes[sceneName].Instance();
+            Instance.AddChild(ActiveScene);
+        }
+
+        public static async Task EscapeToScene(string scene, Action action)
+        {
+            if (Input.IsActionJustPressed("ui_cancel"))
+            {
+                action();
+                await SceneManager.ChangeScene(scene);
+            }
         }
 
         private void LoadScene(string scene) => Scenes[scene] = ResourceLoader.Load<PackedScene>($"res://Scenes/Scenes/{scene}.tscn");
