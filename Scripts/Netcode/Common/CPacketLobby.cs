@@ -109,6 +109,7 @@ namespace GodotModules.Netcode
         // LobbyGameStart
         private void HandleGameStart(Peer peer)
         {
+            NetworkManager.GameServer.DisallowJoiningLobby = true;
             NetworkManager.GameServer.SendToAllPlayers(ServerPacketOpcode.Lobby, new SPacketLobby { LobbyOpcode = LobbyOpcode.LobbyGameStart });
         }
 
@@ -129,6 +130,13 @@ namespace GodotModules.Netcode
             if (NetworkManager.GameServer.Players.ContainsKey((byte)peer.ID))
             {
                 NetworkManager.GameServer.Log($"Received LobbyJoin packet from peer with id {peer.ID}. Tried to add id {peer.ID} to Players but exists already");
+                return;
+            }
+
+            if (NetworkManager.GameServer.DisallowJoiningLobby) 
+            {
+                NetworkManager.GameServer.Kick(peer.ID, DisconnectOpcode.Disconnected);
+                NetworkManager.GameServer.Log($"Peer with id {peer.ID} tried to join lobby but game is running already");
                 return;
             }
 

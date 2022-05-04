@@ -11,6 +11,7 @@ namespace GodotModules.Netcode.Server
         public Dictionary<ushort, DataBullet> Bullets { get; set; }
         public STimer EmitClientTransforms { get; set; }
         private STimer ServerSimulation { get; set; }
+        public bool DisallowJoiningLobby { get; set; }
 
         public GameServer()
         {

@@ -299,22 +299,13 @@ namespace GodotModules.Netcode.Server
             peer.Send(channelID, ref packet);
         }
 
-        /// <summary>
-        /// Kick all clients from the server
-        /// </summary>
-        /// <param name="opcode">Tells the client why they were kicked</param>
-        private void KickAll(DisconnectOpcode opcode)
+        public void KickAll(DisconnectOpcode opcode)
         {
             Peers.Values.ForEach(peer => peer.DisconnectNow((uint)opcode));
             Peers.Clear();
         }
 
-        /// <summary>
-        /// Kick a specified client from the server
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="opcode">Tells the client why they were kicked</param>
-        private void Kick(uint id, DisconnectOpcode opcode)
+        public void Kick(uint id, DisconnectOpcode opcode)
         {
             Peers[id].DisconnectNow((uint)opcode);
             Peers.Remove(id);
