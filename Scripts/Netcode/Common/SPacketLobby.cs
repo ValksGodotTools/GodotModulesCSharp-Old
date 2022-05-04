@@ -26,7 +26,6 @@ namespace GodotModules.Netcode
 
                 case LobbyOpcode.LobbyInfo:
                     base.Write(writer);
-                    writer.Write(IsHost);
                     writer.Write((byte)Players.Count);
                     Players.ForEach(pair =>
                     {
@@ -68,7 +67,6 @@ namespace GodotModules.Netcode
 
                 case LobbyOpcode.LobbyInfo:
                     base.Read(reader);
-                    IsHost = reader.ReadBool();
                     var count = reader.ReadByte();
                     Players = new Dictionary<byte, DataPlayer>();
                     for (int i = 0; i < count; i++)
@@ -104,16 +102,8 @@ namespace GodotModules.Netcode
         {
             switch (LobbyOpcode)
             {
-                case LobbyOpcode.LobbyChatMessage:
-                    HandleChatMessage();
-                    break;
-
-                case LobbyOpcode.LobbyCountdownChange:
-                    HandleCountdownChange();
-                    break;
-
-                case LobbyOpcode.LobbyGameStart:
-                    await HandleGameStart();
+                case LobbyOpcode.LobbyCreate:
+                    await HandleCreate();
                     break;
 
                 case LobbyOpcode.LobbyInfo:
@@ -124,6 +114,10 @@ namespace GodotModules.Netcode
                     HandleJoin();
                     break;
 
+                case LobbyOpcode.LobbyChatMessage:
+                    HandleChatMessage();
+                    break;
+
                 case LobbyOpcode.LobbyLeave:
                     HandleLeave();
                     break;
@@ -131,7 +125,26 @@ namespace GodotModules.Netcode
                 case LobbyOpcode.LobbyReady:
                     HandleReady();
                     break;
+
+                case LobbyOpcode.LobbyCountdownChange:
+                    HandleCountdownChange();
+                    break;
+
+                case LobbyOpcode.LobbyGameStart:
+                    await HandleGameStart();
+                    break;
             }
+        }
+
+        // LobbyCreate
+        private async Task HandleCreate()
+        {
+            NetworkManager.GameClient.PeerId = Id;
+            NetworkManager.GameClient.IsHost = true;
+            NetworkManager.GameClient.Log($"{GameManager.Options.OnlineUsername} created lobby with their id being {Id}");
+            NetworkManager.GameClient.Players.Add(Id, GameManager.Options.OnlineUsername);
+
+            await SceneManager.ChangeScene("Lobby");
         }
 
         // LobbyChatMessage
@@ -167,22 +180,14 @@ namespace GodotModules.Netcode
         }
 
         // LobbyInfo
-        public bool IsHost { get; set; }
-
         public Dictionary<byte, DataPlayer> Players { get; set; }
 
         private async Task HandleInfo()
         {
             NetworkManager.GameClient.PeerId = Id;
-            NetworkManager.GameClient.IsHost = IsHost;
             NetworkManager.GameClient.Log($"{GameManager.Options.OnlineUsername} joined lobby with id {Id}");
             NetworkManager.GameClient.Players.Add(Id, GameManager.Options.OnlineUsername);
             Players.ForEach(pair => NetworkManager.GameClient.Players.Add(pair.Key, pair.Value.Username));
-            /*try
-            {
-                SceneGameServers.PingServersCTS.Cancel();
-            }
-            catch (System.ObjectDisposedException) { }*/
 
             await SceneManager.ChangeScene("Lobby");
         }

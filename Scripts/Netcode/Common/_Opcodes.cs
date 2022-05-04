@@ -34,6 +34,7 @@
 
     public enum LobbyOpcode
     {
+        LobbyCreate,
         LobbyJoin,
         LobbyLeave,
         LobbyInfo,

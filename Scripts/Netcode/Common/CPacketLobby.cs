@@ -21,6 +21,10 @@ namespace GodotModules.Netcode
                     writer.Write(CountdownRunning);
                     break;
 
+                case LobbyOpcode.LobbyCreate:
+                    writer.Write(Username);
+                    break;
+
                 case LobbyOpcode.LobbyJoin:
                     writer.Write(Username);
                     break;
@@ -45,6 +49,10 @@ namespace GodotModules.Netcode
                     CountdownRunning = reader.ReadBool();
                     break;
 
+                case LobbyOpcode.LobbyCreate:
+                    Username = reader.ReadString();
+                    break;
+
                 case LobbyOpcode.LobbyJoin:
                     Username = reader.ReadString();
                     break;
@@ -59,8 +67,20 @@ namespace GodotModules.Netcode
         {
             switch (LobbyOpcode)
             {
+                case LobbyOpcode.LobbyCreate:
+                    HandleCreate(peer);
+                    break;
+
+                case LobbyOpcode.LobbyJoin:
+                    HandleJoin(peer);
+                    break;
+
                 case LobbyOpcode.LobbyChatMessage:
                     HandleChatMessage(peer);
+                    break;
+
+                case LobbyOpcode.LobbyReady:
+                    HandleReady(peer);
                     break;
 
                 case LobbyOpcode.LobbyCountdownChange:
@@ -70,15 +90,22 @@ namespace GodotModules.Netcode
                 case LobbyOpcode.LobbyGameStart:
                     HandleGameStart(peer);
                     break;
-
-                case LobbyOpcode.LobbyJoin:
-                    HandleJoin(peer);
-                    break;
-
-                case LobbyOpcode.LobbyReady:
-                    HandleReady(peer);
-                    break;
             }
+        }
+
+        // LobbyCreate
+        private void HandleCreate(Peer peer)
+        {
+            NetworkManager.GameServer.Players.Add((byte)peer.ID, new DataPlayer
+            {
+                Username = Username,
+                Ready = false,
+                Host = true
+            });
+
+            NetworkManager.GameServer.Send(ServerPacketOpcode.Lobby, new SPacketLobby {
+                LobbyOpcode = LobbyOpcode.LobbyCreate
+            }, peer);
         }
 
         // LobbyChatMessage
@@ -121,11 +148,6 @@ namespace GodotModules.Netcode
             // Check if data.Username is appropriate username
             // TODO
 
-            var isHost = false;
-
-            if (NetworkManager.GameServer.Players.Count == 0)
-                isHost = true;
-
             // Keep track of joining player server side
             if (NetworkManager.GameServer.Players.ContainsKey((byte)peer.ID))
             {
@@ -144,7 +166,7 @@ namespace GodotModules.Netcode
             {
                 Username = Username,
                 Ready = false,
-                Host = isHost
+                Host = false
             });
 
             // tell joining player their Id and tell them about other players in lobby
@@ -153,7 +175,6 @@ namespace GodotModules.Netcode
             {
                 LobbyOpcode = LobbyOpcode.LobbyInfo,
                 Id = (byte)peer.ID,
-                IsHost = isHost,
                 Players = NetworkManager.GameServer.GetOtherPlayers((byte)peer.ID)
             }, peer);
 
