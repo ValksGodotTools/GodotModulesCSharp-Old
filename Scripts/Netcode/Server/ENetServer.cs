@@ -59,7 +59,7 @@ namespace GodotModules.Netcode.Server
                 Log(message);
                 NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.PopupMessage, message));
                 NetworkManager.GameClient.Stop();
-                await Stop();
+                Stop();
                 return;
             }
 
@@ -192,24 +192,7 @@ namespace GodotModules.Netcode.Server
             }
         }
 
-        /// <summary>
-        /// Stop the server, can be called from the Godot thread
-        /// </summary>
-        public async Task Stop()
-        {
-            if (CancelTokenSource.IsCancellationRequested)
-            {
-                Log("Server has been stopped already");
-                return;
-            }
-
-            CancelTokenSource.Cancel(); // THREAD SAFETY VIOLATION
-
-            KickAll(DisconnectOpcode.Stopping); // THREAD SAFETY VIOLATION
-
-            while (!CancelTokenSource.IsCancellationRequested) // THREAD SAFETY VIOLATION
-                await Task.Delay(100);
-        }
+        public void Stop() => ENetCmds.Enqueue(new ENetCmd(ENetOpcode.StopServer));
 
         /// <summary>
         /// Restart the server, can be called from the Godot thread

@@ -88,7 +88,7 @@ namespace Game
                     if (NetworkManager.GameClient != null)
                         NetworkManager.GameClient.Stop();
                     if (NetworkManager.GameServer != null)
-                        await NetworkManager.GameServer.Stop();
+                        NetworkManager.GameServer.Stop();
                 }
             }
         }

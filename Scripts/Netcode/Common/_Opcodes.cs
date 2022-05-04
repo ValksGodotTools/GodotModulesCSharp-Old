@@ -110,6 +110,8 @@
     public enum ENetOpcode
     {
         StartGame,
+        StopServer,
+        RestartServer,
         ClientWantsToExitApp,
         ClientWantsToDisconnect
     }

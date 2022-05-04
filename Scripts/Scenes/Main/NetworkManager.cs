@@ -98,20 +98,20 @@ namespace GodotModules
             }
         }
 
-        public override async void _Notification(int what)
+        public override void _Notification(int what)
         {
             if (what == MainLoop.NotificationWmQuitRequest)
             {
                 Instance.GetTree().SetAutoAcceptQuit(false);
 
-                await ExitCleanup();
+                ExitCleanup();
             }
         }
 
         /// <summary>
         /// All cleanup should be done in here
         /// </summary>
-        private static async Task ExitCleanup()
+        private static void ExitCleanup()
         {
             try
             {
@@ -119,7 +119,7 @@ namespace GodotModules
                     if (NetworkManager.GameServer.Running)
                     {
                         GameServer.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToExitApp));
-                        await GameServer.Stop();
+                        GameServer.Stop();
                         GameServer.Dispose();
                     }
 

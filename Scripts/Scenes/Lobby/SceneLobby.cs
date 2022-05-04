@@ -54,7 +54,7 @@ namespace GodotModules
             LobbyMaxPlayers.Text = "" + CurrentLobby.MaxPlayerCount;
         }
 
-        public override async void _Input(InputEvent @event)
+        public override void _Input(InputEvent @event)
         {
             if (Input.IsActionJustPressed("ui_cancel")) 
             {
@@ -62,7 +62,7 @@ namespace GodotModules
                 WebClient.TimerPingMasterServer.Stop();
                 NetworkManager.GameClient.Stop();
                 if (NetworkManager.GameServer != null)
-                    await NetworkManager.GameServer.Stop();
+                    NetworkManager.GameServer.Stop();
             }
         }
 
