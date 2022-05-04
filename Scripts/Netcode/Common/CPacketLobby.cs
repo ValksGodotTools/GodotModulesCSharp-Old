@@ -114,12 +114,12 @@ namespace GodotModules.Netcode
                 HostId = (byte)peer.ID
             };
 
-            Server.Players.Add((byte)peer.ID, new DataPlayer
+            Server.Players[(byte)peer.ID] = new DataPlayer
             {
                 Username = Username,
                 Ready = false,
                 Host = true
-            });
+            };
 
             Server.Send(ServerPacketOpcode.Lobby, new SPacketLobby {
                 LobbyOpcode = LobbyOpcode.LobbyCreate
@@ -180,12 +180,12 @@ namespace GodotModules.Netcode
                 return;
             }
 
-            Server.Players.Add((byte)peer.ID, new DataPlayer
+            Server.Players[(byte)peer.ID] = new DataPlayer
             {
                 Username = Username,
                 Ready = false,
                 Host = false
-            });
+            };
 
             // tell joining player their Id and tell them about other players in lobby
             Server.Send(ServerPacketOpcode.Lobby, new SPacketLobby

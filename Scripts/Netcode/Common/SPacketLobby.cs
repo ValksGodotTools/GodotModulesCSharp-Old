@@ -82,11 +82,11 @@ namespace GodotModules.Netcode
                         var id = reader.ReadByte();
                         var name = reader.ReadString();
 
-                        Players.Add(id, new DataPlayer
+                        Players[id] = new DataPlayer
                         {
                             Username = name,
                             Ready = false
-                        });
+                        };
                     }
                     var directConnected = reader.ReadBool();
                     if (directConnected)
@@ -162,7 +162,7 @@ namespace GodotModules.Netcode
             Client.PeerId = Id;
             Client.IsHost = true;
             Client.Log($"{GameManager.Options.OnlineUsername} created lobby with their id being {Id}");
-            Client.Players.Add(Id, GameManager.Options.OnlineUsername);
+            Client.Players[Id] = GameManager.Options.OnlineUsername;
 
             await SceneManager.ChangeScene("Lobby");
         }
@@ -210,8 +210,8 @@ namespace GodotModules.Netcode
         {
             Client.PeerId = Id;
             Client.Log($"{GameManager.Options.OnlineUsername} joined lobby with id {Id}");
-            Client.Players.Add(Id, GameManager.Options.OnlineUsername);
-            Players.ForEach(pair => NetworkManager.GameClient.Players.Add(pair.Key, pair.Value.Username));
+            Client.Players[Id] = GameManager.Options.OnlineUsername;
+            Players.ForEach(pair => NetworkManager.GameClient.Players[pair.Key] = pair.Value.Username);
 
             var currentLobby = SceneLobby.CurrentLobby;
             currentLobby.Name = LobbyName;
@@ -229,8 +229,7 @@ namespace GodotModules.Netcode
         {
             if (SceneManager.InLobby())
                 SceneManager.GetActiveSceneScript<SceneLobby>().AddPlayer(Id, Username);
-            Client.Players.Add(Id, Username);
-
+            Client.Players[Id] = Username;
             Client.Log($"Player with username {Username} id: {Id} joined the lobby");
         }
 

@@ -161,7 +161,7 @@ namespace GodotModules
 
                 if (!PingServersCTS.IsCancellationRequested)
                 {
-                    LobbyListings.Add(server.Ip, server);
+                    LobbyListings[server.Ip] = server;
                     server.Ping = dummyClient.PingMs;
                     AddServer(server);
                 }

@@ -93,7 +93,7 @@ namespace GodotModules
                 return;
 
             var player = Prefabs.LobbyPlayerListing.Instance<UILobbyPlayerListing>();
-            UIPlayers.Add(id, player);
+            UIPlayers[id] = player;
 
             ListPlayers.AddChild(player);
 

@@ -104,7 +104,7 @@ namespace Game
 
         private void InitMultiplayerStuff()
         {
-            Players.Add(NetworkManager.GameClient.PeerId, Player);
+            Players[NetworkManager.GameClient.PeerId] = Player;
             Player.SetUsername(GameManager.Options.OnlineUsername);
 
             bool IsNotClient(uint id) => id != NetworkManager.GameClient.PeerId;

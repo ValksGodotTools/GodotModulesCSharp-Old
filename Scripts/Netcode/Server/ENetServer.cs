@@ -143,7 +143,7 @@ namespace GodotModules.Netcode.Server
 
                         // Connect
                         SomeoneConnected = true;
-                        Peers.Add(netEvent.Peer.ID, netEvent.Peer);
+                        Peers[netEvent.Peer.ID] = netEvent.Peer;
                         Connect(netEvent);
                     }
                     else if (eventType == EventType.Disconnect)
