@@ -5,7 +5,7 @@ using GodotModules.Netcode.Server;
 
 namespace GodotModules
 {
-    public class SceneLobby : Node
+    public class SceneLobby : AScene
     {
         public static LobbyListing CurrentLobby { get; set; } // TODO: Check out stat ic here
         private static SceneLobby Instance { get; set; }
@@ -45,6 +45,7 @@ namespace GodotModules
             BtnReady = GetNode<Button>(NodePathBtnReady);
             BtnStart = GetNode<Button>(NodePathBtnStart);
             UIPlayers = new();
+            TimerCountdownGameStart = new STimer(1000, Instance.TimerCountdownCallback, false);
 
             if (!NetworkManager.GameClient.IsHost)
                 Instance.BtnStart.Disabled = true;
@@ -73,7 +74,7 @@ namespace GodotModules
 
             if (CountdownGameStart == 0)
             {
-                TimerCountdownGameStart.Dispose();
+                TimerCountdownGameStart.Stop();
 
                 if (NetworkManager.GameClient.IsHost)
                 {
@@ -123,7 +124,7 @@ namespace GodotModules
 
         public static void CancelGameCountdown()
         {
-            Instance.TimerCountdownGameStart.Dispose();
+            Instance.TimerCountdownGameStart.Stop();
             Instance.CountdownGameStart = COUNTDOWN_START_TIME;
             Instance.BtnReady.Disabled = false;
             Log("Game start was cancelled");
@@ -131,7 +132,7 @@ namespace GodotModules
 
         public static void StartGameCountdown()
         {
-            Instance.TimerCountdownGameStart = new STimer(1000, Instance.TimerCountdownCallback);
+            Instance.TimerCountdownGameStart.Start();
             Instance.BtnReady.Disabled = true;
         }
 
@@ -214,6 +215,11 @@ namespace GodotModules
                     Message = text.Trim()
                 });
             }
+        }
+
+        public override void Cleanup()
+        {
+            TimerCountdownGameStart.Dispose();
         }
     }
 }
