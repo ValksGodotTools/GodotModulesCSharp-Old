@@ -1,4 +1,5 @@
 using Godot;
+using GodotModules.Netcode.Client;
 using System.Threading.Tasks;
 
 namespace GodotModules
@@ -18,10 +19,11 @@ namespace GodotModules
         private Button ButtonLobby { get; set; }
 
         public LobbyListing Info { get; set; }
+        private SceneGameServers SceneGameServersScript { get; set; }
 
         public override void _Ready()
         {
-            SceneGameServers.ConnectingToLobby = false;
+            GameClient.ConnectingToLobby = false;
             LabelTitle = GetNode<Label>(NodePathLabelTitle);
             LabelDescription = GetNode<Label>(NodePathLabelDescription);
             LabelPing = GetNode<Label>(NodePathLabelPing);
@@ -40,18 +42,18 @@ namespace GodotModules
 
         public async Task Join()
         {
-            await SceneGameServers.JoinServer(Info);
+            await SceneGameServersScript.JoinServer(Info);
         }
 
         private async void _on_Btn_pressed()
         {
-            SceneGameServers.SelectedLobbyInstance = this;
+            SceneGameServersScript.SelectedLobbyInstance = this;
             await Join();
         }
 
         private void _on_Btn_focus_entered()
         {
-            SceneGameServers.SelectedLobbyInstance = this;
+            SceneGameServersScript.SelectedLobbyInstance = this;
         }
     }
 

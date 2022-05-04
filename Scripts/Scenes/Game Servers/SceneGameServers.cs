@@ -9,12 +9,9 @@ namespace GodotModules
 {
     public class SceneGameServers : AScene
     {
-        public static Dictionary<string, LobbyListing> LobbyListings { get; set; }  // TODO: Check out stat ic here
-        public static SceneGameServers Instance { get; set; }
-        public static UILobbyListing SelectedLobbyInstance { get; set; }
-        public static bool ConnectingToLobby { get; set; }
-        public static bool Disconnected { get; set; }
-        public static bool GettingServers { get; set; }
+        public Dictionary<string, LobbyListing> LobbyListings { get; set; }
+        public UILobbyListing SelectedLobbyInstance { get; set; }
+        public bool GettingServers { get; set; }
 
         [Export] public readonly NodePath NodePathServerList;
         [Export] public readonly NodePath NodePathServerCreationPopup;
@@ -24,17 +21,16 @@ namespace GodotModules
 
         public override async void _Ready()
         {
-            SceneGameServers.GettingServers = true; // because we await GetServers() at bottom
+            GettingServers = true; // because we await GetServers() at bottom
             UIGameServersNavBtns.BtnRefresh.Disabled = true;
 
-            Instance = this;
             ServerList = GetNode<VBoxContainer>(NodePathServerList);
             ServerCreationPopup = GetNode<UIPopupCreateLobby>(NodePathServerCreationPopup);
             LobbyListings = new();
 
-            if (Disconnected)
+            if (GameClient.Disconnected)
             {
-                Disconnected = false;
+                GameClient.Disconnected = false;
                 var message = "Disconnected";
 
                 switch (NetworkManager.GameClient.DisconnectOpcode)
@@ -75,13 +71,13 @@ namespace GodotModules
             });
         }
 
-        public static async Task JoinServer(LobbyListing info)
+        public async Task JoinServer(LobbyListing info)
         {
-            if (SceneGameServers.ConnectingToLobby)
+            if (GameClient.ConnectingToLobby)
                 return;
 
             SceneLobby.CurrentLobby = info;
-            SceneGameServers.ConnectingToLobby = true;
+            GameClient.ConnectingToLobby = true;
 
             GD.Print("Connecting to lobby...");
             NetworkManager.StartClient(info.Ip, info.Port);
@@ -109,11 +105,11 @@ namespace GodotModules
                 child.QueueFree();
         }
 
-        public static CancellationTokenSource PingServersCTS;
+        public CancellationTokenSource PingServersCTS;
 
         public async Task ListServers()
         {
-            SceneGameServers.GettingServers = true;
+            GettingServers = true;
             UIGameServersNavBtns.BtnRefresh.Disabled = true;
 
             WebClient.TaskGetServers = WebClient.Get<LobbyListing[]>("servers/get");
@@ -124,7 +120,7 @@ namespace GodotModules
 
             if (res.Status == WebServerStatus.ERROR)
             {
-                SceneGameServers.GettingServers = false;
+                GettingServers = false;
                 UIGameServersNavBtns.BtnRefresh.Disabled = false;
                 return;
             }
@@ -175,7 +171,7 @@ namespace GodotModules
             await Task.WhenAll(tasks);
             await Task.Delay(1000);
 
-            SceneGameServers.GettingServers = false;
+            GettingServers = false;
 
             if (SceneManager.InGameServers())
                 UIGameServersNavBtns.BtnRefresh.Disabled = false;
@@ -195,12 +191,16 @@ namespace GodotModules
         private void _on_Control_resized()
         {
             //if (ServerCreationPopup != null)
-                //ServerCreationPopup.RectGlobalPosition = RectSize / 2 - ServerCreationPopup.RectSize / 2;
+            //ServerCreationPopup.RectGlobalPosition = RectSize / 2 - ServerCreationPopup.RectSize / 2;
         }
 
         public override void Cleanup()
         {
-            
+            if (PingServersCTS != null)
+            {
+                PingServersCTS.Cancel();
+                PingServersCTS.Dispose();
+            }
         }
     }
 }

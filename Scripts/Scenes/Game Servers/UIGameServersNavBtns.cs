@@ -7,15 +7,17 @@ namespace GodotModules
     {
         [Export] public readonly NodePath NodePathRefresh;
         public static Button BtnRefresh { get; set; }
+        private SceneGameServers SceneGameServersScript { get; set; }
 
         public override void _Ready()
         {
             BtnRefresh = GetNode<Button>(NodePathRefresh);
+            SceneGameServersScript = SceneManager.GetActiveSceneScript<SceneGameServers>();
         }
 
         private async void _on_Join_Lobby_pressed()
         {
-            var selected = SceneGameServers.SelectedLobbyInstance;
+            var selected = SceneGameServersScript.SelectedLobbyInstance;
 
             if (selected == null)
                 return;
@@ -25,7 +27,7 @@ namespace GodotModules
 
         private void _on_Create_Lobby_pressed()
         {
-            var popup = SceneGameServers.Instance.ServerCreationPopup;
+            var popup = SceneGameServersScript.ServerCreationPopup;
 
             if (popup.Visible)
                 return;
@@ -36,11 +38,11 @@ namespace GodotModules
 
         private async void _on_Refresh_pressed()
         {
-            if (SceneGameServers.GettingServers)
+            if (SceneGameServersScript.GettingServers)
                 return;
 
-            SceneGameServers.Instance.ClearServers();
-            await SceneGameServers.Instance.ListServers();
+            SceneGameServersScript.ClearServers();
+            await SceneGameServersScript.ListServers();
         }
 
         private void _on_Direct_Connect_pressed()

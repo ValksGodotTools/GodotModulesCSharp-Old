@@ -23,9 +23,11 @@ namespace GodotModules
         private CheckBox Public { get; set; }
         private LineEdit NumPingChecks { get; set; }
         private CheckBox NumPingChecksEnabled { get; set; }
+        private SceneGameServers SceneGameServersScript { get; set; }
 
         public override void _Ready()
         {
+            SceneGameServersScript = SceneManager.GetActiveSceneScript<SceneGameServers>();
             InputTitle = GetNode<LineEdit>(NodePathInputTitle);
             InputPort = GetNode<LineEdit>(NodePathInputPort);
             InputDescription = GetNode<TextEdit>(NodePathInputDescription);
@@ -71,7 +73,7 @@ namespace GodotModules
 
         private async void _on_Create_pressed()
         {
-            if (SceneGameServers.ConnectingToLobby)
+            if (GameClient.ConnectingToLobby)
                 return;
 
             if (ValidatedName == null || ValidatedDescription == null)
@@ -103,8 +105,8 @@ namespace GodotModules
                 Public = Public.Pressed
             };
 
-            SceneGameServers.Instance.AddServer(info);
-            SceneGameServers.Instance.PostServer(info);
+            SceneGameServersScript.AddServer(info);
+            SceneGameServersScript.PostServer(info);
             SceneLobby.CurrentLobby = info;
 
             Hide();

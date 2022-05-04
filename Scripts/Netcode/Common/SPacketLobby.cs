@@ -139,7 +139,8 @@ namespace GodotModules.Netcode
 
         private void HandleChatMessage()
         {
-            SceneLobby.Log(Id, Message);
+            if (SceneManager.InLobby())
+                SceneManager.GetActiveSceneScript<SceneLobby>().Log(Id, Message);
         }
 
         // LobbyCountdownChange
@@ -147,10 +148,13 @@ namespace GodotModules.Netcode
 
         private void HandleCountdownChange()
         {
+            if (!SceneManager.InLobby())
+                return;
+
             if (CountdownRunning)
-                SceneLobby.StartGameCountdown();
+                SceneManager.GetActiveSceneScript<SceneLobby>().StartGameCountdown();
             else
-                SceneLobby.CancelGameCountdown();
+                SceneManager.GetActiveSceneScript<SceneLobby>().CancelGameCountdown();
         }
 
         // LobbyGameStart
@@ -188,7 +192,8 @@ namespace GodotModules.Netcode
 
         private void HandleJoin()
         {
-            SceneLobby.AddPlayer(Id, Username);
+            if (SceneManager.InLobby())
+                SceneManager.GetActiveSceneScript<SceneLobby>().AddPlayer(Id, Username);
             NetworkManager.GameClient.Players.Add(Id, Username);
 
             NetworkManager.GameClient.Log($"Player with username {Username} id: {Id} joined the lobby");
@@ -198,11 +203,11 @@ namespace GodotModules.Netcode
         private void HandleLeave()
         {
             if (SceneManager.InLobby())
-                SceneLobby.RemovePlayer(Id);
+                SceneManager.GetActiveSceneScript<SceneLobby>().RemovePlayer(Id);
 
             if (SceneManager.InGame())
             {
-                SceneGame.RemovePlayer(Id);
+                SceneManager.GetActiveSceneScript<SceneGame>().RemovePlayer(Id);
             }
             
             NetworkManager.GameClient.Players.Remove(Id);
@@ -214,7 +219,8 @@ namespace GodotModules.Netcode
 
         private void HandleReady()
         {
-            SceneLobby.SetReady(Id, Ready);
+            if (SceneManager.InLobby())
+                SceneManager.GetActiveSceneScript<SceneLobby>().SetReady(Id, Ready);
         }
     }
 }

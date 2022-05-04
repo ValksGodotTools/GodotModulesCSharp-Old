@@ -120,8 +120,8 @@ namespace GodotModules
                 UtilOptions.SaveOptions();
                 WebClient.Dispose();
 
-                if (SceneGameServers.PingServersCTS != null)
-                    SceneGameServers.PingServersCTS.Dispose();
+                //if (SceneGameServers.PingServersCTS != null)
+                    //SceneGameServers.PingServersCTS.Dispose();
                 if (ClientConnectingTokenSource != null)
                     ClientConnectingTokenSource.Dispose();
             }
@@ -180,7 +180,7 @@ namespace GodotModules
             if (ClientConnectingTokenSource == null)
                 return;
 
-            SceneGameServers.ConnectingToLobby = false;
+            //SceneGameServers.ConnectingToLobby = false;
             ClientConnectingTokenSource.Cancel();
             GameClient.CancelTask();
         }

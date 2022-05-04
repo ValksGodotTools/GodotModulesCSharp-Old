@@ -8,21 +8,11 @@ namespace Game
 {
     public class SceneGame : AScene
     {
-        public static SceneGame Instance { get; set; } // TODO: Move stat ic somewhere else
-        private static PrevCurQueue<Dictionary<byte, DataEntityTransform>> PlayerTransformQueue = new PrevCurQueue<Dictionary<byte, DataEntityTransform>>(ServerIntervals.PlayerTransforms);
-        public static void UpdatePlayerPositions(Dictionary<byte, DataEntityTransform> playerTransforms) // TODO: Move stat ic somewhere else
-        {
-            PlayerTransformQueue.Add(playerTransforms);
-        }
-
-        public ClientPlayer Player { get; set; }
-
         [Export] public readonly NodePath NodePathLabelPlayerHealth;
         public Label LabelPlayerHealth;
 
-        private static Dictionary<uint, OtherPlayer> Players;
-        private static Dictionary<uint, Vector2> NextServerPlayerPositions { get; set; }
-        private static Dictionary<uint, Vector2> PrevServerPlayerPositions { get; set; }
+        private Dictionary<uint, OtherPlayer> Players;
+        private PrevCurQueue<Dictionary<byte, DataEntityTransform>> PlayerTransformQueue = new PrevCurQueue<Dictionary<byte, DataEntityTransform>>(ServerIntervals.PlayerTransforms);
 
         private List<Sprite> Bullets = new List<Sprite>();
 
@@ -33,9 +23,7 @@ namespace Game
             AddChild(bullet);
 
             Players = new();
-            NextServerPlayerPositions = new();
-            PrevServerPlayerPositions = new();
-            Instance = this;
+
             LabelPlayerHealth = GetNode<Label>(NodePathLabelPlayerHealth);
             Player = Prefabs.ClientPlayer.Instance<ClientPlayer>();
             Player.Position = Vector2.Zero;
@@ -72,7 +60,14 @@ namespace Game
             }
         }
 
-        public static void RemovePlayer(byte id)
+        public void UpdatePlayerPositions(Dictionary<byte, DataEntityTransform> playerTransforms) // TODO: Move stat ic somewhere else
+        {
+            PlayerTransformQueue.Add(playerTransforms);
+        }
+
+        public ClientPlayer Player { get; set; }
+
+        public void RemovePlayer(byte id)
         {
             var player = Players[id];
             player.QueueFree();
@@ -111,10 +106,7 @@ namespace Game
             PlayerTransformQueue.UpdateProgress(delta);
 
             if (PlayerTransformQueue.NotReady)
-            {
-                PrevServerPlayerPositions = NextServerPlayerPositions;
                 return;
-            }
 
             foreach (var pair in PlayerTransformQueue.Current)
             {

@@ -7,9 +7,11 @@ namespace GodotModules
         [Export] public readonly NodePath NodePathIp;
 
         private LineEdit Ip { get; set; }
+        private SceneGameServers SceneGameServersScript { get; set; }
 
         public override void _Ready()
         {
+            SceneGameServersScript = SceneManager.GetActiveSceneScript<SceneGameServers>();
             Ip = GetNode<LineEdit>(NodePathIp);
         }
 
@@ -37,7 +39,7 @@ namespace GodotModules
 
             Hide();
 
-            await SceneGameServers.JoinServer(new LobbyListing {
+            await SceneGameServersScript.JoinServer(new LobbyListing {
                 Ip = ip,
                 Port = port,
                 Name = "Unknown Name"

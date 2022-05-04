@@ -16,9 +16,12 @@ namespace Game
         private bool PressedLeft { get; set; }
         private bool PressedRight { get; set; }
 
+        private SceneGame SceneGameScript { get; set; }
+
         public override void _Ready()
         {
             base._Ready();
+            SceneGameScript = SceneManager.GetActiveSceneScript<SceneGame>();
             SetHealth(100);
             LabelPosition = GetNode<Label>(NodePathLabelPosition);
 
@@ -96,7 +99,7 @@ namespace Game
 
         public void SetHealth(int v)
         {
-            SceneGame.Instance.LabelPlayerHealth.Text = $"Health: {v}";
+            SceneGameScript.LabelPlayerHealth.Text = $"Health: {v}";
         }
     }
 }

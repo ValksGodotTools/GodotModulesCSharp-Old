@@ -66,6 +66,8 @@ namespace GodotModules
             }
         }
 
+        public static T GetActiveSceneScript<T>() where T : AScene => (T)ActiveScene;
+
         private void LoadScene(string scene) => Scenes[scene] = ResourceLoader.Load<PackedScene>($"res://Scenes/Scenes/{scene}.tscn");
     }
 }

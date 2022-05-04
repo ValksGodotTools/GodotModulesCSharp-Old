@@ -182,7 +182,7 @@ namespace GodotModules.Netcode.Client
             {
                 if (ENetThreadRunning)
                 {
-                    SceneGameServers.ConnectingToLobby = false;
+                    GameClient.ConnectingToLobby = false;
                     Log($"Client is running already");
                     return;
                 }

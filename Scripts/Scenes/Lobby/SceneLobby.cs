@@ -7,8 +7,7 @@ namespace GodotModules
 {
     public class SceneLobby : AScene
     {
-        public static LobbyListing CurrentLobby { get; set; } // TODO: Check out stat ic here
-        private static SceneLobby Instance { get; set; }
+        public static LobbyListing CurrentLobby { get; set; }
 
         [Export] public readonly NodePath NodePathPlayers;
         [Export] public readonly NodePath NodePathChatText;
@@ -18,7 +17,7 @@ namespace GodotModules
         [Export] public readonly NodePath NodePathBtnReady;
         [Export] public readonly NodePath NodePathBtnStart;
 
-        private static RichTextLabel ChatText { get; set; }
+        private RichTextLabel ChatText { get; set; }
         private Control ListPlayers { get; set; }
         private LineEdit ChatInput { get; set; }
         private Label LobbyName { get; set; }
@@ -36,7 +35,6 @@ namespace GodotModules
 
         public override void _Ready()
         {
-            Instance = this;
             ListPlayers = GetNode<Control>(NodePathPlayers);
             ChatText = GetNode<RichTextLabel>(NodePathChatText);
             ChatInput = GetNode<LineEdit>(NodePathChatInput);
@@ -45,10 +43,10 @@ namespace GodotModules
             BtnReady = GetNode<Button>(NodePathBtnReady);
             BtnStart = GetNode<Button>(NodePathBtnStart);
             UIPlayers = new();
-            TimerCountdownGameStart = new STimer(1000, Instance.TimerCountdownCallback, false);
+            TimerCountdownGameStart = new STimer(1000, TimerCountdownCallback, false);
 
             if (!NetworkManager.GameClient.IsHost)
-                Instance.BtnStart.Disabled = true;
+                BtnStart.Disabled = true;
 
             NetworkManager.GameClient.Players.ForEach(x => AddPlayer(x.Key, x.Value));
 
@@ -89,62 +87,62 @@ namespace GodotModules
             }
         }
 
-        public static void AddPlayer(uint id, string name)
+        public void AddPlayer(uint id, string name)
         {
-            if (Instance.UIPlayers.Duplicate(id))
+            if (UIPlayers.Duplicate(id))
                 return;
 
             var player = Prefabs.LobbyPlayerListing.Instance<UILobbyPlayerListing>();
-            Instance.UIPlayers.Add(id, player);
+            UIPlayers.Add(id, player);
 
-            Instance.ListPlayers.AddChild(player);
+            ListPlayers.AddChild(player);
 
             player.SetUsername(name);
             player.SetReady(false);
         }
 
-        public static void RemovePlayer(uint id)
+        public void RemovePlayer(uint id)
         {
-            if (Instance.UIPlayers.DoesNotHave(id))
+            if (UIPlayers.DoesNotHave(id))
                 return;
             
-            var uiPlayer = Instance.UIPlayers[id];
+            var uiPlayer = UIPlayers[id];
             uiPlayer.QueueFree();
-            Instance.UIPlayers.Remove(id);
+            UIPlayers.Remove(id);
         }
 
-        public static void SetReady(uint id, bool ready)
+        public void SetReady(uint id, bool ready)
         {
-            if (Instance.UIPlayers.DoesNotHave(id))
+            if (UIPlayers.DoesNotHave(id))
                 return;
 
-            var player = Instance.UIPlayers[id];
+            var player = UIPlayers[id];
             player.SetReady(ready);
         }
 
-        public static void CancelGameCountdown()
+        public void CancelGameCountdown()
         {
-            Instance.TimerCountdownGameStart.Stop();
-            Instance.CountdownGameStart = COUNTDOWN_START_TIME;
-            Instance.BtnReady.Disabled = false;
+            TimerCountdownGameStart.Stop();
+            CountdownGameStart = COUNTDOWN_START_TIME;
+            BtnReady.Disabled = false;
             Log("Game start was cancelled");
         }
 
-        public static void StartGameCountdown()
+        public void StartGameCountdown()
         {
-            Instance.TimerCountdownGameStart.Start();
-            Instance.BtnReady.Disabled = true;
+            TimerCountdownGameStart.Start();
+            BtnReady.Disabled = true;
         }
 
-        public static void Log(string text)
+        public void Log(string text)
         {
             ChatText.AddText($"{text}\n");
             ChatText.ScrollToLine(ChatText.GetLineCount() - 1);
         }
 
-        public static void Log(uint peerId, string text)
+        public void Log(uint peerId, string text)
         {
-            if (Instance.UIPlayers.DoesNotHave(peerId))
+            if (UIPlayers.DoesNotHave(peerId))
                 return;
 
             var playerName = NetworkManager.GameClient.Players[peerId];
