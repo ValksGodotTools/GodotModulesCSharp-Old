@@ -32,6 +32,14 @@ namespace GodotModules.Netcode
                         writer.Write((byte)pair.Key); // id
                         writer.Write((string)pair.Value.Username);
                     });
+                    writer.Write(DirectConnect);
+                    if (DirectConnect)
+                    {
+                        writer.Write(LobbyName);
+                        writer.Write(LobbyDescription);
+                        writer.Write(LobbyHostId);
+                        writer.Write(LobbyMaxPlayerCount);
+                    }
                     break;
 
                 case LobbyOpcode.LobbyJoin:
@@ -80,6 +88,14 @@ namespace GodotModules.Netcode
                             Ready = false
                         });
                     }
+                    var directConnected = reader.ReadBool();
+                    if (directConnected)
+                    {
+                        LobbyName = reader.ReadString();
+                        LobbyDescription = reader.ReadString();
+                        LobbyHostId = reader.ReadByte();
+                        LobbyMaxPlayerCount = reader.ReadByte();
+                    }
                     break;
 
                 case LobbyOpcode.LobbyJoin:
@@ -98,8 +114,12 @@ namespace GodotModules.Netcode
             }
         }
 
+        private GameClient Client { get; set; }
+
         public override async Task Handle(ENetClient client)
         {
+            Client = NetworkManager.GameClient;
+
             switch (LobbyOpcode)
             {
                 case LobbyOpcode.LobbyCreate:
@@ -139,10 +159,10 @@ namespace GodotModules.Netcode
         // LobbyCreate
         private async Task HandleCreate()
         {
-            NetworkManager.GameClient.PeerId = Id;
-            NetworkManager.GameClient.IsHost = true;
-            NetworkManager.GameClient.Log($"{GameManager.Options.OnlineUsername} created lobby with their id being {Id}");
-            NetworkManager.GameClient.Players.Add(Id, GameManager.Options.OnlineUsername);
+            Client.PeerId = Id;
+            Client.IsHost = true;
+            Client.Log($"{GameManager.Options.OnlineUsername} created lobby with their id being {Id}");
+            Client.Players.Add(Id, GameManager.Options.OnlineUsername);
 
             await SceneManager.ChangeScene("Lobby");
         }
@@ -173,7 +193,7 @@ namespace GodotModules.Netcode
         // LobbyGameStart
         private async Task HandleGameStart()
         {
-            if (NetworkManager.GameClient.IsHost)
+            if (Client.IsHost)
                 NetworkManager.GameServer.StartGame();
 
             await SceneManager.ChangeScene("Game");
@@ -181,13 +201,23 @@ namespace GodotModules.Netcode
 
         // LobbyInfo
         public Dictionary<byte, DataPlayer> Players { get; set; }
-
+        public bool DirectConnect { get; set; }
+        public string LobbyName { get; set; }
+        public string LobbyDescription { get; set; }
+        public byte LobbyMaxPlayerCount { get; set; }
+        public byte LobbyHostId { get; set; }
         private async Task HandleInfo()
         {
-            NetworkManager.GameClient.PeerId = Id;
-            NetworkManager.GameClient.Log($"{GameManager.Options.OnlineUsername} joined lobby with id {Id}");
-            NetworkManager.GameClient.Players.Add(Id, GameManager.Options.OnlineUsername);
+            Client.PeerId = Id;
+            Client.Log($"{GameManager.Options.OnlineUsername} joined lobby with id {Id}");
+            Client.Players.Add(Id, GameManager.Options.OnlineUsername);
             Players.ForEach(pair => NetworkManager.GameClient.Players.Add(pair.Key, pair.Value.Username));
+
+            var currentLobby = SceneLobby.CurrentLobby;
+            currentLobby.Name = LobbyName;
+            currentLobby.Description = LobbyDescription;
+            currentLobby.LobbyHostId = LobbyHostId;
+            currentLobby.MaxPlayerCount = LobbyMaxPlayerCount;
 
             await SceneManager.ChangeScene("Lobby");
         }
@@ -199,9 +229,9 @@ namespace GodotModules.Netcode
         {
             if (SceneManager.InLobby())
                 SceneManager.GetActiveSceneScript<SceneLobby>().AddPlayer(Id, Username);
-            NetworkManager.GameClient.Players.Add(Id, Username);
+            Client.Players.Add(Id, Username);
 
-            NetworkManager.GameClient.Log($"Player with username {Username} id: {Id} joined the lobby");
+            Client.Log($"Player with username {Username} id: {Id} joined the lobby");
         }
 
         // LobbyLeave
@@ -215,8 +245,8 @@ namespace GodotModules.Netcode
                 SceneManager.GetActiveSceneScript<SceneGame>().RemovePlayer(Id);
             }
             
-            NetworkManager.GameClient.Players.Remove(Id);
-            NetworkManager.GameClient.Log($"Player with id: {Id} left the lobby");
+            Client.Players.Remove(Id);
+            Client.Log($"Player with id: {Id} left the lobby");
         }
 
         // LobbyReady

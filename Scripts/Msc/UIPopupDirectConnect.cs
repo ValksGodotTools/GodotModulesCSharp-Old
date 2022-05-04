@@ -43,7 +43,7 @@ namespace GodotModules
                 Ip = ip,
                 Port = port,
                 Name = "Unknown Name"
-            });
+            }, true);
         }
 
         private void _on_PopupDirectConnect_popup_hide()
