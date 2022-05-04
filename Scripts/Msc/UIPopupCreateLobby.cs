@@ -81,25 +81,15 @@ namespace GodotModules
 
             var port = (ushort)ValidatedPort;
             var localIp = "127.0.0.1";
-
-            // does not update fast enough to be reliable
-            /*if (UIGameServers.LobbyListings.ContainsKey(externalIp))
-            {
-                var listing = UIGameServers.LobbyListings[externalIp];
-
-                if (listing.Port == port)
-                {
-                    GD.Print("A server is running on this ip and port already");
-                    return;
-                }
-            }*/
+            var name = InputTitle.Text.Trim();
+            var desc = InputDescription.Text.Trim();
 
             var info = new LobbyListing
             {
-                Name = InputTitle.Text.Trim(),
+                Name = name,
                 Ip = localIp,
                 Port = port,
-                Description = InputDescription.Text.Trim(),
+                Description = desc,
                 MaxPlayerCount = ValidatedMaxPlayerCount,
                 LobbyHost = GameManager.Options.OnlineUsername,
                 Public = Public.Pressed
@@ -111,7 +101,7 @@ namespace GodotModules
 
             Hide();
 
-            NetworkManager.StartServer(port, ValidatedMaxPlayerCount);
+            NetworkManager.StartServer(port, (byte)ValidatedMaxPlayerCount);
             NetworkManager.StartClient(localIp, port);
 
             await NetworkManager.WaitForClientToConnect(3000, async () =>
@@ -120,7 +110,9 @@ namespace GodotModules
                 await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
                 {
                     LobbyOpcode = LobbyOpcode.LobbyCreate,
-                    Username = GameManager.Options.OnlineUsername
+                    Username = GameManager.Options.OnlineUsername,
+                    LobbyName = name,
+                    LobbyDescription = desc
                 });
             });
         }

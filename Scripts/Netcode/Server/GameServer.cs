@@ -7,6 +7,7 @@ namespace GodotModules.Netcode.Server
 {
     public class GameServer : ENetServer
     {
+        public DataLobby Lobby { get; set; }
         public Dictionary<byte, DataPlayer> Players { get; set; }
         public Dictionary<ushort, DataBullet> Bullets { get; set; }
         public STimer EmitClientTransforms { get; set; }
@@ -16,6 +17,7 @@ namespace GodotModules.Netcode.Server
         public GameServer()
         {
             Players = new();
+            Lobby = new();
 
             EmitClientTransforms = new(ServerIntervals.PlayerTransforms, () =>
             {

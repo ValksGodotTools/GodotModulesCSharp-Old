@@ -71,7 +71,7 @@ namespace GodotModules
             });
         }
 
-        public async Task JoinServer(LobbyListing info)
+        public async Task JoinServer(LobbyListing info, bool directConnect)
         {
             if (GameClient.ConnectingToLobby)
                 return;
@@ -87,7 +87,8 @@ namespace GodotModules
                 await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
                 {
                     LobbyOpcode = LobbyOpcode.LobbyJoin,
-                    Username = GameManager.Options.OnlineUsername
+                    Username = GameManager.Options.OnlineUsername,
+                    DirectConnect = directConnect
                 });
             });
         }

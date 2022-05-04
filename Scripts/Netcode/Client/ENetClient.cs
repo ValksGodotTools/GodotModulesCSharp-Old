@@ -58,6 +58,8 @@ namespace GodotModules.Netcode.Client
             address.Port = port;
             client.Create();
 
+            Log($"{ip}:{port}");
+
             //GDLog("Attempting to connect to the game server...");
             var peer = client.Connect(address);
 

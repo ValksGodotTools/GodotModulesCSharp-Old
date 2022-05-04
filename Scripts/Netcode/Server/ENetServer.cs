@@ -18,6 +18,7 @@ namespace GodotModules.Netcode.Server
         public Dictionary<uint, Peer> Peers { get; set; }
         public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
         private bool QueueRestart { get; set; }
+        public byte MaxPlayers { get; set; }
 
         public ENetServer()
         {
@@ -33,11 +34,13 @@ namespace GodotModules.Netcode.Server
         /// </summary>
         /// <param name="port"></param>
         /// <param name="maxClients"></param>
-        public async Task ENetThreadWorker(ushort port, int maxClients)
+        public async Task ENetThreadWorker(ushort port, byte maxClients)
         {
             Thread.CurrentThread.Name = "Server";
             if (SceneLobby.CurrentLobby.Public)
                 WebClient.TimerPingMasterServer.Start();
+
+            MaxPlayers = maxClients;
 
             Library.Initialize();
 
@@ -183,7 +186,7 @@ namespace GodotModules.Netcode.Server
         /// <summary>
         /// Start the server, can be called from the Godot thread
         /// </summary>
-        public async Task Start(ushort port, int maxClients)
+        public async Task Start(ushort port, byte maxClients)
         {
             if (Running)
             {

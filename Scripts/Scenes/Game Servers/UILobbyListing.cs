@@ -23,6 +23,7 @@ namespace GodotModules
 
         public override void _Ready()
         {
+            SceneGameServersScript = SceneManager.GetActiveSceneScript<SceneGameServers>();
             GameClient.ConnectingToLobby = false;
             LabelTitle = GetNode<Label>(NodePathLabelTitle);
             LabelDescription = GetNode<Label>(NodePathLabelDescription);
@@ -42,7 +43,7 @@ namespace GodotModules
 
         public async Task Join()
         {
-            await SceneGameServersScript.JoinServer(Info);
+            await SceneGameServersScript.JoinServer(Info, false);
         }
 
         private async void _on_Btn_pressed()
@@ -65,6 +66,7 @@ namespace GodotModules
         public ushort Port { get; set; }
         public int Ping { get; set; }
         public string LobbyHost { get; set; }
+        public byte LobbyHostId { get; set; }
         public int MaxPlayerCount { get; set; }
         public bool Public { get; set; }
     }
