@@ -39,3 +39,6 @@ Do not change the location of a script inside vscode, instead do it inside Godot
 
 ## Renaming export node paths
 Generally a good idea to keep the script as close as you can to the NodePaths so when renaming nodes you won't have to worry about re-assigning the nodepaths.
+
+## Host.Create(address, byte)
+Host.Create(address, byte) will always fail. Always do Host.Create(address, int) and don't even try casting from byte to int, it will fail. Client will not connect and you won't know why.
