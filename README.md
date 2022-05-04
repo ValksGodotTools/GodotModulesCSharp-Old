@@ -6,6 +6,13 @@ A collection of useful modules and scripts for C# Godot games.
 I was thinking to myself, I want to make a bullet hell game, but I am also going to be making more then just one game in the future. I do not want to redo the same things over again. If I want multiplayer, I can just grab it from here. If I want a modloader, I can find it here. That is the motivation behind this project.
 
 ## Modules
+### Core
+In-game console on pressing F12, supports custom commands, useful for in-game testing / debugging.
+
+![image](https://user-images.githubusercontent.com/6277739/166569933-de699808-6de9-4f7f-ac90-1a8ae460e262.png)
+
+There are also popup error / message windows and the bottom right corner of the screen shows a small red box which notifies you of any errors with the total error count every second.
+
 ### [ModLoader](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/MOD_LOADER.md)
 ![image](https://user-images.githubusercontent.com/6277739/162651881-b8f98aa5-da2a-4499-b4dd-737a64dec4a9.png)  
 
