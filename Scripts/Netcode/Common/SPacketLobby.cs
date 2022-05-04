@@ -15,6 +15,10 @@ namespace GodotModules.Netcode
 
             switch (LobbyOpcode)
             {
+                case LobbyOpcode.LobbyCreate:
+                    base.Write(writer);
+                    break;
+
                 case LobbyOpcode.LobbyChatMessage:
                     base.Write(writer);
                     writer.Write((string)Message);
@@ -64,6 +68,10 @@ namespace GodotModules.Netcode
 
             switch (LobbyOpcode)
             {
+                case LobbyOpcode.LobbyCreate:
+                    base.Read(reader);
+                    break;
+                    
                 case LobbyOpcode.LobbyChatMessage:
                     base.Read(reader);
                     Message = reader.ReadString();
