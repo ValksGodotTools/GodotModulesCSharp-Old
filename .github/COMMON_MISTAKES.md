@@ -23,13 +23,6 @@ public override void Read(PacketReader reader)
 Also forgetting to extend from `PacketServerPeerId` if for example telling everyone else in the server about changes to a peer.
 And forgetting to write `base.Write(writer);` and `base.Read(reader);`
 
-## Avoid static in netcode
-Static properties / fields should never be used unless you want something to be persistent even if the server / client gets destroyed but this is rarely the case. 
-
-For e.g. you could make Players static and it would retain its data even after server / client gets destroyed. Next time the server / client start up they will add a duplicate player key.
-
-Edit: Just avoid static as much as you can. This goes for everywhere.
-
 ## Popups
 Never make static references to Godot Popup Windows, changing the scene more than once will cause the code to access a old invalid reference and crash the game with `Could not access a disposed object`
 
