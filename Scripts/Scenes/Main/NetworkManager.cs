@@ -124,13 +124,13 @@ namespace GodotModules
                     SceneGameServers.PingServersCTS.Dispose();
                 if (ClientConnectingTokenSource != null)
                     ClientConnectingTokenSource.Dispose();
-
-                Instance.GetTree().Quit();
             }
             catch (Exception e)
             {
                 GD.Print("Exception on game exit cleanup: " + e);
             }
+
+            Instance.GetTree().Quit();
         }
 
         public static void StartClient(string ip, ushort port)
