@@ -104,12 +104,6 @@ namespace GodotModules.Netcode
             FailedPingAttempts = 0; // reset failed ping attempts if a ping gets through
         }
 
-        /*private static int FailedPostAttempts { get; set; }
-        private static System.Timers.Timer TimerPostAttempts { get; set; }
-        public async static void OnTimerPostMasterServerEvent(System.Object source, ElapsedEventArgs e)
-        {
-        }*/
-
         public static void GetExternalIp()
         {
             string externalIpString = new System.Net.WebClient().DownloadString("http://icanhazip.com").Replace("\\r\\n", "").Replace("\\n", "").Trim();

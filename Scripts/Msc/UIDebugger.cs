@@ -23,7 +23,7 @@ namespace GodotModules
 
         public static void AddException(Exception e) => AddMessage($"{e.Message}\n{e.StackTrace}");
 
-        public static void AddMessage(object message)
+        public static void AddMessage(string message)
         {
             Logs.Text += $"{message}\n";
             ScrollToBottom();

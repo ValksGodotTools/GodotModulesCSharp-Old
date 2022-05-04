@@ -31,14 +31,14 @@ namespace GodotModules
             Colorize(() => GD.PrintErr(message), ConsoleColor.Red);
         }
 
-        public static void LogWarning(object obj, ConsoleColor color = ConsoleColor.Yellow) 
+        public static void LogWarning(string obj, ConsoleColor color = ConsoleColor.Yellow) 
         {
             var message = $"[Warning]: {obj}";
             UIDebugger.AddMessage(message);
             Colorize(() => GD.Print(message), color);
         }
 
-        public static void Log(object obj, ConsoleColor color = ConsoleColor.Gray)
+        public static void Log(string obj, ConsoleColor color = ConsoleColor.Gray)
         {
             UIDebugger.AddMessage(obj);
             Colorize(() => GD.Print(obj), color);

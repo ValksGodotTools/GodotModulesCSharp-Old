@@ -42,11 +42,6 @@ namespace GodotModules.Netcode.Client
             DisconnectOpcode = DisconnectOpcode.Disconnected;
         }
 
-        /// <summary>
-        /// The client thread worker
-        /// </summary>
-        /// <param name="ip"></param>
-        /// <param name="port"></param>
         private async Task ENetThreadWorker(string ip, ushort port)
         {
             Thread.CurrentThread.Name = "Client";
@@ -57,8 +52,6 @@ namespace GodotModules.Netcode.Client
             address.SetHost(ip);
             address.Port = port;
             client.Create();
-
-            Log($"{ip}:{port}");
 
             //GDLog("Attempting to connect to the game server...");
             var peer = client.Connect(address);
