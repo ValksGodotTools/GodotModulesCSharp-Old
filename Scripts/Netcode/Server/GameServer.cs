@@ -23,7 +23,8 @@ namespace GodotModules.Netcode.Server
             {
                 SendToAllPlayers(ServerPacketOpcode.PlayerTransforms, new SPacketPlayerTransforms
                 {
-                    PlayerTransforms = Players.ToDictionary(x => x.Key, x => new DataEntityTransform {
+                    PlayerTransforms = Players.ToDictionary(x => x.Key, x => new DataEntityTransform
+                    {
                         Position = x.Value.Position,
                         Rotation = x.Value.Rotation
                     })
@@ -34,8 +35,10 @@ namespace GodotModules.Netcode.Server
             const int fps = 60;
             const float delta = 1f / fps;
 
-            ServerSimulation = new((double)oneSecondInMs / fps, () => {
-                Players.ForEach(x => {
+            ServerSimulation = new((double)oneSecondInMs / fps, () =>
+            {
+                Players.ForEach(x =>
+                {
                     var player = x.Value;
                     var directionVert = player.DirectionVert;
                     var directionHorz = player.DirectionHorz;
@@ -62,6 +65,23 @@ namespace GodotModules.Netcode.Server
         {
             EmitClientTransforms.Start();
             ServerSimulation.Start();
+        }
+
+        protected override void ServerCmds()
+        {
+            while (ENetCmds.TryDequeue(out ENetCmd cmd))
+            {
+                var opcode = cmd.Opcode;
+
+                // Host client wants to stop the server
+                switch (opcode)
+                {
+                    case ENetOpcode.ClientWantsToExitApp:
+                        CancelTokenSource.Cancel();
+                        KickAll(DisconnectOpcode.Stopping);
+                        break;
+                }
+            }
         }
 
         protected override void Connect(Event netEvent)

@@ -15,8 +15,9 @@ namespace GodotModules.Netcode.Server
         public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
         public ushort MaxPlayers { get; set; }
 
+        protected CancellationTokenSource CancelTokenSource { get; set; }
+        
         private static readonly Dictionary<ClientPacketOpcode, APacketClient> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, APacketClient>("CPacket");
-        private CancellationTokenSource CancelTokenSource { get; set; }
         private ConcurrentQueue<ServerPacket> Outgoing { get; set; }
         private bool QueueRestart { get; set; }
 
@@ -70,19 +71,7 @@ namespace GodotModules.Netcode.Server
                 bool polled = false;
 
                 // ENet Cmds
-                while (ENetCmds.TryDequeue(out ENetCmd cmd))
-                {
-                    var opcode = cmd.Opcode;
-
-                    // Host client wants to stop the server
-                    switch (opcode)
-                    {
-                        case ENetOpcode.ClientWantsToExitApp:
-                            CancelTokenSource.Cancel();
-                            KickAll(DisconnectOpcode.Stopping);
-                            break;
-                    }
-                }
+                ServerCmds();
 
                 // Outgoing
                 while (Outgoing.TryDequeue(out ServerPacket packet))
@@ -283,6 +272,9 @@ namespace GodotModules.Netcode.Server
         /// This is in the ENet thread, anything from the ENet thread can be used here
         /// </summary>
         protected virtual void Stopped()
+        { }
+
+        protected virtual void ServerCmds()
         { }
 
         /// <summary>
