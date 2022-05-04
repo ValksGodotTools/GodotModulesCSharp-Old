@@ -144,9 +144,9 @@ namespace GodotModules.Netcode.Server
 
         public override void Dispose()
         {
-            base.Dispose();
-            EmitClientTransforms.Dispose();
-            ServerSimulation.Dispose();
+            base.Dispose(); // THREAD SAFETY VIOLATION
+            EmitClientTransforms.Dispose(); // THREAD SAFETY VIOLATION
+            ServerSimulation.Dispose(); // THREAD SAFETY VIOLATION
         }
     }
 }

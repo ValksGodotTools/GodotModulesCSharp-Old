@@ -39,7 +39,7 @@ namespace Game
             ModLoader.Call("OnGameInit");
 
             if (NetworkManager.GameClient != null)
-                if (NetworkManager.GameClient.Running)
+                if (NetworkManager.GameClient.Running) // THREAD SAFETY VIOLATION
                     InitMultiplayerStuff();
         }
 
@@ -104,10 +104,10 @@ namespace Game
 
         private void InitMultiplayerStuff()
         {
-            Players[NetworkManager.GameClient.PeerId] = Player;
+            Players[NetworkManager.GameClient.PeerId] = Player; // THREAD SAFETY VIOLATION
             Player.SetUsername(GameManager.Options.OnlineUsername);
 
-            bool IsNotClient(uint id) => id != NetworkManager.GameClient.PeerId;
+            bool IsNotClient(uint id) => id != NetworkManager.GameClient.PeerId; // THREAD SAFETY VIOLATION
 
             NetworkManager.GameClient.Players
                 .Where(x => IsNotClient(x.Key))

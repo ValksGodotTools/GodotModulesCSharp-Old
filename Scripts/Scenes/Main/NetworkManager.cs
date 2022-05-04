@@ -111,7 +111,7 @@ namespace GodotModules
                     }
 
                 if (NetworkManager.GameClient != null)
-                    if (NetworkManager.GameClient.Running)
+                    if (NetworkManager.GameClient.Running) // THREAD SAFETY VIOLATION
                     {
                         GameClient.Stop();
                         GameClient.Dispose();
@@ -161,7 +161,7 @@ namespace GodotModules
             ClientConnectingTokenSource.CancelAfter(timeoutMs);
             await Task.Run(async () =>
             {
-                while (!NetworkManager.GameClient.IsConnected)
+                while (!NetworkManager.GameClient.IsConnected) // THREAD SAFETY VIOLATION
                 {
                     if (ClientConnectingTokenSource.IsCancellationRequested)
                         break;

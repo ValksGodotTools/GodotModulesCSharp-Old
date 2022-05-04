@@ -26,7 +26,7 @@ namespace Game
             LabelPosition = GetNode<Label>(NodePathLabelPosition);
 
             if (NetworkManager.GameClient != null)
-                if (NetworkManager.GameClient.Running)
+                if (NetworkManager.GameClient.Running) // THREAD SAFETY VIOLATION
                 {
                     var timer1 = new GTimer(ClientIntervals.PlayerDirection);
                     timer1.Connect(this, nameof(EmitMovementDirection));
@@ -69,7 +69,7 @@ namespace Game
             HandleMovement(delta);
 
             if (NetworkManager.GameClient != null)
-                if (NetworkManager.GameClient.Running)
+                if (NetworkManager.GameClient.Running) // THREAD SAFETY VIOLATION
                     KeepTrackOfInputs();
         }
 

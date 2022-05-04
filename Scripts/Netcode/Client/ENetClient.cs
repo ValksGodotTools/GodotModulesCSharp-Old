@@ -21,16 +21,17 @@ namespace GodotModules.Netcode.Client
         public DateTime PingSent { get; set; }
         public int PingMs { get; set;}
         public bool WasPingReceived { get; set; }
-        protected CancellationTokenSource CancelTokenSource { get; set; }
         public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
+        public DisconnectOpcode DisconnectOpcode { get; set; }
+        public bool IsConnected { get => Interlocked.Read(ref Connected) == 1; } // thread safe
+        public bool Running { get; set; }
+
+        protected CancellationTokenSource CancelTokenSource { get; set; }
+        protected long Connected = 0;
+        protected bool ENetThreadRunning;
+
         private int OutgoingId { get; set; }
         private ConcurrentDictionary<int, ClientPacket> Outgoing { get; set; }
-        public DisconnectOpcode DisconnectOpcode { get; set; }
-        protected long Connected = 0;
-        public bool IsConnected { get => Interlocked.Read(ref Connected) == 1; } // thread safe
-
-        public bool Running { get; set; }
-        protected bool ENetThreadRunning;
 
         public ENetClient()
         {

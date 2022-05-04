@@ -9,16 +9,16 @@ namespace GodotModules.Netcode.Server
 {
     public abstract class ENetServer : IDisposable
     {
-        private static readonly Dictionary<ClientPacketOpcode, APacketClient> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, APacketClient>("CPacket");
-        
-        private CancellationTokenSource CancelTokenSource { get; set; }
         public bool SomeoneConnected { get; set; }
         public bool Running { get; set; }
-        private ConcurrentQueue<ServerPacket> Outgoing { get; set; }
         public Dictionary<uint, Peer> Peers { get; set; }
         public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
-        private bool QueueRestart { get; set; }
         public ushort MaxPlayers { get; set; }
+
+        private static readonly Dictionary<ClientPacketOpcode, APacketClient> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, APacketClient>("CPacket");
+        private CancellationTokenSource CancelTokenSource { get; set; }
+        private ConcurrentQueue<ServerPacket> Outgoing { get; set; }
+        private bool QueueRestart { get; set; }
 
         public ENetServer()
         {
@@ -57,7 +57,7 @@ namespace GodotModules.Netcode.Server
                 var message = $"A server is running on port {port} already! {e.Message}";
                 Log(message);
                 NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.PopupMessage, message));
-                NetworkManager.GameClient.Stop();
+                NetworkManager.GameClient.Stop(); // THREAD SAFETY VIOLATION
                 await Stop();
                 return;
             }
@@ -194,7 +194,7 @@ namespace GodotModules.Netcode.Server
                 return;
             }
 
-            CancelTokenSource = new CancellationTokenSource();
+            CancelTokenSource = new CancellationTokenSource(); // THREAD SAFETY VIOLATION
 
             try
             {
@@ -217,11 +217,11 @@ namespace GodotModules.Netcode.Server
                 return;
             }
 
-            CancelTokenSource.Cancel();
+            CancelTokenSource.Cancel(); // THREAD SAFETY VIOLATION
 
-            KickAll(DisconnectOpcode.Stopping);
+            KickAll(DisconnectOpcode.Stopping); // THREAD SAFETY VIOLATION
 
-            while (!CancelTokenSource.IsCancellationRequested)
+            while (!CancelTokenSource.IsCancellationRequested) // THREAD SAFETY VIOLATION
                 await Task.Delay(100);
         }
 
@@ -230,18 +230,18 @@ namespace GodotModules.Netcode.Server
         /// </summary>
         public void Restart()
         {
-            if (CancelTokenSource.IsCancellationRequested)
+            if (CancelTokenSource.IsCancellationRequested) // THREAD SAFETY VIOLATION
             {
                 Log("Server has been stopped already");
                 return;
             }
 
-            KickAll(DisconnectOpcode.Restarting);
+            KickAll(DisconnectOpcode.Restarting); // THREAD SAFETY VIOLATION
 
-            QueueRestart = true;
+            QueueRestart = true; // THREAD SAFETY VIOLATION
         }
 
-        public Peer[] GetOtherPeers(uint id)
+        protected Peer[] GetOtherPeers(uint id)
         {
             var otherPeers = new Dictionary<uint, Peer>(Peers);
             otherPeers.Remove(id);
@@ -316,7 +316,7 @@ namespace GodotModules.Netcode.Server
 
         public virtual void Dispose()
         {
-            CancelTokenSource.Dispose();
+            CancelTokenSource.Dispose(); // THREAD SAFETY VIOLATION
         }
     }
 }

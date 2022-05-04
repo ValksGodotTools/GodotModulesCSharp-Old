@@ -45,7 +45,7 @@ namespace GodotModules
             UIPlayers = new();
             TimerCountdownGameStart = new STimer(1000, TimerCountdownCallback, false);
 
-            if (!NetworkManager.GameClient.IsHost)
+            if (!NetworkManager.GameClient.IsHost) // THREAD SAFETY VIOLATION
                 BtnStart.Disabled = true;
 
             NetworkManager.GameClient.Players.ForEach(x => AddPlayer(x.Key, x.Value));
@@ -74,7 +74,7 @@ namespace GodotModules
             {
                 TimerCountdownGameStart.Stop();
 
-                if (NetworkManager.GameClient.IsHost)
+                if (NetworkManager.GameClient.IsHost) // THREAD SAFETY VIOLATION
                 {
                     WebClient.TimerPingMasterServer.Stop();
 
@@ -151,7 +151,7 @@ namespace GodotModules
 
         private async void _on_Ready_pressed()
         {
-            var player = UIPlayers[NetworkManager.GameClient.PeerId];
+            var player = UIPlayers[NetworkManager.GameClient.PeerId]; // THREAD SAFETY VIOLATION
             player.SetReady(!player.Ready);
 
             BtnReady.Text = player.Ready ? "Ready" : "Not Ready";
@@ -165,7 +165,7 @@ namespace GodotModules
 
         private async void _on_Start_pressed()
         {
-            if (!NetworkManager.GameClient.IsHost)
+            if (!NetworkManager.GameClient.IsHost) // THREAD SAFETY VIOLATION
                 return;
 
             // check if all players are ready
