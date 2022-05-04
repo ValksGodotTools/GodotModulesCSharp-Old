@@ -23,9 +23,6 @@ public override void Read(PacketReader reader)
 Also forgetting to extend from `PacketServerPeerId` if for example telling everyone else in the server about changes to a peer.
 And forgetting to write `base.Write(writer);` and `base.Read(reader);`
 
-## Popups
-Never make static references to Godot Popup Windows, changing the scene more than once will cause the code to access a old invalid reference and crash the game with `Could not access a disposed object`
-
 ## Removing and adding a child in the same frame
 Adding and removing a child within the same frame almost always this leads to many errors (sometimes game crashing errors), and generally the work-a-around is to wait 1 idle_frame between removing and adding the child
 
