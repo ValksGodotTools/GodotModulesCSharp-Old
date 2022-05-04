@@ -104,7 +104,7 @@ namespace Game
 
         private void InitMultiplayerStuff()
         {
-            Players[NetworkManager.GameClient.PeerId] = Player; // THREAD SAFETY VIOLATION
+            Players[NetworkManager.GameClient.PeerId] = Player;
             Player.SetUsername(GameManager.Options.OnlineUsername);
 
             bool IsNotClient(uint id) => id != NetworkManager.GameClient.PeerId; // THREAD SAFETY VIOLATION
