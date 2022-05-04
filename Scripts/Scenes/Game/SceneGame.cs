@@ -100,10 +100,13 @@ namespace Game
 
         public override void _PhysicsProcess(float delta)
         {
+            ModLoader.Call("OnGameUpdate", delta);
+
+            if (SceneManager.PrevSceneName == "Menu") // singleplayer
+                return;
+            
             foreach (var bullet in Bullets)
                 bullet.Position += new Vector2(0, -1f);
-
-            ModLoader.Call("OnGameUpdate", delta);
 
             PlayerTransformQueue.UpdateProgress(delta);
 
