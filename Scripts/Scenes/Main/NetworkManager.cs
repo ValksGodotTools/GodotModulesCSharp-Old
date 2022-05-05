@@ -116,7 +116,7 @@ namespace GodotModules
             try
             {
                 if (NetworkManager.GameServer != null)
-                    if (NetworkManager.GameServer.Running)
+                    if (NetworkManager.GameServer.IsRunning)
                     {
                         GameServer.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToExitApp));
                         GameServer.Dispose();

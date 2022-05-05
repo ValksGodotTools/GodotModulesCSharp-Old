@@ -10,21 +10,20 @@ namespace GodotModules.Netcode.Server
     public abstract class ENetServer : IDisposable
     {
         public bool SomeoneConnected { get; set; }
-        public bool Running { get; set; }
+        public bool IsRunning { get => Interlocked.Read(ref Running) == 1; }
         public Dictionary<uint, Peer> Peers { get; set; }
         public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
         public ushort MaxPlayers { get; set; }
 
         protected CancellationTokenSource CancelTokenSource { get; set; }
         protected bool QueueRestart { get; set; }
+        protected long Running = 0;
 
         private static readonly Dictionary<ClientPacketOpcode, APacketClient> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, APacketClient>("CPacket");
         private ConcurrentQueue<ServerPacket> Outgoing { get; set; }
 
         public ENetServer()
         {
-            Running = false;
-            SomeoneConnected = false;
             ENetCmds = new();
             Outgoing = new();
             Peers = new();
@@ -32,7 +31,7 @@ namespace GodotModules.Netcode.Server
 
         public async Task Start(ushort port, int maxClients)
         {
-            if (Running)
+            if (IsRunning)
             {
                 Log("Server is running already");
                 return;
@@ -145,7 +144,7 @@ namespace GodotModules.Netcode.Server
             }
 
             Log($"Server listening on port {port}");
-            Running = true;
+            Running = 1;
 
             while (!CancelTokenSource.IsCancellationRequested)
             {
@@ -240,7 +239,7 @@ namespace GodotModules.Netcode.Server
             while (ConcurrentQueuesWorking())
                 await Task.Delay(100);
 
-            Running = false;
+            Running = 0;
             Stopped();
 
             if (QueueRestart)
