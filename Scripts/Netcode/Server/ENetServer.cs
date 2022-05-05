@@ -15,7 +15,7 @@ namespace GodotModules.Netcode.Server
         public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
         public ushort MaxPlayers { get; set; }
 
-        protected CancellationTokenSource CancelTokenSource { get; set; }
+        protected CancellationTokenSource CTS { get; set; }
         protected bool QueueRestart { get; set; }
         protected long SomeoneConnected = 0;
         protected long Running = 0;
@@ -38,11 +38,11 @@ namespace GodotModules.Netcode.Server
                 return;
             }
 
-            CancelTokenSource = new CancellationTokenSource();
+            CTS = new CancellationTokenSource();
 
             try
             {
-                await Task.Run(() => ENetThreadWorker(port, maxClients), CancelTokenSource.Token);
+                await Task.Run(() => ENetThreadWorker(port, maxClients), CTS.Token);
             }
             catch (Exception e)
             {
@@ -147,7 +147,7 @@ namespace GodotModules.Netcode.Server
             Log($"Server listening on port {port}");
             Running = 1;
 
-            while (!CancelTokenSource.IsCancellationRequested)
+            while (!CTS.IsCancellationRequested)
             {
                 bool polled = false;
 
@@ -259,7 +259,7 @@ namespace GodotModules.Netcode.Server
             peer.Send(channelID, ref packet);
         }
 
-        private bool ConcurrentQueuesWorking() => NetworkManager.GodotCmds.Count != 0 || ENetCmds.Count != 0 || Outgoing.Count != 0;
+        private bool ConcurrentQueuesWorking() => ENetCmds.Count != 0 || Outgoing.Count != 0;
 
         public virtual void Dispose()
         { }

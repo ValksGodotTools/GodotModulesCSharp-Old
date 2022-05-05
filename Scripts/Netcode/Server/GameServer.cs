@@ -73,19 +73,19 @@ namespace GodotModules.Netcode.Server
                         break;
 
                     case ENetOpcode.StopServer:
-                        if (CancelTokenSource.IsCancellationRequested)
+                        if (CTS.IsCancellationRequested)
                         {
                             Log("Server has been stopped already");
                             return;
                         }
 
-                        CancelTokenSource.Cancel();
+                        CTS.Cancel();
 
                         KickAll(DisconnectOpcode.Stopping);
                         break;
 
                     case ENetOpcode.RestartServer:
-                        if (CancelTokenSource.IsCancellationRequested)
+                        if (CTS.IsCancellationRequested)
                         {
                             Log("Server has been stopped already");
                             return;
@@ -97,12 +97,12 @@ namespace GodotModules.Netcode.Server
                         break;
 
                     case ENetOpcode.ClientWantsToExitApp:
-                        CancelTokenSource.Cancel();
+                        CTS.Cancel();
                         KickAll(DisconnectOpcode.Stopping);
                         break;
 
                     case ENetOpcode.Dispose:
-                        CancelTokenSource.Dispose();
+                        CTS.Dispose();
                         EmitClientTransforms.Stop();
                         EmitClientTransforms.Dispose();
                         ServerSimulation.Stop();

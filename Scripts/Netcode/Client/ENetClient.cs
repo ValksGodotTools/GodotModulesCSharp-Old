@@ -210,7 +210,7 @@ namespace GodotModules.Netcode.Client
             Running = 0;
         }
 
-        private bool ConcurrentQueuesWorking() => NetworkManager.GodotCmds.Count != 0 || ENetCmds.Count != 0 || Outgoing.Count != 0;
+        private bool ConcurrentQueuesWorking() => ENetCmds.Count != 0 || Outgoing.Count != 0;
 
         public void Dispose()
         {
