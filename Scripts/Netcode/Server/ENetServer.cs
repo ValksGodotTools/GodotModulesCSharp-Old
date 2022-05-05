@@ -262,8 +262,6 @@ namespace GodotModules.Netcode.Server
         private bool ConcurrentQueuesWorking() => NetworkManager.GodotCmds.Count != 0 || ENetCmds.Count != 0 || Outgoing.Count != 0;
 
         public virtual void Dispose()
-        {
-            CancelTokenSource.Dispose(); // THREAD SAFETY VIOLATION
-        }
+        { }
     }
 }

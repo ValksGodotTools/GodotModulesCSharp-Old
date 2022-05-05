@@ -100,6 +100,14 @@ namespace GodotModules.Netcode.Server
                         CancelTokenSource.Cancel();
                         KickAll(DisconnectOpcode.Stopping);
                         break;
+
+                    case ENetOpcode.Dispose:
+                        CancelTokenSource.Dispose();
+                        EmitClientTransforms.Stop();
+                        EmitClientTransforms.Dispose();
+                        ServerSimulation.Stop();
+                        ServerSimulation.Dispose();
+                        break;
                 }
             }
         }
@@ -184,9 +192,8 @@ namespace GodotModules.Netcode.Server
 
         public override void Dispose()
         {
-            base.Dispose(); // THREAD SAFETY VIOLATION
-            EmitClientTransforms.Dispose(); // THREAD SAFETY VIOLATION
-            ServerSimulation.Dispose(); // THREAD SAFETY VIOLATION
+            base.Dispose();
+            ENetCmds.Enqueue(new ENetCmd(ENetOpcode.Dispose));
         }
     }
 }

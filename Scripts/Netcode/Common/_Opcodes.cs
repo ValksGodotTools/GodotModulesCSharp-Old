@@ -113,6 +113,7 @@
         StopServer,
         RestartServer,
         ClientWantsToExitApp,
-        ClientWantsToDisconnect
+        ClientWantsToDisconnect,
+        Dispose
     }
 }

@@ -119,15 +119,15 @@ namespace GodotModules
                     if (NetworkManager.GameServer.Running)
                     {
                         GameServer.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToExitApp));
-                        GameServer.Stop();
                         GameServer.Dispose();
+                        GameServer.Stop();
                     }
 
                 if (NetworkManager.GameClient != null)
                     if (NetworkManager.GameClient.Running) // THREAD SAFETY VIOLATION
                     {
-                        GameClient.Stop();
                         GameClient.Dispose();
+                        GameClient.Stop();
                     }
 
                 UtilOptions.SaveOptions();
