@@ -25,11 +25,12 @@ namespace GodotModules.Netcode.Client
         public DisconnectOpcode DisconnectOpcode { get; set; }
         public bool IsConnected { get => Interlocked.Read(ref Connected) == 1; }
         public bool IsRunning { get => Interlocked.Read(ref Running) == 1; }
+        public bool IsENetThreadRunning { get => Interlocked.Read(ref ENetThreadRunning) == 1; }
 
         protected CancellationTokenSource CancelTokenSource { get; set; }
         protected long Running = 0;
         protected long Connected = 0;
-        protected bool ENetThreadRunning;
+        protected long ENetThreadRunning = 0;
 
         private int OutgoingId { get; set; }
         private ConcurrentDictionary<int, ClientPacket> Outgoing { get; set; }
@@ -57,14 +58,14 @@ namespace GodotModules.Netcode.Client
         {
             try
             {
-                if (ENetThreadRunning)
+                if (IsENetThreadRunning)
                 {
                     GameClient.ConnectingToLobby = false;
                     Log($"Client is running already");
                     return;
                 }
 
-                ENetThreadRunning = true;
+                ENetThreadRunning = 1;
                 CancelTokenSource = new CancellationTokenSource();
 
                 await Task.Run(() => ENetThreadWorker(ip, port), CancelTokenSource.Token);
@@ -207,7 +208,7 @@ namespace GodotModules.Netcode.Client
             }
 
             Library.Deinitialize();
-            ENetThreadRunning = false;
+            ENetThreadRunning = 0;
 
             Log($"Client stopped");
 
