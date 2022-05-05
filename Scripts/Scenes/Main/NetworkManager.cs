@@ -130,20 +130,25 @@ namespace GodotModules
 
         public static async Task WaitForClientToConnect(int timeoutMs, CancellationTokenSource cts, Action onClientConnected)
         {
-            cts.CancelAfter(timeoutMs);
-            await Task.Run(async () =>
+            try
             {
-                while (!NetworkManager.GameClient.IsConnected)
+                cts.CancelAfter(timeoutMs);
+                await Task.Run(async () =>
                 {
-                    if (cts.IsCancellationRequested)
-                        break;
+                    while (!NetworkManager.GameClient.IsConnected)
+                    {
+                        if (cts.IsCancellationRequested)
+                            break;
 
-                    await Task.Delay(100);
-                }
-            }, cts.Token);
+                        await Task.Delay(100);
+                    }
+                }, cts.Token);
 
-            if (!cts.IsCancellationRequested)
-                onClientConnected();
+                if (!cts.IsCancellationRequested)
+                    onClientConnected();
+            }
+            catch (Exception)
+            { }
         }
     }
 
