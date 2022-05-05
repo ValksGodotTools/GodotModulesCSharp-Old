@@ -10,9 +10,6 @@ rect_min_size = Vector2( 0, 100 )
 size_flags_vertical = 0
 theme = ExtResource( 2 )
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 NodePathLabelTitle = NodePath("Padding/VBox Left/Name")
 NodePathLabelDescription = NodePath("Padding/VBox Left/Description")
 NodePathLabelPing = NodePath("Padding/VBox Right/Ping")
@@ -82,14 +79,6 @@ margin_right = 38.0
 margin_bottom = 38.0
 text = "1 / 4"
 align = 2
-
-[node name="Label" type="Label" parent="Padding"]
-margin_left = 455.0
-margin_top = 40.0
-margin_right = 566.0
-margin_bottom = 57.0
-size_flags_horizontal = 4
-text = "Can't reach server"
 
 [connection signal="focus_entered" from="Btn" to="." method="_on_Btn_focus_entered"]
 [connection signal="pressed" from="Btn" to="." method="_on_Btn_pressed"]
