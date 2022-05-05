@@ -16,7 +16,6 @@ namespace GodotModules.Netcode.Client
         public int PingMs { get; set;}
         public bool WasPingReceived { get; set; }
         public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
-        public DisconnectOpcode DisconnectOpcode { get; set; }
         public bool IsConnected { get => Interlocked.Read(ref Connected) == 1; }
         public bool IsRunning { get => Interlocked.Read(ref Running) == 1; }
         public bool IsENetThreadRunning { get => Interlocked.Read(ref ENetThreadRunning) == 1; }
@@ -33,7 +32,6 @@ namespace GodotModules.Netcode.Client
         {
             Outgoing = new();
             ENetCmds = new();
-            DisconnectOpcode = DisconnectOpcode.Disconnected;
         }
 
         public async Task Send(ClientPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)

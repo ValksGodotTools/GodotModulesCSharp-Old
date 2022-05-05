@@ -36,8 +36,7 @@ namespace GodotModules.Netcode.Client
             ConnectingToLobby = false;
             Disconnected = true;
             Connected = 0;
-            DisconnectOpcode = (DisconnectOpcode)opcode;
-            NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.ChangeScene, "GameServers"));
+            NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.Disconnect, opcode));
             CancelTokenSource.Cancel();
         }
     }

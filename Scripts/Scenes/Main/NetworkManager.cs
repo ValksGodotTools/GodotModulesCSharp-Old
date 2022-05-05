@@ -18,6 +18,7 @@ namespace GodotModules
         public static NetworkManager Instance { get; set; }
         private static CancellationTokenSource ClientConnectingTokenSource { get; set; }
 
+        public static DisconnectOpcode DisconnectOpcode { get; set; }
         public static uint PeerId { get; set; } // this clients peer id (grabbed from server at some point)
         public static bool IsHost { get; set; }
 
@@ -96,6 +97,11 @@ namespace GodotModules
 
                     case GodotOpcode.ChangeScene:
                         await SceneManager.ChangeScene($"{cmd.Data}");
+                        break;
+
+                    case GodotOpcode.Disconnect:
+                        DisconnectOpcode = (DisconnectOpcode)cmd.Data;
+                        await SceneManager.ChangeScene("GameServers");
                         break;
                 }
             }

@@ -33,7 +33,7 @@ namespace GodotModules
                 GameClient.Disconnected = false;
                 var message = "Disconnected";
 
-                switch (NetworkManager.GameClient.DisconnectOpcode) // THREAD SAFETY VIOLATION
+                switch (NetworkManager.DisconnectOpcode)
                 {
                     case DisconnectOpcode.Timeout:
                         message = "Timed out from server";

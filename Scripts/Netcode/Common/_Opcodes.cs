@@ -87,7 +87,8 @@
         LogMessage,
         LogError,
         ChangeScene,
-        PopupMessage
+        PopupMessage,
+        Disconnect
     }
 
     public class ENetCmd
