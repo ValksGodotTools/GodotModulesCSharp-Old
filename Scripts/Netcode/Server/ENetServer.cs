@@ -30,12 +30,93 @@ namespace GodotModules.Netcode.Server
             Peers = new();
         }
 
+        public async Task Start(ushort port, int maxClients)
+        {
+            if (Running)
+            {
+                Log("Server is running already");
+                return;
+            }
+
+            CancelTokenSource = new CancellationTokenSource();
+
+            try
+            {
+                await Task.Run(() => ENetThreadWorker(port, maxClients), CancelTokenSource.Token);
+            }
+            catch (Exception e)
+            {
+                Logger.LogErr(e, "Server");
+            }
+        }
+
+        public void KickAll(DisconnectOpcode opcode)
+        {
+            Peers.Values.ForEach(peer => peer.DisconnectNow((uint)opcode));
+            Peers.Clear();
+        }
+
+        public void Kick(uint id, DisconnectOpcode opcode)
+        {
+            Peers[id].DisconnectNow((uint)opcode);
+            Peers.Remove(id);
+        }
+
+        public void Stop() => ENetCmds.Enqueue(new ENetCmd(ENetOpcode.StopServer));
+
+        public void Restart() => ENetCmds.Enqueue(new ENetCmd(ENetOpcode.RestartServer));
+
+        public void Send(ServerPacketOpcode opcode, params Peer[] peers) => Send(opcode, null, PacketFlags.Reliable, peers);
+
+        public void Send(ServerPacketOpcode opcode, APacket data, params Peer[] peers) => Send(opcode, data, PacketFlags.Reliable, peers);
+
+        public void Send(ServerPacketOpcode opcode, PacketFlags flags = PacketFlags.Reliable, params Peer[] peers) => Send(opcode, null, flags, peers);
+
+        public void Send(ServerPacketOpcode opcode, APacket data, PacketFlags flags = PacketFlags.Reliable, params Peer[] peers) => Outgoing.Enqueue(new ServerPacket((byte)opcode, flags, data, peers));
+
+        public void Log(object obj) => Logger.Log($"[Server]: {obj}", ConsoleColor.Cyan);
+
+        protected Peer[] GetOtherPeers(uint id)
+        {
+            var otherPeers = new Dictionary<uint, Peer>(Peers);
+            otherPeers.Remove(id);
+            return otherPeers.Values.ToArray();
+        }
+
         /// <summary>
-        /// The server thread worker
+        /// This is in the ENet thread, anything from the ENet thread can be used here
         /// </summary>
-        /// <param name="port"></param>
-        /// <param name="maxClients"></param>
-        public async Task ENetThreadWorker(ushort port, int maxClients)
+        /// <param name="netEvent"></param>
+        protected virtual void Connect(Event netEvent)
+        { }
+
+        /// <summary>
+        /// This is in the ENet thread, anything from the ENet thread can be used here
+        /// </summary>
+        /// <param name="netEvent"></param>
+        protected virtual void Disconnect(Event netEvent)
+        { }
+
+        /// <summary>
+        /// This is in the ENet thread, anything from the ENet thread can be used here
+        /// </summary>
+        /// <param name="netEvent"></param>
+        protected virtual void Timeout(Event netEvent)
+        { }
+
+        /// <summary>
+        /// This is in the ENet thread, anything from the ENet thread can be used here
+        /// </summary>
+        protected virtual void Stopped()
+        { }
+
+        /// <summary>
+        /// This is in the ENet thread, anything from the ENet thread can be used here
+        /// </summary>
+        protected virtual void ServerCmds()
+        { }
+
+        private async Task ENetThreadWorker(ushort port, int maxClients)
         {
             Thread.CurrentThread.Name = "Server";
             if (SceneLobby.CurrentLobby.Public)
@@ -170,96 +251,6 @@ namespace GodotModules.Netcode.Server
             }
         }
 
-        private bool ConcurrentQueuesWorking() => NetworkManager.GodotCmds.Count != 0 || ENetCmds.Count != 0 || Outgoing.Count != 0;
-
-        public async Task Start(ushort port, int maxClients)
-        {
-            if (Running)
-            {
-                Log("Server is running already");
-                return;
-            }
-
-            CancelTokenSource = new CancellationTokenSource();
-
-            try
-            {
-                await Task.Run(() => ENetThreadWorker(port, maxClients), CancelTokenSource.Token);
-            }
-            catch (Exception e)
-            {
-                Logger.LogErr(e, "Server");
-            }
-        }
-
-        public void KickAll(DisconnectOpcode opcode)
-        {
-            Peers.Values.ForEach(peer => peer.DisconnectNow((uint)opcode));
-            Peers.Clear();
-        }
-
-        public void Kick(uint id, DisconnectOpcode opcode)
-        {
-            Peers[id].DisconnectNow((uint)opcode);
-            Peers.Remove(id);
-        }
-
-        public void Stop() => ENetCmds.Enqueue(new ENetCmd(ENetOpcode.StopServer));
-
-        public void Restart() => ENetCmds.Enqueue(new ENetCmd(ENetOpcode.RestartServer));
-
-        public void Send(ServerPacketOpcode opcode, params Peer[] peers) => Send(opcode, null, PacketFlags.Reliable, peers);
-
-        public void Send(ServerPacketOpcode opcode, APacket data, params Peer[] peers) => Send(opcode, data, PacketFlags.Reliable, peers);
-
-        public void Send(ServerPacketOpcode opcode, PacketFlags flags = PacketFlags.Reliable, params Peer[] peers) => Send(opcode, null, flags, peers);
-
-        public void Send(ServerPacketOpcode opcode, APacket data, PacketFlags flags = PacketFlags.Reliable, params Peer[] peers) => Outgoing.Enqueue(new ServerPacket((byte)opcode, flags, data, peers));
-
-        public void Log(object obj) => Logger.Log($"[Server]: {obj}", ConsoleColor.Cyan);
-
-        protected Peer[] GetOtherPeers(uint id)
-        {
-            var otherPeers = new Dictionary<uint, Peer>(Peers);
-            otherPeers.Remove(id);
-            return otherPeers.Values.ToArray();
-        }
-
-        /// <summary>
-        /// This is in the ENet thread, anything from the ENet thread can be used here
-        /// </summary>
-        /// <param name="netEvent"></param>
-        protected virtual void Connect(Event netEvent)
-        { }
-
-        /// <summary>
-        /// This is in the ENet thread, anything from the ENet thread can be used here
-        /// </summary>
-        /// <param name="netEvent"></param>
-        protected virtual void Disconnect(Event netEvent)
-        { }
-
-        /// <summary>
-        /// This is in the ENet thread, anything from the ENet thread can be used here
-        /// </summary>
-        /// <param name="netEvent"></param>
-        protected virtual void Timeout(Event netEvent)
-        { }
-
-        /// <summary>
-        /// This is in the ENet thread, anything from the ENet thread can be used here
-        /// </summary>
-        protected virtual void Stopped()
-        { }
-
-        protected virtual void ServerCmds()
-        { }
-
-        /// <summary>
-        /// Send a packet to a client. This method is not meant to be used directly, see Outgoing ConcurrentQueue
-        /// </summary>
-        /// <param name="gamePacket">The packet to send</param>
-        /// <param name="peer">The peer to send this packet to</param>
         private void Send(ServerPacket gamePacket, Peer peer)
         {
             var packet = default(Packet);
@@ -267,6 +258,8 @@ namespace GodotModules.Netcode.Server
             byte channelID = 0;
             peer.Send(channelID, ref packet);
         }
+
+        private bool ConcurrentQueuesWorking() => NetworkManager.GodotCmds.Count != 0 || ENetCmds.Count != 0 || Outgoing.Count != 0;
 
         public virtual void Dispose()
         {
