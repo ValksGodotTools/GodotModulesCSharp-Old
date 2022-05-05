@@ -61,11 +61,6 @@ namespace GodotModules
 
                 UtilOptions.SaveOptions();
                 NetworkManager.WebClient.Dispose();
-
-                //if (SceneGameServers.PingServersCTS != null)
-                //SceneGameServers.PingServersCTS.Dispose();
-                if (NetworkManager.ClientConnectingTokenSource != null)
-                    NetworkManager.ClientConnectingTokenSource.Dispose();
             }
             catch (Exception e)
             {

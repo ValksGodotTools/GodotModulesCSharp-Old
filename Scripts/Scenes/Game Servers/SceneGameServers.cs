@@ -9,23 +9,26 @@ namespace GodotModules
 {
     public class SceneGameServers : AScene
     {
-        public Dictionary<string, LobbyListing> LobbyListings { get; set; }
+        public UIPopupCreateLobby ServerCreationPopup { get; set; }
         public UILobbyListing SelectedLobbyInstance { get; set; }
         public bool GettingServers { get; set; }
 
         [Export] public readonly NodePath NodePathServerList;
         [Export] public readonly NodePath NodePathServerCreationPopup;
 
+        private Dictionary<string, LobbyListing> LobbyListings { get; set; }
         private VBoxContainer ServerList { get; set; }
-        public UIPopupCreateLobby ServerCreationPopup { get; set; }
+        private CancellationTokenSource CTSClientConnecting { get; set; }
+        private CancellationTokenSource CTSPingServers { get; set; }
 
         public override async void _Ready()
         {
+            CTSClientConnecting = new CancellationTokenSource();
             GettingServers = true; // because we await GetServers() at bottom
             UIGameServersNavBtns.BtnRefresh.Disabled = true;
-
             ServerList = GetNode<VBoxContainer>(NodePathServerList);
             ServerCreationPopup = GetNode<UIPopupCreateLobby>(NodePathServerCreationPopup);
+
             LobbyListings = new();
 
             if (GameClient.Disconnected)
@@ -67,7 +70,7 @@ namespace GodotModules
             await SceneManager.EscapeToScene("Menu", () =>
             {
                 WebClient.Client.CancelPendingRequests();
-                NetworkManager.CancelClientConnectingTokenSource();
+                NetworkManager.GameClient.CancelTask();
             });
         }
 
@@ -82,8 +85,7 @@ namespace GodotModules
             GD.Print("Connecting to lobby...");
             NetworkManager.StartClient(info.Ip, info.Port);
 
-            await NetworkManager.WaitForClientToConnect(3000, async () =>
-            {
+            await ClientConnect(async () => {
                 await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
                 {
                     LobbyOpcode = LobbyOpcode.LobbyJoin,
@@ -92,6 +94,8 @@ namespace GodotModules
                 });
             });
         }
+
+        public async Task ClientConnect(Action action) => await NetworkManager.WaitForClientToConnect(3000, CTSClientConnecting, action);
 
         public void AddServer(LobbyListing info)
         {
@@ -105,8 +109,6 @@ namespace GodotModules
             foreach (Control child in ServerList.GetChildren())
                 child.QueueFree();
         }
-
-        public CancellationTokenSource PingServersCTS;
 
         public async Task ListServers()
         {
@@ -132,8 +134,8 @@ namespace GodotModules
 
             res.Content.ForEach(async server =>
             {
-                PingServersCTS = new CancellationTokenSource();
-                PingServersCTS.CancelAfter(1000);
+                CTSPingServers = new CancellationTokenSource();
+                CTSPingServers.CancelAfter(1000);
 
                 var dummyClient = new ENetClient();
                 dummyClient.Start("127.0.0.1", 7777);
@@ -143,23 +145,23 @@ namespace GodotModules
                     try
                     {
                         while (!dummyClient.IsConnected)
-                            await Task.Delay(100, PingServersCTS.Token);
+                            await Task.Delay(100, CTSPingServers.Token);
 
                         await dummyClient.Send(Netcode.ClientPacketOpcode.Ping);
 
                         while (!dummyClient.WasPingReceived)
-                            await Task.Delay(1, PingServersCTS.Token);
+                            await Task.Delay(1, CTSPingServers.Token);
 
                         dummyClient.WasPingReceived = false;
                     }
                     catch (TaskCanceledException) { }
-                }, PingServersCTS.Token);
+                }, CTSPingServers.Token);
 
                 tasks.Add(task);
 
                 await task;
 
-                if (!PingServersCTS.IsCancellationRequested)
+                if (!CTSPingServers.IsCancellationRequested)
                 {
                     LobbyListings[server.Ip] = server;
                     server.Ping = dummyClient.PingMs;
@@ -197,11 +199,14 @@ namespace GodotModules
 
         public override void Cleanup()
         {
-            if (PingServersCTS != null)
+            if (CTSPingServers != null)
             {
-                PingServersCTS.Cancel();
-                PingServersCTS.Dispose();
+                CTSPingServers.Cancel();
+                CTSPingServers.Dispose();
             }
+
+            CTSClientConnecting.Cancel();
+            CTSClientConnecting.Dispose();
         }
     }
 }

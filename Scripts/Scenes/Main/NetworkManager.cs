@@ -16,7 +16,6 @@ namespace GodotModules
         public static GameClient GameClient { get; set; }
         public static WebClient WebClient { get; set; }
         public static NetworkManager Instance { get; set; }
-        public static CancellationTokenSource ClientConnectingTokenSource { get; set; }
 
         public static DisconnectOpcode DisconnectOpcode { get; set; }
         public static uint PeerId { get; set; } // this clients peer id (grabbed from server at some point)
@@ -86,7 +85,7 @@ namespace GodotModules
                         Console.ForegroundColor = ConsoleColor.Red;
                         GD.PrintErr(exception);
                         Console.ResetColor();
-                        
+
                         ErrorNotifier.IncrementErrorCount();
                         UIDebugger.AddMessage(errorText);
                         break;
@@ -129,33 +128,22 @@ namespace GodotModules
                 await Task.Delay(200);
         }
 
-        public static async Task WaitForClientToConnect(int timeoutMs, Action onClientConnected)
+        public static async Task WaitForClientToConnect(int timeoutMs, CancellationTokenSource cts, Action onClientConnected)
         {
-            ClientConnectingTokenSource = new CancellationTokenSource();
-            ClientConnectingTokenSource.CancelAfter(timeoutMs);
+            cts.CancelAfter(timeoutMs);
             await Task.Run(async () =>
             {
                 while (!NetworkManager.GameClient.IsConnected)
                 {
-                    if (ClientConnectingTokenSource.IsCancellationRequested)
+                    if (cts.IsCancellationRequested)
                         break;
 
                     await Task.Delay(100);
                 }
-            }, ClientConnectingTokenSource.Token).ContinueWith((task) =>
-            {
-                if (!ClientConnectingTokenSource.IsCancellationRequested)
-                    onClientConnected();
-            });
-        }
+            }, cts.Token);
 
-        public static void CancelClientConnectingTokenSource()
-        {
-            if (ClientConnectingTokenSource == null)
-                return;
-
-            ClientConnectingTokenSource.Cancel();
-            GameClient.CancelTask();
+            if (!cts.IsCancellationRequested)
+                onClientConnected();
         }
     }
 
