@@ -58,15 +58,22 @@ namespace GodotModules
         {
             if (Input.IsActionJustPressed("ui_cancel"))
             {
-                await WebClient.Post("servers/remove", new Dictionary<string, string> {
-                    { "Ip", WebClient.ExternalIp }
-                });
+                if (NetworkManager.IsHost)
+                {
+                    await WebClient.Post("servers/remove", new Dictionary<string, string> {
+                        { "Ip", WebClient.ExternalIp }
+                    });
 
-                WebClient.Client.CancelPendingRequests();
-                WebClient.TimerPingMasterServer.Stop();
+                    WebClient.Client.CancelPendingRequests();
+                    WebClient.TimerPingMasterServer.Stop();
+
+                    if (NetworkManager.GameServer != null)
+                        NetworkManager.GameServer.Stop();
+
+                    NetworkManager.IsHost = false;
+                }
+
                 NetworkManager.GameClient.Stop();
-                if (NetworkManager.GameServer != null)
-                    NetworkManager.GameServer.Stop();
             }
         }
 
