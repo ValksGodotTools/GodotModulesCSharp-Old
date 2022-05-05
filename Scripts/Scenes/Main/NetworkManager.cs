@@ -174,7 +174,7 @@ namespace GodotModules
             ClientConnectingTokenSource.CancelAfter(timeoutMs);
             await Task.Run(async () =>
             {
-                while (!NetworkManager.GameClient.IsConnected) // THREAD SAFETY VIOLATION
+                while (!NetworkManager.GameClient.IsConnected)
                 {
                     if (ClientConnectingTokenSource.IsCancellationRequested)
                         break;
