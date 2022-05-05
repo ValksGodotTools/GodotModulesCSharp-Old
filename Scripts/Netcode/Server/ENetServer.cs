@@ -9,7 +9,7 @@ namespace GodotModules.Netcode.Server
 {
     public abstract class ENetServer : IDisposable
     {
-        public bool SomeoneConnected { get; set; }
+        public bool HasSomeoneConnected { get => Interlocked.Read(ref SomeoneConnected) == 1; }
         public bool IsRunning { get => Interlocked.Read(ref Running) == 1; }
         public Dictionary<uint, Peer> Peers { get; set; }
         public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
@@ -17,6 +17,7 @@ namespace GodotModules.Netcode.Server
 
         protected CancellationTokenSource CancelTokenSource { get; set; }
         protected bool QueueRestart { get; set; }
+        protected long SomeoneConnected = 0;
         protected long Running = 0;
 
         private static readonly Dictionary<ClientPacketOpcode, APacketClient> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, APacketClient>("CPacket");
@@ -211,7 +212,7 @@ namespace GodotModules.Netcode.Server
                         Log($"Client connected with id: {netEvent.Peer.ID}");
 
                         // Connect
-                        SomeoneConnected = true;
+                        SomeoneConnected = 1;
                         Peers[netEvent.Peer.ID] = netEvent.Peer;
                         Connect(netEvent);
                     }
