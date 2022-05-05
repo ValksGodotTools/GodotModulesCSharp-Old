@@ -1,10 +1,7 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Fonts/Roboto/Roboto-Bold.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://Themes/Main.tres" type="Theme" id=2]
 [ext_resource path="res://Scripts/Msc/UINotifyError.cs" type="Script" id=3]
-
-[sub_resource type="StyleBoxEmpty" id=9]
 
 [sub_resource type="StyleBoxEmpty" id=11]
 
@@ -32,7 +29,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 1 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 0, 30 ), Vector2( 0, 0 ) ]
+"values": [ Vector2( 0, 25 ), Vector2( 0, 0 ) ]
 }
 
 [sub_resource type="Animation" id=10]
@@ -47,7 +44,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 1 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 0, 0 ), Vector2( 0, 30 ) ]
+"values": [ Vector2( 0, 0 ), Vector2( 0, 25 ) ]
 }
 
 [sub_resource type="Animation" id=8]
@@ -64,44 +61,57 @@ tracks/0/keys = {
 "update": 0,
 "values": [ Vector2( 0, 30 ) ]
 }
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:margin_top")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 30.0 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:margin_bottom")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 55.0 ]
+}
 
-[node name="Control" type="PanelContainer"]
+[node name="NotifyError" type="PanelContainer"]
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -75.0
-margin_top = -30.0
-rect_min_size = Vector2( 75, 30 )
-size_flags_horizontal = 8
-size_flags_vertical = 8
-theme = ExtResource( 2 )
-custom_styles/panel = SubResource( 9 )
-script = ExtResource( 3 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-NodePathErrorCount = NodePath("Pivot Bottom Right/Popup Error/Label")
-NodePathAnimationPlayer = NodePath("Pivot Bottom Right/Popup Error/AnimationPlayer")
-
-[node name="Pivot Bottom Right" type="PanelContainer" parent="."]
-margin_right = 75.0
-margin_bottom = 30.0
+margin_left = -80.0
+margin_top = -25.0
+margin_bottom = 25.0
+rect_min_size = Vector2( 80, 35 )
 custom_styles/panel = SubResource( 11 )
+script = ExtResource( 3 )
+NodePathErrorCount = NodePath("Popup Error/Label")
+NodePathAnimationPlayer = NodePath("Popup Error/AnimationPlayer")
 
-[node name="Popup Error" type="PanelContainer" parent="Pivot Bottom Right"]
-margin_right = 75.0
-margin_bottom = 30.0
+[node name="Popup Error" type="PanelContainer" parent="."]
+margin_top = 30.0
+margin_right = 80.0
+margin_bottom = 55.0
+size_flags_vertical = 8
 custom_styles/panel = SubResource( 5 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Label" type="Label" parent="Pivot Bottom Right/Popup Error"]
+[node name="Label" type="Label" parent="Popup Error"]
 margin_left = 3.0
-margin_top = 5.0
-margin_right = 72.0
-margin_bottom = 24.0
+margin_top = 3.0
+margin_right = 77.0
+margin_bottom = 22.0
 custom_fonts/font = SubResource( 2 )
 text = "23"
 align = 1
@@ -109,7 +119,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Pivot Bottom Right/Popup Error"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Popup Error"]
 playback_speed = 3.0
 anims/Appear = SubResource( 7 )
 anims/Disappear = SubResource( 10 )
