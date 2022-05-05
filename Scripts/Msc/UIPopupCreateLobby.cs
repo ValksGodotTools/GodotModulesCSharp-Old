@@ -1,6 +1,7 @@
 using Godot;
 using GodotModules.Netcode;
 using GodotModules.Netcode.Client;
+using System.Threading.Tasks;
 
 namespace GodotModules
 {
@@ -84,6 +85,30 @@ namespace GodotModules
             var name = InputTitle.Text.Trim();
             var desc = InputDescription.Text.Trim();
 
+            Hide();
+
+            NetworkManager.StartServer(port, ValidatedMaxPlayerCount);
+
+            var dummyClient = new ENetClient();
+            dummyClient.Start(WebClient.ExternalIp, port);
+            int attempts = 100;
+            while (!dummyClient.IsConnected) 
+            {
+                await Task.Delay(1);
+                attempts--;
+
+                if (attempts == 0)
+                {
+                    Logger.LogDebug($"The port '{port}' must be port forwarded first!");
+                    NetworkManager.GameServer.Stop();
+                    dummyClient.Stop();
+                    return;
+                }
+            }
+            dummyClient.Stop();
+
+            NetworkManager.StartClient(localIp, port);
+
             var info = new LobbyListing
             {
                 Name = name,
@@ -99,11 +124,6 @@ namespace GodotModules
             if (WebClient.ConnectionAlive)
                 SceneGameServersScript.PostServer(info);
             SceneLobby.CurrentLobby = info;
-
-            Hide();
-
-            NetworkManager.StartServer(port, ValidatedMaxPlayerCount);
-            NetworkManager.StartClient(localIp, port);
 
             await SceneGameServersScript.ClientConnect(async () => {
                 await NetworkManager.WaitForHostToConnectToServer();
