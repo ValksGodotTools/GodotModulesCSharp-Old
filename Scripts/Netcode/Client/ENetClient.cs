@@ -23,10 +23,11 @@ namespace GodotModules.Netcode.Client
         public bool WasPingReceived { get; set; }
         public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
         public DisconnectOpcode DisconnectOpcode { get; set; }
-        public bool IsConnected { get => Interlocked.Read(ref Connected) == 1; } // thread safe
-        public bool Running { get; set; }
+        public bool IsConnected { get => Interlocked.Read(ref Connected) == 1; }
+        public bool IsRunning { get => Interlocked.Read(ref Running) == 1; }
 
         protected CancellationTokenSource CancelTokenSource { get; set; }
+        protected long Running = 0;
         protected long Connected = 0;
         protected bool ENetThreadRunning;
 
@@ -35,9 +36,6 @@ namespace GodotModules.Netcode.Client
 
         public ENetClient()
         {
-            Running = false;
-            Connected = 0;
-            OutgoingId = 0;
             Outgoing = new();
             ENetCmds = new();
             DisconnectOpcode = DisconnectOpcode.Disconnected;
@@ -132,7 +130,7 @@ namespace GodotModules.Netcode.Client
             peer.PingInterval(pingInterval);
             peer.Timeout(timeout, timeoutMinimum, timeoutMaximum);
 
-            Running = true;
+            Running = 1;
 
             while (!CancelTokenSource.IsCancellationRequested)
             {
@@ -216,7 +214,7 @@ namespace GodotModules.Netcode.Client
             while (ConcurrentQueuesWorking())
                 await Task.Delay(100);
 
-            Running = false;
+            Running = 0;
         }
 
         private bool ConcurrentQueuesWorking() => NetworkManager.GodotCmds.Count != 0 || ENetCmds.Count != 0 || Outgoing.Count != 0;

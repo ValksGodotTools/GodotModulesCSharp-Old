@@ -39,7 +39,7 @@ namespace Game
             ModLoader.Call("OnGameInit");
 
             if (NetworkManager.GameClient != null)
-                if (NetworkManager.GameClient.Running) // THREAD SAFETY VIOLATION
+                if (NetworkManager.GameClient.IsRunning)
                     InitMultiplayerStuff();
         }
 
