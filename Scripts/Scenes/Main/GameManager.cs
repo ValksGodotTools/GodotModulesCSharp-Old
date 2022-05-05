@@ -51,8 +51,11 @@ namespace GodotModules
                         NetworkManager.GameServer.Dispose();
                         NetworkManager.GameServer.Stop();
 
-                        while (NetworkManager.GameServer.IsRunning)
+                        while (NetworkManager.GameServer.IsRunning) 
+                        {
+                            Logger.LogDebug("Game server still running");
                             await Task.Delay(100);
+                        }
                     }
 
                 if (NetworkManager.GameClient != null)
@@ -61,8 +64,11 @@ namespace GodotModules
                         NetworkManager.GameClient.Dispose();
                         NetworkManager.GameClient.Stop();
 
-                        while (NetworkManager.GameClient.IsRunning)
+                        while (NetworkManager.GameClient.IsRunning) 
+                        {
+                            Logger.LogDebug("Game client still running");
                             await Task.Delay(100);
+                        }
                     }
 
                 UtilOptions.SaveOptions();

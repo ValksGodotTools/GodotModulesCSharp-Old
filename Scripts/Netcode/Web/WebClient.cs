@@ -44,7 +44,7 @@ namespace GodotModules.Netcode
             }
         }
 
-        public async static Task<WebServerResponse<string>> Post(string path, Dictionary<string, string> values)
+        public async static Task<WebServerResponse<string>> Post(string path, Dictionary<string, string> values = null)
         {
             try
             {

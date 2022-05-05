@@ -37,7 +37,7 @@ namespace GodotModules
             Info = info;
             LabelTitle.Text = info.Name;
             LabelDescription.Text = info.Description;
-            LabelPlayerCount.Text = "" + info.MaxPlayerCount;
+            LabelPlayerCount.Text = $"{info.Players} / {info.MaxPlayerCount}";
             LabelPing.Text = $"{info.Ping}ms";
         }
 
@@ -68,6 +68,7 @@ namespace GodotModules
         public string LobbyHost { get; set; }
         public byte LobbyHostId { get; set; }
         public int MaxPlayerCount { get; set; }
+        public int Players { get; set; }
         public bool Public { get; set; }
     }
 }

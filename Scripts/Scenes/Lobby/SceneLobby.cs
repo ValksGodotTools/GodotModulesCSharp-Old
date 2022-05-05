@@ -2,6 +2,7 @@ using Godot;
 using GodotModules.Netcode;
 using GodotModules.Netcode.Client;
 using GodotModules.Netcode.Server;
+using System.Threading.Tasks;
 
 namespace GodotModules
 {
@@ -54,14 +55,17 @@ namespace GodotModules
             LobbyMaxPlayers.Text = "" + CurrentLobby.MaxPlayerCount;
         }
 
-        public override async void _Input(InputEvent @event)
+        public override void _Input(InputEvent @event)
         {
             if (Input.IsActionJustPressed("ui_cancel"))
             {
                 if (NetworkManager.IsHost)
                 {
-                    await WebClient.Post("servers/remove", new Dictionary<string, string> {
-                        { "Ip", WebClient.ExternalIp }
+                    Task.Run(async () =>
+                    {
+                        await WebClient.Post("servers/remove", new Dictionary<string, string> {
+                            { "Ip", WebClient.ExternalIp }
+                        });
                     });
 
                     WebClient.Client.CancelPendingRequests();
@@ -107,6 +111,15 @@ namespace GodotModules
             if (UIPlayers.Duplicate(id))
                 return;
 
+            if (NetworkManager.IsHost)
+            {
+                Task.Run(async () => {
+                    await WebClient.Post("servers/players/add", new Dictionary<string, string> {
+                        { "Ip", WebClient.ExternalIp }
+                    });
+                });
+            }
+
             var player = Prefabs.LobbyPlayerListing.Instance<UILobbyPlayerListing>();
             UIPlayers[id] = player;
 
@@ -120,6 +133,15 @@ namespace GodotModules
         {
             if (UIPlayers.DoesNotHave(id))
                 return;
+
+            if (NetworkManager.IsHost)
+            {
+                Task.Run(async () => {
+                    await WebClient.Post("servers/players/remove", new Dictionary<string, string> {
+                        { "Ip", WebClient.ExternalIp }
+                    });
+                });
+            }
 
             var uiPlayer = UIPlayers[id];
             uiPlayer.QueueFree();
