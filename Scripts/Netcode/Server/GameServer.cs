@@ -84,6 +84,18 @@ namespace GodotModules.Netcode.Server
                         KickAll(DisconnectOpcode.Stopping);
                         break;
 
+                    case ENetOpcode.RestartServer:
+                        if (CancelTokenSource.IsCancellationRequested)
+                        {
+                            Log("Server has been stopped already");
+                            return;
+                        }
+
+                        KickAll(DisconnectOpcode.Restarting);
+
+                        QueueRestart = true;
+                        break;
+
                     case ENetOpcode.ClientWantsToExitApp:
                         CancelTokenSource.Cancel();
                         KickAll(DisconnectOpcode.Stopping);

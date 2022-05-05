@@ -16,10 +16,10 @@ namespace GodotModules.Netcode.Server
         public ushort MaxPlayers { get; set; }
 
         protected CancellationTokenSource CancelTokenSource { get; set; }
+        protected bool QueueRestart { get; set; }
 
         private static readonly Dictionary<ClientPacketOpcode, APacketClient> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, APacketClient>("CPacket");
         private ConcurrentQueue<ServerPacket> Outgoing { get; set; }
-        private bool QueueRestart { get; set; }
 
         public ENetServer()
         {
@@ -192,30 +192,21 @@ namespace GodotModules.Netcode.Server
             }
         }
 
+        public void KickAll(DisconnectOpcode opcode)
+        {
+            Peers.Values.ForEach(peer => peer.DisconnectNow((uint)opcode));
+            Peers.Clear();
+        }
+
+        public void Kick(uint id, DisconnectOpcode opcode)
+        {
+            Peers[id].DisconnectNow((uint)opcode);
+            Peers.Remove(id);
+        }
+
         public void Stop() => ENetCmds.Enqueue(new ENetCmd(ENetOpcode.StopServer));
 
-        /// <summary>
-        /// Restart the server, can be called from the Godot thread
-        /// </summary>
-        public void Restart()
-        {
-            if (CancelTokenSource.IsCancellationRequested) // THREAD SAFETY VIOLATION
-            {
-                Log("Server has been stopped already");
-                return;
-            }
-
-            KickAll(DisconnectOpcode.Restarting); // THREAD SAFETY VIOLATION
-
-            QueueRestart = true; // THREAD SAFETY VIOLATION
-        }
-
-        protected Peer[] GetOtherPeers(uint id)
-        {
-            var otherPeers = new Dictionary<uint, Peer>(Peers);
-            otherPeers.Remove(id);
-            return otherPeers.Values.ToArray();
-        }
+        public void Restart() => ENetCmds.Enqueue(new ENetCmd(ENetOpcode.RestartServer));
 
         public void Send(ServerPacketOpcode opcode, params Peer[] peers) => Send(opcode, null, PacketFlags.Reliable, peers);
 
@@ -226,6 +217,13 @@ namespace GodotModules.Netcode.Server
         public void Send(ServerPacketOpcode opcode, APacket data, PacketFlags flags = PacketFlags.Reliable, params Peer[] peers) => Outgoing.Enqueue(new ServerPacket((byte)opcode, flags, data, peers));
 
         public void Log(object obj) => Logger.Log($"[Server]: {obj}", ConsoleColor.Cyan);
+
+        protected Peer[] GetOtherPeers(uint id)
+        {
+            var otherPeers = new Dictionary<uint, Peer>(Peers);
+            otherPeers.Remove(id);
+            return otherPeers.Values.ToArray();
+        }
 
         /// <summary>
         /// This is in the ENet thread, anything from the ENet thread can be used here
@@ -268,18 +266,6 @@ namespace GodotModules.Netcode.Server
             packet.Create(gamePacket.Data, gamePacket.PacketFlags);
             byte channelID = 0;
             peer.Send(channelID, ref packet);
-        }
-
-        public void KickAll(DisconnectOpcode opcode)
-        {
-            Peers.Values.ForEach(peer => peer.DisconnectNow((uint)opcode));
-            Peers.Clear();
-        }
-
-        public void Kick(uint id, DisconnectOpcode opcode)
-        {
-            Peers[id].DisconnectNow((uint)opcode);
-            Peers.Remove(id);
         }
 
         public virtual void Dispose()
