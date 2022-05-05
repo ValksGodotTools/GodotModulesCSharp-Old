@@ -14,9 +14,9 @@ namespace GodotModules
         public static ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
         public static GameServer GameServer { get; set; }
         public static GameClient GameClient { get; set; }
-        private static WebClient WebClient { get; set; }
+        public static WebClient WebClient { get; set; }
         public static NetworkManager Instance { get; set; }
-        private static CancellationTokenSource ClientConnectingTokenSource { get; set; }
+        public static CancellationTokenSource ClientConnectingTokenSource { get; set; }
 
         public static DisconnectOpcode DisconnectOpcode { get; set; }
         public static uint PeerId { get; set; } // this clients peer id (grabbed from server at some point)
@@ -105,54 +105,6 @@ namespace GodotModules
                         break;
                 }
             }
-        }
-
-        public override void _Notification(int what)
-        {
-            if (what == MainLoop.NotificationWmQuitRequest)
-            {
-                Instance.GetTree().SetAutoAcceptQuit(false);
-
-                ExitCleanup();
-            }
-        }
-
-        /// <summary>
-        /// All cleanup should be done in here
-        /// </summary>
-        private static void ExitCleanup()
-        {
-            try
-            {
-                if (NetworkManager.GameServer != null)
-                    if (NetworkManager.GameServer.IsRunning)
-                    {
-                        GameServer.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToExitApp));
-                        GameServer.Dispose();
-                        GameServer.Stop();
-                    }
-
-                if (NetworkManager.GameClient != null)
-                    if (NetworkManager.GameClient.IsRunning)
-                    {
-                        GameClient.Dispose();
-                        GameClient.Stop();
-                    }
-
-                UtilOptions.SaveOptions();
-                WebClient.Dispose();
-
-                //if (SceneGameServers.PingServersCTS != null)
-                //SceneGameServers.PingServersCTS.Dispose();
-                if (ClientConnectingTokenSource != null)
-                    ClientConnectingTokenSource.Dispose();
-            }
-            catch (Exception e)
-            {
-                GD.Print("Exception on game exit cleanup: " + e);
-            }
-
-            Instance.GetTree().Quit();
         }
 
         public static void StartClient(string ip, ushort port)

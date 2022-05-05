@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Threading.Tasks;
 
 namespace GodotModules
 {
@@ -24,6 +25,55 @@ namespace GodotModules
 
             if (Input.IsActionJustPressed("ui_fullscreen"))
                 UtilOptions.ToggleFullscreen();
+        }
+
+        public override async void _Notification(int what)
+        {
+            if (what == MainLoop.NotificationWmQuitRequest)
+            {
+                Instance.GetTree().SetAutoAcceptQuit(false);
+
+                await ExitCleanup();
+            }
+        }
+
+        /// <summary>
+        /// All cleanup should be done in here
+        /// </summary>
+        private static async Task ExitCleanup()
+        {
+            try
+            {
+                if (NetworkManager.GameServer != null)
+                    if (NetworkManager.GameServer.IsRunning)
+                    {
+                        NetworkManager.GameServer.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToExitApp));
+                        NetworkManager.GameServer.Dispose();
+                        NetworkManager.GameServer.Stop();
+                    }
+
+                if (NetworkManager.GameClient != null)
+                    if (NetworkManager.GameClient.IsRunning)
+                    {
+                        NetworkManager.GameClient.Dispose();
+                        NetworkManager.GameClient.Stop();
+                    }
+
+                UtilOptions.SaveOptions();
+                NetworkManager.WebClient.Dispose();
+
+                //if (SceneGameServers.PingServersCTS != null)
+                //SceneGameServers.PingServersCTS.Dispose();
+                if (NetworkManager.ClientConnectingTokenSource != null)
+                    NetworkManager.ClientConnectingTokenSource.Dispose();
+            }
+            catch (Exception e)
+            {
+                Logger.LogErr(e, "Game exit cleanup");
+                await Task.Delay(3000);
+            }
+
+            Instance.GetTree().Quit();
         }
 
         public static void SpawnPopupMessage(string message)
