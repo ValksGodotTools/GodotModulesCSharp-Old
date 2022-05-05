@@ -96,7 +96,8 @@ namespace GodotModules
             };
 
             SceneGameServersScript.AddServer(info);
-            SceneGameServersScript.PostServer(info);
+            if (WebClient.ConnectionAlive)
+                SceneGameServersScript.PostServer(info);
             SceneLobby.CurrentLobby = info;
 
             Hide();

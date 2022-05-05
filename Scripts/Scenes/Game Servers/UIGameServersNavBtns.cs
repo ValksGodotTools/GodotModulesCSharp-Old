@@ -42,7 +42,9 @@ namespace GodotModules
                 return;
 
             SceneGameServersScript.ClearServers();
-            await SceneGameServersScript.ListServers();
+
+            if (WebClient.ConnectionAlive)
+                await SceneGameServersScript.ListServers();
         }
 
         private void _on_Direct_Connect_pressed()

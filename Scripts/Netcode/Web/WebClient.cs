@@ -12,6 +12,7 @@ namespace GodotModules.Netcode
     public class WebClient : IDisposable
     {
         public static HttpClient Client { get; set; }
+        public static bool ConnectionAlive { get; set; }
         public static Task<WebServerResponse<LobbyListing[]>> TaskGetServers { get; set; }
         public static string ExternalIp { get; set; }
         private static int FailedPingAttempts { get; set; }
@@ -31,6 +32,16 @@ namespace GodotModules.Netcode
             TimerPingMasterServer = new(WebClient.WEB_PING_INTERVAL);
             TimerPingMasterServer.AutoReset = true;
             TimerPingMasterServer.Elapsed += new(OnTimerPingMasterServerEvent);
+
+            try 
+            {
+                ExternalIp = new System.Net.WebClient().DownloadString("http://icanhazip.com").Replace("\\r\\n", "").Replace("\\n", "").Trim();
+            }
+            catch (Exception e)
+            {
+                ExternalIp = "";
+                System.Console.WriteLine($"Failed to get external IP {e.Message}\n{e.StackTrace}");
+            }
         }
 
         public async static Task<WebServerResponse<string>> Post(string path, Dictionary<string, string> values)
@@ -58,6 +69,20 @@ namespace GodotModules.Netcode
                     Status = WebServerStatus.ERROR,
                     Exception = e
                 };
+            }
+        }
+
+        public static async Task UpdateIsAlive()
+        {
+            try 
+            {
+                var response = await Client.GetAsync($"http://{WEB_SERVER_IP}/api/ping");
+                await response.Content.ReadAsStringAsync();
+                ConnectionAlive = true;
+            }
+            catch (Exception)
+            {
+                ConnectionAlive = false;
             }
         }
 
@@ -91,7 +116,7 @@ namespace GodotModules.Netcode
 
         public async void OnTimerPingMasterServerEvent(System.Object source, ElapsedEventArgs args)
         {
-            var res = await WebClient.Post("ping", new Dictionary<string, string> { { "Name", SceneLobby.CurrentLobby.Name } });
+            var res = await WebClient.Post("servers/ping", new Dictionary<string, string> { { "Name", SceneLobby.CurrentLobby.Name } });
             if (res.Status == WebServerStatus.ERROR)
             {
                 FailedPingAttempts++;
@@ -102,12 +127,6 @@ namespace GodotModules.Netcode
             }
 
             FailedPingAttempts = 0; // reset failed ping attempts if a ping gets through
-        }
-
-        public static void GetExternalIp()
-        {
-            string externalIpString = new System.Net.WebClient().DownloadString("http://icanhazip.com").Replace("\\r\\n", "").Replace("\\n", "").Trim();
-            ExternalIp = IPAddress.Parse(externalIpString).ToString();
         }
 
         public void Dispose()

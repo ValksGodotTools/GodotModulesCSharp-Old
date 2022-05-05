@@ -119,7 +119,7 @@ namespace GodotModules.Netcode.Server
         private async Task ENetThreadWorker(ushort port, int maxClients)
         {
             Thread.CurrentThread.Name = "Server";
-            if (SceneLobby.CurrentLobby.Public)
+            if (SceneLobby.CurrentLobby.Public && WebClient.ConnectionAlive)
                 WebClient.TimerPingMasterServer.Start();
 
             MaxPlayers = (ushort)maxClients;
