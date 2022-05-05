@@ -62,7 +62,10 @@ namespace GodotModules
                 GameManager.SpawnPopupMessage(message);
             }
 
-            await ListServers();
+            await WebClient.UpdateIsAlive();
+
+            if (WebClient.ConnectionAlive)
+                await ListServers();
         }
 
         public override async void _Input(InputEvent @event)
@@ -70,7 +73,9 @@ namespace GodotModules
             await SceneManager.EscapeToScene("Menu", () =>
             {
                 WebClient.Client.CancelPendingRequests();
-                NetworkManager.GameClient.CancelTask();
+
+                if (NetworkManager.GameClient != null)
+                    NetworkManager.GameClient.CancelTask();
             });
         }
 
@@ -180,16 +185,18 @@ namespace GodotModules
                 UIGameServersNavBtns.BtnRefresh.Disabled = false;
         }
 
-        public async void PostServer(LobbyListing info) =>
-            await WebClient.Post("servers/post", new Dictionary<string, string>
+        public async void PostServer(LobbyListing info) 
+        {
+            await WebClient.Post("servers/add", new Dictionary<string, string>
             {
                 { "Name", info.Name },
-                { "Ip", info.Ip },
+                { "Ip", WebClient.ExternalIp },
                 { "Port", "" + info.Port },
                 { "Description", info.Description },
                 { "MaxPlayerCount", "" + info.MaxPlayerCount },
                 { "LobbyHost", info.LobbyHost }
             });
+        }
 
         private void _on_Control_resized()
         {
