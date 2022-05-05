@@ -54,10 +54,14 @@ namespace GodotModules
             LobbyMaxPlayers.Text = "" + CurrentLobby.MaxPlayerCount;
         }
 
-        public override void _Input(InputEvent @event)
+        public override async void _Input(InputEvent @event)
         {
-            if (Input.IsActionJustPressed("ui_cancel")) 
+            if (Input.IsActionJustPressed("ui_cancel"))
             {
+                await WebClient.Post("servers/remove", new Dictionary<string, string> {
+                    { "Ip", WebClient.ExternalIp }
+                });
+
                 WebClient.Client.CancelPendingRequests();
                 WebClient.TimerPingMasterServer.Stop();
                 NetworkManager.GameClient.Stop();
@@ -77,6 +81,10 @@ namespace GodotModules
                 if (NetworkManager.IsHost)
                 {
                     WebClient.TimerPingMasterServer.Stop();
+
+                    await WebClient.Post("servers/remove", new Dictionary<string, string> {
+                        { "Ip", WebClient.ExternalIp }
+                    });
 
                     // tell everyone game has started
                     await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
@@ -105,7 +113,7 @@ namespace GodotModules
         {
             if (UIPlayers.DoesNotHave(id))
                 return;
-            
+
             var uiPlayer = UIPlayers[id];
             uiPlayer.QueueFree();
             UIPlayers.Remove(id);
