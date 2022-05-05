@@ -18,6 +18,9 @@ namespace GodotModules
         public static NetworkManager Instance { get; set; }
         private static CancellationTokenSource ClientConnectingTokenSource { get; set; }
 
+        public static uint PeerId { get; set; } // this clients peer id (grabbed from server at some point)
+        public static bool IsHost { get; set; }
+
         public override void _Ready()
         {
             Instance = this;

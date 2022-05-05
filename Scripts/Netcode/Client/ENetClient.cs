@@ -12,12 +12,6 @@ namespace GodotModules.Netcode.Client
     {
         public static readonly Dictionary<ServerPacketOpcode, APacketServer> HandlePacket = ReflectionUtils.LoadInstances<ServerPacketOpcode, APacketServer>("SPacket");
 
-        // values grabbed from the server
-        // =========================================================
-        public uint PeerId { get; set; } // this clients peer id (grabbed from server at some point)
-        public bool IsHost { get; set; }
-        // =========================================================
-
         public DateTime PingSent { get; set; }
         public int PingMs { get; set;}
         public bool WasPingReceived { get; set; }

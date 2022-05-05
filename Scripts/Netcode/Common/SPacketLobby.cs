@@ -167,8 +167,8 @@ namespace GodotModules.Netcode
         // LobbyCreate
         private async Task HandleCreate()
         {
-            Client.PeerId = Id;
-            Client.IsHost = true;
+            NetworkManager.PeerId = Id;
+            NetworkManager.IsHost = true;
             Client.Log($"{GameManager.Options.OnlineUsername} created lobby with their id being {Id}");
             Client.Players[Id] = GameManager.Options.OnlineUsername;
 
@@ -201,7 +201,7 @@ namespace GodotModules.Netcode
         // LobbyGameStart
         private async Task HandleGameStart()
         {
-            if (Client.IsHost)
+            if (NetworkManager.IsHost)
                 NetworkManager.GameServer.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.StartGame));
 
             await SceneManager.ChangeScene("Game");
@@ -216,7 +216,7 @@ namespace GodotModules.Netcode
         public byte LobbyHostId { get; set; }
         private async Task HandleInfo()
         {
-            Client.PeerId = Id;
+            NetworkManager.PeerId = Id;
             Client.Log($"{GameManager.Options.OnlineUsername} joined lobby with id {Id}");
             Client.Players[Id] = GameManager.Options.OnlineUsername;
             Players.ForEach(pair => NetworkManager.GameClient.Players[pair.Key] = pair.Value.Username);
