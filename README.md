@@ -29,9 +29,6 @@ Tech tree where nodes in tree are positioned automatically via script
 ### Options
 ![image](https://user-images.githubusercontent.com/6277739/163117944-e350b70c-aaaa-426f-8719-3c28648d5747.png)  
 
-### Popup Menu (coming soon)
-In games usually when you press Esc a popup menu comes up asking if you want to go back to the main menu or edit the options
-
 ### [Helper Scripts](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/UTILITY_SCRIPTS.md)
 
 ## Contributing
