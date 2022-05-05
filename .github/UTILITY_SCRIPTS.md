@@ -39,6 +39,11 @@ if (loadedScenes)
 
 SceneManager.ChangeScene("Menu");
 SceneManager.ChangeScene("Game");
+
+// Change scene to menu scene when ESC is pressed 
+SceneManager.EscapeToScene("Menu", () => {
+    // optional code here
+});
 ```
 
 ### Game Manager
@@ -49,7 +54,7 @@ GameManager.SpawnPopupMessage(string message);
 // spawns a error message in the center of the screen
 GameManager.SpawnPopupError(Exception e);
 
-// Exit and do proper clean up (perhaps this should be under SceneManager)
+// Exit and do proper clean up
 GameManager.Exit();
 ```
 
@@ -58,13 +63,6 @@ GameManager.Exit();
 
 ### Utils
 ```cs
-// Change scene to menu scene when ESC is pressed 
-// (perhaps this should be under SceneManager)
-
-Utils.EscapeToScene("Menu", () => {
-    // optional code here
-});
-
 "hello world".ToTitleCase(); // Hello World
 "helloWorld".AddSpaceBeforeEachCapitol(); // hello World
 
