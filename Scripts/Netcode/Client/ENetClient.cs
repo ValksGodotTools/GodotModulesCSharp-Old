@@ -43,6 +43,73 @@ namespace GodotModules.Netcode.Client
             DisconnectOpcode = DisconnectOpcode.Disconnected;
         }
 
+        public async Task Send(ClientPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
+        {
+            OutgoingId++;
+            var success = Outgoing.TryAdd(OutgoingId, new ClientPacket((byte)opcode, flags, data));
+
+            if (!success)
+                Log($"Failed to add {opcode} to Outgoing queue because of duplicate key"); // this should never go off, however it's better to be safe then not safe at all
+
+            while (Outgoing.ContainsKey(OutgoingId))
+                await Task.Delay(100);
+        }
+
+        public async void Start(string ip, ushort port)
+        {
+            try
+            {
+                if (ENetThreadRunning)
+                {
+                    GameClient.ConnectingToLobby = false;
+                    Log($"Client is running already");
+                    return;
+                }
+
+                ENetThreadRunning = true;
+                CancelTokenSource = new CancellationTokenSource();
+
+                await Task.Run(() => ENetThreadWorker(ip, port), CancelTokenSource.Token);
+            }
+            catch (Exception e)
+            {
+                Logger.LogErr(e, "Client");
+            }
+        }
+
+        /// <summary>
+        /// Disconnect the client from the server, can be called from the Godot thread
+        /// </summary>
+        public void Stop() => ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToDisconnect));
+
+        public void CancelTask()
+        {
+            CancelTokenSource.Cancel();
+        }
+
+        public void Log(object obj) => Logger.Log($"[Client]: {obj}", ConsoleColor.Yellow);
+
+        /// <summary>
+        /// This is in the ENet thread, anything from the ENet thread can be used here
+        /// </summary>
+        /// <param name="netEvent"></param>
+        protected virtual void Connect(Event netEvent)
+        { }
+
+        /// <summary>
+        /// This is in the ENet thread, anything from the ENet thread can be used here
+        /// </summary>
+        /// <param name="netEvent"></param>
+        protected virtual void Disconnect(Event netEvent)
+        { }
+
+        /// <summary>
+        /// This is in the ENet thread, anything from the ENet thread can be used here
+        /// </summary>
+        /// <param name="netEvent"></param>
+        protected virtual void Timeout(Event netEvent)
+        { }
+
         private async Task ENetThreadWorker(string ip, ushort port)
         {
             Thread.CurrentThread.Name = "Client";
@@ -152,80 +219,7 @@ namespace GodotModules.Netcode.Client
             Running = false;
         }
 
-        public async Task Send(ClientPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
-        {
-            OutgoingId++;
-            var success = Outgoing.TryAdd(OutgoingId, new ClientPacket((byte)opcode, flags, data));
-
-            if (!success)
-                Log($"Failed to add {opcode} to Outgoing queue because of duplicate key"); // this should never go off, however it's better to be safe then not safe at all
-
-            while (Outgoing.ContainsKey(OutgoingId))
-                await Task.Delay(100);
-        }
-
         private bool ConcurrentQueuesWorking() => NetworkManager.GodotCmds.Count != 0 || ENetCmds.Count != 0 || Outgoing.Count != 0;
-
-        /// <summary>
-        /// Attempt to connect to the server, can be called from the Godot thread
-        /// Because Task is not returned we surround all code with try catch to catch exceptions
-        /// </summary>
-        /// <param name="ip"></param>
-        /// <param name="port"></param>
-        public async void Start(string ip, ushort port)
-        {
-            try
-            {
-                if (ENetThreadRunning)
-                {
-                    GameClient.ConnectingToLobby = false;
-                    Log($"Client is running already");
-                    return;
-                }
-
-                ENetThreadRunning = true;
-                CancelTokenSource = new CancellationTokenSource();
-
-                await Task.Run(() => ENetThreadWorker(ip, port), CancelTokenSource.Token);
-            }
-            catch (Exception e)
-            {
-                Logger.LogErr(e, "Client");
-            }
-        }
-
-        /// <summary>
-        /// Disconnect the client from the server, can be called from the Godot thread
-        /// </summary>
-        public void Stop() => ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToDisconnect));
-
-        public void CancelTask()
-        {
-            CancelTokenSource.Cancel();
-        }
-
-        public void Log(object obj) => Logger.Log($"[Client]: {obj}", ConsoleColor.Yellow);
-
-        /// <summary>
-        /// This is in the ENet thread, anything from the ENet thread can be used here
-        /// </summary>
-        /// <param name="netEvent"></param>
-        protected virtual void Connect(Event netEvent)
-        { }
-
-        /// <summary>
-        /// This is in the ENet thread, anything from the ENet thread can be used here
-        /// </summary>
-        /// <param name="netEvent"></param>
-        protected virtual void Disconnect(Event netEvent)
-        { }
-
-        /// <summary>
-        /// This is in the ENet thread, anything from the ENet thread can be used here
-        /// </summary>
-        /// <param name="netEvent"></param>
-        protected virtual void Timeout(Event netEvent)
-        { }
 
         public void Dispose()
         {
