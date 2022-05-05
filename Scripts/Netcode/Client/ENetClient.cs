@@ -73,10 +73,7 @@ namespace GodotModules.Netcode.Client
         /// </summary>
         public void Stop() => ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToDisconnect));
 
-        public void CancelTask()
-        {
-            CancelTokenSource.Cancel();
-        }
+        public void CancelTask() => ENetCmds.Enqueue(new ENetCmd(ENetOpcode.CancelTask));
 
         public void Log(object obj) => Logger.Log($"[Client]: {obj}", ConsoleColor.Yellow);
 
@@ -137,6 +134,9 @@ namespace GodotModules.Netcode.Client
                         case ENetOpcode.ClientWantsToExitApp:
                         case ENetOpcode.ClientWantsToDisconnect:
                             peer.Disconnect(0);
+                            break;
+                        case ENetOpcode.CancelTask:
+                            CancelTokenSource.Cancel();
                             break;
                     }
                 }

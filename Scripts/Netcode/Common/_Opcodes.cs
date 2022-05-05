@@ -115,6 +115,7 @@
         RestartServer,
         ClientWantsToExitApp,
         ClientWantsToDisconnect,
+        CancelTask,
         Dispose
     }
 }

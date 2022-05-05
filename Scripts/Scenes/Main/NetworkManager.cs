@@ -203,7 +203,7 @@ namespace GodotModules
                 return;
 
             ClientConnectingTokenSource.Cancel();
-            GameClient.CancelTask(); // THREAD SAFETY VIOLATION
+            GameClient.CancelTask();
         }
     }
 
