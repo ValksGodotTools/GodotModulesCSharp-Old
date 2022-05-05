@@ -92,7 +92,8 @@ namespace GodotModules
             GD.Print("Connecting to lobby...");
             NetworkManager.StartClient(info.Ip, info.Port);
 
-            await ClientConnect(async () => {
+            await ClientConnect(async () =>
+            {
                 await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
                 {
                     LobbyOpcode = LobbyOpcode.LobbyJoin,
@@ -161,12 +162,23 @@ namespace GodotModules
 
                         dummyClient.WasPingReceived = false;
                     }
-                    catch (TaskCanceledException) { }
+                    catch (TaskCanceledException)
+                    {
+                        Logger.LogDebug("Dummy client task cancelled (A)");
+                    }
                 }, CTSPingServers.Token);
 
                 tasks.Add(task);
 
-                await task;
+                try 
+                {
+                    await task;
+                } catch(TaskCanceledException)
+                {
+                    Logger.LogDebug("Dummy client task cancelled (B)");
+                }
+
+
 
                 if (!CTSPingServers.IsCancellationRequested)
                 {
@@ -187,7 +199,7 @@ namespace GodotModules
                 UIGameServersNavBtns.BtnRefresh.Disabled = false;
         }
 
-        public async void PostServer(LobbyListing info) 
+        public async void PostServer(LobbyListing info)
         {
             await WebClient.Post("servers/add", new Dictionary<string, string>
             {
