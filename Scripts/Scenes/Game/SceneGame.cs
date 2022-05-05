@@ -73,10 +73,9 @@ namespace Game
             }
         }
 
-        public override async void _Input(InputEvent @event)
+        public override void _Input(InputEvent @event)
         {
-            if (Input.IsActionJustPressed("ui_cancel"))
-            {
+            SceneManager.EscapePressed(async () => {
                 if (SceneManager.PrevSceneName == "Menu")
                 {
                     // Singleplayer
@@ -90,7 +89,7 @@ namespace Game
                     if (NetworkManager.GameServer != null)
                         NetworkManager.GameServer.Stop();
                 }
-            }
+            });
         }
 
         public void UpdatePlayerPositions(Dictionary<byte, DataEntityTransform> playerTransforms) => PlayerTransformQueue.Add(playerTransforms);

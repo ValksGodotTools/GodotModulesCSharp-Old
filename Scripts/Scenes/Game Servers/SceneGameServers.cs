@@ -68,14 +68,16 @@ namespace GodotModules
                 await ListServers();
         }
 
-        public override async void _Input(InputEvent @event)
+        public override void _Input(InputEvent @event)
         {
-            await SceneManager.EscapeToScene("Menu", () =>
+            SceneManager.EscapePressed(async () =>
             {
                 WebClient.Client.CancelPendingRequests();
 
                 if (NetworkManager.GameClient != null)
                     NetworkManager.GameClient.CancelTask();
+
+                await SceneManager.ChangeScene("Menu");
             });
         }
 

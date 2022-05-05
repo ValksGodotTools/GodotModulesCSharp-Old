@@ -57,12 +57,17 @@ namespace GodotModules
             Instance.AddChild(ActiveScene);
         }
 
-        public static async Task EscapeToScene(string scene, Action action)
+        public static void EscapePressed(Action action)
         {
             if (Input.IsActionJustPressed("ui_cancel"))
             {
+                if (UIDebugger.Instance.Visible) 
+                {
+                    UIDebugger.ToggleVisibility();
+                    return;
+                }
+
                 action();
-                await SceneManager.ChangeScene(scene);
             }
         }
 
