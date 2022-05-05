@@ -143,7 +143,7 @@ namespace GodotModules
                 CTSPingServers.CancelAfter(1000);
 
                 var dummyClient = new ENetClient();
-                dummyClient.Start("127.0.0.1", 7777);
+                dummyClient.Start(server.Ip, server.Port);
 
                 var task = Task.Run(async () =>
                 {
