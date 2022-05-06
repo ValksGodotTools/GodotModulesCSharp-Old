@@ -1,5 +1,5 @@
 using Godot;
-
+using System;
 using System.Diagnostics;
 
 namespace GodotModules.ModLoader
@@ -141,7 +141,18 @@ namespace GodotModules.ModLoader
             //AddChild(fileDialogPopup);
             //fileDialogPopup.Open();
 
-            Process.Start(ModLoader.PathMods);
+            try
+            {
+                using (Process myProcess = new Process())
+                {
+                    myProcess.StartInfo.FileName = ModLoader.PathMods;
+                    myProcess.Start();
+                }
+            }
+            catch (Exception e)
+            {
+                GodotModules.Logger.LogErr(e);
+            }
         }
     }
 }
