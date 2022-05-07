@@ -32,6 +32,11 @@ Tech tree where nodes in tree are positioned automatically via script
 ### [Helper Scripts](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/UTILITY_SCRIPTS.md)
 
 ## Contributing
+There are 3 types of problems I always seem to run into while working on this
+- Tasks are fired and forgotten (wanted behavior) but are not cancelled at proper times causing all sorts of problems
+- Duplicate player id added to lobby player dictionary
+- Static variables not being reset after being finished for using them for setting them up for re-use again
+
 See [CONTRIBUTING.md](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/CONTRIBUTING.md)
 
 ## Credit
