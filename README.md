@@ -37,6 +37,12 @@ There are 3 types of problems I always run into while working on this
 - Duplicate player id added to lobby player dictionary
 - Static variables not being reset for re-use
 
+Tasks are hard to manage, you cancel them with a cancellation token but it's hard to keep track if you cancel them twice or dispose them twice and get a disposed already exception.
+
+With the duplicate player joining it's because their joining ID is 0 just like the host id is 0. The joining ID should be 1. Usually this is because I forgot to write or read a byte but that dosen't seem to be the case this time but I might be wrong I do not know.
+
+Static variables are a mess, I wish I never used them to begin with.
+
 See [CONTRIBUTING.md](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/CONTRIBUTING.md)
 
 ## Credit
