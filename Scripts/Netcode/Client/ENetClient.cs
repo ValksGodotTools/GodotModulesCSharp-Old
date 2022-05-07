@@ -175,7 +175,7 @@ namespace GodotModules.Netcode.Client
                                 continue;
                             }
 
-                            NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.ENetPacket, new PacketHandleData {
+                            GameManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.ENetPacket, new PacketHandleData {
                                 Reader = new PacketReader(packet),
                                 Client = this
                             }));

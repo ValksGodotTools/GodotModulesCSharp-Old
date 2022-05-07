@@ -8,7 +8,7 @@ namespace GodotModules
     {
         public static void LogErr(Exception ex, string hint = "")
         {
-            NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogError, new GodotError
+            GameManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogError, new GodotError
             {
                 Exception = ex,
                 Hint = hint
@@ -22,7 +22,7 @@ namespace GodotModules
             if (trace)
                 path = $"{filePath.Substring(filePath.IndexOf("Scripts\\"))} line:{lineNumber}";
 
-            NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessage, new GodotMessage
+            GameManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessage, new GodotMessage
             {
                 Text = $"[Debug]: {v}",
                 Path = path,
@@ -31,7 +31,7 @@ namespace GodotModules
         }
         public static void Log(object v, ConsoleColor color = ConsoleColor.Gray)
         {
-            NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessage, new GodotMessage
+            GameManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessage, new GodotMessage
             {
                 Text = $"{v}",
                 Color = color

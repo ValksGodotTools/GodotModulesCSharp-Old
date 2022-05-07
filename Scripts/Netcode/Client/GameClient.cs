@@ -36,7 +36,7 @@ namespace GodotModules.Netcode.Client
             ConnectingToLobby = false;
             Disconnected = true;
             Connected = 0;
-            NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.Disconnect, opcode));
+            GameManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.Disconnect, opcode));
             if (CTSClientTask != null)
             {
                 CTSClientTask.Cancel();
