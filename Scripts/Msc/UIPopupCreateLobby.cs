@@ -48,8 +48,8 @@ namespace GodotModules
 
         public void ClearFields()
         {
-            InputTitle.Text = "Test";
-            InputPort.Text = "7777";
+            InputTitle.Text = "Another lobby";
+            InputPort.Text = "25565";
             InputDescription.Text = "";
             InputMaxPlayerCount.Text = $"{MAX_PLAYER_COUNT}"; // byte values range from 0-255 (gives 256 ids) (should be noted dummy clients connect to ping servers and take up an id for a short duration)
         }
@@ -99,7 +99,7 @@ namespace GodotModules
 
                 if (attempts == 0)
                 {
-                    Logger.LogDebug($"The port '{port}' must be port forwarded first!");
+                    GameManager.SpawnPopupMessage($"The port '{port}' must be port forwarded first");
                     NetworkManager.GameServer.Stop();
                     dummyClient.Stop();
                     return;

@@ -78,7 +78,7 @@ margin_left = 31.0
 margin_right = 106.0
 margin_bottom = 17.0
 rect_min_size = Vector2( 75, 0 )
-text = "7777"
+text = "25565"
 align = 1
 max_length = 65535
 
@@ -97,7 +97,7 @@ margin_left = 41.0
 margin_right = 191.0
 margin_bottom = 17.0
 rect_min_size = Vector2( 150, 0 )
-text = "Test"
+text = "Another lobby"
 max_length = 15
 
 [node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBox"]
