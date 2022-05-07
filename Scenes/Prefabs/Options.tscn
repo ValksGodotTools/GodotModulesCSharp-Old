@@ -97,10 +97,7 @@ margin_bottom = 23.0
 [node name="Multiplayer" type="MarginContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 32.0
-margin_right = -4.0
-margin_bottom = -4.0
+margin_top = 24.0
 custom_constants/margin_right = 15
 custom_constants/margin_top = 15
 custom_constants/margin_left = 15
@@ -109,11 +106,11 @@ custom_constants/margin_bottom = 15
 [node name="VBoxContainer" type="VBoxContainer" parent="Multiplayer"]
 margin_left = 15.0
 margin_top = 15.0
-margin_right = 377.0
+margin_right = 385.0
 margin_bottom = 53.0
 
 [node name="Online Username" type="HBoxContainer" parent="Multiplayer/VBoxContainer"]
-margin_right = 362.0
+margin_right = 370.0
 margin_bottom = 17.0
 
 [node name="Label" type="Label" parent="Multiplayer/VBoxContainer/Online Username"]
@@ -122,8 +119,8 @@ margin_bottom = 17.0
 text = "Online Username: "
 
 [node name="OnlineUsername" type="LineEdit" parent="Multiplayer/VBoxContainer/Online Username"]
-margin_left = 162.0
-margin_right = 362.0
+margin_left = 170.0
+margin_right = 370.0
 margin_bottom = 17.0
 rect_min_size = Vector2( 200, 0 )
 size_flags_horizontal = 10
@@ -132,7 +129,7 @@ caret_blink_speed = 0.5
 
 [node name="Web Server" type="HBoxContainer" parent="Multiplayer/VBoxContainer"]
 margin_top = 21.0
-margin_right = 362.0
+margin_right = 370.0
 margin_bottom = 38.0
 
 [node name="Label" type="Label" parent="Multiplayer/VBoxContainer/Web Server"]
@@ -141,8 +138,8 @@ margin_bottom = 17.0
 text = "Web Server:"
 
 [node name="WebServerIp" type="LineEdit" parent="Multiplayer/VBoxContainer/Web Server"]
-margin_left = 162.0
-margin_right = 362.0
+margin_left = 170.0
+margin_right = 370.0
 margin_bottom = 17.0
 rect_min_size = Vector2( 200, 0 )
 size_flags_horizontal = 10

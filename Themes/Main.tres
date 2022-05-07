@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=14 format=2]
+[gd_resource type="Theme" load_steps=17 format=2]
 
 [ext_resource path="res://Themes/Fonts/Roboto.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Themes/Button/Btn_Hover.tres" type="StyleBox" id=2]
@@ -39,6 +39,30 @@ border_color = Color( 0.188235, 0.188235, 0.188235, 1 )
 shadow_color = Color( 0.184314, 0.184314, 0.184314, 0.486275 )
 shadow_size = 3
 
+[sub_resource type="StyleBoxFlat" id=7]
+bg_color = Color( 0.0862745, 0.0862745, 0.0862745, 1 )
+
+[sub_resource type="StyleBoxFlat" id=8]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.109804, 0.109804, 0.109804, 1 )
+expand_margin_left = 3.0
+expand_margin_right = 3.0
+expand_margin_top = 3.0
+expand_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxFlat" id=9]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color( 0.341176, 0.341176, 0.341176, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.231373, 0.231373, 0.231373, 1 )
+expand_margin_top = 2.0
+expand_margin_bottom = 2.0
+
 [resource]
 Button/fonts/font = ExtResource( 1 )
 Button/styles/disabled = ExtResource( 4 )
@@ -55,6 +79,9 @@ LineEdit/styles/focus = SubResource( 6 )
 LineEdit/styles/normal = ExtResource( 9 )
 PanelContainer/styles/panel = SubResource( 1 )
 RichTextLabel/constants/line_separation = 4
+TabContainer/styles/panel = SubResource( 7 )
+TabContainer/styles/tab_bg = SubResource( 8 )
+TabContainer/styles/tab_fg = SubResource( 9 )
 TextEdit/colors/brace_mismatch_color = Color( 0.372549, 0.372549, 0.372549, 1 )
 TextEdit/colors/font_color = Color( 0.615686, 0.615686, 0.615686, 1 )
 TextEdit/colors/font_color_readonly = Color( 1, 1, 1, 1 )
