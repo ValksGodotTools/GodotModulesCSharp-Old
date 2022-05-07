@@ -128,6 +128,9 @@ namespace GodotModules
 
         public static void GodotCmd(GodotOpcode opcode, object data = null) => GodotCmds.Enqueue(new GodotCmd(opcode, data));
 
+        private static int GameClientStillRunning { get; set; }
+        private static int GameServerStillRunning { get; set; }
+
         /// <summary>
         /// All cleanup should be done in here
         /// </summary>
@@ -142,7 +145,9 @@ namespace GodotModules
 
                     while (NetworkManager.GameServer.IsRunning) 
                     {
-                        Logger.LogDebug("Game server still running");
+                        GameServerStillRunning++;
+                        if (GameServerStillRunning > 4)
+                            Logger.LogDebug("Game server taking a long time to stop");
                         await Task.Delay(100);
                     }
                 }
@@ -153,7 +158,9 @@ namespace GodotModules
 
                     while (NetworkManager.GameClient.IsRunning) 
                     {
-                        Logger.LogDebug("Game client still running");
+                        GameClientStillRunning++;
+                        if (GameClientStillRunning > 4)
+                            Logger.LogDebug("Game client taking a long time to stop");
                         await Task.Delay(100);
                     }
                 }
