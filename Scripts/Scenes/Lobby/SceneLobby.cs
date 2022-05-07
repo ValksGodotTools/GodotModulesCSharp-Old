@@ -125,7 +125,7 @@ namespace GodotModules
 
             ListPlayers.AddChild(player);
 
-            player.SetUsername(name);
+            player.SetUsername($"{name} (Id: {id})");
             player.SetReady(false);
             player.Id = id;
         }
