@@ -38,9 +38,8 @@ namespace Game
 
             ModLoader.Call("OnGameInit");
 
-            if (NetworkManager.GameClient != null)
-                if (NetworkManager.GameClient.IsRunning)
-                    InitMultiplayerStuff();
+            if (NetworkManager.IsClientRunning())
+                InitMultiplayerStuff();
         }
 
         public override void _PhysicsProcess(float delta)

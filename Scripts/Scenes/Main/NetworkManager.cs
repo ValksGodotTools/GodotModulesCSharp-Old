@@ -22,6 +22,9 @@ namespace GodotModules
             WebClient = new();
         }
 
+        public static bool IsClientRunning() => GameClient == null ? false : GameClient.IsRunning;
+        public static bool IsServerRunning() => GameServer == null ? false : GameServer.IsRunning;
+
         public static void StartClient(string ip, ushort port)
         {
             GameClient = new GameClient();

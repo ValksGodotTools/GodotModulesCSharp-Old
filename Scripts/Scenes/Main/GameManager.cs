@@ -135,30 +135,28 @@ namespace GodotModules
         {
             try
             {
-                if (NetworkManager.GameServer != null)
-                    if (NetworkManager.GameServer.IsRunning)
+                if (NetworkManager.IsServerRunning())
+                {
+                    NetworkManager.GameServer.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToExitApp));
+                    NetworkManager.GameServer.Stop();
+
+                    while (NetworkManager.GameServer.IsRunning) 
                     {
-                        NetworkManager.GameServer.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToExitApp));
-                        NetworkManager.GameServer.Stop();
-
-                        while (NetworkManager.GameServer.IsRunning) 
-                        {
-                            Logger.LogDebug("Game server still running");
-                            await Task.Delay(100);
-                        }
+                        Logger.LogDebug("Game server still running");
+                        await Task.Delay(100);
                     }
+                }
 
-                if (NetworkManager.GameClient != null)
-                    if (NetworkManager.GameClient.IsRunning)
+                if (NetworkManager.IsClientRunning())
+                {
+                    NetworkManager.GameClient.Stop();
+
+                    while (NetworkManager.GameClient.IsRunning) 
                     {
-                        NetworkManager.GameClient.Stop();
-
-                        while (NetworkManager.GameClient.IsRunning) 
-                        {
-                            Logger.LogDebug("Game client still running");
-                            await Task.Delay(100);
-                        }
+                        Logger.LogDebug("Game client still running");
+                        await Task.Delay(100);
                     }
+                }
 
                 UtilOptions.SaveOptions();
                 NetworkManager.WebClient.Dispose();

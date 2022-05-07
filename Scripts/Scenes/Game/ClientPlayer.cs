@@ -25,15 +25,14 @@ namespace Game
             SetHealth(100);
             LabelPosition = GetNode<Label>(NodePathLabelPosition);
 
-            if (NetworkManager.GameClient != null)
-                if (NetworkManager.GameClient.IsRunning)
-                {
-                    var timer1 = new GTimer(ClientIntervals.PlayerDirection);
-                    timer1.Connect(this, nameof(EmitMovementDirection));
+            if (NetworkManager.IsClientRunning())
+            {
+                var timer1 = new GTimer(ClientIntervals.PlayerDirection);
+                timer1.Connect(this, nameof(EmitMovementDirection));
 
-                    var timer2 = new GTimer(ClientIntervals.PlayerRotation);
-                    timer2.Connect(this, nameof(EmitRotation));
-                }
+                var timer2 = new GTimer(ClientIntervals.PlayerRotation);
+                timer2.Connect(this, nameof(EmitRotation));
+            }
         }
 
         public async void EmitMovementDirection()
@@ -68,9 +67,8 @@ namespace Game
 
             HandleMovement(delta);
 
-            if (NetworkManager.GameClient != null)
-                if (NetworkManager.GameClient.IsRunning)
-                    KeepTrackOfInputs();
+            if (NetworkManager.IsClientRunning())
+                KeepTrackOfInputs();
         }
 
         private void HandleMovement(float delta)
