@@ -8,11 +8,11 @@ namespace GodotModules
     {
         public static void LogErr(Exception ex, string hint = "")
         {
-            GameManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogError, new GodotError
+            GameManager.GodotCmd(GodotOpcode.LogError, new GodotError
             {
                 Exception = ex,
                 Hint = hint
-            }));
+            });
         }
         public static void LogTODO(object v, ConsoleColor color = ConsoleColor.White) => Log($"[TODO]: {v}", color);
         public static void LogWarning(object v, ConsoleColor color = ConsoleColor.Yellow) => Log($"[Warning]: {v}", color);
@@ -22,20 +22,20 @@ namespace GodotModules
             if (trace)
                 path = $"{filePath.Substring(filePath.IndexOf("Scripts\\"))} line:{lineNumber}";
 
-            GameManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessage, new GodotMessage
+            GameManager.GodotCmd(GodotOpcode.LogMessage, new GodotMessage
             {
                 Text = $"[Debug]: {v}",
                 Path = path,
                 Color = color
-            }));
+            });
         }
         public static void Log(object v, ConsoleColor color = ConsoleColor.Gray)
         {
-            GameManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessage, new GodotMessage
+            GameManager.GodotCmd(GodotOpcode.LogMessage, new GodotMessage
             {
                 Text = $"{v}",
                 Color = color
-            }));
+            });
         }
 
         public static void LogMs(Action code)

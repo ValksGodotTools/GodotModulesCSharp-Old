@@ -14,7 +14,7 @@ namespace GodotModules
         public static string GameName = "Godot Modules";
         public static OptionsData Options { get; set; }
         public static GameManager Instance { get; set; }
-        public static ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
+        private static ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
 
         public override void _Ready()
         {
@@ -127,6 +127,8 @@ namespace GodotModules
                 await ExitCleanup();
             }
         }
+
+        public static void GodotCmd(GodotOpcode opcode, object data = null) => GodotCmds.Enqueue(new GodotCmd(opcode, data));
 
         /// <summary>
         /// All cleanup should be done in here
