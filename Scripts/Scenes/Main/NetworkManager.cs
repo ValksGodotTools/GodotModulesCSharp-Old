@@ -70,6 +70,13 @@ namespace GodotModules
 
                         Console.ForegroundColor = color;
                         GD.Print(text);
+
+                        if (!string.IsNullOrWhiteSpace(message.Path))
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkGray;
+                            GD.Print($"   at ({message.Path})");
+                        }
+
                         Console.ResetColor();
 
                         UIDebugger.AddMessage(text);
@@ -151,6 +158,7 @@ namespace GodotModules
     public struct GodotMessage
     {
         public string Text { get; set; }
+        public string Path { get; set; }
         public ConsoleColor Color { get; set; }
     }
 
