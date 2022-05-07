@@ -16,7 +16,7 @@ namespace GodotModules.Netcode
         public static Task<WebServerResponse<LobbyListing[]>> TaskGetServers { get; set; }
         public static string ExternalIp { get; set; }
         private static int FailedPingAttempts { get; set; }
-        private const string WEB_SERVER_IP = "localhost:4000";
+        public static string WEB_SERVER_IP = "localhost:4000";
         private const int WEB_PING_INTERVAL = 10000;
         private static bool LogExceptions = true;
         public static Timer TimerPingMasterServer { get; set; }

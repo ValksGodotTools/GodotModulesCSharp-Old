@@ -12,6 +12,7 @@ namespace GodotModules.Settings
         [Export] public readonly NodePath NodePathSliderSFX;
         [Export] public readonly NodePath NodePathVSync;
         [Export] public readonly NodePath NodePathInputOnlineUsername;
+        [Export] public readonly NodePath NodePathInputWebServerIp;
 
         public HSlider SliderMusic { get; set; }
         public HSlider SliderSFX { get; set; }
@@ -19,6 +20,7 @@ namespace GodotModules.Settings
         private OptionButton ResolutionOptions { get; set; }
         private CheckBox VSync { get; set; }
         public LineEdit InputUsername { get; set; }
+        private LineEdit InputWebServer { get; set; }
 
         public OptionsData Options { get; set; }
 
@@ -30,6 +32,7 @@ namespace GodotModules.Settings
             SliderSFX = GetNode<HSlider>(NodePathSliderSFX);
             VSync = GetNode<CheckBox>(NodePathVSync);
             InputUsername = GetNode<LineEdit>(NodePathInputOnlineUsername);
+            InputWebServer = GetNode<LineEdit>(NodePathInputWebServerIp);
             SetupFullscreenOptions();
             SetupResolutionOptions();
             SetupUI();
@@ -45,6 +48,7 @@ namespace GodotModules.Settings
             SliderSFX.Value = Options.VolumeSFX;
             VSync.Pressed = Options.VSync;
             InputUsername.Text = Options.OnlineUsername;
+            InputWebServer.Text = WebClient.WEB_SERVER_IP;
         }
 
         private void SetupFullscreenOptions()
@@ -98,6 +102,11 @@ namespace GodotModules.Settings
         private void _on_OnlineUsername_text_changed(string text)
         {
             Options.OnlineUsername = text.Validate(ref previousTextOnlineUsername, InputUsername, () => text.IsMatch("^[A-Za-z]+$"));
+        }
+
+        private void _on_WebServerIp_text_changed(string text)
+        {
+            WebClient.WEB_SERVER_IP = text;
         }
     }
 }
