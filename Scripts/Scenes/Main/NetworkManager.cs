@@ -12,7 +12,6 @@ namespace GodotModules
         public static GameServer GameServer { get; set; }
         public static GameClient GameClient { get; set; }
         public static WebClient WebClient { get; set; }
-        public static NetworkManager Instance { get; set; }
 
         public static DisconnectOpcode DisconnectOpcode { get; set; }
         public static uint PeerId { get; set; } // this clients peer id (grabbed from server at some point)
@@ -20,7 +19,6 @@ namespace GodotModules
 
         public override void _Ready()
         {
-            Instance = this;
             WebClient = new();
         }
 
