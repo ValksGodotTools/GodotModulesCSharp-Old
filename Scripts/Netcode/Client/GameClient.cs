@@ -37,10 +37,10 @@ namespace GodotModules.Netcode.Client
             Disconnected = true;
             Connected = 0;
             NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.Disconnect, opcode));
-            if (CancelTokenSource != null)
+            if (CTSClientTask != null)
             {
-                CancelTokenSource.Cancel();
-                CancelTokenSource.Dispose();
+                CTSClientTask.Cancel();
+                CTSClientTask.Dispose();
             }
         }
     }

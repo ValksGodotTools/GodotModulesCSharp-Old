@@ -178,8 +178,6 @@ namespace GodotModules
                     Logger.LogDebug("Dummy client task cancelled (B)");
                 }
 
-
-
                 if (!CTSPingServers.IsCancellationRequested)
                 {
                     LobbyListings[server.Ip] = server;

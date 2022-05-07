@@ -116,7 +116,7 @@ namespace GodotModules.Netcode.Server
         protected virtual void ServerCmds()
         { }
 
-        private async Task ENetThreadWorker(ushort port, int maxClients)
+        private Task ENetThreadWorker(ushort port, int maxClients)
         {
             Thread.CurrentThread.Name = "Server";
             if (SceneLobby.CurrentLobby != null)
@@ -142,7 +142,7 @@ namespace GodotModules.Netcode.Server
                 NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.PopupMessage, message));
                 NetworkManager.GameClient.Stop();
                 Stop();
-                return;
+                return Task.FromResult(1);
             }
 
             Log($"Server listening on port {port}");
@@ -238,9 +238,6 @@ namespace GodotModules.Netcode.Server
 
             Log("Server stopped");
 
-            while (ConcurrentQueuesWorking())
-                await Task.Delay(100);
-
             Running = 0;
             Stopped();
 
@@ -250,6 +247,8 @@ namespace GodotModules.Netcode.Server
                 //Start();
                 NetworkManager.StartServer(port, maxClients);
             }
+
+            return Task.FromResult(1);
         }
 
         private void Send(ServerPacket gamePacket, Peer peer)
@@ -259,7 +258,5 @@ namespace GodotModules.Netcode.Server
             byte channelID = 0;
             peer.Send(channelID, ref packet);
         }
-
-        private bool ConcurrentQueuesWorking() => ENetCmds.Count != 0 || Outgoing.Count != 0;
     }
 }

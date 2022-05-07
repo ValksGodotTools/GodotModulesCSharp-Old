@@ -20,7 +20,7 @@ namespace GodotModules.Netcode.Client
         public bool IsRunning { get => Interlocked.Read(ref Running) == 1; }
         public bool IsENetThreadRunning { get => Interlocked.Read(ref ENetThreadRunning) == 1; }
 
-        protected CancellationTokenSource CancelTokenSource { get; set; }
+        protected CancellationTokenSource CTSClientTask { get; set; }
         protected long Running = 0;
         protected long Connected = 0;
         protected long ENetThreadRunning = 0;
@@ -58,9 +58,9 @@ namespace GodotModules.Netcode.Client
                 }
 
                 ENetThreadRunning = 1;
-                CancelTokenSource = new CancellationTokenSource();
+                CTSClientTask = new CancellationTokenSource();
 
-                await Task.Run(() => ENetThreadWorker(ip, port), CancelTokenSource.Token);
+                await Task.Run(() => ENetThreadWorker(ip, port), CTSClientTask.Token);
             }
             catch (Exception e)
             {
@@ -96,7 +96,7 @@ namespace GodotModules.Netcode.Client
         protected virtual void Timeout(Event netEvent)
         { }
 
-        private async Task ENetThreadWorker(string ip, ushort port)
+        private Task ENetThreadWorker(string ip, ushort port)
         {
             Thread.CurrentThread.Name = "Client";
             Library.Initialize();
@@ -120,7 +120,7 @@ namespace GodotModules.Netcode.Client
 
             Running = 1;
 
-            while (!CancelTokenSource.IsCancellationRequested)
+            while (!CTSClientTask.IsCancellationRequested)
             {
                 var polled = false;
 
@@ -198,14 +198,11 @@ namespace GodotModules.Netcode.Client
             ENetThreadRunning = 0;
 
             Log($"Client stopped");
-
-            while (ConcurrentQueuesWorking())
-                await Task.Delay(100);
-
+            
             Running = 0;
-        }
 
-        private bool ConcurrentQueuesWorking() => ENetCmds.Count != 0 || Outgoing.Count != 0;
+            return Task.FromResult(1);
+        }
     }
 
     public struct PacketHandleData 
