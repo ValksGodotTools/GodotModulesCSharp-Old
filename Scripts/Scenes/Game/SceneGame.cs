@@ -38,7 +38,7 @@ namespace Game
 
             ModLoader.Call("OnGameInit");
 
-            if (NetworkManager.IsClientRunning())
+            if (NetworkManager.IsMultiplayer())
                 InitMultiplayerStuff();
         }
 

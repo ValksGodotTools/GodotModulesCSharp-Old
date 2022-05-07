@@ -25,7 +25,7 @@ namespace Game
             SetHealth(100);
             LabelPosition = GetNode<Label>(NodePathLabelPosition);
 
-            if (NetworkManager.IsClientRunning())
+            if (NetworkManager.IsMultiplayer())
             {
                 var timer1 = new GTimer(ClientIntervals.PlayerDirection);
                 timer1.Connect(this, nameof(EmitMovementDirection));
@@ -67,7 +67,7 @@ namespace Game
 
             HandleMovement(delta);
 
-            if (NetworkManager.IsClientRunning())
+            if (NetworkManager.IsMultiplayer())
                 KeepTrackOfInputs();
         }
 

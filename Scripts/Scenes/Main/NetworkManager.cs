@@ -24,6 +24,7 @@ namespace GodotModules
 
         public static bool IsClientRunning() => GameClient == null ? false : GameClient.IsRunning;
         public static bool IsServerRunning() => GameServer == null ? false : GameServer.IsRunning;
+        public static bool IsMultiplayer() => IsClientRunning() || IsServerRunning();
 
         public static void StartClient(string ip, ushort port)
         {
