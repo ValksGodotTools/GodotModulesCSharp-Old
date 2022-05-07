@@ -8,17 +8,17 @@ using System.Threading.Tasks;
 
 namespace GodotModules
 {
-    // GameManager is attached to Global.tscn which is in AutoLoad
     public class GameManager : Node
     {
         public static string GameName = "Godot Modules";
         public static OptionsData Options { get; set; }
-        public static GameManager Instance { get; set; }
+        public static SceneTree GameTree { get; set; }
+
         private static ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
 
         public override void _Ready()
         {
-            Instance = this;
+            GameTree = GetTree();
             GodotCmds = new();
         }
 
@@ -122,7 +122,7 @@ namespace GodotModules
         {
             if (what == MainLoop.NotificationWmQuitRequest)
             {
-                Instance.GetTree().SetAutoAcceptQuit(false);
+                GameTree.SetAutoAcceptQuit(false);
 
                 await ExitCleanup();
             }
@@ -171,13 +171,13 @@ namespace GodotModules
                 await Task.Delay(3000);
             }
 
-            Instance.GetTree().Quit();
+            GameTree.Quit();
         }
 
         public static void SpawnPopupMessage(string message)
         {
             var popupMessage = Prefabs.PopupMessage.Instance<UIPopupMessage>();
-            Instance.GetTree().CurrentScene.AddChild(popupMessage);
+            GameTree.CurrentScene.AddChild(popupMessage);
             popupMessage.Init(message);
             popupMessage.PopupCentered();
         }
@@ -186,7 +186,7 @@ namespace GodotModules
         {
             ErrorNotifier.IncrementErrorCount();
             var popupError = Prefabs.PopupError.Instance<UIPopupError>();
-            Instance.GetTree().CurrentScene.AddChild(popupError);
+            GameTree.CurrentScene.AddChild(popupError);
             popupError.Init(e.Message, e.StackTrace);
             popupError.PopupCentered();
         }
@@ -195,7 +195,7 @@ namespace GodotModules
         /// This should be used instead of GetTree().Quit() has it will handle cleanup and saving options
         /// Note that if the console is closed directly then the cleanup will never happen, this should be avoided.
         /// </summary>
-        public static void Exit() => Instance.GetTree().Notification(MainLoop.NotificationWmQuitRequest);
+        public static void Exit() => GameTree.Notification(MainLoop.NotificationWmQuitRequest);
     }
 
     public struct GodotMessage
