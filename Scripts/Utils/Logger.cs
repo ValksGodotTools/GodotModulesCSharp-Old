@@ -13,6 +13,7 @@ namespace GodotModules
                 Hint = hint
             }));
         }
+        public static void LogTODO(object v, ConsoleColor color = ConsoleColor.White) => Log($"[TODO]: {v}", color);
         public static void LogWarning(object v, ConsoleColor color = ConsoleColor.Yellow) => Log($"[Warning]: {v}", color);
         public static void LogDebug(object v, ConsoleColor color = ConsoleColor.Magenta) => Log($"[Debug]: {v}", color);
         public static void Log(object v, ConsoleColor color = ConsoleColor.Gray)

@@ -48,7 +48,7 @@ namespace GodotModules
         private void _on_Kick_pressed()
         {
             // TODO: Kick Id
-            Logger.LogDebug(Id);
+            Logger.LogTODO("Kick ID: " + Id);
         }
     }
 }
