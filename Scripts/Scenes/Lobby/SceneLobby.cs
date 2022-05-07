@@ -127,7 +127,7 @@ namespace GodotModules
 
             player.SetUsername($"{name} (Id: {id})");
             player.SetReady(false);
-            player.Id = id;
+            player.SetId(id);
         }
 
         public void RemovePlayer(uint id)

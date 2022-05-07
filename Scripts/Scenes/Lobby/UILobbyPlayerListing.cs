@@ -15,7 +15,7 @@ namespace GodotModules
         public string Username { get; private set; }
         public bool Ready { get; private set; }
         public bool Host { get; private set; }
-        public uint Id { get; set; }
+        public uint Id { get; private set; }
 
         public override void _Ready()
         {
@@ -23,8 +23,8 @@ namespace GodotModules
             Status = GetNode<Label>(NodePathStatus);
             Kick = GetNode<Button>(NodePathKick);
 
-            // Only host may kick others and host cannot kick self
-            if (!NetworkManager.IsHost || NetworkManager.PeerId == Id)
+            // Only host may kick others
+            if (!NetworkManager.IsHost)
                 Kick.Visible = false;
         }
 
@@ -45,10 +45,24 @@ namespace GodotModules
             Host = value;
         }
 
-        private void _on_Kick_pressed()
+        public void SetId(uint value) 
         {
-            // TODO: Kick Id
-            Logger.LogTODO("Kick ID: " + Id);
+            Id = value;
+
+            // host cannot kick self
+            if (NetworkManager.PeerId == Id)
+                Kick.Visible = false;
+        }
+
+        private async void _on_Kick_pressed()
+        {
+            SceneManager.GetActiveSceneScript<SceneLobby>().RemovePlayer(Id);
+            NetworkManager.GameServer.Players.Remove((byte)Id);
+
+            await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby {
+                LobbyOpcode = LobbyOpcode.LobbyKick,
+                Id = (byte)Id
+            });
         }
     }
 }
