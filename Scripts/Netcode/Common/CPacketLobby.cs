@@ -230,7 +230,7 @@ namespace GodotModules.Netcode
             }, peer);
 
             // tell other players about new player that joined
-            Server.SendToOtherPeers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby
+            Server.SendToOtherPlayers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby
             {
                 LobbyOpcode = LobbyOpcode.LobbyJoin,
                 Id = (byte)peer.ID,

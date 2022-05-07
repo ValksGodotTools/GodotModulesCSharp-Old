@@ -137,7 +137,7 @@ namespace GodotModules.Netcode.Server
             {
                 LobbyOpcode = LobbyOpcode.LobbyLeave,
                 Id = (byte)id
-            }, GetOtherPeers(id));
+            }, GetOtherPlayerPeers(id));
 
             Players.Remove((byte)id);
         }

@@ -248,9 +248,7 @@ namespace GodotModules.Netcode
                 SceneManager.GetActiveSceneScript<SceneLobby>().RemovePlayer(Id);
 
             if (SceneManager.InGame())
-            {
                 SceneManager.GetActiveSceneScript<SceneGame>().RemovePlayer(Id);
-            }
             
             Client.Players.Remove(Id);
             Client.Log($"Player with id: {Id} left the lobby");
