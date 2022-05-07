@@ -43,6 +43,8 @@ With the duplicate player joining it's because their joining ID is 0 just like t
 
 Static variables are a mess, I wish I never used them to begin with.
 
+I'm considering restarting this entire project from scratch because of how overwhelming this all is.
+
 See [CONTRIBUTING.md](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/CONTRIBUTING.md)
 
 ## Credit
