@@ -8,27 +8,39 @@ margin_right = 398.0
 margin_bottom = 19.0
 theme = ExtResource( 2 )
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 NodePathName = NodePath("HBox/Name")
-NodePathStatus = NodePath("HBox/Status")
+NodePathStatus = NodePath("HBox/HBoxContainer/Status")
+NodePathKick = NodePath("HBox/HBoxContainer/Kick")
 
 [node name="HBox" type="HBoxContainer" parent="."]
 margin_left = 1.0
 margin_top = 1.0
 margin_right = 397.0
-margin_bottom = 18.0
+margin_bottom = 24.0
 rect_min_size = Vector2( 200, 0 )
 
 [node name="Name" type="Label" parent="HBox"]
+margin_top = 3.0
 margin_right = 76.0
-margin_bottom = 17.0
+margin_bottom = 20.0
 text = "PlayerName"
 
-[node name="Status" type="Label" parent="HBox"]
-margin_left = 331.0
+[node name="HBoxContainer" type="HBoxContainer" parent="HBox"]
+margin_left = 295.0
 margin_right = 396.0
-margin_bottom = 17.0
+margin_bottom = 23.0
 size_flags_horizontal = 10
+
+[node name="Kick" type="Button" parent="HBox/HBoxContainer"]
+margin_right = 32.0
+margin_bottom = 23.0
+text = "Kick"
+
+[node name="Status" type="Label" parent="HBox/HBoxContainer"]
+margin_left = 36.0
+margin_top = 3.0
+margin_right = 101.0
+margin_bottom = 20.0
 text = "Not Ready"
+
+[connection signal="pressed" from="HBox/HBoxContainer/Kick" to="." method="_on_Kick_pressed"]

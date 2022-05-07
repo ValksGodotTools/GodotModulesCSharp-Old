@@ -13,13 +13,13 @@ namespace GodotModules
                 Hint = hint
             }));
         }
-        public static void LogWarning(string text, ConsoleColor color = ConsoleColor.Yellow) => Log($"[Warning]: {text}", color);
-        public static void LogDebug(string text, ConsoleColor color = ConsoleColor.Magenta) => Log($"[Debug]: {text}", color);
-        public static void Log(string text, ConsoleColor color = ConsoleColor.Gray)
+        public static void LogWarning(object v, ConsoleColor color = ConsoleColor.Yellow) => Log($"[Warning]: {v}", color);
+        public static void LogDebug(object v, ConsoleColor color = ConsoleColor.Magenta) => Log($"[Debug]: {v}", color);
+        public static void Log(object v, ConsoleColor color = ConsoleColor.Gray)
         {
             NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.LogMessage, new GodotMessage
             {
-                Text = text,
+                Text = $"{v}",
                 Color = color
             }));
         }

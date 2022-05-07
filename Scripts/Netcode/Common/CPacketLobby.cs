@@ -32,6 +32,10 @@ namespace GodotModules.Netcode
                     writer.Write(DirectConnect);
                     break;
 
+                case LobbyOpcode.LobbyKick:
+                    writer.Write(Id);
+                    break;
+
                 case LobbyOpcode.LobbyReady:
                     writer.Write(Ready);
                     break;
@@ -63,6 +67,10 @@ namespace GodotModules.Netcode
                     DirectConnect = reader.ReadBool();
                     break;
 
+                case LobbyOpcode.LobbyKick:
+                    Id = reader.ReadByte();
+                    break;
+
                 case LobbyOpcode.LobbyReady:
                     Ready = reader.ReadBool();
                     break;
@@ -89,6 +97,10 @@ namespace GodotModules.Netcode
                     HandleChatMessage(peer);
                     break;
 
+                case LobbyOpcode.LobbyKick:
+                    HandleKick(peer);
+                    break;
+
                 case LobbyOpcode.LobbyReady:
                     HandleReady(peer);
                     break;
@@ -101,6 +113,16 @@ namespace GodotModules.Netcode
                     HandleGameStart(peer);
                     break;
             }
+        }
+
+        // LobbyKick
+        public byte Id { get; set; }
+        private void HandleKick(Peer peer)
+        {
+            if (!Server.Players[(byte)peer.ID].Host)
+                return;
+
+            Server.Kick(Id, DisconnectOpcode.Kicked);
         }
 
         // LobbyCreate
@@ -144,6 +166,9 @@ namespace GodotModules.Netcode
 
         private void HandleCountdownChange(Peer peer)
         {
+            if (!Server.Players[(byte)peer.ID].Host)
+                return;
+
             Server.SendToOtherPlayers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby
             {
                 LobbyOpcode = LobbyOpcode.LobbyCountdownChange,
@@ -154,6 +179,9 @@ namespace GodotModules.Netcode
         // LobbyGameStart
         private void HandleGameStart(Peer peer)
         {
+            if (!Server.Players[(byte)peer.ID].Host)
+                return;
+
             Server.DisallowJoiningLobby = true;
             Server.SendToAllPlayers(ServerPacketOpcode.Lobby, new SPacketLobby { LobbyOpcode = LobbyOpcode.LobbyGameStart });
         }

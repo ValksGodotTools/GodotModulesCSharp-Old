@@ -37,6 +37,7 @@
         LobbyCreate,
         LobbyJoin,
         LobbyLeave,
+        LobbyKick,
         LobbyInfo,
         LobbyChatMessage,
         LobbyReady,
