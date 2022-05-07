@@ -48,7 +48,6 @@ namespace GodotModules
                     if (NetworkManager.GameServer.IsRunning)
                     {
                         NetworkManager.GameServer.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToExitApp));
-                        NetworkManager.GameServer.Dispose();
                         NetworkManager.GameServer.Stop();
 
                         while (NetworkManager.GameServer.IsRunning) 
@@ -61,7 +60,6 @@ namespace GodotModules
                 if (NetworkManager.GameClient != null)
                     if (NetworkManager.GameClient.IsRunning)
                     {
-                        NetworkManager.GameClient.Dispose();
                         NetworkManager.GameClient.Stop();
 
                         while (NetworkManager.GameClient.IsRunning) 

@@ -75,7 +75,7 @@ namespace GodotModules
                 WebClient.Client.CancelPendingRequests();
 
                 if (NetworkManager.GameClient != null)
-                    NetworkManager.GameClient.CancelTask();
+                    NetworkManager.GameClient.Stop();
 
                 await SceneManager.ChangeScene("Menu");
             });

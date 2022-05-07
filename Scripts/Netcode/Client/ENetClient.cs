@@ -8,7 +8,7 @@ using Thread = System.Threading.Thread;
 
 namespace GodotModules.Netcode.Client
 {
-    public class ENetClient : IDisposable
+    public class ENetClient
     {
         public static readonly Dictionary<ServerPacketOpcode, APacketServer> HandlePacket = ReflectionUtils.LoadInstances<ServerPacketOpcode, APacketServer>("SPacket");
 
@@ -73,8 +73,6 @@ namespace GodotModules.Netcode.Client
         /// </summary>
         public void Stop() => ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToDisconnect));
 
-        public void CancelTask() => ENetCmds.Enqueue(new ENetCmd(ENetOpcode.CancelTask));
-
         public void Log(object obj) => Logger.Log($"[Client]: {obj}", ConsoleColor.Yellow);
 
         /// <summary>
@@ -134,9 +132,6 @@ namespace GodotModules.Netcode.Client
                         case ENetOpcode.ClientWantsToExitApp:
                         case ENetOpcode.ClientWantsToDisconnect:
                             peer.Disconnect(0);
-                            break;
-                        case ENetOpcode.CancelTask:
-                            CancelTokenSource.Cancel();
                             break;
                     }
                 }
@@ -211,11 +206,6 @@ namespace GodotModules.Netcode.Client
         }
 
         private bool ConcurrentQueuesWorking() => ENetCmds.Count != 0 || Outgoing.Count != 0;
-
-        public void Dispose()
-        {
-            CancelTokenSource.Dispose();
-        }
     }
 
     public struct PacketHandleData 

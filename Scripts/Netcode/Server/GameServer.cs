@@ -100,14 +100,6 @@ namespace GodotModules.Netcode.Server
                         CTS.Cancel();
                         KickAll(DisconnectOpcode.Stopping);
                         break;
-
-                    case ENetOpcode.Dispose:
-                        CTS.Dispose();
-                        EmitClientTransforms.Stop();
-                        EmitClientTransforms.Dispose();
-                        ServerSimulation.Stop();
-                        ServerSimulation.Dispose();
-                        break;
                 }
             }
         }
@@ -128,6 +120,11 @@ namespace GodotModules.Netcode.Server
 
         protected override void Stopped()
         {
+            CTS.Dispose();
+            EmitClientTransforms.Stop();
+            EmitClientTransforms.Dispose();
+            ServerSimulation.Stop();
+            ServerSimulation.Dispose();
         }
 
         private void HandlePlayerLeave(uint id)
@@ -188,12 +185,6 @@ namespace GodotModules.Netcode.Server
                 Send(opcode, flags, otherPlayers);
             else
                 Send(opcode, data, flags, otherPlayers);
-        }
-
-        public override void Dispose()
-        {
-            base.Dispose();
-            ENetCmds.Enqueue(new ENetCmd(ENetOpcode.Dispose));
         }
     }
 }

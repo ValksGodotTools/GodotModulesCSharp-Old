@@ -7,7 +7,7 @@ using Thread = System.Threading.Thread;
 
 namespace GodotModules.Netcode.Server
 {
-    public abstract class ENetServer : IDisposable
+    public abstract class ENetServer
     {
         public bool HasSomeoneConnected { get => Interlocked.Read(ref SomeoneConnected) == 1; }
         public bool IsRunning { get => Interlocked.Read(ref Running) == 1; }
@@ -261,8 +261,5 @@ namespace GodotModules.Netcode.Server
         }
 
         private bool ConcurrentQueuesWorking() => ENetCmds.Count != 0 || Outgoing.Count != 0;
-
-        public virtual void Dispose()
-        { }
     }
 }

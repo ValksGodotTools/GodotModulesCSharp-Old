@@ -6,7 +6,7 @@ namespace GodotModules.Netcode.Client
     {
         public static bool ConnectingToLobby { get; set; }
         public static bool Disconnected { get; set; }
-        
+
         public Dictionary<uint, string> Players { get; set; }
 
         public GameClient()
@@ -38,7 +38,10 @@ namespace GodotModules.Netcode.Client
             Connected = 0;
             NetworkManager.GodotCmds.Enqueue(new GodotCmd(GodotOpcode.Disconnect, opcode));
             if (CancelTokenSource != null)
+            {
                 CancelTokenSource.Cancel();
+                CancelTokenSource.Dispose();
+            }
         }
     }
 }

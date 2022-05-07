@@ -115,8 +115,6 @@
         StopServer,
         RestartServer,
         ClientWantsToExitApp,
-        ClientWantsToDisconnect,
-        CancelTask,
-        Dispose
+        ClientWantsToDisconnect
     }
 }
