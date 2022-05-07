@@ -62,6 +62,9 @@ namespace Game
                 if (!Players.ContainsKey(pair.Key)) // TODO: Find more optimal approach for checking this
                     continue;
 
+                if (!NetworkManager.ServerAuthoritativeMovement && NetworkManager.PeerId == pair.Key)
+                    continue;
+
                 var player = Players[pair.Key];
 
                 var prev = PlayerTransformQueue.Previous[pair.Key];

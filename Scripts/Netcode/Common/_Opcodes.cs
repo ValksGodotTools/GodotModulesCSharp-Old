@@ -10,7 +10,7 @@
 
     public static class ServerIntervals 
     {
-        public static int PlayerTransforms = 100;
+        public static int PlayerTransforms = 150;
     }
 
     // Received from Game Client

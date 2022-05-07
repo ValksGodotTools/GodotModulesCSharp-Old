@@ -27,12 +27,27 @@ namespace Game
 
             if (NetworkManager.IsMultiplayer())
             {
-                var timer1 = new GTimer(ClientIntervals.PlayerDirection);
-                timer1.Connect(this, nameof(EmitMovementDirection));
+                if (NetworkManager.ServerAuthoritativeMovement)
+                {
+                    var timer1 = new GTimer(ClientIntervals.PlayerDirection);
+                    timer1.Connect(this, nameof(EmitMovementDirection));
+                }
+                else 
+                {
+                    var timer1 = new GTimer(ClientIntervals.PlayerPosition);
+                    timer1.Connect(this, nameof(EmitPosition));
+                }
 
                 var timer2 = new GTimer(ClientIntervals.PlayerRotation);
                 timer2.Connect(this, nameof(EmitRotation));
             }
+        }
+
+        public async void EmitPosition() 
+        {
+            await NetworkManager.GameClient.Send(ClientPacketOpcode.PlayerPosition, new CPacketPlayerPosition {
+                Position = Position
+            }, ENet.PacketFlags.None);
         }
 
         public async void EmitMovementDirection()
@@ -67,7 +82,7 @@ namespace Game
 
             HandleMovement(delta);
 
-            if (NetworkManager.IsMultiplayer())
+            if (NetworkManager.IsMultiplayer() && NetworkManager.ServerAuthoritativeMovement)
                 KeepTrackOfInputs();
         }
 

@@ -69,7 +69,8 @@ namespace GodotModules.Netcode.Server
                 {
                     case ENetOpcode.StartGame:
                         EmitClientTransforms.Start();
-                        ServerSimulation.Start();
+                        if (NetworkManager.ServerAuthoritativeMovement)
+                            ServerSimulation.Start();
                         break;
 
                     case ENetOpcode.StopServer:
@@ -123,8 +124,11 @@ namespace GodotModules.Netcode.Server
             CTS.Dispose();
             EmitClientTransforms.Stop();
             EmitClientTransforms.Dispose();
-            ServerSimulation.Stop();
-            ServerSimulation.Dispose();
+            if (NetworkManager.ServerAuthoritativeMovement)
+            {
+                ServerSimulation.Stop();
+                ServerSimulation.Dispose();
+            }
         }
 
         private void HandlePlayerLeave(uint id)

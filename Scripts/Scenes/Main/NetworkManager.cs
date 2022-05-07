@@ -16,10 +16,13 @@ namespace GodotModules
         public static DisconnectOpcode DisconnectOpcode { get; set; }
         public static uint PeerId { get; set; } // this clients peer id (grabbed from server at some point)
         public static bool IsHost { get; set; }
+        
+        public static bool ServerAuthoritativeMovement { get; set; }
 
         public override void _Ready()
         {
             WebClient = new();
+            ServerAuthoritativeMovement = false;
         }
 
         public static bool IsClientRunning() => GameClient == null ? false : GameClient.IsRunning;
