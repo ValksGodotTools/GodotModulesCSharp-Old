@@ -144,7 +144,8 @@ namespace GodotModules.Netcode
             };
 
             Server.Send(ServerPacketOpcode.Lobby, new SPacketLobby {
-                LobbyOpcode = LobbyOpcode.LobbyCreate
+                LobbyOpcode = LobbyOpcode.LobbyCreate,
+                Id = (byte)peer.ID
             }, peer);
         }
 
