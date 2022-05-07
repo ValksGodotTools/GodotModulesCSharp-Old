@@ -13,22 +13,15 @@ namespace GodotModules
         {
             // debug command
             // do debug stuff here
-            /*if (args.Length == 0)
+            if (args.Length == 0)
                 return;
 
-            if (!int.TryParse(args[0], out int result))
-                return;
-
-            if (NetworkManager.GameServer.Running)
-            {
-                NetworkManager.GameServer.EmitClientTransforms.Stop();
-                NetworkManager.GameServer.EmitClientTransforms.SetDelay(result);
-                NetworkManager.GameServer.EmitClientTransforms.Start();
-            }
-
-            TEST_VALUE = result;
-
-            Utils.Log("Set test value to " + result);*/
+            if (args[0] == "a")
+                if (NetworkManager.GameServer != null)
+                    if (NetworkManager.GameServer.IsRunning)
+                    {
+                        Logger.LogDebug(NetworkManager.GameServer.Players.Print());
+                    }
         }
     }
 }
