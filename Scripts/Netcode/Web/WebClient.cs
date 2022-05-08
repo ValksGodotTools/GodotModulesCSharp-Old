@@ -50,17 +50,17 @@ namespace GodotModules.Netcode
                 { "description", errorDescription }
             });
       }
-      public async static Task<WebServerResponse<string>> RemoveAsync()
+      public async static Task<WebServerResponse<string>> RemoveLobbyAsync()
       {
          return await PostAsync("server/remove", GetExternalIpDict());
       }
 
-      public async static Task<WebServerResponse<string>> RemovePlayerAsync()
+      public async static Task<WebServerResponse<string>> RemoveLobbyPlayerAsync()
       {
           return await PostAsync("servers/players/remove", GetExternalIpDict());
       }
 
-      public async static Task<WebServerResponse<string>> AddPlayerAsync()
+      public async static Task<WebServerResponse<string>> AddLobbyPlayerAsync()
       {
           return await PostAsync("servers/players/add", GetExternalIpDict());
       }
@@ -69,7 +69,7 @@ namespace GodotModules.Netcode
           return new() {{"Ip", ExternalIp}};
       }
 
-      public async static Task<WebServerResponse<string>> InitiateAsync(LobbyListing info){
+      public async static Task<WebServerResponse<string>> AddLobbyAsync(LobbyListing info){
           var values = new Dictionary<string, string>
             {
                 { "Name", info.Name },

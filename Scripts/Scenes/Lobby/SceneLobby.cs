@@ -68,7 +68,7 @@ namespace GodotModules
 
                     NetworkManager.IsHost = false;
 
-                    await WebClient.RemoveAsync();
+                    await WebClient.RemoveLobbyAsync();
                 }
             }
         }
@@ -90,7 +90,7 @@ namespace GodotModules
                         LobbyOpcode = LobbyOpcode.LobbyGameStart
                     });
 
-                    await WebClient.RemoveAsync();
+                    await WebClient.RemoveLobbyAsync();
                 }
             }
         }
@@ -110,7 +110,7 @@ namespace GodotModules
             player.SetId(id);
 
             if (NetworkManager.IsHost)
-                await WebClient.AddPlayerAsync();
+                await WebClient.AddLobbyPlayerAsync();
         }
 
         public async void RemovePlayer(uint id)
@@ -123,7 +123,7 @@ namespace GodotModules
             UIPlayers.Remove(id);
 
             if (NetworkManager.IsHost)
-                await WebClient.RemovePlayerAsync();
+                await WebClient.RemoveLobbyPlayerAsync();
         }
 
         public void SetReady(uint id, bool ready)

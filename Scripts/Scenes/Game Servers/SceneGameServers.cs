@@ -198,7 +198,7 @@ namespace GodotModules
 
         public async void PostServer(LobbyListing info)
         {
-            await WebClient.InitiateAsync(info);
+            await WebClient.AddLobbyAsync(info);
         }
 
         private void _on_Control_resized()
