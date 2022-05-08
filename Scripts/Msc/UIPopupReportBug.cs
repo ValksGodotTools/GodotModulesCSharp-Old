@@ -22,10 +22,7 @@ namespace GodotModules
             if (string.IsNullOrWhiteSpace(Description.Text))
                 return;
 
-            await WebClient.Post("errors/post", new Dictionary<string, string> {
-                { "error", Error.Text },
-                { "description", Description.Text }
-            });
+            await WebClient.PostError(Error.Text, Description.Text);
         }
     }
 }
