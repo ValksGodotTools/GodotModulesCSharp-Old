@@ -9,18 +9,19 @@ namespace GodotModules.Netcode.Server
 {
     public abstract class ENetServer
     {
+        private static readonly Dictionary<ClientPacketOpcode, APacketClient> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, APacketClient>("CPacket");
+        
         public bool HasSomeoneConnected { get => Interlocked.Read(ref SomeoneConnected) == 1; }
         public bool IsRunning { get => Interlocked.Read(ref Running) == 1; }
-        public Dictionary<uint, Peer> Peers { get; set; }
         public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
         public ushort MaxPlayers { get; set; }
 
+        protected Dictionary<uint, Peer> Peers { get; set; }
         protected CancellationTokenSource CTS { get; set; }
         protected bool QueueRestart { get; set; }
-        protected long SomeoneConnected = 0;
-        protected long Running = 0;
-
-        private static readonly Dictionary<ClientPacketOpcode, APacketClient> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, APacketClient>("CPacket");
+        
+        private long SomeoneConnected = 0;
+        private long Running = 0;
         private ConcurrentQueue<ServerPacket> Outgoing { get; set; }
 
         public ENetServer()

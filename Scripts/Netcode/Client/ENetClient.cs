@@ -12,19 +12,19 @@ namespace GodotModules.Netcode.Client
     {
         public static readonly Dictionary<ServerPacketOpcode, APacketServer> HandlePacket = ReflectionUtils.LoadInstances<ServerPacketOpcode, APacketServer>("SPacket");
 
+        public bool IsConnected { get => Interlocked.Read(ref Connected) == 1; }
+        public bool IsRunning { get => Interlocked.Read(ref Running) == 1; }
         public DateTime PingSent { get; set; }
         public int PingMs { get; set;}
         public bool WasPingReceived { get; set; }
         public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
-        public bool IsConnected { get => Interlocked.Read(ref Connected) == 1; }
-        public bool IsRunning { get => Interlocked.Read(ref Running) == 1; }
-        public bool IsENetThreadRunning { get => Interlocked.Read(ref ENetThreadRunning) == 1; }
 
         protected CancellationTokenSource CTSClientTask { get; set; }
-        protected long Running = 0;
         protected long Connected = 0;
-        protected long ENetThreadRunning = 0;
 
+        private bool IsENetThreadRunning { get => Interlocked.Read(ref ENetThreadRunning) == 1; }
+        private long ENetThreadRunning = 0;
+        private long Running = 0;
         private int OutgoingId { get; set; }
         private ConcurrentDictionary<int, ClientPacket> Outgoing { get; set; }
 
