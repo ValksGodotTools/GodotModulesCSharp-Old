@@ -35,11 +35,11 @@ Tech tree where nodes in tree are positioned automatically via script
 See [CONTRIBUTING.md](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/CONTRIBUTING.md)
 
 ## Credit
+Thank you to the following wonderful people who helped make this project become something even greater!
+
 ### Programming
-Thank you to [LazerGoat](https://github.com/LazerGoat) for pointing out bugs here and there
+- LazerGoat [[GitHub]](https://github.com/LazerGoat)
+- Scorpieth [[GitHub]](https://github.com/Scorpieth)
 
 ### Testers
-Thank you to the following testers.
-
-- LazerGoat [[GitHub]](https://github.com/LazerGoat)
 - SCUDSTORM [[Twitch]](https://www.twitch.tv/perezdispenser)
