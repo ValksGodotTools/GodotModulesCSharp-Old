@@ -2,11 +2,11 @@ using Godot;
 
 namespace GodotModules
 {
-   public class LobbyNotifier
+   public class LobbyChat
    {
       private RichTextLabel _chatText;
       private Dictionary<uint, UILobbyPlayerListing> _uiPlayers;
-      public LobbyNotifier(RichTextLabel chatBox, Dictionary<uint, UILobbyPlayerListing> uiPlayers)
+      public LobbyChat(RichTextLabel chatBox, Dictionary<uint, UILobbyPlayerListing> uiPlayers)
       {
          _chatText = chatBox;
          _uiPlayers = uiPlayers;

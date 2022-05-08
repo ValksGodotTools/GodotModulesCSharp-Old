@@ -14,8 +14,6 @@ namespace GodotModules
         [Export] public readonly NodePath NodePathBtnReady;
         [Export] public readonly NodePath NodePathBtnStart;
 
-        public LobbyNotifier LobbyNotifier;
-
         private RichTextLabel ChatText { get; set; }
         private Control ListPlayers { get; set; }
         private LineEdit ChatInput { get; set; }
@@ -24,14 +22,12 @@ namespace GodotModules
         private Button BtnReady { get; set; }
         private Button BtnStart { get; set; }
 
+        public LobbyChat LobbyChat { get; set; }
         public bool Start { get; set; }
 
         private const int COUNTDOWN_START_TIME = 2;
         private int CountdownGameStart = COUNTDOWN_START_TIME;
         private STimer TimerCountdownGameStart { get; set; }
-
-
-
         private Dictionary<uint, UILobbyPlayerListing> UIPlayers { get; set; }
 
         public override void _Ready()
@@ -44,7 +40,7 @@ namespace GodotModules
             BtnReady = GetNode<Button>(NodePathBtnReady);
             BtnStart = GetNode<Button>(NodePathBtnStart);
             UIPlayers = new();
-            LobbyNotifier = new(ChatText, UIPlayers);
+            LobbyChat = new(ChatText, UIPlayers);
             TimerCountdownGameStart = new STimer(1000, TimerCountdownCallback, false);
 
             if (!NetworkManager.IsHost)
@@ -78,7 +74,7 @@ namespace GodotModules
         }
         private async void TimerCountdownCallback()
         {
-            LobbyNotifier.Print($"Game starting in {CountdownGameStart--}");
+            LobbyChat.Print($"Game starting in {CountdownGameStart--}");
 
             if (CountdownGameStart == 0)
             {
@@ -148,7 +144,7 @@ namespace GodotModules
             TimerCountdownGameStart.Stop();
             CountdownGameStart = COUNTDOWN_START_TIME;
             BtnReady.Disabled = false;
-            LobbyNotifier.Print("Game start was cancelled");
+            LobbyChat.Print("Game start was cancelled");
         }
 
         public void StartGameCountdown()
@@ -183,7 +179,7 @@ namespace GodotModules
             if (playersNotReady.Count > 0)
             {
                 var isAre = playersNotReady.Count == 1 ? "is" : "are";
-                LobbyNotifier.Print($"Cannot start because {string.Join(" ", playersNotReady.ToArray())} {isAre} not ready");
+                LobbyChat.Print($"Cannot start because {string.Join(" ", playersNotReady.ToArray())} {isAre} not ready");
                 return;
             }
 
