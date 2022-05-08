@@ -1,4 +1,5 @@
 using Godot;
+using GodotModules.Netcode.Client;
 
 namespace GodotModules
 {

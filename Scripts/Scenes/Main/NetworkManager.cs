@@ -39,6 +39,10 @@ namespace GodotModules
         {
             GameServer = new GameServer();
             await GameServer.Start(port, maxClients);
+
+            if (SceneLobby.CurrentLobby != null)
+                if (SceneLobby.CurrentLobby.Public && WebClient.ConnectionAlive)
+                    WebClient.TimerPingMasterServer.Start();
         }
 
         public static async Task WaitForHostToConnectToServer()
