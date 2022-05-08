@@ -56,10 +56,10 @@ namespace GodotModules
         {
             if (Input.IsActionJustPressed("ui_cancel"))
             {
+                NetworkManager.GameClient.Stop();
+
                 if (NetworkManager.IsHost)
                 {
-                    await WebClient.RemoveAsync();
-
                     WebClient.Client.CancelPendingRequests();
                     WebClient.TimerPingMasterServer.Stop();
 
@@ -67,9 +67,9 @@ namespace GodotModules
                         NetworkManager.GameServer.Stop();
 
                     NetworkManager.IsHost = false;
-                }
 
-                NetworkManager.GameClient.Stop();
+                    await WebClient.RemoveAsync();
+                }
             }
         }
         private async void TimerCountdownCallback()
@@ -84,13 +84,13 @@ namespace GodotModules
                 {
                     WebClient.TimerPingMasterServer.Stop();
 
-                    await WebClient.RemoveAsync();
-
                     // tell everyone game has started
                     await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
                     {
                         LobbyOpcode = LobbyOpcode.LobbyGameStart
                     });
+
+                    await WebClient.RemoveAsync();
                 }
             }
         }
@@ -100,11 +100,6 @@ namespace GodotModules
             if (UIPlayers.Duplicate(id))
                 return;
 
-            if (NetworkManager.IsHost)
-            {
-                await WebClient.AddPlayerAsync();
-            }
-
             var player = Prefabs.LobbyPlayerListing.Instance<UILobbyPlayerListing>();
             UIPlayers[id] = player;
 
@@ -113,6 +108,9 @@ namespace GodotModules
             player.SetUsername($"{name} (Id: {id})");
             player.SetReady(false);
             player.SetId(id);
+
+            if (NetworkManager.IsHost)
+                await WebClient.AddPlayerAsync();
         }
 
         public async void RemovePlayer(uint id)
@@ -120,14 +118,12 @@ namespace GodotModules
             if (UIPlayers.DoesNotHave(id))
                 return;
 
-            if (NetworkManager.IsHost)
-            {
-                await WebClient.RemovePlayerAsync();
-            }
-
             var uiPlayer = UIPlayers[id];
             uiPlayer.QueueFree();
             UIPlayers.Remove(id);
+
+            if (NetworkManager.IsHost)
+                await WebClient.RemovePlayerAsync();
         }
 
         public void SetReady(uint id, bool ready)
