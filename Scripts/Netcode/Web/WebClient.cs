@@ -52,22 +52,20 @@ namespace GodotModules.Netcode
       }
       public async static Task<WebServerResponse<string>> RemoveLobbyAsync()
       {
-         return await PostAsync("server/remove", GetExternalIpDict());
+         return await PostAsync("server/remove", DataExternalIp);
       }
 
       public async static Task<WebServerResponse<string>> RemoveLobbyPlayerAsync()
       {
-          return await PostAsync("servers/players/remove", GetExternalIpDict());
+          return await PostAsync("servers/players/remove", DataExternalIp);
       }
 
       public async static Task<WebServerResponse<string>> AddLobbyPlayerAsync()
       {
-          return await PostAsync("servers/players/add", GetExternalIpDict());
+          return await PostAsync("servers/players/add", DataExternalIp);
       }
 
-      private static Dictionary<string, string> GetExternalIpDict(){
-          return new() {{"Ip", ExternalIp}};
-      }
+      private static Dictionary<string, string> DataExternalIp => new() {{"Ip", ExternalIp}};
 
       public async static Task<WebServerResponse<string>> AddLobbyAsync(LobbyListing info){
           var values = new Dictionary<string, string>
