@@ -181,7 +181,7 @@ namespace GodotModules.Netcode
         private void HandleChatMessage()
         {
             if (SceneManager.InLobby())
-                SceneManager.GetActiveSceneScript<SceneLobby>().Log(Id, Message);
+                SceneManager.GetActiveSceneScript<SceneLobby>().LobbyNotifier.Print(Id, Message);
         }
 
         // LobbyCountdownChange

@@ -1,8 +1,4 @@
 using Godot;
-using GodotModules.Netcode;
-using GodotModules.Netcode.Client;
-using GodotModules.Netcode.Server;
-using System.Threading.Tasks;
 
 namespace GodotModules
 {
@@ -18,6 +14,8 @@ namespace GodotModules
         [Export] public readonly NodePath NodePathBtnReady;
         [Export] public readonly NodePath NodePathBtnStart;
 
+        public LobbyNotifier LobbyNotifier;
+
         private RichTextLabel ChatText { get; set; }
         private Control ListPlayers { get; set; }
         private LineEdit ChatInput { get; set; }
@@ -32,6 +30,8 @@ namespace GodotModules
         private int CountdownGameStart = COUNTDOWN_START_TIME;
         private STimer TimerCountdownGameStart { get; set; }
 
+
+
         private Dictionary<uint, UILobbyPlayerListing> UIPlayers { get; set; }
 
         public override void _Ready()
@@ -44,6 +44,7 @@ namespace GodotModules
             BtnReady = GetNode<Button>(NodePathBtnReady);
             BtnStart = GetNode<Button>(NodePathBtnStart);
             UIPlayers = new();
+            LobbyNotifier = new(ChatText, UIPlayers);
             TimerCountdownGameStart = new STimer(1000, TimerCountdownCallback, false);
 
             if (!NetworkManager.IsHost)
@@ -55,18 +56,13 @@ namespace GodotModules
             LobbyMaxPlayers.Text = "" + CurrentLobby.MaxPlayerCount;
         }
 
-        public override void _Input(InputEvent @event)
+        public override async void _Input(InputEvent @event)
         {
             if (Input.IsActionJustPressed("ui_cancel"))
             {
                 if (NetworkManager.IsHost)
                 {
-                    Task.Run(async () =>
-                    {
-                        await WebClient.Post("servers/remove", new Dictionary<string, string> {
-                            { "Ip", WebClient.ExternalIp }
-                        });
-                    });
+                    await WebClient.RemoveAsync();
 
                     WebClient.Client.CancelPendingRequests();
                     WebClient.TimerPingMasterServer.Stop();
@@ -80,10 +76,9 @@ namespace GodotModules
                 NetworkManager.GameClient.Stop();
             }
         }
-
         private async void TimerCountdownCallback()
         {
-            Log($"Game starting in {CountdownGameStart--}");
+            LobbyNotifier.Print($"Game starting in {CountdownGameStart--}");
 
             if (CountdownGameStart == 0)
             {
@@ -93,9 +88,7 @@ namespace GodotModules
                 {
                     WebClient.TimerPingMasterServer.Stop();
 
-                    await WebClient.Post("servers/remove", new Dictionary<string, string> {
-                        { "Ip", WebClient.ExternalIp }
-                    });
+                    await WebClient.RemoveAsync();
 
                     // tell everyone game has started
                     await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
@@ -106,18 +99,14 @@ namespace GodotModules
             }
         }
 
-        public void AddPlayer(uint id, string name)
+        public async void AddPlayer(uint id, string name)
         {
             if (UIPlayers.Duplicate(id))
                 return;
 
             if (NetworkManager.IsHost)
             {
-                Task.Run(async () => {
-                    await WebClient.Post("servers/players/add", new Dictionary<string, string> {
-                        { "Ip", WebClient.ExternalIp }
-                    });
-                });
+                await WebClient.AddPlayerAsync();
             }
 
             var player = Prefabs.LobbyPlayerListing.Instance<UILobbyPlayerListing>();
@@ -130,18 +119,14 @@ namespace GodotModules
             player.SetId(id);
         }
 
-        public void RemovePlayer(uint id)
+        public async void RemovePlayer(uint id)
         {
             if (UIPlayers.DoesNotHave(id))
                 return;
 
             if (NetworkManager.IsHost)
             {
-                Task.Run(async () => {
-                    await WebClient.Post("servers/players/remove", new Dictionary<string, string> {
-                        { "Ip", WebClient.ExternalIp }
-                    });
-                });
+                await WebClient.RemovePlayerAsync();
             }
 
             var uiPlayer = UIPlayers[id];
@@ -163,28 +148,13 @@ namespace GodotModules
             TimerCountdownGameStart.Stop();
             CountdownGameStart = COUNTDOWN_START_TIME;
             BtnReady.Disabled = false;
-            Log("Game start was cancelled");
+            LobbyNotifier.Print("Game start was cancelled");
         }
 
         public void StartGameCountdown()
         {
             TimerCountdownGameStart.Start();
             BtnReady.Disabled = true;
-        }
-
-        public void Log(string text)
-        {
-            ChatText.AddText($"{text}\n");
-            ChatText.ScrollToLine(ChatText.GetLineCount() - 1);
-        }
-
-        public void Log(uint peerId, string text)
-        {
-            if (UIPlayers.DoesNotHave(peerId))
-                return;
-
-            var playerName = NetworkManager.GameClient.Players[peerId];
-            Log($"{playerName}: {text}");
         }
 
         private async void _on_Ready_pressed()
@@ -213,7 +183,7 @@ namespace GodotModules
             if (playersNotReady.Count > 0)
             {
                 var isAre = playersNotReady.Count == 1 ? "is" : "are";
-                Log($"Cannot start because {string.Join(" ", playersNotReady.ToArray())} {isAre} not ready");
+                LobbyNotifier.Print($"Cannot start because {string.Join(" ", playersNotReady.ToArray())} {isAre} not ready");
                 return;
             }
 

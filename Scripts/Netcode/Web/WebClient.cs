@@ -9,143 +9,182 @@ using Timer = System.Timers.Timer; // ambitious reference between Godot.Timer an
 
 namespace GodotModules.Netcode
 {
-    public class WebClient : IDisposable
-    {
-        public static HttpClient Client { get; set; }
-        public static bool ConnectionAlive { get; set; }
-        public static Task<WebServerResponse<LobbyListing[]>> TaskGetServers { get; set; }
-        public static string ExternalIp { get; set; }
-        private static int FailedPingAttempts { get; set; }
-        public static string WEB_SERVER_IP = "localhost:4000";
-        private const int WEB_PING_INTERVAL = 10000;
-        private static bool LogExceptions = false;
-        public static Timer TimerPingMasterServer { get; set; }
+   public class WebClient : IDisposable
+   {
+      public static HttpClient Client { get; set; }
+      public static bool ConnectionAlive { get; set; }
+      public static Task<WebServerResponse<LobbyListing[]>> TaskGetServers => WebClient.Get<LobbyListing[]>("servers/get");
+      public static string ExternalIp { get; set; }
+      private static int FailedPingAttempts { get; set; }
+      public static string WEB_SERVER_IP = "localhost:4000";
+      private const int WEB_PING_INTERVAL = 10000;
+      private static bool LogExceptions = false;
+      public static Timer TimerPingMasterServer { get; set; }
 
-        public WebClient()
-        {
-            Client = new();
-            Client.Timeout = TimeSpan.FromMinutes(20);
-            Client.DefaultRequestHeaders.Accept.Clear();
-            Client.DefaultRequestHeaders.Add("Connection", "Keep-Alive");
-            Client.DefaultRequestHeaders.Add("Keep-Alive", "false");
+      public WebClient()
+      {
+         Client = new();
+         Client.Timeout = TimeSpan.FromMinutes(20);
+         Client.DefaultRequestHeaders.Accept.Clear();
+         Client.DefaultRequestHeaders.Add("Connection", "Keep-Alive");
+         Client.DefaultRequestHeaders.Add("Keep-Alive", "false");
 
-            TimerPingMasterServer = new(WebClient.WEB_PING_INTERVAL);
-            TimerPingMasterServer.AutoReset = true;
-            TimerPingMasterServer.Elapsed += new(OnTimerPingMasterServerEvent);
+         TimerPingMasterServer = new(WebClient.WEB_PING_INTERVAL);
+         TimerPingMasterServer.AutoReset = true;
+         TimerPingMasterServer.Elapsed += new(OnTimerPingMasterServerEvent);
 
-            try 
+         try
+         {
+            ExternalIp = new System.Net.WebClient().DownloadString("http://icanhazip.com").Replace("\\r\\n", "").Replace("\\n", "").Trim();
+         }
+         catch (Exception e)
+         {
+            ExternalIp = "";
+            System.Console.WriteLine($"Failed to get external IP {e.Message}\n{e.StackTrace}");
+         }
+      }
+
+      public async static Task<WebServerResponse<string>> PostError(string errorText, string errorDescription){
+         return await PostAsync("errors/post", new Dictionary<string, string> {
+                { "error", errorText },
+                { "description", errorDescription }
+            });
+      }
+      public async static Task<WebServerResponse<string>> RemoveAsync()
+      {
+         return await PostAsync("server/remove", GetExternalIpDict());
+      }
+
+      public async static Task<WebServerResponse<string>> RemovePlayerAsync()
+      {
+          return await PostAsync("servers/players/remove", GetExternalIpDict());
+      }
+
+      public async static Task<WebServerResponse<string>> AddPlayerAsync()
+      {
+          return await PostAsync("servers/players/add", GetExternalIpDict());
+      }
+
+      private static Dictionary<string, string> GetExternalIpDict(){
+          return new() {{"Ip", ExternalIp}};
+      }
+
+      public async static Task<WebServerResponse<string>> InitiateAsync(LobbyListing info){
+          var values = new Dictionary<string, string>
             {
-                ExternalIp = new System.Net.WebClient().DownloadString("http://icanhazip.com").Replace("\\r\\n", "").Replace("\\n", "").Trim();
-            }
-            catch (Exception e)
+                { "Name", info.Name },
+                { "Ip", ExternalIp },
+                { "Port", "" + info.Port },
+                { "Description", info.Description },
+                { "MaxPlayerCount", "" + info.MaxPlayerCount },
+                { "LobbyHost", info.LobbyHost }
+            };
+
+            return await PostAsync("servers/add", values);
+      }
+
+      private async static Task<WebServerResponse<string>> PostAsync(string path, Dictionary<string, string> values = null)
+      {
+         try
+         {
+            var data = new FormUrlEncodedContent(values);
+            var response = await Client.PostAsync($"http://{WEB_SERVER_IP}/api/{path}", data);
+            var content = await response.Content.ReadAsStringAsync();
+            return new WebServerResponse<string>
             {
-                ExternalIp = "";
-                System.Console.WriteLine($"Failed to get external IP {e.Message}\n{e.StackTrace}");
-            }
-        }
-
-        public async static Task<WebServerResponse<string>> Post(string path, Dictionary<string, string> values = null)
-        {
-            try
+               Status = WebServerStatus.OK,
+               Content = content
+            };
+         }
+         catch (Exception e)
+         {
+            if (LogExceptions)
             {
-                var data = new FormUrlEncodedContent(values);
-                var response = await Client.PostAsync($"http://{WEB_SERVER_IP}/api/{path}", data);
-                var content = await response.Content.ReadAsStringAsync();
-                return new WebServerResponse<string>
-                {
-                    Status = WebServerStatus.OK,
-                    Content = content
-                };
+               var message = $"Failed to POST to http://{WEB_SERVER_IP}/api/{path} {e.Message}";
+               Logger.LogWarning(message);
             }
-            catch (Exception e)
+            return new WebServerResponse<string>
             {
-                if (LogExceptions)
-                {
-                    var message = $"Failed to POST to http://{WEB_SERVER_IP}/api/{path} {e.Message}";
-                    Logger.LogWarning(message); 
-                }
-                return new WebServerResponse<string>
-                {
-                    Status = WebServerStatus.ERROR,
-                    Exception = e
-                };
-            }
-        }
+               Status = WebServerStatus.ERROR,
+               Exception = e
+            };
+         }
+      }
 
-        public static async Task UpdateIsAlive()
-        {
-            try 
+      public static async Task UpdateIsAlive()
+      {
+         try
+         {
+            var response = await Client.GetAsync($"http://{WEB_SERVER_IP}/api/ping");
+            await response.Content.ReadAsStringAsync();
+            ConnectionAlive = true;
+         }
+         catch (Exception)
+         {
+            ConnectionAlive = false;
+         }
+      }
+
+      public static async Task<WebServerResponse<T>> Get<T>(string path)
+      {
+         try
+         {
+            var response = await Client.GetAsync($"http://{WEB_SERVER_IP}/api/{path}");
+            var content = await response.Content.ReadAsStringAsync();
+            var obj = JsonConvert.DeserializeObject<T>(content);
+            return new WebServerResponse<T>
             {
-                var response = await Client.GetAsync($"http://{WEB_SERVER_IP}/api/ping");
-                await response.Content.ReadAsStringAsync();
-                ConnectionAlive = true;
-            }
-            catch (Exception)
+               Status = WebServerStatus.OK,
+               Content = obj
+            };
+         }
+         catch (Exception e)
+         {
+            if (LogExceptions)
             {
-                ConnectionAlive = false;
+               var message = $"Failed to GET from http://{WEB_SERVER_IP}/api/{path} {e.Message}";
+               Logger.LogWarning(message); // no need to notify user of this kind of error
             }
-        }
-
-        public static async Task<WebServerResponse<T>> Get<T>(string path)
-        {
-            try
+            return new WebServerResponse<T>
             {
-                var response = await Client.GetAsync($"http://{WEB_SERVER_IP}/api/{path}");
-                var content = await response.Content.ReadAsStringAsync();
-                var obj = JsonConvert.DeserializeObject<T>(content);
-                return new WebServerResponse<T>
-                {
-                    Status = WebServerStatus.OK,
-                    Content = obj
-                };
-            }
-            catch (Exception e)
-            {
-                if (LogExceptions)
-                {
-                    var message = $"Failed to GET from http://{WEB_SERVER_IP}/api/{path} {e.Message}";
-                    Logger.LogWarning(message); // no need to notify user of this kind of error
-                }
-                return new WebServerResponse<T>
-                {
-                    Status = WebServerStatus.ERROR,
-                    Exception = e
-                };
-            }
-        }
+               Status = WebServerStatus.ERROR,
+               Exception = e
+            };
+         }
+      }
 
-        public async void OnTimerPingMasterServerEvent(System.Object source, ElapsedEventArgs args)
-        {
-            var res = await WebClient.Post("servers/ping", new Dictionary<string, string> { { "Name", SceneLobby.CurrentLobby.Name } });
-            if (res.Status == WebServerStatus.ERROR)
-            {
-                FailedPingAttempts++;
-                if (FailedPingAttempts >= 3)
-                    TimerPingMasterServer.Stop();
+      public async void OnTimerPingMasterServerEvent(System.Object source, ElapsedEventArgs args)
+      {
+         var res = await WebClient.PostAsync("servers/ping", new Dictionary<string, string> { { "Name", SceneLobby.CurrentLobby.Name } });
+         if (res.Status == WebServerStatus.ERROR)
+         {
+            FailedPingAttempts++;
+            if (FailedPingAttempts >= 3)
+               TimerPingMasterServer.Stop();
 
-                return;
-            }
+            return;
+         }
 
-            FailedPingAttempts = 0; // reset failed ping attempts if a ping gets through
-        }
+         FailedPingAttempts = 0; // reset failed ping attempts if a ping gets through
+      }
 
-        public void Dispose()
-        {
-            TimerPingMasterServer.Dispose();
-            Client.Dispose();
-        }
-    }
+      public void Dispose()
+      {
+         TimerPingMasterServer.Dispose();
+         Client.Dispose();
+      }
+   }
 
-    public struct WebServerResponse<T>
-    {
-        public WebServerStatus Status { get; set; }
-        public Exception Exception { get; set; }
-        public T Content { get; set; }
-    }
+   public struct WebServerResponse<T>
+   {
+      public WebServerStatus Status { get; set; }
+      public Exception Exception { get; set; }
+      public T Content { get; set; }
+   }
 
-    public enum WebServerStatus
-    {
-        OK,
-        ERROR
-    }
+   public enum WebServerStatus
+   {
+      OK,
+      ERROR
+   }
 }

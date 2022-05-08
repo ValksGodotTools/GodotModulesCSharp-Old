@@ -123,7 +123,6 @@ namespace GodotModules
             GettingServers = true;
             UIGameServersNavBtns.BtnRefresh.Disabled = true;
 
-            WebClient.TaskGetServers = WebClient.Get<LobbyListing[]>("servers/get");
             var res = await WebClient.TaskGetServers;
 
             if (!SceneManager.InGameServers())
@@ -199,15 +198,7 @@ namespace GodotModules
 
         public async void PostServer(LobbyListing info)
         {
-            await WebClient.Post("servers/add", new Dictionary<string, string>
-            {
-                { "Name", info.Name },
-                { "Ip", WebClient.ExternalIp },
-                { "Port", "" + info.Port },
-                { "Description", info.Description },
-                { "MaxPlayerCount", "" + info.MaxPlayerCount },
-                { "LobbyHost", info.LobbyHost }
-            });
+            await WebClient.InitiateAsync(info);
         }
 
         private void _on_Control_resized()
