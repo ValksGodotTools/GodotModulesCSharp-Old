@@ -2,7 +2,7 @@ using Godot;
 
 namespace Game
 {
-    public class OtherPlayer : Node2D
+    public class OtherPlayer : KinematicBody2D
     {
         [Export] public readonly NodePath NodePathPlayerSprite;
         [Export] public readonly NodePath NodePathLabelUsername;

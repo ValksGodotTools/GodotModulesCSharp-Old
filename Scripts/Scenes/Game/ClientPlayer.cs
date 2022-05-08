@@ -99,7 +99,8 @@ namespace Game
             if (Input.IsActionPressed("ui_right"))
                 dir.x += 1;
 
-            Position += dir * Speed * delta;
+            //Position += dir * Speed * delta;
+            MoveAndSlide(dir * Speed * delta * 50);
         }
 
         private void KeepTrackOfInputs()
