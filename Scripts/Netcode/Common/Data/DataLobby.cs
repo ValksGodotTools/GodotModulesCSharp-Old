@@ -1,6 +1,6 @@
 namespace GodotModules.Netcode
 {
-    public class DataLobby
+    public struct DataLobby
     {
         public string Name { get; set; }
         public string Description { get; set; }
