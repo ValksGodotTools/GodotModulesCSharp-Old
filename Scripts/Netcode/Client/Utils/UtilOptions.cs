@@ -139,7 +139,7 @@ namespace GodotModules
             return supportedResolutions;
         }
 
-        public static string PathOptions => System.IO.Path.Combine(SystemFileManager.GetGameDataPath(), "options.json");
+        public static string PathOptions => System.IO.Path.Combine(GameManager.GetGameDataPath(), "options.json");
 
         public static void SaveOptions() => SystemFileManager.WriteConfig(PathOptions, GameManager.Options);
     }

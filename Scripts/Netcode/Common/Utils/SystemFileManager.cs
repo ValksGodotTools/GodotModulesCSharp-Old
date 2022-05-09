@@ -8,8 +8,6 @@ namespace GodotModules
     {
         public static char Separator => Path.DirectorySeparatorChar;
 
-        public static string GetGameDataPath() => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), GameManager.GameName);
-
         public static T WriteConfig<T>(string path) where T : new() => WriteConfig<T>(path, new T());
 
         public static T WriteConfig<T>(string path, T data)

@@ -18,7 +18,7 @@ namespace GodotModules.ModLoader
 
         public static void Init()
         {
-            PathMods = Path.Combine(SystemFileManager.GetGameDataPath(), "Mods");
+            PathMods = Path.Combine(GameManager.GetGameDataPath(), "Mods");
             PathModsEnabled = Path.Combine(PathMods, "enabled.json");
 
             LuaScriptsPath = $"Scripts{SystemFileManager.Separator}Lua";

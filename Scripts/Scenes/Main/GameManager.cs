@@ -124,6 +124,8 @@ namespace GodotModules
             }
         }
 
+        public static string GetGameDataPath() => System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), GameManager.GameName);
+
         public static void GodotCmd(GodotOpcode opcode, object data = null) => GodotCmds.Enqueue(new GodotCmd(opcode, data));
 
         private static int GameClientStillRunning { get; set; }
