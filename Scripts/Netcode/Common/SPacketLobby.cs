@@ -7,7 +7,14 @@ namespace GodotModules.Netcode
 {
     public class SPacketLobby : APacketServerPeerId
     {
-        public LobbyOpcode LobbyOpcode { get; set; }
+        private LobbyOpcode LobbyOpcode { get; set; }
+
+        public SPacketLobby() {} // required because of ReflectionUtils
+
+        public SPacketLobby(LobbyOpcode opcode)
+        {
+            LobbyOpcode = opcode;
+        }
 
         public override void Write(PacketWriter writer)
         {

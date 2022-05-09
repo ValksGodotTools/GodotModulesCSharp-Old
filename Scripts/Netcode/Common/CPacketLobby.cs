@@ -5,7 +5,14 @@ namespace GodotModules.Netcode
 {
     public class CPacketLobby : APacketClient
     {
-        public LobbyOpcode LobbyOpcode { get; set; }
+        private LobbyOpcode LobbyOpcode { get; set; }
+
+        public CPacketLobby() {} // required because of ReflectionUtils
+
+        public CPacketLobby(LobbyOpcode opcode)
+        {
+            LobbyOpcode = opcode;
+        }
 
         public override void Write(PacketWriter writer)
         {
@@ -143,8 +150,7 @@ namespace GodotModules.Netcode
                 Host = true
             };
 
-            Server.Send(ServerPacketOpcode.Lobby, new SPacketLobby {
-                LobbyOpcode = LobbyOpcode.LobbyCreate,
+            Server.Send(ServerPacketOpcode.Lobby, new SPacketLobby(LobbyOpcode.LobbyCreate) {
                 Id = (byte)peer.ID
             }, peer);
         }
@@ -154,9 +160,8 @@ namespace GodotModules.Netcode
 
         private void HandleChatMessage(Peer peer)
         {
-            Server.SendToAllPlayers(ServerPacketOpcode.Lobby, new SPacketLobby
+            Server.SendToAllPlayers(ServerPacketOpcode.Lobby, new SPacketLobby(LobbyOpcode.LobbyChatMessage)
             {
-                LobbyOpcode = LobbyOpcode.LobbyChatMessage,
                 Id = (byte)peer.ID,
                 Message = Message
             });
@@ -170,9 +175,8 @@ namespace GodotModules.Netcode
             if (!Server.Players[(byte)peer.ID].Host)
                 return;
 
-            Server.SendToOtherPlayers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby
+            Server.SendToOtherPlayers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby(LobbyOpcode.LobbyCountdownChange)
             {
-                LobbyOpcode = LobbyOpcode.LobbyCountdownChange,
                 CountdownRunning = CountdownRunning
             });
         }
@@ -184,7 +188,7 @@ namespace GodotModules.Netcode
                 return;
 
             Server.DisallowJoiningLobby = true;
-            Server.SendToAllPlayers(ServerPacketOpcode.Lobby, new SPacketLobby { LobbyOpcode = LobbyOpcode.LobbyGameStart });
+            Server.SendToAllPlayers(ServerPacketOpcode.Lobby, new SPacketLobby(LobbyOpcode.LobbyGameStart));
         }
 
         // LobbyJoin
@@ -217,9 +221,8 @@ namespace GodotModules.Netcode
             };
 
             // tell joining player their Id and tell them about other players in lobby
-            Server.Send(ServerPacketOpcode.Lobby, new SPacketLobby
+            Server.Send(ServerPacketOpcode.Lobby, new SPacketLobby(LobbyOpcode.LobbyInfo)
             {
-                LobbyOpcode = LobbyOpcode.LobbyInfo,
                 Id = (byte)peer.ID,
                 Players = Server.GetOtherPlayers((byte)peer.ID),
                 DirectConnect = DirectConnect,
@@ -230,9 +233,8 @@ namespace GodotModules.Netcode
             }, peer);
 
             // tell other players about new player that joined
-            Server.SendToOtherPlayers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby
+            Server.SendToOtherPlayers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby(LobbyOpcode.LobbyJoin)
             {
-                LobbyOpcode = LobbyOpcode.LobbyJoin,
                 Id = (byte)peer.ID,
                 Username = Username
             });
@@ -246,9 +248,8 @@ namespace GodotModules.Netcode
             var player = Server.Players[(byte)peer.ID];
             player.Ready = Ready;
 
-            Server.SendToOtherPlayers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby
+            Server.SendToOtherPlayers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby(LobbyOpcode.LobbyReady)
             {
-                LobbyOpcode = LobbyOpcode.LobbyReady,
                 Id = (byte)peer.ID,
                 Ready = Ready
             });

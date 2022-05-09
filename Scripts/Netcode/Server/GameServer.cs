@@ -137,9 +137,8 @@ namespace GodotModules.Netcode.Server
                 return;
 
             // tell other players that this player left lobby
-            Send(ServerPacketOpcode.Lobby, new SPacketLobby
+            Send(ServerPacketOpcode.Lobby, new SPacketLobby(LobbyOpcode.LobbyLeave)
             {
-                LobbyOpcode = LobbyOpcode.LobbyLeave,
                 Id = (byte)id
             }, GetOtherPlayerPeers(id));
 

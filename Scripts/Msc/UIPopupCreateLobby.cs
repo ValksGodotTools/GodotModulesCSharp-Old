@@ -127,9 +127,8 @@ namespace GodotModules
 
             await SceneGameServersScript.ClientConnect(async () => {
                 await NetworkManager.WaitForHostToConnectToServer();
-                await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
+                await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby(LobbyOpcode.LobbyCreate)
                 {
-                    LobbyOpcode = LobbyOpcode.LobbyCreate,
                     Username = GameManager.Options.OnlineUsername,
                     LobbyName = name,
                     LobbyDescription = desc

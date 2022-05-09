@@ -87,10 +87,7 @@ namespace GodotModules
                     WebClient.TimerPingMasterServer.Stop();
 
                     // tell everyone game has started
-                    await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
-                    {
-                        LobbyOpcode = LobbyOpcode.LobbyGameStart
-                    });
+                    await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby(LobbyOpcode.LobbyGameStart));
 
                     await WebClient.RemoveLobbyAsync();
                 }
@@ -158,9 +155,8 @@ namespace GodotModules
 
             BtnReady.Text = player.Ready ? "Ready" : "Not Ready";
 
-            await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
+            await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby(LobbyOpcode.LobbyReady)
             {
-                LobbyOpcode = LobbyOpcode.LobbyReady,
                 Ready = player.Ready
             });
         }
@@ -186,18 +182,16 @@ namespace GodotModules
 
             if (Start)
             {
-                await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
+                await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby(LobbyOpcode.LobbyCountdownChange)
                 {
-                    LobbyOpcode = LobbyOpcode.LobbyCountdownChange,
                     CountdownRunning = true
                 });
                 StartGameCountdown();
             }
             else
             {
-                await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
+                await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby(LobbyOpcode.LobbyCountdownChange)
                 {
-                    LobbyOpcode = LobbyOpcode.LobbyCountdownChange,
                     CountdownRunning = false
                 });
                 CancelGameCountdown();
@@ -209,9 +203,8 @@ namespace GodotModules
             ChatInput.Clear();
             if (!string.IsNullOrWhiteSpace(text))
             {
-                await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby
+                await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby(LobbyOpcode.LobbyChatMessage)
                 {
-                    LobbyOpcode = LobbyOpcode.LobbyChatMessage,
                     Message = text.Trim()
                 });
             }

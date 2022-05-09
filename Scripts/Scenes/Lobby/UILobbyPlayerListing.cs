@@ -59,8 +59,7 @@ namespace GodotModules
             SceneManager.GetActiveSceneScript<SceneLobby>().RemovePlayer(Id);
             NetworkManager.GameServer.Players.Remove((byte)Id);
 
-            await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby {
-                LobbyOpcode = LobbyOpcode.LobbyKick,
+            await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby(LobbyOpcode.LobbyKick) {
                 Id = (byte)Id
             });
         }
