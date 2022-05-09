@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using Timer = System.Timers.Timer; // ambitious reference between Godot.Timer and System.Timers.Timer
 
-namespace GodotModules.Netcode.Client
+namespace GodotModules.Netcode
 {
     public class WebClient : IDisposable
     {
