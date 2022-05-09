@@ -1,8 +1,7 @@
 using Godot;
 using GodotModules.Netcode.Client;
+using GodotModules.Netcode.Server;
 using System;
-using System.Collections.Concurrent;
-using System.Threading.Tasks;
 
 namespace GodotModules
 {
@@ -12,63 +11,16 @@ namespace GodotModules
         public static OptionsData Options { get; set; }
         public static SceneTree GameTree { get; set; }
 
-        private static ConcurrentQueue<GodotCmd> GodotCmds { get; set; }
-
         public override void _Ready()
         {
             GameTree = GetTree();
-            GodotCmds = new();
         }
 
         public override async void _Process(float delta)
         {
             Logger.Dequeue();
-
-            while (GodotCmds.TryDequeue(out GodotCmd cmd))
-            {
-                switch (cmd.Opcode)
-                {
-                    case GodotOpcode.ENetPacket:
-                        var packetReader = (PacketReader)cmd.Data;
-                        var opcode = (ServerPacketOpcode)packetReader.ReadByte();
-
-                        //Utils.Log($"[Client]: Received {opcode}");
-
-                        if (!ENetClient.HandlePacket.ContainsKey(opcode))
-                        {
-                            Logger.LogWarning($"[Client]: Received malformed opcode: {opcode} (Ignoring)");
-                            break;
-                        }
-
-                        var handlePacket = ENetClient.HandlePacket[opcode];
-                        try
-                        {
-                            handlePacket.Read(packetReader);
-                        }
-                        catch (System.IO.EndOfStreamException ex)
-                        {
-                            Logger.LogWarning($"[Client]: Received malformed opcode: {opcode} {ex.Message} (Ignoring)");
-                            break;
-                        }
-                        await handlePacket.Handle();
-
-                        packetReader.Dispose();
-                        break;
-
-                    case GodotOpcode.PopupMessage:
-                        GameManager.SpawnPopupMessage((string)cmd.Data);
-                        break;
-
-                    case GodotOpcode.ChangeScene:
-                        await SceneManager.ChangeScene($"{cmd.Data}");
-                        break;
-
-                    case GodotOpcode.Disconnect:
-                        NetworkManager.DisconnectOpcode = (DisconnectOpcode)cmd.Data;
-                        await SceneManager.ChangeScene("GameServers");
-                        break;
-                }
-            }
+            ServerSimulation.Dequeue();
+            await GodotCommands.Dequeue();
         }
 
         public override void _Input(InputEvent @event)
@@ -83,8 +35,6 @@ namespace GodotModules
         }
 
         public static string GetGameDataPath() => System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), GameManager.GameName);
-
-        public static void GodotCmd(GodotOpcode opcode, object data = null) => GodotCmds.Enqueue(new GodotCmd(opcode, data));
 
         public static void SpawnPopupMessage(string message)
         {
