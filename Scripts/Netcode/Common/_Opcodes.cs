@@ -1,4 +1,6 @@
-﻿namespace GodotModules.Netcode
+﻿using System;
+
+namespace GodotModules.Netcode
 {
     // Intervals
     public static class ClientIntervals 
@@ -116,5 +118,18 @@
         RestartServer,
         ClientWantsToExitApp,
         ClientWantsToDisconnect
+    }
+
+    public struct GodotMessage
+    {
+        public string Text { get; set; }
+        public string Path { get; set; }
+        public ConsoleColor Color { get; set; }
+    }
+
+    public struct GodotError
+    {
+        public Exception Exception { get; set; }
+        public string Hint { get; set; }
     }
 }
