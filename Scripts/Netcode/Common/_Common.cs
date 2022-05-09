@@ -90,7 +90,7 @@ namespace GodotModules.Netcode
         public string Hint { get; set; }
     }
 
-    public class LobbyListing
+    public struct LobbyListing
     {
         public string Name { get; set; }
         public string Description { get; set; }

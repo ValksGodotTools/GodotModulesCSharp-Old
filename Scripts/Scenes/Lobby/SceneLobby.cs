@@ -5,7 +5,7 @@ namespace GodotModules
 {
     public class SceneLobby : AScene
     {
-        public static LobbyListing CurrentLobby { get; set; }
+        public static GodotModules.Netcode.LobbyListing CurrentLobby { get; set; }
 
         [Export] public readonly NodePath NodePathPlayers;
         [Export] public readonly NodePath NodePathChatText;

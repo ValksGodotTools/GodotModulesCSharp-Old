@@ -135,7 +135,7 @@ namespace GodotModules.Netcode
 
         public static void BroadcastLobbyToMaster()
         {
-            if (SceneLobby.CurrentLobby != null)
+            if (!SceneLobby.CurrentLobby.Equals(default(LobbyListing)))
                 if (SceneLobby.CurrentLobby.Public && WebClient.ConnectionAlive)
                     WebClient.TimerPingMasterServer.Start();
         }
