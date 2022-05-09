@@ -12,16 +12,19 @@ namespace GodotModules.Netcode
 {
     public class NetworkManager : Node
     {
-        private static SceneTree Tree {get; set; }
+        private static SceneTree Tree { get; set; }
+        private static bool ENetInitialized { get; set; }
 
         public override void _Ready()
         {
             Tree = GetTree();
             ServerAuthoritativeMovement = false;
 
-#if CLIENT
-            WebClient = new();
-#endif
+            ENetInitialized = ENet.Library.Initialize();
+            if (!ENetInitialized)
+            {
+                Logger.LogWarning("Failed to initialize ENet! Remember ENet-CSharp.dll AND enet.dll are required in order for ENet to run properly!");
+            }
         }
 
         // SERVER
@@ -31,8 +34,11 @@ namespace GodotModules.Netcode
         public static bool IsServerRunning() => GameServer == null ? false : GameServer.IsRunning;
         public static async void StartServer(ushort port, int maxClients)
         {
-            GameServer = new GameServer();
-            await GameServer.Start(port, maxClients);
+            if (ENetInitialized)
+            {
+                GameServer = new GameServer();
+                await GameServer.Start(port, maxClients);
+            }
         }
 
         public static async Task WaitForHostToConnectToServer()
@@ -63,7 +69,7 @@ namespace GodotModules.Netcode
                     GameServer.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToExitApp));
                     GameServer.Stop();
 
-                    while (GameServer.IsRunning) 
+                    while (GameServer.IsRunning)
                     {
                         GameServerStillRunning++;
                         if (GameServerStillRunning > 4)
@@ -77,7 +83,7 @@ namespace GodotModules.Netcode
                 {
                     GameClient.Stop();
 
-                    while (GameClient.IsRunning) 
+                    while (GameClient.IsRunning)
                     {
                         GameClientStillRunning++;
                         if (GameClientStillRunning > 4)
@@ -88,6 +94,7 @@ namespace GodotModules.Netcode
 
                 UtilOptions.SaveOptions();
                 WebClient.Dispose();
+                ENet.Library.Deinitialize();
 #endif
             }
             catch (Exception e)
@@ -102,7 +109,7 @@ namespace GodotModules.Netcode
 #if CLIENT
         // CLIENT
         public static GameClient GameClient { get; set; }
-        public static WebClient WebClient { get; set; }
+        public static WebClient WebClient = new WebClient();
 
         public static DisconnectOpcode DisconnectOpcode { get; set; }
         public static uint PeerId { get; set; } // this clients peer id (grabbed from server at some point)
@@ -119,8 +126,11 @@ namespace GodotModules.Netcode
 
         public static void StartClient(string ip, ushort port)
         {
-            GameClient = new GameClient();
-            GameClient.Start(ip, port);
+            if (ENetInitialized)
+            {
+                GameClient = new GameClient();
+                GameClient.Start(ip, port);
+            }
         }
 
         public static void BroadcastLobbyToMaster()

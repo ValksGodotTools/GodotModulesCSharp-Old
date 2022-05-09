@@ -123,8 +123,6 @@ namespace GodotModules.Netcode.Server
 
             MaxPlayers = (ushort)maxClients;
 
-            Library.Initialize();
-
             using var server = new Host();
             Address address = new Address();
             address.Port = port;

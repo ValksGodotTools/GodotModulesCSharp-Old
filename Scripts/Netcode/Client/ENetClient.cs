@@ -96,7 +96,6 @@ namespace GodotModules.Netcode.Client
         private Task ENetThreadWorker(string ip, ushort port)
         {
             Thread.CurrentThread.Name = "Client";
-            Library.Initialize();
 
             using var client = new Host();
             var address = new Address();
@@ -188,7 +187,6 @@ namespace GodotModules.Netcode.Client
                 client.Flush();
             }
 
-            Library.Deinitialize();
             ENetThreadRunning = 0;
 
             Log($"Client stopped");
