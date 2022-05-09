@@ -14,6 +14,7 @@ namespace GodotModules.Netcode
     {
         private static SceneTree Tree { get; set; }
         private static bool ENetInitialized { get; set; }
+        public static WebClient WebClient = new WebClient();
 
         public override void _Ready()
         {
@@ -109,7 +110,6 @@ namespace GodotModules.Netcode
 #if CLIENT
         // CLIENT
         public static GameClient GameClient { get; set; }
-        public static WebClient WebClient = new WebClient();
 
         public static DisconnectOpcode DisconnectOpcode { get; set; }
         public static uint PeerId { get; set; } // this clients peer id (grabbed from server at some point)
