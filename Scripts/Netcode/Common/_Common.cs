@@ -77,7 +77,7 @@ namespace GodotModules.Netcode
         public string Hint { get; set; }
     }
 
-    public struct LobbyListing
+    public class LobbyListing
     {
         public string Name { get; set; }
         public string Description { get; set; }
