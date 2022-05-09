@@ -25,6 +25,7 @@ namespace GodotModules
                 await Task.Delay(200);
         }
 
+#if CLIENT
         // CLIENT
         public static GameClient GameClient { get; set; }
         public static WebClient WebClient { get; set; }
@@ -82,5 +83,6 @@ namespace GodotModules
             catch (Exception)
             { }
         }
+#endif
     }
 }
