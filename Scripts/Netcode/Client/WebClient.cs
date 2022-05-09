@@ -24,10 +24,15 @@ namespace GodotModules.Netcode.Client
         public WebClient()
         {
             Client = new();
+            // weird things will happen if you play around with these values
+            // e.g. WebClient will no longer see web responses from master server
+            // please do not touch these settings!!
+            // ---------------------------------------------------------
             Client.Timeout = TimeSpan.FromMinutes(20);
             Client.DefaultRequestHeaders.Accept.Clear();
             Client.DefaultRequestHeaders.Add("Connection", "Keep-Alive");
             Client.DefaultRequestHeaders.Add("Keep-Alive", "false");
+            // ---------------------------------------------------------
 
             TimerPingMasterServer = new(WebClient.WEB_PING_INTERVAL);
             TimerPingMasterServer.AutoReset = true;
