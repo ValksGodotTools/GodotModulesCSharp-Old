@@ -1,6 +1,4 @@
-using Game;
 using Godot;
-using GodotModules.Netcode.Client;
 using System;
 using System.Threading.Tasks;
 
@@ -46,7 +44,7 @@ namespace GodotModules.Netcode
         public override async Task Handle()
         {
             if (SceneManager.InGame())
-                SceneManager.GetActiveSceneScript<SceneGame>().UpdatePlayerPositions(PlayerTransforms);
+                SceneManager.GetActiveSceneScript<Game.SceneGame>().UpdatePlayerPositions(PlayerTransforms);
             await Task.FromResult(1);
         }
 #endif

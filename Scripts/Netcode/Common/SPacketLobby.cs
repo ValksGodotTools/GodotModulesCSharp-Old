@@ -1,6 +1,3 @@
-using GodotModules.Netcode.Client;
-using GodotModules.Netcode.Server;
-using Game;
 using System.Threading.Tasks;
 
 namespace GodotModules.Netcode
@@ -150,7 +147,7 @@ namespace GodotModules.Netcode
         }
 
 #if CLIENT
-        private GameClient Client { get; set; }
+        private GodotModules.Netcode.Client.GameClient Client { get; set; }
 
         public override async Task Handle()
         {
@@ -257,7 +254,7 @@ namespace GodotModules.Netcode
                 SceneManager.GetActiveSceneScript<SceneLobby>().RemovePlayer(Id);
 
             if (SceneManager.InGame())
-                SceneManager.GetActiveSceneScript<SceneGame>().RemovePlayer(Id);
+                SceneManager.GetActiveSceneScript<Game.SceneGame>().RemovePlayer(Id);
             
             Client.Players.Remove(Id);
             Client.Log($"Player with id: {Id} left the lobby");
