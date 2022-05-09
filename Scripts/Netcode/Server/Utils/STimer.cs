@@ -1,7 +1,7 @@
 using System;
 using System.Timers;
 
-namespace GodotModules
+namespace GodotModules.Netcode.Server
 {
     public class STimer : IDisposable
     {
