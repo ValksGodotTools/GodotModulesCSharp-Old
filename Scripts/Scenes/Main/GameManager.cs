@@ -22,6 +22,8 @@ namespace GodotModules
 
         public override async void _Process(float delta)
         {
+            Logger.Dequeue();
+
             while (GodotCmds.TryDequeue(out GodotCmd cmd))
             {
                 switch (cmd.Opcode)
@@ -51,40 +53,6 @@ namespace GodotModules
                         await handlePacket.Handle();
 
                         packetReader.Dispose();
-                        break;
-
-                    case GodotOpcode.LogMessage:
-                        var message = (GodotMessage)cmd.Data;
-                        var text = message.Text;
-                        var color = message.Color;
-
-                        Console.ForegroundColor = color;
-                        GD.Print(text);
-
-                        if (!string.IsNullOrWhiteSpace(message.Path))
-                        {
-                            Console.ForegroundColor = ConsoleColor.DarkGray;
-                            GD.Print($"   at ({message.Path})");
-                        }
-
-                        Console.ResetColor();
-
-                        UIDebugger.AddMessage(text);
-                        break;
-
-                    case GodotOpcode.LogError:
-                        var error = (GodotError)cmd.Data;
-                        var exception = error.Exception;
-                        var hint = error.Hint;
-
-                        var errorText = $"[Error]: {hint}{exception.Message}\n{exception.StackTrace}";
-
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        GD.PrintErr(exception);
-                        Console.ResetColor();
-
-                        ErrorNotifier.IncrementErrorCount();
-                        UIDebugger.AddMessage(errorText);
                         break;
 
                     case GodotOpcode.PopupMessage:
