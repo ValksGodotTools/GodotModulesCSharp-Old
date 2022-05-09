@@ -57,18 +57,4 @@ namespace GodotModules
             SceneGameServersScript.SelectedLobbyInstance = this;
         }
     }
-
-    public class LobbyListing
-    {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string Ip { get; set; }
-        public ushort Port { get; set; }
-        public int Ping { get; set; }
-        public string LobbyHost { get; set; }
-        public byte LobbyHostId { get; set; }
-        public int MaxPlayerCount { get; set; }
-        public int Players { get; set; }
-        public bool Public { get; set; }
-    }
 }
