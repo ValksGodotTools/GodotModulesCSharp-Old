@@ -5,7 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace GodotModules
+namespace GodotModules.Netcode
 {
     public class NetworkManager : Node
     {
