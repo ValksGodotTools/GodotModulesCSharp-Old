@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <LangVersion>10</LangVersion>
+    <DefineConstants>CLIENT;</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MoonSharp" Version="2.0.0" />
