@@ -17,10 +17,6 @@ namespace GodotModules
         {
             GameServer = new GameServer();
             await GameServer.Start(port, maxClients);
-
-            if (SceneLobby.CurrentLobby != null)
-                if (SceneLobby.CurrentLobby.Public && WebClient.ConnectionAlive)
-                    WebClient.TimerPingMasterServer.Start();
         }
 
         public static async Task WaitForHostToConnectToServer()
@@ -55,6 +51,13 @@ namespace GodotModules
         {
             GameClient = new GameClient();
             GameClient.Start(ip, port);
+        }
+
+        public static void BroadcastLobbyToMaster()
+        {
+            if (SceneLobby.CurrentLobby != null)
+                if (SceneLobby.CurrentLobby.Public && WebClient.ConnectionAlive)
+                    WebClient.TimerPingMasterServer.Start();
         }
 
         public static async Task WaitForClientToConnect(int timeoutMs, CancellationTokenSource cts, Action onClientConnected)

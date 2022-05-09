@@ -87,6 +87,7 @@ namespace GodotModules
 
             Hide();
 
+            NetworkManager.BroadcastLobbyToMaster();
             NetworkManager.StartServer(port, ValidatedMaxPlayerCount);
 
             var dummyClient = new ENetClient();
