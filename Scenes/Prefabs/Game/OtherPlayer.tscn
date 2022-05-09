@@ -1,8 +1,8 @@
 [gd_scene load_steps=7 format=2]
 
-[ext_resource path="res://Fonts/Roboto/Roboto-Bold.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://Scripts/Scenes/Game/OtherPlayer.cs" type="Script" id=2]
-[ext_resource path="res://Sprites/Circle 32 - Marked.png" type="Texture" id=3]
+[ext_resource path="res://Scripts/Scenes/Game/OtherPlayer.cs" type="Script" id=1]
+[ext_resource path="res://Sprites/Circle 32 - Marked.png" type="Texture" id=2]
+[ext_resource path="res://Fonts/Roboto/Roboto-Bold.ttf" type="DynamicFontData" id=3]
 
 [sub_resource type="CircleShape2D" id=2]
 radius = 16.0
@@ -11,11 +11,11 @@ radius = 16.0
 radius = 18.0
 
 [sub_resource type="DynamicFont" id=1]
-font_data = ExtResource( 1 )
+font_data = ExtResource( 3 )
 
 [node name="Other Player" type="KinematicBody2D"]
 position = Vector2( 475, 280 )
-script = ExtResource( 2 )
+script = ExtResource( 1 )
 NodePathPlayerSprite = NodePath("Sprite")
 NodePathLabelUsername = NodePath("Username")
 
@@ -28,7 +28,7 @@ shape = SubResource( 2 )
 shape = SubResource( 3 )
 
 [node name="Sprite" type="Sprite" parent="."]
-texture = ExtResource( 3 )
+texture = ExtResource( 2 )
 
 [node name="Username" type="Label" parent="."]
 anchor_left = 0.5
