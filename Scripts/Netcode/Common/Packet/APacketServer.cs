@@ -8,6 +8,6 @@ namespace GodotModules.Netcode
         /// <summary>
         /// The packet handled client-side
         /// </summary>
-        public abstract Task Handle(ENetClient client);
+        public virtual Task Handle(ENetClient client) => Task.FromResult(1);
     }
 }

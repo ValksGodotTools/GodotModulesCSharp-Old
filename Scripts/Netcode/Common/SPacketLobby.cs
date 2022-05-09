@@ -9,6 +9,26 @@ namespace GodotModules.Netcode
     {
         private LobbyOpcode LobbyOpcode { get; set; }
 
+        // LobbyMessage
+        public string Message { get; set; }
+
+        // LobbyCountdownChange
+        public bool CountdownRunning { get; set; }
+
+        // LobbyInfo
+        public Dictionary<byte, DataPlayer> Players { get; set; }
+        public bool DirectConnect { get; set; }
+        public string LobbyName { get; set; }
+        public string LobbyDescription { get; set; }
+        public ushort LobbyMaxPlayerCount { get; set; }
+        public byte LobbyHostId { get; set; }
+
+        // LobbyJoin
+        public string Username { get; set; }
+
+        // LobbyReady
+        public bool Ready { get; set; }
+
         public SPacketLobby() {} // required because of ReflectionUtils
 
         public SPacketLobby(LobbyOpcode opcode)
@@ -129,6 +149,7 @@ namespace GodotModules.Netcode
             }
         }
 
+#if CLIENT
         private GameClient Client { get; set; }
 
         public override async Task Handle(ENetClient client)
@@ -171,7 +192,6 @@ namespace GodotModules.Netcode
             }
         }
 
-        // LobbyCreate
         private async Task HandleCreate()
         {
             NetworkManager.PeerId = Id;
@@ -182,17 +202,11 @@ namespace GodotModules.Netcode
             await SceneManager.ChangeScene("Lobby");
         }
 
-        // LobbyChatMessage
-        public string Message { get; set; }
-
         private void HandleChatMessage()
         {
             if (SceneManager.InLobby())
                 SceneManager.GetActiveSceneScript<SceneLobby>().LobbyChat.Print(Id, Message);
         }
-
-        // LobbyCountdownChange
-        public bool CountdownRunning { get; set; }
 
         private void HandleCountdownChange()
         {
@@ -205,7 +219,6 @@ namespace GodotModules.Netcode
                 SceneManager.GetActiveSceneScript<SceneLobby>().CancelGameCountdown();
         }
 
-        // LobbyGameStart
         private async Task HandleGameStart()
         {
             if (NetworkManager.IsHost)
@@ -214,13 +227,6 @@ namespace GodotModules.Netcode
             await SceneManager.ChangeScene("Game");
         }
 
-        // LobbyInfo
-        public Dictionary<byte, DataPlayer> Players { get; set; }
-        public bool DirectConnect { get; set; }
-        public string LobbyName { get; set; }
-        public string LobbyDescription { get; set; }
-        public ushort LobbyMaxPlayerCount { get; set; }
-        public byte LobbyHostId { get; set; }
         private async Task HandleInfo()
         {
             NetworkManager.PeerId = Id;
@@ -237,9 +243,6 @@ namespace GodotModules.Netcode
             await SceneManager.ChangeScene("Lobby");
         }
 
-        // LobbyJoin
-        public string Username { get; set; }
-
         private void HandleJoin()
         {
             if (SceneManager.InLobby())
@@ -248,7 +251,6 @@ namespace GodotModules.Netcode
             Client.Log($"Player with username {Username} id: {Id} joined the lobby");
         }
 
-        // LobbyLeave
         private void HandleLeave()
         {
             if (SceneManager.InLobby())
@@ -261,13 +263,11 @@ namespace GodotModules.Netcode
             Client.Log($"Player with id: {Id} left the lobby");
         }
 
-        // LobbyReady
-        public bool Ready { get; set; }
-
         private void HandleReady()
         {
             if (SceneManager.InLobby())
                 SceneManager.GetActiveSceneScript<SceneLobby>().SetReady(Id, Ready);
         }
+#endif
     }
 }

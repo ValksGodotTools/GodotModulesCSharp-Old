@@ -7,6 +7,26 @@ namespace GodotModules.Netcode
     {
         private LobbyOpcode LobbyOpcode { get; set; }
 
+        // LobbyKick
+        public byte Id { get; set; }
+
+        // LobbyCreate
+        public string LobbyName { get; set; }
+        public string LobbyDescription { get; set; }
+
+        // LobbyChatMessage
+        public string Message { get; set; }
+
+        // LobbyCountdownChange
+        public bool CountdownRunning { get; set; }
+
+        // LobbyJoin
+        public string Username { get; set; }
+        public bool DirectConnect { get; set; }
+
+        // LobbyReady
+        public bool Ready { get; set; }
+
         public CPacketLobby() {} // required because of ReflectionUtils
 
         public CPacketLobby(LobbyOpcode opcode)
@@ -122,8 +142,6 @@ namespace GodotModules.Netcode
             }
         }
 
-        // LobbyKick
-        public byte Id { get; set; }
         private void HandleKick(Peer peer)
         {
             if (!Server.Players[(byte)peer.ID].Host)
@@ -132,9 +150,6 @@ namespace GodotModules.Netcode
             Server.Kick(Id, DisconnectOpcode.Kicked);
         }
 
-        // LobbyCreate
-        public string LobbyName { get; set; }
-        public string LobbyDescription { get; set; }
         private void HandleCreate(Peer peer)
         {
             Server.Lobby = new DataLobby {
@@ -155,9 +170,6 @@ namespace GodotModules.Netcode
             }, peer);
         }
 
-        // LobbyChatMessage
-        public string Message { get; set; }
-
         private void HandleChatMessage(Peer peer)
         {
             Server.SendToAllPlayers(ServerPacketOpcode.Lobby, new SPacketLobby(LobbyOpcode.LobbyChatMessage)
@@ -166,9 +178,6 @@ namespace GodotModules.Netcode
                 Message = Message
             });
         }
-
-        // LobbyCountdownChange
-        public bool CountdownRunning { get; set; }
 
         private void HandleCountdownChange(Peer peer)
         {
@@ -181,7 +190,6 @@ namespace GodotModules.Netcode
             });
         }
 
-        // LobbyGameStart
         private void HandleGameStart(Peer peer)
         {
             if (!Server.Players[(byte)peer.ID].Host)
@@ -191,9 +199,6 @@ namespace GodotModules.Netcode
             Server.SendToAllPlayers(ServerPacketOpcode.Lobby, new SPacketLobby(LobbyOpcode.LobbyGameStart));
         }
 
-        // LobbyJoin
-        public string Username { get; set; }
-        public bool DirectConnect { get; set; }
         private void HandleJoin(Peer peer)
         {
             // Check if data.Username is appropriate username
@@ -239,9 +244,6 @@ namespace GodotModules.Netcode
                 Username = Username
             });
         }
-
-        // LobbyReady
-        public bool Ready { get; set; }
 
         private void HandleReady(Peer peer)
         {

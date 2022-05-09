@@ -42,11 +42,13 @@ namespace GodotModules.Netcode
             }
         }
 
+#if CLIENT
         public override async Task Handle(ENetClient client)
         {
             if (SceneManager.InGame())
                 SceneManager.GetActiveSceneScript<SceneGame>().UpdatePlayerPositions(PlayerTransforms);
             await Task.FromResult(1);
         }
+#endif
     }
 }
