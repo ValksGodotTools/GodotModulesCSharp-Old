@@ -82,68 +82,9 @@ namespace GodotModules
                 UtilOptions.ToggleFullscreen();
         }
 
-        public override async void _Notification(int what)
-        {
-            if (what == MainLoop.NotificationWmQuitRequest)
-            {
-                GameTree.SetAutoAcceptQuit(false);
-
-                await ExitCleanup();
-            }
-        }
-
         public static string GetGameDataPath() => System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), GameManager.GameName);
 
         public static void GodotCmd(GodotOpcode opcode, object data = null) => GodotCmds.Enqueue(new GodotCmd(opcode, data));
-
-        private static int GameClientStillRunning { get; set; }
-        private static int GameServerStillRunning { get; set; }
-
-        /// <summary>
-        /// All cleanup should be done in here
-        /// </summary>
-        private static async Task ExitCleanup()
-        {
-            try
-            {
-                if (NetworkManager.IsServerRunning())
-                {
-                    NetworkManager.GameServer.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToExitApp));
-                    NetworkManager.GameServer.Stop();
-
-                    while (NetworkManager.GameServer.IsRunning) 
-                    {
-                        GameServerStillRunning++;
-                        if (GameServerStillRunning > 4)
-                            Logger.LogDebug("Game server taking a long time to stop");
-                        await Task.Delay(100);
-                    }
-                }
-
-                if (NetworkManager.IsClientRunning())
-                {
-                    NetworkManager.GameClient.Stop();
-
-                    while (NetworkManager.GameClient.IsRunning) 
-                    {
-                        GameClientStillRunning++;
-                        if (GameClientStillRunning > 4)
-                            Logger.LogDebug("Game client taking a long time to stop");
-                        await Task.Delay(100);
-                    }
-                }
-
-                UtilOptions.SaveOptions();
-                NetworkManager.WebClient.Dispose();
-            }
-            catch (Exception e)
-            {
-                Logger.LogErr(e, "Game exit cleanup");
-                await Task.Delay(3000);
-            }
-
-            GameTree.Quit();
-        }
 
         public static void SpawnPopupMessage(string message)
         {
