@@ -9,10 +9,10 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "Container",
+"base": "Reference",
 "class": "FlexGridContainer",
 "language": "GDScript",
-"path": "res://Scripts/Utils/flex_grid_container.gd"
+"path": "res://Scripts/Netcode/Common/Utils/flex_grid_container.gd"
 } ]
 _global_script_class_icons={
 "FlexGridContainer": ""
