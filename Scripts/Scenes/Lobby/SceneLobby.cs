@@ -28,7 +28,7 @@ namespace GodotModules
 
         private const int COUNTDOWN_START_TIME = 2;
         private int CountdownGameStart = COUNTDOWN_START_TIME;
-        private STimer TimerCountdownGameStart { get; set; }
+        private GTimer TimerCountdownGameStart { get; set; }
         private Dictionary<uint, UILobbyPlayerListing> UIPlayers { get; set; }
 
         public override void _Ready()
@@ -42,7 +42,8 @@ namespace GodotModules
             BtnStart = GetNode<Button>(NodePathBtnStart);
             UIPlayers = new();
             LobbyChat = new(ChatText, UIPlayers);
-            TimerCountdownGameStart = new STimer(1000, TimerCountdownCallback, false);
+            TimerCountdownGameStart = new GTimer(1000, true, false);
+            TimerCountdownGameStart.Connect(this, nameof(TimerCountdownCallback));
 
             if (!NetworkManager.IsHost)
                 BtnStart.Disabled = true;
@@ -77,7 +78,7 @@ namespace GodotModules
         {
             LobbyChat.Print($"Game starting in {CountdownGameStart--}");
 
-            if (CountdownGameStart == 0)
+            if (CountdownGameStart == -1)
             {
                 TimerCountdownGameStart.Stop();
 
@@ -218,7 +219,7 @@ namespace GodotModules
 
         public override void Cleanup()
         {
-            TimerCountdownGameStart.Dispose();
+            
         }
     }
 }
