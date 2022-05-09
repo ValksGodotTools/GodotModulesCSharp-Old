@@ -1,8 +1,7 @@
 using System;
-
 using System.Reflection;
 
-namespace GodotModules
+namespace GodotModules.Netcode
 {
     public static class ReflectionUtils
     {
