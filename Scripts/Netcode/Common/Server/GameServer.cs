@@ -64,7 +64,6 @@ namespace GodotModules.Netcode.Server
             {
                 var opcode = cmd.Opcode;
 
-                // Host client wants to stop the server
                 switch (opcode)
                 {
                     case ENetOpcode.StartGame:
