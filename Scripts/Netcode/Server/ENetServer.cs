@@ -244,7 +244,9 @@ namespace GodotModules.Netcode.Server
             if (QueueRestart)
             {
                 QueueRestart = false;
+#if CLIENT
                 NetworkManager.BroadcastLobbyToMaster();
+#endif
                 NetworkManager.StartServer(port, maxClients);
             }
 
