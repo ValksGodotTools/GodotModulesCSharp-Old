@@ -219,7 +219,7 @@ namespace GodotModules.Netcode
         private async Task HandleGameStart()
         {
             if (NetworkManager.IsHost)
-                NetworkManager.GameServer.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.StartGame));
+                NetworkManager.GameServer.ENetCmds.Enqueue(new ThreadCmd<ENetOpcode>(ENetOpcode.StartGame));
 
             await SceneManager.ChangeScene("Game");
         }

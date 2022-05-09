@@ -60,7 +60,7 @@ namespace GodotModules.Netcode.Server
 
         protected override void ServerCmds()
         {
-            while (ENetCmds.TryDequeue(out ENetCmd cmd))
+            while (ENetCmds.TryDequeue(out ThreadCmd<ENetOpcode> cmd))
             {
                 var opcode = cmd.Opcode;
 

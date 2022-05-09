@@ -68,7 +68,7 @@ namespace GodotModules.Netcode
             {
                 if (IsServerRunning())
                 {
-                    GameServer.ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToExitApp));
+                    GameServer.ENetCmds.Enqueue(new ThreadCmd<ENetOpcode>(ENetOpcode.ClientWantsToExitApp));
                     GameServer.Stop();
 
                     while (GameServer.IsRunning)

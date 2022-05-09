@@ -13,7 +13,7 @@ namespace GodotModules.Netcode.Server
         
         public bool HasSomeoneConnected { get => Interlocked.Read(ref SomeoneConnected) == 1; }
         public bool IsRunning { get => Interlocked.Read(ref Running) == 1; }
-        public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
+        public ConcurrentQueue<ThreadCmd<ENetOpcode>> ENetCmds { get; set; }
         public ushort MaxPlayers { get; set; }
 
         protected Dictionary<uint, Peer> Peers { get; set; }
@@ -63,9 +63,9 @@ namespace GodotModules.Netcode.Server
             Peers.Remove(id);
         }
 
-        public void Stop() => ENetCmds.Enqueue(new ENetCmd(ENetOpcode.StopServer));
+        public void Stop() => ENetCmds.Enqueue(new ThreadCmd<ENetOpcode>(ENetOpcode.StopServer));
 
-        public void Restart() => ENetCmds.Enqueue(new ENetCmd(ENetOpcode.RestartServer));
+        public void Restart() => ENetCmds.Enqueue(new ThreadCmd<ENetOpcode>(ENetOpcode.RestartServer));
 
         public void Send(ServerPacketOpcode opcode, params Peer[] peers) => Send(opcode, null, PacketFlags.Reliable, peers);
 

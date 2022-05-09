@@ -4,13 +4,13 @@ namespace GodotModules
 {
     public static class GodotCommands
     {
-        private static ConcurrentQueue<GodotCmd> GodotCmdQueue = new ConcurrentQueue<GodotCmd>();
+        private static ConcurrentQueue<ThreadCmd<GodotOpcode>> GodotCmdQueue = new ConcurrentQueue<ThreadCmd<GodotOpcode>>();
 
-        public static void Enqueue(GodotOpcode opcode, object data = null) => GodotCmdQueue.Enqueue(new GodotCmd(opcode, data));
+        public static void Enqueue(GodotOpcode opcode, object data = null) => GodotCmdQueue.Enqueue(new ThreadCmd<GodotOpcode>(opcode, data));
 
         public static async Task Dequeue()
         {
-            if (GodotCmdQueue.TryDequeue(out GodotCmd cmd))
+            if (GodotCmdQueue.TryDequeue(out ThreadCmd<GodotOpcode> cmd))
             {
                 switch (cmd.Opcode)
                 {

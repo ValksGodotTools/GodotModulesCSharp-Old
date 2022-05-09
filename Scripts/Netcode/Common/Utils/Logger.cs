@@ -8,11 +8,11 @@ namespace GodotModules
 {
     public static class Logger
     {
-        private static ConcurrentQueue<GodotCmd> Messages = new ConcurrentQueue<GodotCmd>();
+        private static ConcurrentQueue<ThreadCmd<LoggerOpcode>> Messages = new ConcurrentQueue<ThreadCmd<LoggerOpcode>>();
 
         public static void LogErr(Exception ex, string hint = "")
         {
-            Messages.Enqueue(new GodotCmd(GodotOpcode.LogError, new GodotError
+            Messages.Enqueue(new ThreadCmd<LoggerOpcode>(LoggerOpcode.LogError, new GodotError
             {
                 Exception = ex,
                 Hint = hint
@@ -26,7 +26,7 @@ namespace GodotModules
             if (trace)
                 path = $"{filePath.Substring(filePath.IndexOf("Scripts\\"))} line:{lineNumber}";
 
-            Messages.Enqueue(new GodotCmd(GodotOpcode.LogMessage, new GodotMessage
+            Messages.Enqueue(new ThreadCmd<LoggerOpcode>(LoggerOpcode.LogMessage, new GodotMessage
             {
                 Text = $"[Debug]: {v}",
                 Path = path,
@@ -35,7 +35,7 @@ namespace GodotModules
         }
         public static void Log(object v, ConsoleColor color = ConsoleColor.Gray)
         {
-            Messages.Enqueue(new GodotCmd(GodotOpcode.LogMessage, new GodotMessage
+            Messages.Enqueue(new ThreadCmd<LoggerOpcode>(LoggerOpcode.LogMessage, new GodotMessage
             {
                 Text = $"{v}",
                 Color = color
@@ -53,13 +53,13 @@ namespace GodotModules
 
         public static void Dequeue()
         {
-            if (Messages.TryDequeue(out GodotCmd cmd))
+            if (Messages.TryDequeue(out ThreadCmd<LoggerOpcode> cmd))
             {
                 var opcode = cmd.Opcode;
 
                 switch (opcode)
                 {
-                    case GodotOpcode.LogMessage:
+                    case LoggerOpcode.LogMessage:
                         var message = (GodotMessage)cmd.Data;
                         var text = message.Text;
                         var color = message.Color;
@@ -79,7 +79,7 @@ namespace GodotModules
                         UIDebugger.AddMessage(text);
 #endif
                         break;
-                    case GodotOpcode.LogError:
+                    case LoggerOpcode.LogError:
                         var error = (GodotError)cmd.Data;
                         var exception = error.Exception;
                         var hint = error.Hint;

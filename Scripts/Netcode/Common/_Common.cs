@@ -3,14 +3,14 @@ using System;
 namespace GodotModules.Netcode
 {
     // Intervals
-    public struct ClientIntervals 
+    public struct ClientIntervals
     {
         public static int PlayerDirection = 20;
         public static int PlayerPosition = 150;
         public static int PlayerRotation = 150;
     }
 
-    public struct ServerIntervals 
+    public struct ServerIntervals
     {
         public static int PlayerTransforms = 150;
     }
@@ -24,48 +24,35 @@ namespace GodotModules.Netcode
         Right
     }
 
-    public class GodotCmd
+    public struct ThreadCmd<TOpcode>
     {
-        public GodotCmd(GodotOpcode opcode)
-        {
-            Opcode = opcode;
-        }
+        public TOpcode Opcode { get; set; }
+        public object Data { get; set; }
 
-        public GodotCmd(GodotOpcode opcode, object data)
+        public ThreadCmd(TOpcode opcode, object data = null)
         {
             Opcode = opcode;
             Data = data;
         }
+    }
 
-        public GodotOpcode Opcode { get; set; }
-        public object Data { get; set; }
+    public enum SimulationOpcode 
+    {
+
+    }
+
+    public enum LoggerOpcode
+    {
+        LogMessage,
+        LogError
     }
 
     public enum GodotOpcode
     {
         ENetPacket,
-        LogMessage,
-        LogError,
         ChangeScene,
         PopupMessage,
         Disconnect
-    }
-
-    public class ENetCmd
-    {
-        public ENetCmd(ENetOpcode opcode)
-        {
-            Opcode = opcode;
-        }
-
-        public ENetCmd(ENetOpcode opcode, object data)
-        {
-            Opcode = opcode;
-            Data = data;
-        }
-
-        public ENetOpcode Opcode { get; set; }
-        public object Data { get; set; }
     }
 
     public enum ENetOpcode

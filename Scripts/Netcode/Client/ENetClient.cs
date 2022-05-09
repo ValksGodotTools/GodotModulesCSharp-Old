@@ -14,7 +14,7 @@ namespace GodotModules.Netcode.Client
 
         public bool IsConnected { get => Interlocked.Read(ref Connected) == 1; }
         public bool IsRunning { get => Interlocked.Read(ref Running) == 1; }
-        public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
+        public ConcurrentQueue<ThreadCmd<ENetOpcode>> ENetCmds { get; set; }
 
         protected CancellationTokenSource CTSClientTask { get; set; }
         protected long Connected = 0;
@@ -68,7 +68,7 @@ namespace GodotModules.Netcode.Client
         /// <summary>
         /// Disconnect the client from the server, can be called from the Godot thread
         /// </summary>
-        public void Stop() => ENetCmds.Enqueue(new ENetCmd(ENetOpcode.ClientWantsToDisconnect));
+        public void Stop() => ENetCmds.Enqueue(new ThreadCmd<ENetOpcode>(ENetOpcode.ClientWantsToDisconnect));
 
         public void Log(object obj) => Logger.Log($"[Client]: {obj}", ConsoleColor.Yellow);
 
@@ -121,7 +121,7 @@ namespace GodotModules.Netcode.Client
                 var polled = false;
 
                 // ENet Cmds from Godot Thread
-                while (ENetCmds.TryDequeue(out ENetCmd cmd))
+                while (ENetCmds.TryDequeue(out ThreadCmd<ENetOpcode> cmd))
                 {
                     switch (cmd.Opcode)
                     {
