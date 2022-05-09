@@ -86,7 +86,7 @@ namespace GodotModules
             if (GameClient.ConnectingToLobby)
                 return;
 
-            SceneLobby.CurrentLobby = info;
+            NetworkManager.CurrentLobby = info;
             GameClient.ConnectingToLobby = true;
 
             GD.Print("Connecting to lobby...");

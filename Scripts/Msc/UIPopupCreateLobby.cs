@@ -124,7 +124,7 @@ namespace GodotModules
             SceneGameServersScript.AddServer(info);
             if (WebClient.ConnectionAlive)
                 SceneGameServersScript.PostServer(info);
-            SceneLobby.CurrentLobby = info;
+            NetworkManager.CurrentLobby = info;
 
             await SceneGameServersScript.ClientConnect(async () => {
                 await NetworkManager.WaitForHostToConnectToServer();

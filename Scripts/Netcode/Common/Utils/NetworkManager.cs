@@ -15,6 +15,7 @@ namespace GodotModules.Netcode
         private static SceneTree Tree { get; set; }
         private static bool ENetInitialized { get; set; }
         public static WebClient WebClient = new WebClient();
+        public static LobbyListing CurrentLobby { get; set; }
 
         public override void _Ready()
         {
@@ -135,8 +136,8 @@ namespace GodotModules.Netcode
 
         public static void BroadcastLobbyToMaster()
         {
-            if (!SceneLobby.CurrentLobby.Equals(default(LobbyListing)))
-                if (SceneLobby.CurrentLobby.Public && WebClient.ConnectionAlive)
+            if (!CurrentLobby.Equals(default(LobbyListing)))
+                if (CurrentLobby.Public && WebClient.ConnectionAlive)
                     WebClient.TimerPingMasterServer.Start();
         }
 

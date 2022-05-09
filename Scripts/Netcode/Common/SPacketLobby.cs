@@ -231,7 +231,7 @@ namespace GodotModules.Netcode
             Client.Players[Id] = GameManager.Options.OnlineUsername;
             Players.ForEach(pair => NetworkManager.GameClient.Players[pair.Key] = pair.Value.Username);
 
-            var currentLobby = SceneLobby.CurrentLobby;
+            var currentLobby = NetworkManager.CurrentLobby;
             currentLobby.Name = LobbyName;
             currentLobby.Description = LobbyDescription;
             currentLobby.LobbyHostId = LobbyHostId;

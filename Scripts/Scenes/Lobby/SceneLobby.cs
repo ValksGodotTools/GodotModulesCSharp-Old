@@ -5,8 +5,6 @@ namespace GodotModules
 {
     public class SceneLobby : AScene
     {
-        public static GodotModules.Netcode.LobbyListing CurrentLobby { get; set; }
-
         [Export] public readonly NodePath NodePathPlayers;
         [Export] public readonly NodePath NodePathChatText;
         [Export] public readonly NodePath NodePathChatInput;
@@ -50,8 +48,8 @@ namespace GodotModules
 
             NetworkManager.GameClient.Players.ForEach(x => AddPlayer(x.Key, x.Value));
 
-            LobbyName.Text = CurrentLobby.Name;
-            LobbyMaxPlayers.Text = "" + CurrentLobby.MaxPlayerCount;
+            LobbyName.Text = NetworkManager.CurrentLobby.Name;
+            LobbyMaxPlayers.Text = "" + NetworkManager.CurrentLobby.MaxPlayerCount;
         }
 
         public override async void _Input(InputEvent @event)
