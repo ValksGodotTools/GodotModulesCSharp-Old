@@ -45,10 +45,10 @@ namespace GodotModules.Netcode.Client
         }
 
         public async static Task<WebServerResponse<string>> PostError(string errorText, string errorDescription)
-           => await PostAsync("errors/post", new Dictionary<string, string> {
-                { "error", errorText },
-                { "description", errorDescription }
-              });
+            => await PostAsync("errors/post", new Dictionary<string, string> {
+                    { "error", errorText },
+                    { "description", errorDescription }
+                });
 
         public async static Task<WebServerResponse<string>> RemoveLobbyAsync() => await PostAsync("server/remove", DataExternalIp);
 
@@ -75,6 +75,9 @@ namespace GodotModules.Netcode.Client
 
         private async static Task<WebServerResponse<string>> PostAsync(string path, Dictionary<string, string> values = null)
         {
+            if (!ConnectionAlive)
+                return new() { Status = WebServerStatus.OFFLINE };
+
             try
             {
                 var data = new FormUrlEncodedContent(values);
@@ -117,6 +120,9 @@ namespace GodotModules.Netcode.Client
 
         public static async Task<WebServerResponse<T>> Get<T>(string path)
         {
+            if (!ConnectionAlive)
+                return new() { Status = WebServerStatus.OFFLINE };
+
             try
             {
                 var response = await Client.GetAsync($"http://{WEB_SERVER_IP}/api/{path}");
@@ -175,6 +181,7 @@ namespace GodotModules.Netcode.Client
     public enum WebServerStatus
     {
         OK,
-        ERROR
+        ERROR,
+        OFFLINE
     }
 }
