@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Scripts/Scenes/Main/GameManager.cs" type="Script" id=1]
 [ext_resource path="res://Scripts/Scenes/Main/MusicManager.cs" type="Script" id=2]
@@ -7,11 +7,13 @@
 [ext_resource path="res://Scripts/Scenes/Main/SceneManager.cs" type="Script" id=5]
 [ext_resource path="res://Scenes/Prefabs/Debugger.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Scripts/Scenes/Main/ErrorNotifier.cs" type="Script" id=7]
+[ext_resource path="res://Scripts/Netcode/Common/Server/ServerSimulation.cs" type="Script" id=8]
 
 [node name="Main" type="Node"]
 script = ExtResource( 1 )
 
 [node name="Server Simulation" type="Node2D" parent="."]
+script = ExtResource( 8 )
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 volume_db = -10.0
@@ -22,6 +24,7 @@ script = ExtResource( 3 )
 
 [node name="NetworkManager" type="Node" parent="."]
 script = ExtResource( 4 )
+NodePathServerSimulation = NodePath("../Server Simulation")
 
 [node name="SceneManager" type="Node" parent="."]
 script = ExtResource( 5 )
