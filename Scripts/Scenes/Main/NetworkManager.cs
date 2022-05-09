@@ -16,6 +16,11 @@ namespace GodotModules
         public static DisconnectOpcode DisconnectOpcode { get; set; }
         public static uint PeerId { get; set; } // this clients peer id (grabbed from server at some point)
         public static bool IsHost { get; set; }
+
+        // dummy client
+        public static bool WasPingReceived { get; set; }
+        public static DateTime PingSent { get; set; }
+        public static int PingMs { get; set; }
         
         public static bool ServerAuthoritativeMovement { get; set; }
 

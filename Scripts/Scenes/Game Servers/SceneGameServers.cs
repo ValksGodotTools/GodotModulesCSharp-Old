@@ -155,10 +155,10 @@ namespace GodotModules
 
                         await dummyClient.Send(Netcode.ClientPacketOpcode.Ping);
 
-                        while (!dummyClient.WasPingReceived)
+                        while (!NetworkManager.WasPingReceived)
                             await Task.Delay(1, CTSPingServers.Token);
 
-                        dummyClient.WasPingReceived = false;
+                        NetworkManager.WasPingReceived = false;
                     }
                     catch (TaskCanceledException)
                     {
@@ -179,7 +179,7 @@ namespace GodotModules
                 if (!CTSPingServers.IsCancellationRequested)
                 {
                     LobbyListings[server.Ip] = server;
-                    server.Ping = dummyClient.PingMs;
+                    server.Ping = NetworkManager.PingMs;
                     AddServer(server);
                 }
 

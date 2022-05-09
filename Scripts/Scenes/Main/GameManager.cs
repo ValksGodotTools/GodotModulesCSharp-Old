@@ -27,9 +27,7 @@ namespace GodotModules
                 switch (cmd.Opcode)
                 {
                     case GodotOpcode.ENetPacket:
-                        var packetHandleData = (PacketHandleData)cmd.Data;
-                        var packetReader = packetHandleData.Reader;
-                        var client = packetHandleData.Client;
+                        var packetReader = (PacketReader)cmd.Data;
                         var opcode = (ServerPacketOpcode)packetReader.ReadByte();
 
                         //Utils.Log($"[Client]: Received {opcode}");
@@ -50,7 +48,7 @@ namespace GodotModules
                             Logger.LogWarning($"[Client]: Received malformed opcode: {opcode} {ex.Message} (Ignoring)");
                             break;
                         }
-                        await handlePacket.Handle(client);
+                        await handlePacket.Handle();
 
                         packetReader.Dispose();
                         break;

@@ -14,9 +14,6 @@ namespace GodotModules.Netcode.Client
 
         public bool IsConnected { get => Interlocked.Read(ref Connected) == 1; }
         public bool IsRunning { get => Interlocked.Read(ref Running) == 1; }
-        public DateTime PingSent { get; set; }
-        public int PingMs { get; set;}
-        public bool WasPingReceived { get; set; }
         public ConcurrentQueue<ENetCmd> ENetCmds { get; set; }
 
         protected CancellationTokenSource CTSClientTask { get; set; }
@@ -145,7 +142,7 @@ namespace GodotModules.Netcode.Client
                     packet.Create(clientPacket.Data, clientPacket.PacketFlags);
                     //Log("Sent packet: " + (ClientPacketOpcode)clientPacket.Opcode);
                     peer.Send(channelID, ref packet);
-                    PingSent = DateTime.Now;
+                    NetworkManager.PingSent = DateTime.Now;
                 }
 
                 while (!polled)
@@ -175,10 +172,7 @@ namespace GodotModules.Netcode.Client
                                 continue;
                             }
 
-                            GameManager.GodotCmd(GodotOpcode.ENetPacket, new PacketHandleData {
-                                Reader = new PacketReader(packet),
-                                Client = this
-                            });
+                            GameManager.GodotCmd(GodotOpcode.ENetPacket, new PacketReader(packet));
                             break;
 
                         case EventType.Timeout:
@@ -207,7 +201,6 @@ namespace GodotModules.Netcode.Client
 
     public struct PacketHandleData 
     {
-        public ENetClient Client { get; set; }
         public PacketReader Reader { get; set; }
     }
 }

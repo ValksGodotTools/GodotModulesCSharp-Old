@@ -152,7 +152,7 @@ namespace GodotModules.Netcode
 #if CLIENT
         private GameClient Client { get; set; }
 
-        public override async Task Handle(ENetClient client)
+        public override async Task Handle()
         {
             Client = NetworkManager.GameClient;
 

@@ -10,10 +10,10 @@ namespace GodotModules.Netcode
     public class SPacketPong : APacketServer
     {
 #if CLIENT
-        public override async Task Handle(ENetClient client)
+        public override async Task Handle()
         {
-            client.WasPingReceived = true;
-            client.PingMs = (DateTime.Now - client.PingSent).Milliseconds;
+            NetworkManager.WasPingReceived = true;
+            NetworkManager.PingMs = (DateTime.Now - NetworkManager.PingSent).Milliseconds;
             await Task.FromResult(1);
         }
 #endif
