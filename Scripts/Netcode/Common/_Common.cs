@@ -1,3 +1,4 @@
+using Godot;
 using System;
 
 namespace GodotModules.Netcode
@@ -36,11 +37,6 @@ namespace GodotModules.Netcode
         }
     }
 
-    public enum SimulationOpcode 
-    {
-
-    }
-
     public enum LoggerOpcode
     {
         LogMessage,
@@ -61,7 +57,8 @@ namespace GodotModules.Netcode
         StopServer,
         RestartServer,
         ClientWantsToExitApp,
-        ClientWantsToDisconnect
+        ClientWantsToDisconnect,
+        EnemyTransforms
     }
 
     public struct GodotMessage
@@ -89,5 +86,33 @@ namespace GodotModules.Netcode
         public int MaxPlayerCount { get; set; }
         public int Players { get; set; }
         public bool Public { get; set; }
+    }
+
+    public enum SimulationOpcode 
+    {
+        StartSimulation,
+        CreatePlayer,
+        CreateEnemy,
+        PlayerPosition,
+        EnemyPosition
+    }
+
+    public class SimulationEnemy 
+    {
+        public Vector2 SpawnForce { get; set; }
+
+        public void RandomDirOnSpawn(float force) => SpawnForce = Utils.RandomDir() * force;
+    }
+
+    public struct SimulationPlayerPosition 
+    {
+        public byte Id { get; set; }
+        public Vector2 Position { get; set; }
+
+        public SimulationPlayerPosition(byte id, Vector2 pos)
+        {
+            Id = id;
+            Position = pos;
+        }
     }
 }
