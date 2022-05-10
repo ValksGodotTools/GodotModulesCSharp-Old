@@ -47,7 +47,9 @@ namespace GodotModules.Netcode
 
             foreach (var pair in Enemies)
             {
-                sceneGameScript.Enemies[pair.Key].Position = pair.Value.Position;
+                var enemy = sceneGameScript.Enemies[pair.Key];
+                if (enemy.Position.DistanceTo(pair.Value.Position) > 100)
+                    sceneGameScript.Enemies[pair.Key].Position = pair.Value.Position;
             }
 
             await Task.FromResult(1);
