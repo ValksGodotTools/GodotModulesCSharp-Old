@@ -23,11 +23,10 @@ namespace GodotModules.Netcode.Server
         {
             Delta = delta;
 
-            var players = ServerSimulation.Players;
-            if (players.Count == 0) 
+            if (Players.Count == 0) 
                 return;
 
-            Sprite.LookAt(players.First().Value.Position);
+            Sprite.LookAt(Players.First().Value.Position);
         }
 
         public override void _IntegrateForces(Physics2DDirectBodyState state)
@@ -35,17 +34,23 @@ namespace GodotModules.Netcode.Server
             state.LinearVelocity = Velocity;
         }
 
+        public Dictionary<byte, Game.OtherPlayer> Players { get; set; }
+
+        public void SetPlayers(Dictionary<byte, Game.OtherPlayer> players) 
+        {
+            Players = players;
+        }
+
         private void CalcVelocity()
         {
-            var players = ServerSimulation.Players;
-            if (players.Count == 0) 
+            if (Players.Count == 0) 
             {
                 Velocity = Vector2.Zero;
                 return;
             }
 
             // TODO: Find nearest player instead of first player in array
-            var dir = (players.First().Value.Position - Position).Normalized();
+            var dir = (Players.First().Value.Position - Position).Normalized();
             Velocity = (dir * Delta * 10000f);
         }
 

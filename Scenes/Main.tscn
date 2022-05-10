@@ -21,6 +21,7 @@ script = ExtResource( 3 )
 
 [node name="NetworkManager" type="Node" parent="."]
 script = ExtResource( 4 )
+NodePathServerSimulation = NodePath("../CanvasLayer/Server Simulation/ViewportContainer/Viewport/Server Simulation")
 
 [node name="SceneManager" type="Node" parent="."]
 script = ExtResource( 5 )

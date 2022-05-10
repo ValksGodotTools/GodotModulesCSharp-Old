@@ -8,7 +8,7 @@ namespace GodotModules.Netcode.Server
         private static ConcurrentQueue<ThreadCmd<SimulationOpcode>> ServerSimulationQueue = new ConcurrentQueue<ThreadCmd<SimulationOpcode>>();
 
         public static Dictionary<ushort, Enemy> Enemies = new Dictionary<ushort, Enemy>();
-        public static Dictionary<byte, Game.OtherPlayer> Players = new Dictionary<byte, Game.OtherPlayer>();
+        private Dictionary<byte, Game.OtherPlayer> Players;
 
         private static ServerSimulation Instance { get; set; }
         private static GTimer Timer { get; set; }
@@ -17,6 +17,7 @@ namespace GodotModules.Netcode.Server
         public override void _Ready()
         {
             Instance = this;
+            Players = new Dictionary<byte, Game.OtherPlayer>();
             Timer = new GTimer(ServerIntervals.PlayerTransforms, true, false);
             Timer.Connect(this, nameof(EmitSimulationData));
         }
@@ -36,7 +37,7 @@ namespace GodotModules.Netcode.Server
 
         public static void Enqueue(ThreadCmd<SimulationOpcode> cmd) => ServerSimulationQueue.Enqueue(cmd);
 
-        public static void Dequeue()
+        public void Dequeue()
         {
             if (ServerSimulationQueue.TryDequeue(out ThreadCmd<SimulationOpcode> cmd))
             {
@@ -77,7 +78,7 @@ namespace GodotModules.Netcode.Server
             }
         }
 
-        private static void CreatePlayer(byte id)
+        private void CreatePlayer(byte id)
         {
             var otherPlayer = Prefabs.OtherPlayer.Instance<Game.OtherPlayer>();
             otherPlayer.AddToGroup("Player");
@@ -86,10 +87,11 @@ namespace GodotModules.Netcode.Server
             Instance.AddChild(otherPlayer);
         }
 
-        private static void CreateEnemy(SimulationEnemy simEnemy)
+        private void CreateEnemy(SimulationEnemy simEnemy)
         {
             var enemy = Prefabs.Enemy.Instance<Enemy>();
             enemy.AddToGroup("Enemy");
+            enemy.SetPlayers(Players);
             enemy.Position = simEnemy.SpawnForce;
             Enemies.Add(simEnemy.Id, enemy);
             Instance.AddChild(enemy);
@@ -105,7 +107,7 @@ namespace GodotModules.Netcode.Server
             NetworkManager.GameServer.ENetCmds.Enqueue(new ThreadCmd<ENetOpcode>(ENetOpcode.EnemyTransforms, enemyData));
         }
 
-        public static void Cleanup()
+        public void Cleanup()
         {
             Timer.Stop();
             while (ServerSimulationQueue.TryDequeue(out _));

@@ -19,7 +19,7 @@ namespace GodotModules
         public override async void _Process(float delta)
         {
             Logger.Dequeue();
-            ServerSimulation.Dequeue();
+            NetworkManager.ServerSimulation.Dequeue();
             await GodotCommands.Dequeue();
         }
 

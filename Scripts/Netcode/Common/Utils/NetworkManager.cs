@@ -11,6 +11,8 @@ namespace GodotModules.Netcode
 {
     public class NetworkManager : Node
     {
+        [Export] public readonly NodePath NodePathServerSimulation;
+
         private static SceneTree Tree { get; set; }
         private static bool ENetInitialized { get; set; }
         public static WebClient WebClient = new WebClient();
@@ -20,6 +22,7 @@ namespace GodotModules.Netcode
         {
             Tree = GetTree();
             ServerAuthoritativeMovement = false;
+            ServerSimulation = GetNode<ServerSimulation>(NodePathServerSimulation);
 
             ENetInitialized = ENet.Library.Initialize();
             if (!ENetInitialized)
@@ -30,6 +33,7 @@ namespace GodotModules.Netcode
 
         // SERVER
         public static GameServer GameServer { get; set; }
+        public static ServerSimulation ServerSimulation { get; set; }
         public static bool ServerAuthoritativeMovement { get; set; }
         private static int GameServerStillRunning { get; set; }
         public static bool IsServerRunning() => GameServer == null ? false : GameServer.IsRunning;

@@ -65,6 +65,7 @@ namespace GodotModules.Netcode
             {
                 var enemy = Prefabs.Enemy.Instance<GodotModules.Netcode.Server.Enemy>();
                 enemy.Position = pair.Value.Position;
+                enemy.SetPlayers(sceneGameScript.Players);
                 sceneGameScript.AddChild(enemy);
                 sceneGameScript.Enemies[pair.Key] = enemy;
             }

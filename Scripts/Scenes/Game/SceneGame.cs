@@ -12,7 +12,7 @@ namespace Game
         [Export] public readonly NodePath NodePathLabelPlayerHealth;
         public Label LabelPlayerHealth;
 
-        private Dictionary<uint, OtherPlayer> Players;
+        public Dictionary<byte, OtherPlayer> Players;
         public Dictionary<ushort, Enemy> Enemies;
         public ClientPlayer Player { get; set; }
         private PrevCurQueue<Dictionary<byte, DataEntityTransform>> PlayerTransformQueue { get; set; }
@@ -108,7 +108,7 @@ namespace Game
 
         private void InitMultiplayerStuff()
         {
-            Players[NetworkManager.PeerId] = Player;
+            Players[(byte)NetworkManager.PeerId] = Player;
             Player.SetUsername(GameManager.Options.OnlineUsername);
 
             bool IsNotClient(uint id) => id != NetworkManager.PeerId;
@@ -119,7 +119,7 @@ namespace Game
                 {
                     var otherPlayer = Prefabs.OtherPlayer.Instance<OtherPlayer>();
                     otherPlayer.Position = Vector2.Zero;
-                    Players.Add(pair.Key, otherPlayer);
+                    Players.Add((byte)pair.Key, otherPlayer);
                     AddChild(otherPlayer);
                     otherPlayer.SetUsername(pair.Value);
                 });
