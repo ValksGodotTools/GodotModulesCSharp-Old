@@ -2,6 +2,7 @@ using Godot;
 using GodotModules.ModLoader;
 using GodotModules.Netcode;
 using GodotModules.Netcode.Client;
+using GodotModules.Netcode.Server;
 using System;
 
 namespace Game
@@ -12,6 +13,7 @@ namespace Game
         public Label LabelPlayerHealth;
 
         private Dictionary<uint, OtherPlayer> Players;
+        public Dictionary<ushort, Enemy> Enemies;
         public ClientPlayer Player { get; set; }
         private PrevCurQueue<Dictionary<byte, DataEntityTransform>> PlayerTransformQueue { get; set; }
 
@@ -22,6 +24,7 @@ namespace Game
             LabelPlayerHealth = GetNode<Label>(NodePathLabelPlayerHealth);
 
             Players = new();
+            Enemies = new();
 
             Player = Prefabs.ClientPlayer.Instance<ClientPlayer>();
             Player.Position = Vector2.Zero;
