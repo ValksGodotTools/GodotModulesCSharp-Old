@@ -13,6 +13,8 @@ namespace GodotModules.Netcode.Server
         private STimer ServerSimPlayerPositions { get; set; } // unused
         public bool DisallowJoiningLobby { get; set; }
 
+        private ushort EnemyId { get; set; }
+
         public GameServer()
         {
             Players = new();
@@ -78,18 +80,32 @@ namespace GodotModules.Netcode.Server
                             ServerSimulation.Enqueue(new ThreadCmd<SimulationOpcode>(SimulationOpcode.CreatePlayer, player.Key));
                         }
 
+                        var enemies = new List<SimulationEnemy>();
+
                         for (int i = 0; i < 10; i++)
                         {
-                            var enemy = new SimulationEnemy();
+                            var enemy = new SimulationEnemy() { Id = EnemyId++ };
                             enemy.RandomDirOnSpawn(50);
+                            enemies.Add(enemy);
                             ServerSimulation.Enqueue(new ThreadCmd<SimulationOpcode>(SimulationOpcode.CreateEnemy, enemy));
                         }
+
+                        // Tell everyone that 10 enemies were created
+                        SendToAllPlayers(ServerPacketOpcode.Game, new SPacketGame(GameOpcode.EnemiesSpawned) {
+                            Enemies = enemies.ToDictionary(x => x.Id, x => new DataEnemy {
+                                Position = Vector2.Zero
+                            })
+                        });
 
                         ServerSimulation.Enqueue(new ThreadCmd<SimulationOpcode>(SimulationOpcode.StartSimulation));
                         break;
 
                     case ENetOpcode.EnemyTransforms:
                         Enemies = (Dictionary<ushort, DataEnemy>)cmd.Data;
+
+                        SendToAllPlayers(ServerPacketOpcode.EnemyPositions, new SPacketEnemyPositions {
+                            Enemies = Enemies
+                        });
                         break;
 
                     case ENetOpcode.StopServer:
