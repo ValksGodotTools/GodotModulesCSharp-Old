@@ -14,8 +14,11 @@ namespace GodotModules.Netcode.Server
         {
             Sprite = GetNode<Sprite>(NodePathSprite);
 
-            var calcTarget = new GTimer(200);
-            calcTarget.Connect(this, nameof(CalcVelocity));
+            if (NetworkManager.IsHost)
+            {
+                var calcTarget = new GTimer(200);
+                calcTarget.Connect(this, nameof(CalcVelocity));
+            }
         }
 
         public override void _PhysicsProcess(float delta)
@@ -30,7 +33,8 @@ namespace GodotModules.Netcode.Server
 
         public override void _IntegrateForces(Physics2DDirectBodyState state)
         {
-            state.LinearVelocity = Velocity;
+            if (NetworkManager.IsHost)
+                state.LinearVelocity = Velocity;
         }
 
         public Dictionary<byte, Game.OtherPlayer> Players { get; set; }

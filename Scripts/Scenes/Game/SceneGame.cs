@@ -12,6 +12,8 @@ namespace Game
         public Dictionary<byte, OtherPlayer> Players;
         public Dictionary<ushort, Enemy> Enemies;
         public ClientPlayer Player { get; set; }
+
+        public PrevCurQueue<Dictionary<ushort, DataEnemy>> EnemyTransformQueue { get; set; }
         private PrevCurQueue<Dictionary<byte, DataEntityTransform>> PlayerTransformQueue { get; set; }
 
         private List<Sprite> Bullets = new List<Sprite>();
@@ -28,6 +30,7 @@ namespace Game
 
             AddChild(Player);
             PlayerTransformQueue = new PrevCurQueue<Dictionary<byte, DataEntityTransform>>(ServerIntervals.PlayerTransforms);
+            EnemyTransformQueue = new PrevCurQueue<Dictionary<ushort, DataEnemy>>(ServerIntervals.PlayerTransforms);
 
             var bullet = Prefabs.Bullet.Instance<Sprite>();
             Bullets.Add(bullet);
@@ -53,8 +56,12 @@ namespace Game
                 bullet.Position += new Vector2(0, -1f);
 
             PlayerTransformQueue.UpdateProgress(delta);
+            EnemyTransformQueue.UpdateProgress(delta);
 
             if (PlayerTransformQueue.NotReady)
+                return;
+
+            if (EnemyTransformQueue.NotReady)
                 return;
 
             foreach (var pair in PlayerTransformQueue.Current)
@@ -72,6 +79,16 @@ namespace Game
 
                 player.Position = Utils.Lerp(prev.Position, cur.Position, PlayerTransformQueue.Progress);
                 player.PlayerSprite.Rotation = Utils.LerpAngle(player.PlayerSprite.Rotation, cur.Rotation, 0.05f);
+            }
+
+            foreach (var pair in EnemyTransformQueue.Current)
+            {
+                var enemy = Enemies[pair.Key];
+
+                var prev = EnemyTransformQueue.Previous[pair.Key];
+                var cur = pair.Value;
+
+                enemy.Position = Utils.Lerp(prev.Position, cur.Position, EnemyTransformQueue.Progress);
             }
         }
 

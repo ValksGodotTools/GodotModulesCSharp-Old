@@ -44,12 +44,14 @@ namespace GodotModules.Netcode
         {
             var sceneGameScript = SceneManager.GetActiveSceneScript<Game.SceneGame>();
 
-            foreach (var pair in Enemies)
+            sceneGameScript.EnemyTransformQueue.Add(Enemies);
+
+            /*foreach (var pair in Enemies)
             {
                 var enemy = sceneGameScript.Enemies[pair.Key];
-                if (enemy.Position.DistanceTo(pair.Value.Position) > 100)
+                if (enemy.Position.DistanceTo(pair.Value.Position) > 100) // TODO: Lerp
                     sceneGameScript.Enemies[pair.Key].Position = pair.Value.Position;
-            }
+            }*/
 
             await Task.FromResult(1);
         }
