@@ -171,7 +171,7 @@ namespace GodotModules.Netcode.Client
                                 continue;
                             }
 
-                            GM.GodotCommands.Enqueue(GodotOpcode.ENetPacket, new PacketReader(packet));
+                            GM.EnqueueGodotCmd(GodotOpcode.ENetPacket, new PacketReader(packet));
                             break;
 
                         case EventType.Timeout:

@@ -11,7 +11,7 @@ namespace GodotModules
         [Export] public readonly NodePath NodePathGameConsole;
         public static ModLoader ModLoader { get; set; }
         public static UIGameConsole GameConsole { get; set; }
-        public static GodotCommands GodotCommands { get; set; }
+        private static GodotCommands GodotCommands { get; set; }
         private static Logger Logger { get; set; }
 
         public static string GameName = "Godot Modules";
@@ -62,6 +62,8 @@ namespace GodotModules
             popupError.Init(e.Message, e.StackTrace);
             popupError.PopupCentered();
         }
+
+        public static void EnqueueGodotCmd(GodotOpcode opcode, object data = null) => GodotCommands.Enqueue(opcode, data);
 
         public static void Log(object v, ConsoleColor color = ConsoleColor.Gray) => Logger.Log(v, color);
         public static void LogWarning(object v, ConsoleColor color = ConsoleColor.Yellow) => Logger.LogWarning(v, color);

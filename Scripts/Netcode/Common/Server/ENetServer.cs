@@ -136,7 +136,7 @@ namespace GodotModules.Netcode.Server
                 var message = $"A server is running on port {port} already! {e.Message}";
                 Log(message);
 #if CLIENT
-                GM.GodotCommands.Enqueue(GodotOpcode.PopupMessage, message);
+                GM.EnqueueGodotCmd(GodotOpcode.PopupMessage, message);
                 NetworkManager.GameClient.Stop();
 #endif
                 Stop();
