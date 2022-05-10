@@ -1,6 +1,4 @@
 using Godot;
-using GodotModules.Netcode.Client;
-using System.Threading.Tasks;
 
 namespace GodotModules
 {

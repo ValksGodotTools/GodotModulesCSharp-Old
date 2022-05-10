@@ -1,5 +1,3 @@
-using Godot;
-
 namespace GodotModules
 {
     public class PrevCurQueue<T>

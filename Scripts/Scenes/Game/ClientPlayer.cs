@@ -1,6 +1,4 @@
 using Godot;
-using GodotModules.Netcode;
-using GodotModules.Netcode.Client;
 
 namespace Game
 {

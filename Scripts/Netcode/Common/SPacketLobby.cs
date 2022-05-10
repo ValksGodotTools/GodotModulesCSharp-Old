@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 namespace GodotModules.Netcode
 {
     public class SPacketLobby : APacketServerPeerId
