@@ -5,18 +5,15 @@ namespace GodotModules.Netcode.Server
 {
     public class ServerSimulation : Node
     {
-        private static ConcurrentQueue<ThreadCmd<SimulationOpcode>> ServerSimulationQueue = new ConcurrentQueue<ThreadCmd<SimulationOpcode>>();
+        private ConcurrentQueue<ThreadCmd<SimulationOpcode>> ServerSimulationQueue = new ConcurrentQueue<ThreadCmd<SimulationOpcode>>();
 
-        public static Dictionary<ushort, Enemy> Enemies = new Dictionary<ushort, Enemy>();
+        private Dictionary<ushort, Enemy> Enemies = new Dictionary<ushort, Enemy>();
         private Dictionary<byte, Game.OtherPlayer> Players;
-
-        private static ServerSimulation Instance { get; set; }
-        private static GTimer Timer { get; set; }
-        private static Dictionary<byte, PrevCurQueue<Vector2>> PlayerPositions = new Dictionary<byte, PrevCurQueue<Vector2>>();
+        private GTimer Timer { get; set; }
+        private Dictionary<byte, PrevCurQueue<Vector2>> PlayerPositions = new Dictionary<byte, PrevCurQueue<Vector2>>();
 
         public override void _Ready()
         {
-            Instance = this;
             Players = new Dictionary<byte, Game.OtherPlayer>();
             Timer = new GTimer(ServerIntervals.PlayerTransforms, true, false);
             Timer.Connect(this, nameof(EmitSimulationData));
@@ -35,7 +32,7 @@ namespace GodotModules.Netcode.Server
             }
         }
 
-        public static void Enqueue(ThreadCmd<SimulationOpcode> cmd) => ServerSimulationQueue.Enqueue(cmd);
+        public void Enqueue(ThreadCmd<SimulationOpcode> cmd) => ServerSimulationQueue.Enqueue(cmd);
 
         public void Dequeue()
         {
@@ -84,7 +81,7 @@ namespace GodotModules.Netcode.Server
             otherPlayer.AddToGroup("Player");
             otherPlayer.Position = Vector2.Zero;
             Players.Add(id, otherPlayer);
-            Instance.AddChild(otherPlayer);
+            AddChild(otherPlayer);
         }
 
         private void CreateEnemy(SimulationEnemy simEnemy)
@@ -94,7 +91,7 @@ namespace GodotModules.Netcode.Server
             enemy.SetPlayers(Players);
             enemy.Position = simEnemy.SpawnForce;
             Enemies.Add(simEnemy.Id, enemy);
-            Instance.AddChild(enemy);
+            AddChild(enemy);
         }
 
         private void EmitSimulationData()

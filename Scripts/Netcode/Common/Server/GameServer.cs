@@ -77,7 +77,7 @@ namespace GodotModules.Netcode.Server
 
                         foreach (var player in Players)
                         {
-                            ServerSimulation.Enqueue(new ThreadCmd<SimulationOpcode>(SimulationOpcode.CreatePlayer, player.Key));
+                            NetworkManager.ServerSimulation.Enqueue(new ThreadCmd<SimulationOpcode>(SimulationOpcode.CreatePlayer, player.Key));
                         }
 
                         var enemies = new List<SimulationEnemy>();
@@ -87,7 +87,7 @@ namespace GodotModules.Netcode.Server
                             var enemy = new SimulationEnemy() { Id = EnemyId++ };
                             enemy.RandomDirOnSpawn(50);
                             enemies.Add(enemy);
-                            ServerSimulation.Enqueue(new ThreadCmd<SimulationOpcode>(SimulationOpcode.CreateEnemy, enemy));
+                            NetworkManager.ServerSimulation.Enqueue(new ThreadCmd<SimulationOpcode>(SimulationOpcode.CreateEnemy, enemy));
                         }
 
                         // Tell everyone that 10 enemies were created
@@ -97,7 +97,7 @@ namespace GodotModules.Netcode.Server
                             })
                         });
 
-                        ServerSimulation.Enqueue(new ThreadCmd<SimulationOpcode>(SimulationOpcode.StartSimulation));
+                        NetworkManager.ServerSimulation.Enqueue(new ThreadCmd<SimulationOpcode>(SimulationOpcode.StartSimulation));
                         break;
 
                     case ENetOpcode.EnemyTransforms:
