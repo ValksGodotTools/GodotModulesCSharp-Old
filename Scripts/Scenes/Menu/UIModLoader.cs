@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Diagnostics;
 
-namespace GodotModules.ModLoader
+namespace GodotModules
 {
     public class UIModLoader : Control
     {
@@ -31,7 +31,7 @@ namespace GodotModules.ModLoader
         // logger
         private RichTextLabel Logger { get; set; }
 
-        public override void _Ready()
+        public override async void _Ready()
         {
             Instance = this;
             ModList = GetNode<VBoxContainer>(NodePathModList);
@@ -46,8 +46,8 @@ namespace GodotModules.ModLoader
             ModDescription.Text = "";
             Logger.Clear();
 
-            ModLoader.Init();
-            ModLoader.LoadMods();
+            while (GameManager.ModLoader == null) // this is ugly
+                await Task.Delay(1);
 
             DisplayMods();
         }
@@ -61,7 +61,7 @@ namespace GodotModules.ModLoader
             foreach (Node node in ModDependencies.GetChildren())
                 node.QueueFree();
 
-            var modInfo = ModLoader.ModInfo[name].ModInfo;
+            var modInfo = GameManager.ModLoader.ModInfo[name].ModInfo;
 
             ModName.Text = name;
 
@@ -86,15 +86,15 @@ namespace GodotModules.ModLoader
 
         public void DisplayMods()
         {
-            ModLoader.LoadedMods.ForEach(mod =>
+            GameManager.ModLoader.LoadedMods.ForEach(mod =>
             {
                 var modInfo = CreateModInfoInstance(mod.ModInfo.Name);
                 ModList.AddChild(modInfo);
                 ModInfoList[mod.ModInfo.Name] = modInfo;
             });
 
-            if (ModLoader.LoadedMods.Count > 0)
-                UpdateModInfo(ModLoader.LoadedMods[0].ModInfo.Name);
+            if (GameManager.ModLoader.LoadedMods.Count > 0)
+                UpdateModInfo(GameManager.ModLoader.LoadedMods[0].ModInfo.Name);
         }
 
         private UIModInfo CreateModInfoInstance(string modName)
@@ -102,8 +102,8 @@ namespace GodotModules.ModLoader
             var instance = Prefabs.ModInfo.Instance<UIModInfo>();
             instance.SetModName(modName);
 
-            if (ModLoader.ModInfo[modName].ModInfo.Enabled)
-                instance.SetModEnabled(ModLoader.ModInfo[modName].ModInfo.Enabled);
+            if (GameManager.ModLoader.ModInfo[modName].ModInfo.Enabled)
+                instance.SetModEnabled(GameManager.ModLoader.ModInfo[modName].ModInfo.Enabled);
             else
                 instance.SetModEnabled(false);
 
@@ -112,12 +112,12 @@ namespace GodotModules.ModLoader
 
         private void _on_Refresh_pressed()
         {
-            ModLoader.SetModsEnabled();
+            GameManager.ModLoader.SetModsEnabled();
 
             foreach (Node node in ModList.GetChildren())
                 node.QueueFree();
 
-            ModLoader.SortMods();
+            GameManager.ModLoader.SortMods();
             DisplayMods();
         }
 
@@ -128,11 +128,11 @@ namespace GodotModules.ModLoader
                 var modName = info.ModName;
                 var modEnabled = info.Enabled;
 
-                ModLoader.ModInfo[modName].ModInfo.Enabled = modEnabled;
+                GameManager.ModLoader.ModInfo[modName].ModInfo.Enabled = modEnabled;
             }
 
-            ModLoader.SetModsEnabled();
-            ModLoader.LoadMods();
+            GameManager.ModLoader.SetModsEnabled();
+            GameManager.ModLoader.LoadMods();
         }
 
         private void _on_Open_Mods_Folder_pressed()
@@ -145,7 +145,7 @@ namespace GodotModules.ModLoader
             {
                 using (Process myProcess = new Process())
                 {
-                    myProcess.StartInfo.FileName = ModLoader.PathMods;
+                    myProcess.StartInfo.FileName = GameManager.ModLoader.PathMods;
                     myProcess.Start();
                 }
             }

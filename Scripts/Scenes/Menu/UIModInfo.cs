@@ -1,6 +1,6 @@
 using Godot;
 
-namespace GodotModules.ModLoader
+namespace GodotModules
 {
     public class UIModInfo : Control
     {
@@ -43,7 +43,7 @@ namespace GodotModules.ModLoader
             var modName = BtnMod.Text;
 
             BtnModEnabled.Text = Enabled ? "[x]" : "[ ]";
-            ModLoader.ModInfo[modName].ModInfo.Enabled = Enabled;
+            GameManager.ModLoader.ModInfo[modName].ModInfo.Enabled = Enabled;
 
             if (DisplayedInDependencies)
                 UIModLoader.Instance.ModInfoList[modName].SetModEnabled(Enabled);

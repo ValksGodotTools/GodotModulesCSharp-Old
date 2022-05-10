@@ -12,9 +12,6 @@ size_flags_horizontal = 0
 size_flags_vertical = 0
 theme = ExtResource( 3 )
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 NodePathModList = NodePath("VBoxContainer/Mod Loader Info/Mod List/Mod List/MarginContainer/PanelContainer/ScrollContainer/Mods")
 NodePathModName = NodePath("VBoxContainer/Mod Loader Info/Mod Info/Mod Information/Mod Name")
 NodePathModGameVersions = NodePath("VBoxContainer/Mod Loader Info/Mod Info/Mod Information/MarginContainer2/VBoxContainer/Game Versions")
@@ -219,8 +216,10 @@ scroll_following = true
 selection_enabled = true
 
 [node name="FileDialog" type="FileDialog" parent="."]
-margin_right = 282.0
-margin_bottom = 131.0
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 599.0
+margin_bottom = 499.0
 
 [connection signal="pressed" from="VBoxContainer/Mod Loader Info/Mod List/Mod List/HBoxContainer/Refresh" to="." method="_on_Refresh_pressed"]
 [connection signal="pressed" from="VBoxContainer/Mod Loader Info/Mod List/Mod List/HBoxContainer/Load Mods" to="." method="_on_Load_Mods_pressed"]

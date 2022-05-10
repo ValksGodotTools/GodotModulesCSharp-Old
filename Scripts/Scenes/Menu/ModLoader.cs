@@ -4,19 +4,19 @@ using Newtonsoft.Json;
 
 using System.IO;
 
-namespace GodotModules.ModLoader
+namespace GodotModules
 {
     public class ModLoader
     {
-        public static List<Mod> LoadedMods = new List<Mod>();
-        public static Dictionary<string, Mod> ModInfo = new Dictionary<string, Mod>();
-        private static MoonSharpVsCodeDebugServer DebugServer { get; set; }
-        public static string PathModsEnabled { get; set; }
-        public static string PathMods { get; set; }
-        public static Script Script { get; set; }
-        public static string LuaScriptsPath = "";
+        public List<Mod> LoadedMods = new List<Mod>();
+        public Dictionary<string, Mod> ModInfo = new Dictionary<string, Mod>();
+        private MoonSharpVsCodeDebugServer DebugServer { get; set; }
+        public string PathModsEnabled { get; set; }
+        public string PathMods { get; set; }
+        public Script Script { get; set; }
+        public string LuaScriptsPath = "";
 
-        public static void Init()
+        public void Init()
         {
             PathMods = Path.Combine(GameManager.GetGameDataPath(), "Mods");
             PathModsEnabled = Path.Combine(PathMods, "enabled.json");
@@ -33,7 +33,7 @@ namespace GodotModules.ModLoader
             SortMods();
         }
 
-        public static void SortMods()
+        public void SortMods()
         {
             LoadedMods.Clear();
             ModInfo = FindAllMods();
@@ -57,7 +57,7 @@ namespace GodotModules.ModLoader
             });
         }
 
-        public static void LoadMods()
+        public void LoadMods()
         {
             UIModLoader.Instance.ClearLog();
 
@@ -83,7 +83,7 @@ namespace GodotModules.ModLoader
                 UIModLoader.Instance.Log($"{modLoadedCount} mods have loaded successfully");
         }
 
-        private static void DisableModsWithLackingDependencies()
+        private void DisableModsWithLackingDependencies()
         {
             var modsToDisable = new List<ModInfo>();
 
@@ -99,7 +99,7 @@ namespace GodotModules.ModLoader
                 mod.Enabled = false;
         }
 
-        private static void CheckAllDependenciesEnabled(ModInfo firstMod, ModInfo modInfo, List<string> checkedMods, ref List<ModInfo> modsToDisable)
+        private void CheckAllDependenciesEnabled(ModInfo firstMod, ModInfo modInfo, List<string> checkedMods, ref List<ModInfo> modsToDisable)
         {
             foreach (var dependency in modInfo.Dependencies)
             {
@@ -117,7 +117,7 @@ namespace GodotModules.ModLoader
             }
         }
 
-        public static void Call(string v, params object[] args)
+        public void Call(string v, params object[] args)
         {
             try
             {
@@ -130,7 +130,7 @@ namespace GodotModules.ModLoader
             }
         }
 
-        public static void SetModsEnabled()
+        public void SetModsEnabled()
         {
             var modsEnabled = new Dictionary<string, bool>();
             foreach (var mod in ModInfo)
@@ -139,7 +139,7 @@ namespace GodotModules.ModLoader
             File.WriteAllText(PathModsEnabled, JsonConvert.SerializeObject(modsEnabled, Formatting.Indented));
         }
 
-        public static void GetModsEnabled()
+        public void GetModsEnabled()
         {
             if (!File.Exists(PathModsEnabled))
                 return;
@@ -152,13 +152,13 @@ namespace GodotModules.ModLoader
             }
         }
 
-        private static void Log(object obj)
+        private void Log(object obj)
         {
             Logger.Log($"[ModLoader]: {obj}");
             UIModLoader.Instance.Log($"{obj}");
         }
 
-        private static void LoadLuaScripts(string directory)
+        private void LoadLuaScripts(string directory)
         {
             GodotFileManager.LoadDir(directory, (dir, fileName) =>
             {
@@ -182,7 +182,7 @@ namespace GodotModules.ModLoader
             });
         }
 
-        private static void SetupModsEnabled()
+        private void SetupModsEnabled()
         {
             if (File.Exists(PathModsEnabled))
                 return;
@@ -190,7 +190,7 @@ namespace GodotModules.ModLoader
             File.WriteAllText(PathModsEnabled, "{}");
         }
 
-        private static Dictionary<string, Mod> FindAllMods()
+        private Dictionary<string, Mod> FindAllMods()
         {
             var mods = new Dictionary<string, Mod>();
             var modFolders = Directory.GetDirectories(PathMods);
@@ -233,13 +233,13 @@ namespace GodotModules.ModLoader
             return mods;
         }
 
-        private static void AddDependencyToLoadedMods(int modIndex, string dependency)
+        private void AddDependencyToLoadedMods(int modIndex, string dependency)
         {
             if (!LoadedMods.Contains(ModInfo[dependency]))
                 LoadedMods.Insert(modIndex, ModInfo[dependency]);
         }
 
-        private static void LoadMod(Mod mod, ref int modLoadedCount)
+        private void LoadMod(Mod mod, ref int modLoadedCount)
         {
             try
             {
@@ -255,15 +255,15 @@ namespace GodotModules.ModLoader
             }
         }
 
-        private static bool ModHasName(ModInfo modInfo) => modInfo.Name != null;
+        private bool ModHasName(ModInfo modInfo) => modInfo.Name != null;
 
-        private static bool RequiredModFilesExist(string folder, string pathInfo, string pathScriptLua) => File.Exists(pathInfo) && File.Exists(pathScriptLua);
+        private bool RequiredModFilesExist(string folder, string pathInfo, string pathScriptLua) => File.Exists(pathInfo) && File.Exists(pathScriptLua);
 
-        private static bool IsModMissingDependency(string dependency) => !ModInfo.ContainsKey(dependency);
+        private bool IsModMissingDependency(string dependency) => !ModInfo.ContainsKey(dependency);
 
-        private static bool ModHasDependency(string dependency) => ModInfo.ContainsKey(dependency);
+        private bool ModHasDependency(string dependency) => ModInfo.ContainsKey(dependency);
 
-        private static bool ModHasAllDependenciesEnabled(Mod mod)
+        private bool ModHasAllDependenciesEnabled(Mod mod)
         {
             var allDependenciesEnabled = true;
 

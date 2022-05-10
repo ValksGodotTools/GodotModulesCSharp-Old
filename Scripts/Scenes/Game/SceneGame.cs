@@ -1,5 +1,4 @@
 using Godot;
-using GodotModules.ModLoader;
 using GodotModules.Netcode;
 using GodotModules.Netcode.Client;
 using GodotModules.Netcode.Server;
@@ -37,9 +36,9 @@ namespace Game
             AddChild(bullet);
 
             // set game definitions
-            ModLoader.Script.Globals["Player", "setHealth"] = (Action<int>)Player.SetHealth;
+            GameManager.ModLoader.Script.Globals["Player", "setHealth"] = (Action<int>)Player.SetHealth;
 
-            ModLoader.Call("OnGameInit");
+            GameManager.ModLoader.Call("OnGameInit");
 
             if (NetworkManager.IsMultiplayer())
                 InitMultiplayerStuff();
@@ -47,7 +46,7 @@ namespace Game
 
         public override void _PhysicsProcess(float delta)
         {
-            ModLoader.Call("OnGameUpdate", delta);
+            GameManager.ModLoader.Call("OnGameUpdate", delta);
 
             if (SceneManager.PrevSceneName == "Menu") // singleplayer
                 return;

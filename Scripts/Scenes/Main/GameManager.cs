@@ -8,8 +8,8 @@ namespace GodotModules
     public class GameManager : Node
     {
         [Export] public readonly NodePath NodePathGameConsole;
+        public static ModLoader ModLoader { get; set; }
         public static UIGameConsole GameConsole { get; set; }
-
         public static GodotCommands GodotCommands { get; set; }
 
         public static string GameName = "Godot Modules";
@@ -21,6 +21,9 @@ namespace GodotModules
             GameTree = GetTree();
             GameConsole = GetNode<UIGameConsole>(NodePathGameConsole);
             GodotCommands = new GodotCommands();
+            ModLoader = new ModLoader();
+            ModLoader.Init();
+            ModLoader.LoadMods();
         }
 
         public override async void _Process(float delta)
