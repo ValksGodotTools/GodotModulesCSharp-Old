@@ -104,7 +104,7 @@ namespace GodotModules
             NetworkManager.StartServer(port, ValidatedMaxPlayerCount);
 
             var dummyClient = new ENetClient();
-            dummyClient.Start(WebClient.ExternalIp, port);
+            dummyClient.Start(NetworkManager.WebClient.ExternalIp, port);
             int attempts = 100;
             while (!dummyClient.IsConnected) 
             {
@@ -124,7 +124,7 @@ namespace GodotModules
             NetworkManager.StartClient(localIp, port);
 
             SceneGameServersScript.AddServer(info);
-            if (WebClient.ConnectionAlive)
+            if (NetworkManager.WebClient.ConnectionAlive)
                 SceneGameServersScript.PostServer(info);
 
             await SceneGameServersScript.ClientConnect(async () => {

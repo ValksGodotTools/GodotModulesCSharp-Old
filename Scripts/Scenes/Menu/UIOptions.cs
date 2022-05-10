@@ -49,7 +49,7 @@ namespace GodotModules.Settings
             SliderSFX.Value = Options.VolumeSFX;
             VSync.Pressed = Options.VSync;
             InputUsername.Text = Options.OnlineUsername;
-            InputWebServer.Text = WebClient.WEB_SERVER_IP;
+            InputWebServer.Text = NetworkManager.WebClient.WEB_SERVER_IP;
         }
 
         private void SetupFullscreenOptions()
@@ -107,7 +107,7 @@ namespace GodotModules.Settings
 
         private void _on_WebServerIp_text_changed(string text)
         {
-            WebClient.WEB_SERVER_IP = text;
+            NetworkManager.WebClient.WEB_SERVER_IP = text;
         }
     }
 }

@@ -60,15 +60,15 @@ namespace GodotModules
 
                 if (NetworkManager.IsHost)
                 {
-                    WebClient.Client.CancelPendingRequests();
-                    WebClient.TimerPingMasterServer.Stop();
+                    NetworkManager.WebClient.Client.CancelPendingRequests();
+                    NetworkManager.WebClient.TimerPingMasterServer.Stop();
 
                     if (NetworkManager.GameServer != null)
                         NetworkManager.GameServer.Stop();
 
                     NetworkManager.IsHost = false;
 
-                    await WebClient.RemoveLobbyAsync();
+                    await NetworkManager.WebClient.RemoveLobbyAsync();
                 }
             }
         }
@@ -82,12 +82,12 @@ namespace GodotModules
 
                 if (NetworkManager.IsHost)
                 {
-                    WebClient.TimerPingMasterServer.Stop();
+                    NetworkManager.WebClient.TimerPingMasterServer.Stop();
 
                     // tell everyone game has started
                     await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby(LobbyOpcode.LobbyGameStart));
 
-                    await WebClient.RemoveLobbyAsync();
+                    await NetworkManager.WebClient.RemoveLobbyAsync();
                 }
             }
         }
@@ -107,7 +107,7 @@ namespace GodotModules
             player.SetId(id);
 
             if (NetworkManager.IsHost)
-                await WebClient.AddLobbyPlayerAsync();
+                await NetworkManager.WebClient.AddLobbyPlayerAsync();
         }
 
         public async void RemovePlayer(uint id)
@@ -120,7 +120,7 @@ namespace GodotModules
             UIPlayers.Remove(id);
 
             if (NetworkManager.IsHost)
-                await WebClient.RemoveLobbyPlayerAsync();
+                await NetworkManager.WebClient.RemoveLobbyPlayerAsync();
         }
 
         public void SetReady(uint id, bool ready)

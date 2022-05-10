@@ -8,15 +8,15 @@ namespace GodotModules.Netcode
 {
     public class WebClient : IDisposable
     {
-        public static HttpClient Client { get; set; }
-        public static bool ConnectionAlive { get; set; }
-        public static Task<WebServerResponse<LobbyListing[]>> TaskGetServers => WebClient.Get<LobbyListing[]>("servers/get");
-        public static string ExternalIp { get; set; }
-        private static int FailedPingAttempts { get; set; }
-        public static string WEB_SERVER_IP = "localhost:4000";
+        public HttpClient Client { get; set; }
+        public bool ConnectionAlive { get; set; }
+        public Task<WebServerResponse<LobbyListing[]>> TaskGetServers => Get<LobbyListing[]>("servers/get");
+        public string ExternalIp { get; set; }
+        private int FailedPingAttempts { get; set; }
+        public string WEB_SERVER_IP = "localhost:4000";
         private const int WEB_PING_INTERVAL = 10000;
-        private static bool LogExceptions = false;
-        public static Timer TimerPingMasterServer { get; set; }
+        private bool LogExceptions = false;
+        public Timer TimerPingMasterServer { get; set; }
 
         public WebClient()
         {
@@ -46,21 +46,21 @@ namespace GodotModules.Netcode
             }
         }
 
-        public async static Task<WebServerResponse<string>> PostError(string errorText, string errorDescription)
+        public async Task<WebServerResponse<string>> PostError(string errorText, string errorDescription)
             => await PostAsync("errors/post", new Dictionary<string, string> {
                     { "error", errorText },
                     { "description", errorDescription }
                 });
 
-        public async static Task<WebServerResponse<string>> RemoveLobbyAsync() => await PostAsync("server/remove", DataExternalIp);
+        public async Task<WebServerResponse<string>> RemoveLobbyAsync() => await PostAsync("server/remove", DataExternalIp);
 
-        public async static Task<WebServerResponse<string>> RemoveLobbyPlayerAsync() => await PostAsync("servers/players/remove", DataExternalIp);
+        public async Task<WebServerResponse<string>> RemoveLobbyPlayerAsync() => await PostAsync("servers/players/remove", DataExternalIp);
 
-        public async static Task<WebServerResponse<string>> AddLobbyPlayerAsync() => await PostAsync("servers/players/add", DataExternalIp);
+        public async Task<WebServerResponse<string>> AddLobbyPlayerAsync() => await PostAsync("servers/players/add", DataExternalIp);
 
-        private static Dictionary<string, string> DataExternalIp => new() { { "Ip", ExternalIp } };
+        private Dictionary<string, string> DataExternalIp => new() { { "Ip", ExternalIp } };
 
-        public async static Task<WebServerResponse<string>> AddLobbyAsync(LobbyListing info)
+        public async Task<WebServerResponse<string>> AddLobbyAsync(LobbyListing info)
         {
             var values = new Dictionary<string, string>
             {
@@ -75,7 +75,7 @@ namespace GodotModules.Netcode
             return await PostAsync("servers/add", values);
         }
 
-        private async static Task<WebServerResponse<string>> PostAsync(string path, Dictionary<string, string> values = null)
+        private async Task<WebServerResponse<string>> PostAsync(string path, Dictionary<string, string> values = null)
         {
             if (!ConnectionAlive)
                 return new() { Status = WebServerStatus.OFFLINE };
@@ -106,7 +106,7 @@ namespace GodotModules.Netcode
             }
         }
 
-        public static async Task UpdateIsAlive()
+        public async Task UpdateIsAlive()
         {
             try
             {
@@ -120,7 +120,7 @@ namespace GodotModules.Netcode
             }
         }
 
-        public static async Task<WebServerResponse<T>> Get<T>(string path)
+        public async Task<WebServerResponse<T>> Get<T>(string path)
         {
             if (!ConnectionAlive)
                 return new() { Status = WebServerStatus.OFFLINE };
@@ -153,7 +153,7 @@ namespace GodotModules.Netcode
 
         public async void OnTimerPingMasterServerEvent(System.Object source, ElapsedEventArgs args)
         {
-            var res = await WebClient.PostAsync("servers/ping", new Dictionary<string, string> { { "Name", NetworkManager.CurrentLobby.Name } });
+            var res = await PostAsync("servers/ping", new Dictionary<string, string> { { "Name", NetworkManager.CurrentLobby.Name } });
             if (res.Status == WebServerStatus.ERROR)
             {
                 FailedPingAttempts++;

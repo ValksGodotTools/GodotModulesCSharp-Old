@@ -22,7 +22,7 @@ namespace GodotModules
             if (string.IsNullOrWhiteSpace(Description.Text))
                 return;
 
-            await WebClient.PostError(Error.Text, Description.Text);
+            await NetworkManager.WebClient.PostError(Error.Text, Description.Text);
         }
     }
 }

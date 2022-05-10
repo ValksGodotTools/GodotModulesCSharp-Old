@@ -62,9 +62,9 @@ namespace GodotModules
                 GameManager.SpawnPopupMessage(message);
             }
 
-            await WebClient.UpdateIsAlive();
+            await NetworkManager.WebClient.UpdateIsAlive();
 
-            if (WebClient.ConnectionAlive)
+            if (NetworkManager.WebClient.ConnectionAlive)
                 await ListServers();
         }
 
@@ -72,7 +72,7 @@ namespace GodotModules
         {
             SceneManager.EscapePressed(async () =>
             {
-                WebClient.Client.CancelPendingRequests();
+                NetworkManager.WebClient.Client.CancelPendingRequests();
 
                 if (NetworkManager.GameClient != null)
                     NetworkManager.GameClient.Stop();
@@ -122,7 +122,7 @@ namespace GodotModules
             GettingServers = true;
             UIGameServersNavBtns.BtnRefresh.Disabled = true;
 
-            var res = await WebClient.TaskGetServers;
+            var res = await NetworkManager.WebClient.TaskGetServers;
 
             if (!SceneManager.InGameServers())
                 return;
@@ -197,7 +197,7 @@ namespace GodotModules
 
         public async void PostServer(LobbyListing info)
         {
-            await WebClient.AddLobbyAsync(info);
+            await NetworkManager.WebClient.AddLobbyAsync(info);
         }
 
         private void _on_Control_resized()
