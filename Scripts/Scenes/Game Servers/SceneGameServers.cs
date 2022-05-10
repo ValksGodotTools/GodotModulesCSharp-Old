@@ -89,7 +89,7 @@ namespace GodotModules
             NetworkManager.CurrentLobby = info;
             GameClient.ConnectingToLobby = true;
 
-            GD.Print("Connecting to lobby...");
+            Logger.Log("Connecting to lobby...");
             NetworkManager.StartClient(info.Ip, info.Port);
 
             await ClientConnect(async () =>

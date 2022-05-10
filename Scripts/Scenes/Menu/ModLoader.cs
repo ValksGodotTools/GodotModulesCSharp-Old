@@ -154,7 +154,7 @@ namespace GodotModules.ModLoader
 
         private static void Log(object obj)
         {
-            Godot.GD.Print($"[ModLoader]: {obj}");
+            Logger.Log($"[ModLoader]: {obj}");
             UIModLoader.Instance.Log($"{obj}");
         }
 
