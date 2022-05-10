@@ -7,8 +7,8 @@ namespace GodotModules
         private List<T> Data = new();
         public float Progress { get; private set; }
 
-        public T Previous => Data[0];
-        public T Current => Data[1];
+        public T Previous { get; set; }
+        public T Current { get; set; }
 
         public bool NotReady => Data.Count <= 1;
 
@@ -17,6 +17,7 @@ namespace GodotModules
         public PrevCurQueue(int interval) 
         {
             Interval = interval;
+            Current = default(T);
         }
 
         public void Add(T data)
@@ -26,6 +27,17 @@ namespace GodotModules
 
             if (Data.Count > 2) // only keep track of previous and current
                 Data.RemoveAt(0);
+
+            if (Data.Count == 1)
+            {
+                Previous = Data[0];
+            }
+
+            if (Data.Count == 2)
+            {
+                Previous = Data[0];
+                Current = Data[1];
+            }
         }
 
         public void UpdateProgress(float delta) => Progress += delta * (1000f / Interval); // reach value of 1.0 every 150ms
