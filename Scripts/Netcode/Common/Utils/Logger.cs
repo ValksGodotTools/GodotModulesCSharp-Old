@@ -90,7 +90,7 @@ namespace GodotModules
                         Console.ResetColor();
 
 #if CLIENT
-                        ErrorNotifier.IncrementErrorCount();
+                        GM.IncrementErrorCount();
                         GM.LogConsoleMessage(errorText);
 #endif
                         break;

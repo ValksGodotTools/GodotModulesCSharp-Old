@@ -6,7 +6,7 @@
 [ext_resource path="res://Scripts/Netcode/Common/Utils/NetworkManager.cs" type="Script" id=4]
 [ext_resource path="res://Scripts/Scenes/Main/SceneManager.cs" type="Script" id=5]
 [ext_resource path="res://Themes/Main.tres" type="Theme" id=6]
-[ext_resource path="res://Scripts/Scenes/Main/ErrorNotifier.cs" type="Script" id=7]
+[ext_resource path="res://Scripts/Scenes/Main/Notifier.cs" type="Script" id=7]
 [ext_resource path="res://Scripts/Msc/UIGameConsole.cs" type="Script" id=8]
 [ext_resource path="res://Scenes/Prefabs/ServerSimulation.tscn" type="PackedScene" id=9]
 
@@ -20,8 +20,11 @@
 bg_color = Color( 0, 0, 0, 0.784314 )
 
 [node name="Main" type="Node"]
+
+[node name="GameManager" type="Node" parent="."]
 script = ExtResource( 1 )
-NodePathGameConsole = NodePath("CanvasLayer/Game Console")
+NodePathGameConsole = NodePath("../CanvasLayer/Game Console")
+NodePathNotifier = NodePath("../Notifier")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 volume_db = -10.0
@@ -37,7 +40,7 @@ NodePathServerSimulation = NodePath("../CanvasLayer/Server Simulation/ViewportCo
 [node name="SceneManager" type="Node" parent="."]
 script = ExtResource( 5 )
 
-[node name="ErrorNotifier" type="Node" parent="."]
+[node name="Notifier" type="Node" parent="."]
 script = ExtResource( 7 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]

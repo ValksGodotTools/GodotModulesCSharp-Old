@@ -9,6 +9,7 @@ namespace GodotModules
     public class GM : Node
     {
         [Export] public readonly NodePath NodePathGameConsole;
+        [Export] public readonly NodePath NodePathNotifier;
         
         public static ModLoader ModLoader { get; set; }
         public static string GameName = "Godot Modules";
@@ -18,6 +19,8 @@ namespace GodotModules
         private static UIGameConsole GameConsole { get; set; }
         private static GodotCommands GodotCommands { get; set; }
         private static Logger Logger { get; set; }
+        private static Notifier Notifier { get; set; }
+        private static GTimer TimerNotifyErrors { get; set; }
 
         public override void _Ready()
         {
@@ -25,6 +28,7 @@ namespace GodotModules
             GameConsole = GetNode<UIGameConsole>(NodePathGameConsole);
             GodotCommands = new GodotCommands();
             Logger = new Logger();
+            Notifier = GetNode<Notifier>(NodePathNotifier);
         }
 
         public override async void _Process(float delta)
@@ -37,9 +41,7 @@ namespace GodotModules
         public override void _Input(InputEvent @event)
         {
             if (Input.IsActionJustPressed("ui_debug"))
-            {
                 GameConsole.ToggleVisibility();
-            }
 
             if (Input.IsActionJustPressed("ui_fullscreen"))
                 UtilOptions.ToggleFullscreen();
@@ -47,22 +49,9 @@ namespace GodotModules
 
         public static string GetGameDataPath() => System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), GM.GameName);
 
-        public static void SpawnPopupMessage(string message)
-        {
-            var popupMessage = Prefabs.PopupMessage.Instance<UIPopupMessage>();
-            PersistentTree.CurrentScene.AddChild(popupMessage);
-            popupMessage.Init(message);
-            popupMessage.PopupCentered();
-        }
-
-        public static void SpawnPopupError(Exception e)
-        {
-            ErrorNotifier.IncrementErrorCount();
-            var popupError = Prefabs.PopupError.Instance<UIPopupError>();
-            PersistentTree.CurrentScene.AddChild(popupError);
-            popupError.Init(e.Message, e.StackTrace);
-            popupError.PopupCentered();
-        }
+        public static void SpawnPopupMessage(string message) => Notifier.SpawnPopupMessage(message);
+        public static void SpawnPopupError(Exception e) => Notifier.SpawnPopupError(e);
+        public static void IncrementErrorCount() => Notifier.IncrementErrorCount();
 
         public static void LogConsoleMessage(string message) => GameConsole.AddMessage(message);
         public static void ToggleConsoleVisibility() => GameConsole.ToggleVisibility();
