@@ -2,13 +2,13 @@ using GodotModules.Netcode.Client;
 
 namespace GodotModules
 {
-    public static class GodotCommands
+    public class GodotCommands
     {
-        private static ConcurrentQueue<ThreadCmd<GodotOpcode>> GodotCmdQueue = new ConcurrentQueue<ThreadCmd<GodotOpcode>>();
+        private ConcurrentQueue<ThreadCmd<GodotOpcode>> GodotCmdQueue = new ConcurrentQueue<ThreadCmd<GodotOpcode>>();
 
-        public static void Enqueue(GodotOpcode opcode, object data = null) => GodotCmdQueue.Enqueue(new ThreadCmd<GodotOpcode>(opcode, data));
+        public void Enqueue(GodotOpcode opcode, object data = null) => GodotCmdQueue.Enqueue(new ThreadCmd<GodotOpcode>(opcode, data));
 
-        public static async Task Dequeue()
+        public async Task Dequeue()
         {
             if (GodotCmdQueue.TryDequeue(out ThreadCmd<GodotOpcode> cmd))
             {
