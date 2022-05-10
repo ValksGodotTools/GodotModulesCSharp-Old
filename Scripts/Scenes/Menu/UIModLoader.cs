@@ -6,8 +6,6 @@ namespace GodotModules
 {
     public class UIModLoader : Control
     {
-        public static UIModLoader Instance { get; set; }
-
         [Export] public readonly NodePath NodePathModList;
         [Export] public readonly NodePath NodePathModName;
         [Export] public readonly NodePath NodePathModGameVersions;
@@ -31,9 +29,8 @@ namespace GodotModules
         // logger
         private RichTextLabel Logger { get; set; }
 
-        public override async void _Ready()
+        public override void _Ready()
         {
-            Instance = this;
             ModList = GetNode<VBoxContainer>(NodePathModList);
             ModName = GetNode<Label>(NodePathModName);
             ModGameVersions = GetNode<Label>(NodePathModGameVersions);
@@ -46,8 +43,9 @@ namespace GodotModules
             ModDescription.Text = "";
             Logger.Clear();
 
-            while (GameManager.ModLoader == null) // this is ugly
-                await Task.Delay(1);
+            GameManager.ModLoader = new ModLoader(this);
+            GameManager.ModLoader.Init();
+            GameManager.ModLoader.LoadMods();
 
             DisplayMods();
         }
@@ -100,6 +98,7 @@ namespace GodotModules
         private UIModInfo CreateModInfoInstance(string modName)
         {
             var instance = Prefabs.ModInfo.Instance<UIModInfo>();
+            instance.UIModLoader = this;
             instance.SetModName(modName);
 
             if (GameManager.ModLoader.ModInfo[modName].ModInfo.Enabled)

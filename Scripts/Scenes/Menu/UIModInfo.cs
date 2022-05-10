@@ -37,6 +37,8 @@ namespace GodotModules
             BtnModEnabled.AddColorOverride("font_color", color);
         }
 
+        public UIModLoader UIModLoader { get; set; }
+
         private void _on_Enabled_pressed()
         {
             Enabled = !BtnModEnabled.Pressed;
@@ -46,12 +48,12 @@ namespace GodotModules
             GameManager.ModLoader.ModInfo[modName].ModInfo.Enabled = Enabled;
 
             if (DisplayedInDependencies)
-                UIModLoader.Instance.ModInfoList[modName].SetModEnabled(Enabled);
+                UIModLoader.ModInfoList[modName].SetModEnabled(Enabled);
             else
-                if (UIModLoader.Instance.ModInfoDependencyList.ContainsKey(modName))
-                UIModLoader.Instance.ModInfoDependencyList[modName].SetModEnabled(Enabled);
+                if (UIModLoader.ModInfoDependencyList.ContainsKey(modName))
+                    UIModLoader.ModInfoDependencyList[modName].SetModEnabled(Enabled);
         }
 
-        private void _on_Mod_pressed() => UIModLoader.Instance.UpdateModInfo(BtnMod.Text);
+        private void _on_Mod_pressed() => UIModLoader.UpdateModInfo(BtnMod.Text);
     }
 }

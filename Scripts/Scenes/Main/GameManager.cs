@@ -21,9 +21,6 @@ namespace GodotModules
             GameTree = GetTree();
             GameConsole = GetNode<UIGameConsole>(NodePathGameConsole);
             GodotCommands = new GodotCommands();
-            ModLoader = new ModLoader();
-            ModLoader.Init();
-            ModLoader.LoadMods();
         }
 
         public override async void _Process(float delta)

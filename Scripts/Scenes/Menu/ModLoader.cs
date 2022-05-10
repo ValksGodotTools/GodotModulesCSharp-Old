@@ -15,6 +15,12 @@ namespace GodotModules
         public string PathMods { get; set; }
         public Script Script { get; set; }
         public string LuaScriptsPath = "";
+        public UIModLoader UIModLoader { get; set; }
+
+        public ModLoader(UIModLoader uiModLoader)
+        {
+            UIModLoader = uiModLoader;
+        }
 
         public void Init()
         {
@@ -59,7 +65,7 @@ namespace GodotModules
 
         public void LoadMods()
         {
-            UIModLoader.Instance.ClearLog();
+            UIModLoader.ClearLog();
 
             //if (Script != null)
             //DebugServer.Detach(Script);
@@ -80,7 +86,7 @@ namespace GodotModules
                 .ForEach(mod => LoadMod(mod, ref modLoadedCount));
 
             if (modLoadedCount > 0)
-                UIModLoader.Instance.Log($"{modLoadedCount} mods have loaded successfully");
+                UIModLoader.Log($"{modLoadedCount} mods have loaded successfully");
         }
 
         private void DisableModsWithLackingDependencies()
@@ -110,7 +116,7 @@ namespace GodotModules
                 {
                     if (!modsToDisable.Contains(firstMod))
                         modsToDisable.Add(firstMod);
-                    UIModLoader.Instance.Log($"{firstMod.Name} requires dependency {dependency} to be enabled");
+                    UIModLoader.Log($"{firstMod.Name} requires dependency {dependency} to be enabled");
                 }
                 checkedMods.Add(dependency);
                 CheckAllDependenciesEnabled(firstMod, ModInfo[dependency].ModInfo, checkedMods, ref modsToDisable);
@@ -125,7 +131,7 @@ namespace GodotModules
             }
             catch (ScriptRuntimeException e)
             {
-                UIModLoader.Instance.Log($"{e.DecoratedMessage}");
+                UIModLoader.Log($"{e.DecoratedMessage}");
                 Logger.LogErr(e, $"[ModLoader]: ");
             }
         }
@@ -155,7 +161,7 @@ namespace GodotModules
         private void Log(object obj)
         {
             Logger.Log($"[ModLoader]: {obj}");
-            UIModLoader.Instance.Log($"{obj}");
+            UIModLoader.Log($"{obj}");
         }
 
         private void LoadLuaScripts(string directory)
@@ -175,7 +181,7 @@ namespace GodotModules
                         Script.DoString(luaScript.GetAsText());
                     else
                     {
-                        UIModLoader.Instance.Log($"Could not open file: {absolutePath}");
+                        UIModLoader.Log($"Could not open file: {absolutePath}");
                         Logger.LogWarning($"Could not open file: {absolutePath}");
                     }
                 }
@@ -244,13 +250,13 @@ namespace GodotModules
             try
             {
                 Script.DoFile(mod.PathScript);
-                UIModLoader.Instance.Log($"Loaded {mod.ModInfo.Name}");
+                UIModLoader.Log($"Loaded {mod.ModInfo.Name}");
                 modLoadedCount++;
             }
             catch (ScriptRuntimeException e)
             {
                 // Mod script did not run right
-                UIModLoader.Instance.Log($"{e.DecoratedMessage}");
+                UIModLoader.Log($"{e.DecoratedMessage}");
                 Logger.LogErr(e, "[ModLoader]: ");
             }
         }
