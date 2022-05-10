@@ -87,6 +87,19 @@ namespace GodotModules
 
             Hide();
 
+            var info = new LobbyListing
+            {
+                Name = name,
+                Ip = localIp,
+                Port = port,
+                Description = desc,
+                MaxPlayerCount = ValidatedMaxPlayerCount,
+                LobbyHost = GameManager.Options.OnlineUsername,
+                Public = Public.Pressed
+            };
+
+            NetworkManager.CurrentLobby = info;
+
             NetworkManager.BroadcastLobbyToMaster();
             NetworkManager.StartServer(port, ValidatedMaxPlayerCount);
 
@@ -110,21 +123,9 @@ namespace GodotModules
 
             NetworkManager.StartClient(localIp, port);
 
-            var info = new LobbyListing
-            {
-                Name = name,
-                Ip = localIp,
-                Port = port,
-                Description = desc,
-                MaxPlayerCount = ValidatedMaxPlayerCount,
-                LobbyHost = GameManager.Options.OnlineUsername,
-                Public = Public.Pressed
-            };
-
             SceneGameServersScript.AddServer(info);
             if (WebClient.ConnectionAlive)
                 SceneGameServersScript.PostServer(info);
-            NetworkManager.CurrentLobby = info;
 
             await SceneGameServersScript.ClientConnect(async () => {
                 await NetworkManager.WaitForHostToConnectToServer();
