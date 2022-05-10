@@ -2,7 +2,6 @@ using Godot;
 using GodotModules.Netcode.Server;
 using System;
 using System.Threading;
-using System.Threading.Tasks;
 
 #if CLIENT
 using GodotModules.Netcode.Client;

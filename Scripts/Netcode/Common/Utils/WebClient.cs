@@ -1,9 +1,6 @@
 using Newtonsoft.Json;
 using System;
-
-using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Timers;
 using Timer = System.Timers.Timer; // ambitious reference between Godot.Timer and System.Timers.Timer
 
