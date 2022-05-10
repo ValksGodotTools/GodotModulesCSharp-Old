@@ -150,7 +150,7 @@ namespace GodotModules
             }
             catch (Exception e)
             {
-                GodotModules.Logger.LogErr(e);
+                GameManager.Logger.LogErr(e);
             }
         }
     }

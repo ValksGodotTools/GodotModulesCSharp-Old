@@ -5,11 +5,11 @@ using System.Runtime.CompilerServices;
 
 namespace GodotModules
 {
-    public static class Logger
+    public class Logger
     {
-        private static ConcurrentQueue<ThreadCmd<LoggerOpcode>> Messages = new ConcurrentQueue<ThreadCmd<LoggerOpcode>>();
+        private ConcurrentQueue<ThreadCmd<LoggerOpcode>> Messages = new ConcurrentQueue<ThreadCmd<LoggerOpcode>>();
 
-        public static void LogErr(Exception ex, string hint = "")
+        public void LogErr(Exception ex, string hint = "")
         {
             Messages.Enqueue(new ThreadCmd<LoggerOpcode>(LoggerOpcode.LogError, new GodotError
             {
@@ -17,9 +17,9 @@ namespace GodotModules
                 Hint = hint
             }));
         }
-        public static void LogTODO(object v, ConsoleColor color = ConsoleColor.White) => Log($"[TODO]: {v}", color);
-        public static void LogWarning(object v, ConsoleColor color = ConsoleColor.Yellow) => Log($"[Warning]: {v}", color);
-        public static void LogDebug(object v, ConsoleColor color = ConsoleColor.Magenta, bool trace = true, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        public void LogTODO(object v, ConsoleColor color = ConsoleColor.White) => Log($"[TODO]: {v}", color);
+        public void LogWarning(object v, ConsoleColor color = ConsoleColor.Yellow) => Log($"[Warning]: {v}", color);
+        public void LogDebug(object v, ConsoleColor color = ConsoleColor.Magenta, bool trace = true, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
         {
             var path = "";
             if (trace)
@@ -32,7 +32,7 @@ namespace GodotModules
                 Color = color
             }));
         }
-        public static void Log(object v, ConsoleColor color = ConsoleColor.Gray)
+        public void Log(object v, ConsoleColor color = ConsoleColor.Gray)
         {
             Messages.Enqueue(new ThreadCmd<LoggerOpcode>(LoggerOpcode.LogMessage, new GodotMessage
             {
@@ -41,7 +41,7 @@ namespace GodotModules
             }));
         }
 
-        public static void LogMs(Action code)
+        public void LogMs(Action code)
         {
             var watch = new Stopwatch();
             watch.Start();
@@ -50,7 +50,7 @@ namespace GodotModules
             Log($"Took {watch.ElapsedMilliseconds} ms");
         }
 
-        public static void Dequeue()
+        public void Dequeue()
         {
             if (Messages.TryDequeue(out ThreadCmd<LoggerOpcode> cmd))
             {

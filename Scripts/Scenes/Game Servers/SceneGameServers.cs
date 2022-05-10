@@ -89,7 +89,7 @@ namespace GodotModules
             NetworkManager.CurrentLobby = info;
             NetworkManager.ClientConnectingToLobby = true;
 
-            Logger.Log("Connecting to lobby...");
+            GameManager.Logger.Log("Connecting to lobby...");
             NetworkManager.StartClient(info.Ip, info.Port);
 
             await ClientConnect(async () =>
@@ -162,7 +162,7 @@ namespace GodotModules
                     }
                     catch (TaskCanceledException)
                     {
-                        Logger.LogDebug("Dummy client task cancelled (A)");
+                        GameManager.Logger.LogDebug("Dummy client task cancelled (A)");
                     }
                 }, CTSPingServers.Token);
 
@@ -173,7 +173,7 @@ namespace GodotModules
                     await task;
                 } catch(TaskCanceledException)
                 {
-                    Logger.LogDebug("Dummy client task cancelled (B)");
+                    GameManager.Logger.LogDebug("Dummy client task cancelled (B)");
                 }
 
                 if (!CTSPingServers.IsCancellationRequested)

@@ -61,7 +61,7 @@ namespace GodotModules.Netcode.Client
             }
             catch (Exception e)
             {
-                Logger.LogErr(e, "Client");
+                GameManager.Logger.LogErr(e, "Client");
             }
         }
 
@@ -70,7 +70,7 @@ namespace GodotModules.Netcode.Client
         /// </summary>
         public void Stop() => ENetCmds.Enqueue(new ThreadCmd<ENetOpcode>(ENetOpcode.ClientWantsToDisconnect));
 
-        public void Log(object obj) => Logger.Log($"[Client]: {obj}", ConsoleColor.Yellow);
+        public void Log(object obj) => GameManager.Logger.Log($"[Client]: {obj}", ConsoleColor.Yellow);
 
         /// <summary>
         /// This is in the ENet thread, anything from the ENet thread can be used here

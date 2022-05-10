@@ -11,6 +11,7 @@ namespace GodotModules
         public static ModLoader ModLoader { get; set; }
         public static UIGameConsole GameConsole { get; set; }
         public static GodotCommands GodotCommands { get; set; }
+        public static Logger Logger { get; set; }
 
         public static string GameName = "Godot Modules";
         public static OptionsData Options { get; set; }
@@ -21,6 +22,7 @@ namespace GodotModules
             GameTree = GetTree();
             GameConsole = GetNode<UIGameConsole>(NodePathGameConsole);
             GodotCommands = new GodotCommands();
+            Logger = new Logger();
         }
 
         public override async void _Process(float delta)

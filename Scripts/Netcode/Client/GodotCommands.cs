@@ -22,7 +22,7 @@ namespace GodotModules
 
                         if (!ENetClient.HandlePacket.ContainsKey(opcode))
                         {
-                            Logger.LogWarning($"[Client]: Received malformed opcode: {opcode} (Ignoring)");
+                            GameManager.Logger.LogWarning($"[Client]: Received malformed opcode: {opcode} (Ignoring)");
                             break;
                         }
 
@@ -33,7 +33,7 @@ namespace GodotModules
                         }
                         catch (System.IO.EndOfStreamException ex)
                         {
-                            Logger.LogWarning($"[Client]: Received malformed opcode: {opcode} {ex.Message} (Ignoring)");
+                            GameManager.Logger.LogWarning($"[Client]: Received malformed opcode: {opcode} {ex.Message} (Ignoring)");
                             break;
                         }
                         await handlePacket.Handle();

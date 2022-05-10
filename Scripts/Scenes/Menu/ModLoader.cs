@@ -132,7 +132,7 @@ namespace GodotModules
             catch (ScriptRuntimeException e)
             {
                 UIModLoader.Log($"{e.DecoratedMessage}");
-                Logger.LogErr(e, $"[ModLoader]: ");
+                GameManager.Logger.LogErr(e, $"[ModLoader]: ");
             }
         }
 
@@ -160,7 +160,7 @@ namespace GodotModules
 
         private void Log(object obj)
         {
-            Logger.Log($"[ModLoader]: {obj}");
+            GameManager.Logger.Log($"[ModLoader]: {obj}");
             UIModLoader.Log($"{obj}");
         }
 
@@ -182,7 +182,7 @@ namespace GodotModules
                     else
                     {
                         UIModLoader.Log($"Could not open file: {absolutePath}");
-                        Logger.LogWarning($"Could not open file: {absolutePath}");
+                        GameManager.Logger.LogWarning($"Could not open file: {absolutePath}");
                     }
                 }
             });
@@ -257,7 +257,7 @@ namespace GodotModules
             {
                 // Mod script did not run right
                 UIModLoader.Log($"{e.DecoratedMessage}");
-                Logger.LogErr(e, "[ModLoader]: ");
+                GameManager.Logger.LogErr(e, "[ModLoader]: ");
             }
         }
 

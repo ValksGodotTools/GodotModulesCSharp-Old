@@ -24,7 +24,7 @@ namespace GodotModules
             var error = dir.Open($"res://{path}");
             if (error != Error.Ok)
             {
-                Logger.LogWarning($"Failed to open {path}");
+                GameManager.Logger.LogWarning($"Failed to open {path}");
                 return false;
             }
 

@@ -49,7 +49,7 @@ namespace GodotModules
             if (command != null)
                 command.Run(inputArr.Skip(1).ToArray());
             else
-                Logger.Log($"The command '{cmd}' does not exist");
+                GameManager.Logger.Log($"The command '{cmd}' does not exist");
 
             Console.Clear();
         }

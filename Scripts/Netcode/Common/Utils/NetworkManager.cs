@@ -27,7 +27,7 @@ namespace GodotModules.Netcode
             ENetInitialized = ENet.Library.Initialize();
             if (!ENetInitialized)
             {
-                Logger.LogWarning("Failed to initialize ENet! Remember ENet-CSharp.dll AND enet.dll are required in order for ENet to run properly!");
+                GameManager.Logger.LogWarning("Failed to initialize ENet! Remember ENet-CSharp.dll AND enet.dll are required in order for ENet to run properly!");
             }
         }
 
@@ -80,7 +80,7 @@ namespace GodotModules.Netcode
                     {
                         GameServerStillRunning++;
                         if (GameServerStillRunning > 4)
-                            Logger.LogDebug("Game server taking a long time to stop");
+                            GameManager.Logger.LogDebug("Game server taking a long time to stop");
                         await Task.Delay(100);
                     }
                 }
@@ -94,7 +94,7 @@ namespace GodotModules.Netcode
                     {
                         GameClientStillRunning++;
                         if (GameClientStillRunning > 4)
-                            Logger.LogDebug("Game client taking a long time to stop");
+                            GameManager.Logger.LogDebug("Game client taking a long time to stop");
                         await Task.Delay(100);
                     }
                 }
@@ -106,7 +106,7 @@ namespace GodotModules.Netcode
             }
             catch (Exception e)
             {
-                Logger.LogErr(e, "Game exit cleanup");
+                GameManager.Logger.LogErr(e, "Game exit cleanup");
                 await Task.Delay(3000);
             }
 
