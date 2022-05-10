@@ -4,9 +4,6 @@ namespace GodotModules.Netcode.Client
 {
     public class GameClient : ENetClient
     {
-        public static bool ConnectingToLobby { get; set; }
-        public static bool Disconnected { get; set; }
-
         public Dictionary<uint, string> Players { get; set; }
 
         public GameClient()
@@ -33,8 +30,8 @@ namespace GodotModules.Netcode.Client
 
         private void HandlePeerLeave(DisconnectOpcode opcode)
         {
-            ConnectingToLobby = false;
-            Disconnected = true;
+            NetworkManager.ClientConnectingToLobby = false;
+            NetworkManager.ClientDisconnected = true;
             Connected = 0;
             GodotCommands.Enqueue(GodotOpcode.Disconnect, opcode);
             if (CTSClientTask != null)

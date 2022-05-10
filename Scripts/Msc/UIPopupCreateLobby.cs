@@ -74,7 +74,7 @@ namespace GodotModules
 
         private async void _on_Create_pressed()
         {
-            if (GameClient.ConnectingToLobby)
+            if (NetworkManager.ClientConnectingToLobby)
                 return;
 
             if (ValidatedName == null || ValidatedDescription == null)

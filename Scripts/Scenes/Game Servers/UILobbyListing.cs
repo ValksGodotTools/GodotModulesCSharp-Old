@@ -24,7 +24,7 @@ namespace GodotModules
         public override void _Ready()
         {
             SceneGameServersScript = SceneManager.GetActiveSceneScript<SceneGameServers>();
-            GameClient.ConnectingToLobby = false;
+            NetworkManager.ClientConnectingToLobby = false;
             LabelTitle = GetNode<Label>(NodePathLabelTitle);
             LabelDescription = GetNode<Label>(NodePathLabelDescription);
             LabelPing = GetNode<Label>(NodePathLabelPing);

@@ -34,6 +34,8 @@ namespace GodotModules.Netcode
         // SERVER
         public static GameServer GameServer { get; set; }
         public static ServerSimulation ServerSimulation { get; set; }
+        public static bool ClientConnectingToLobby { get; set; }
+        public static bool ClientDisconnected { get; set; }
         public static bool ServerAuthoritativeMovement { get; set; }
         private static int GameServerStillRunning { get; set; }
         public static bool IsServerRunning() => GameServer == null ? false : GameServer.IsRunning;

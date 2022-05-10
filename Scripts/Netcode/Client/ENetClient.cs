@@ -49,7 +49,7 @@ namespace GodotModules.Netcode.Client
             {
                 if (IsENetThreadRunning)
                 {
-                    GameClient.ConnectingToLobby = false;
+                    NetworkManager.ClientConnectingToLobby = false;
                     Log($"Client is running already");
                     return;
                 }

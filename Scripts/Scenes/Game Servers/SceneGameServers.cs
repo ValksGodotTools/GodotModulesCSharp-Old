@@ -31,9 +31,9 @@ namespace GodotModules
 
             LobbyListings = new();
 
-            if (GameClient.Disconnected)
+            if (NetworkManager.ClientDisconnected)
             {
-                GameClient.Disconnected = false;
+                NetworkManager.ClientDisconnected = false;
                 var message = "Disconnected";
 
                 switch (NetworkManager.DisconnectOpcode)
@@ -83,11 +83,11 @@ namespace GodotModules
 
         public async Task JoinServer(LobbyListing info, bool directConnect)
         {
-            if (GameClient.ConnectingToLobby)
+            if (NetworkManager.ClientConnectingToLobby)
                 return;
 
             NetworkManager.CurrentLobby = info;
-            GameClient.ConnectingToLobby = true;
+            NetworkManager.ClientConnectingToLobby = true;
 
             Logger.Log("Connecting to lobby...");
             NetworkManager.StartClient(info.Ip, info.Port);
