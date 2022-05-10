@@ -16,7 +16,14 @@
     {
         Pong,
         Lobby,
-        PlayerTransforms
+        PlayerTransforms,
+        Game,
+        EnemyPositions
+    }
+
+    public enum GameOpcode 
+    {
+        EnemiesSpawned
     }
 
     public enum LobbyOpcode
