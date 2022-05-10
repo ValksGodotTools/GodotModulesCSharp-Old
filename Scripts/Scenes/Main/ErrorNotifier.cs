@@ -8,12 +8,12 @@ namespace GodotModules
 
         public static void IncrementErrorCount() => ErrorCount++;
 
-        private static GTimer Timer { get; set; }
+        private static GTimer TimerNotifyErrors { get; set; }
 
         public override void _Ready()
         {
-            Timer = new GTimer(1500);
-            Timer.Connect(this, nameof(SpawnErrorNotification));
+            TimerNotifyErrors = new GTimer(1500);
+            TimerNotifyErrors.Connect(this, nameof(SpawnErrorNotification));
         }
 
         private static void SpawnErrorNotification()
@@ -23,7 +23,7 @@ namespace GodotModules
 
             var notifyError = Prefabs.NotifyError.Instance<UINotifyError>();
             notifyError.Count = ErrorCount;
-            GM.GameTree.CurrentScene.AddChild(notifyError);
+            GM.PersistentTree.CurrentScene.AddChild(notifyError);
 
             ErrorCount = 0;
         }

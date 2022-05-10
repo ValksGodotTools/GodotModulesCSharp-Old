@@ -9,18 +9,19 @@ namespace GodotModules
     public class GM : Node
     {
         [Export] public readonly NodePath NodePathGameConsole;
+        
         public static ModLoader ModLoader { get; set; }
-        public static UIGameConsole GameConsole { get; set; }
+        public static string GameName = "Godot Modules";
+        public static OptionsData Options { get; set; }
+        public static SceneTree PersistentTree { get; set; }
+
+        private static UIGameConsole GameConsole { get; set; }
         private static GodotCommands GodotCommands { get; set; }
         private static Logger Logger { get; set; }
 
-        public static string GameName = "Godot Modules";
-        public static OptionsData Options { get; set; }
-        public static SceneTree GameTree { get; set; }
-
         public override void _Ready()
         {
-            GameTree = GetTree();
+            PersistentTree = GetTree();
             GameConsole = GetNode<UIGameConsole>(NodePathGameConsole);
             GodotCommands = new GodotCommands();
             Logger = new Logger();
@@ -49,7 +50,7 @@ namespace GodotModules
         public static void SpawnPopupMessage(string message)
         {
             var popupMessage = Prefabs.PopupMessage.Instance<UIPopupMessage>();
-            GameTree.CurrentScene.AddChild(popupMessage);
+            PersistentTree.CurrentScene.AddChild(popupMessage);
             popupMessage.Init(message);
             popupMessage.PopupCentered();
         }
@@ -58,10 +59,14 @@ namespace GodotModules
         {
             ErrorNotifier.IncrementErrorCount();
             var popupError = Prefabs.PopupError.Instance<UIPopupError>();
-            GameTree.CurrentScene.AddChild(popupError);
+            PersistentTree.CurrentScene.AddChild(popupError);
             popupError.Init(e.Message, e.StackTrace);
             popupError.PopupCentered();
         }
+
+        public static void LogConsoleMessage(string message) => GameConsole.AddMessage(message);
+        public static void ToggleConsoleVisibility() => GameConsole.ToggleVisibility();
+        public static bool GameConsoleVisible => GameConsole.Visible;
 
         public static void EnqueueGodotCmd(GodotOpcode opcode, object data = null) => GodotCommands.Enqueue(opcode, data);
 
@@ -72,10 +77,6 @@ namespace GodotModules
         public static void LogTODO(object v, ConsoleColor color = ConsoleColor.White) => Logger.LogTODO(v, color);
         public static void LogMs(Action code) => Logger.LogMs(code);
 
-        /// <summary>
-        /// This should be used instead of GetTree().Quit() has it will handle cleanup and saving options
-        /// Note that if the console is closed directly then the cleanup will never happen, this should be avoided.
-        /// </summary>
-        public static void Exit() => GameTree.Notification(MainLoop.NotificationWmQuitRequest);
+        public static void Exit() => PersistentTree.Notification(MainLoop.NotificationWmQuitRequest);
     }
 }
