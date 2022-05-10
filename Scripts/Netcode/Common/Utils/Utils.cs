@@ -1,18 +1,19 @@
 using Godot;
 using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace GodotModules
 {
     public static class Utils
     {
+        public static Vector2 RandomDir() 
+        {
+            float angle = GD.Randf();
+            return new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+        }
+
         public static float DegreesToRadians(float degrees) => degrees * (Mathf.Pi / 180);
 
-        public static float LerpAngle(float from, float to, float weight)
-        {
-            return from + ShortAngleDistance(from, to) * weight;
-        }
+        public static float LerpAngle(float from, float to, float weight) => from + ShortAngleDistance(from, to) * weight;
 
         private static float ShortAngleDistance(float from, float to)
         {
