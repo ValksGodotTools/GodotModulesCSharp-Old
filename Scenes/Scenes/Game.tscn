@@ -7,39 +7,12 @@
 script = ExtResource( 1 )
 NodePathLabelPlayerHealth = NodePath("CanvasLayer/PanelContainer/HBoxContainer/Label")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
-
-[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer"]
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_top = -28.0
-theme = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/PanelContainer"]
-margin_left = 1.0
-margin_top = 1.0
-margin_right = 1023.0
-margin_bottom = 27.0
-
-[node name="Label" type="Label" parent="CanvasLayer/PanelContainer/HBoxContainer"]
-margin_top = 4.0
-margin_right = 71.0
-margin_bottom = 21.0
-text = "Health: 100"
-
 [node name="ColorRect" type="ColorRect" parent="."]
 margin_left = -220.0
 margin_top = -220.0
 margin_right = -180.0
 margin_bottom = -180.0
 color = Color( 1, 0.458824, 0.988235, 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="ColorRect2" type="ColorRect" parent="."]
 margin_left = 220.0
@@ -80,3 +53,24 @@ color = Color( 1, 0.780392, 0.360784, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -28.0
+theme = ExtResource( 2 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/PanelContainer"]
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 1023.0
+margin_bottom = 27.0
+
+[node name="Label" type="Label" parent="CanvasLayer/PanelContainer/HBoxContainer"]
+margin_top = 4.0
+margin_right = 71.0
+margin_bottom = 21.0
+text = "Health: 100"

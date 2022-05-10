@@ -7,13 +7,10 @@
 [ext_resource path="res://Scripts/Scenes/Main/SceneManager.cs" type="Script" id=5]
 [ext_resource path="res://Scenes/Prefabs/Debugger.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Scripts/Scenes/Main/ErrorNotifier.cs" type="Script" id=7]
-[ext_resource path="res://Scripts/Netcode/Common/Server/ServerSimulation.cs" type="Script" id=8]
+[ext_resource path="res://Scenes/Prefabs/ServerSimulation.tscn" type="PackedScene" id=9]
 
 [node name="Main" type="Node"]
 script = ExtResource( 1 )
-
-[node name="Server Simulation" type="Node2D" parent="."]
-script = ExtResource( 8 )
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 volume_db = -10.0
@@ -24,7 +21,6 @@ script = ExtResource( 3 )
 
 [node name="NetworkManager" type="Node" parent="."]
 script = ExtResource( 4 )
-NodePathServerSimulation = NodePath("../Server Simulation")
 
 [node name="SceneManager" type="Node" parent="."]
 script = ExtResource( 5 )
@@ -33,6 +29,29 @@ script = ExtResource( 5 )
 script = ExtResource( 7 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Server Simulation" type="Control" parent="CanvasLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="ViewportContainer" type="ViewportContainer" parent="CanvasLayer/Server Simulation"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+stretch = true
+
+[node name="Viewport" type="Viewport" parent="CanvasLayer/Server Simulation/ViewportContainer"]
+size = Vector2( 1024, 600 )
+transparent_bg = true
+handle_input_locally = false
+render_target_update_mode = 3
+gui_disable_input = true
+
+[node name="Server Simulation" parent="CanvasLayer/Server Simulation/ViewportContainer/Viewport" instance=ExtResource( 9 )]
+
+[node name="Camera2D" type="Camera2D" parent="CanvasLayer/Server Simulation/ViewportContainer/Viewport"]
+current = true
 
 [node name="Debugger" parent="CanvasLayer" instance=ExtResource( 6 )]
 visible = false
