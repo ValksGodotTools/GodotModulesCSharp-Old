@@ -8,6 +8,7 @@ namespace GodotModules
         public static PackedScene ClientPlayer = LoadGamePrefab("ClientPlayer");
         public static PackedScene OtherPlayer = LoadGamePrefab("OtherPlayer");
         public static PackedScene Bullet = LoadGamePrefab("Bullet");
+        public static PackedScene Enemy = LoadGamePrefab("Enemy");
 
         // Popup
         public static PackedScene PopupDirectConnect = LoadPopupPrefab($"PopupDirectConnect");
