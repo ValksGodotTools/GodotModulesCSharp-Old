@@ -1,16 +1,27 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Scripts/Scenes/Main/GameManager.cs" type="Script" id=1]
 [ext_resource path="res://Scripts/Scenes/Main/MusicManager.cs" type="Script" id=2]
 [ext_resource path="res://Scripts/Scenes/Main/Debug.cs" type="Script" id=3]
 [ext_resource path="res://Scripts/Netcode/Common/Utils/NetworkManager.cs" type="Script" id=4]
 [ext_resource path="res://Scripts/Scenes/Main/SceneManager.cs" type="Script" id=5]
-[ext_resource path="res://Scenes/Prefabs/Debugger.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Themes/Main.tres" type="Theme" id=6]
 [ext_resource path="res://Scripts/Scenes/Main/ErrorNotifier.cs" type="Script" id=7]
+[ext_resource path="res://Scripts/Msc/UIGameConsole.cs" type="Script" id=8]
 [ext_resource path="res://Scenes/Prefabs/ServerSimulation.tscn" type="PackedScene" id=9]
+
+[sub_resource type="StyleBoxEmpty" id=1]
+
+[sub_resource type="StyleBoxEmpty" id=7]
+
+[sub_resource type="StyleBoxEmpty" id=6]
+
+[sub_resource type="StyleBoxFlat" id=8]
+bg_color = Color( 0, 0, 0, 0.784314 )
 
 [node name="Main" type="Node"]
 script = ExtResource( 1 )
+NodePathGameConsole = NodePath("CanvasLayer/Game Console")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 volume_db = -10.0
@@ -54,5 +65,37 @@ gui_disable_input = true
 [node name="Camera2D" type="Camera2D" parent="CanvasLayer/Server Simulation/ViewportContainer/Viewport"]
 current = true
 
-[node name="Debugger" parent="CanvasLayer" instance=ExtResource( 6 )]
+[node name="Game Console" type="PanelContainer" parent="CanvasLayer"]
 visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 6 )
+custom_styles/panel = SubResource( 1 )
+script = ExtResource( 8 )
+NodePathLogs = NodePath("VBoxContainer/TextEdit")
+NodePathConsole = NodePath("VBoxContainer/Console")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Game Console"]
+margin_right = 1024.0
+margin_bottom = 600.0
+
+[node name="TextEdit" type="TextEdit" parent="CanvasLayer/Game Console/VBoxContainer"]
+margin_right = 1024.0
+margin_bottom = 580.0
+size_flags_vertical = 3
+custom_styles/read_only = SubResource( 7 )
+custom_styles/focus = SubResource( 6 )
+custom_styles/normal = SubResource( 8 )
+readonly = true
+syntax_highlighting = true
+show_line_numbers = true
+highlight_all_occurrences = true
+smooth_scrolling = true
+wrap_enabled = true
+
+[node name="Console" type="LineEdit" parent="CanvasLayer/Game Console/VBoxContainer"]
+margin_top = 584.0
+margin_right = 1024.0
+margin_bottom = 600.0
+
+[connection signal="text_entered" from="CanvasLayer/Game Console/VBoxContainer/Console" to="CanvasLayer/Game Console" method="_on_Console_text_entered"]

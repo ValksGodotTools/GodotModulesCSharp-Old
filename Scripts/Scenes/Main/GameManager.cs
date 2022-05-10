@@ -7,6 +7,9 @@ namespace GodotModules
 {
     public class GameManager : Node
     {
+        [Export] public readonly NodePath NodePathGameConsole;
+        public static UIGameConsole GameConsole { get; set; }
+
         public static string GameName = "Godot Modules";
         public static OptionsData Options { get; set; }
         public static SceneTree GameTree { get; set; }
@@ -14,6 +17,7 @@ namespace GodotModules
         public override void _Ready()
         {
             GameTree = GetTree();
+            GameConsole = GetNode<UIGameConsole>(NodePathGameConsole);
         }
 
         public override async void _Process(float delta)
@@ -27,7 +31,7 @@ namespace GodotModules
         {
             if (Input.IsActionJustPressed("ui_debug"))
             {
-                UIDebugger.ToggleVisibility();
+                GameConsole.ToggleVisibility();
             }
 
             if (Input.IsActionJustPressed("ui_fullscreen"))

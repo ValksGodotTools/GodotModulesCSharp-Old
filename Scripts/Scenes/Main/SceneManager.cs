@@ -61,9 +61,9 @@ namespace GodotModules
         {
             if (Input.IsActionJustPressed("ui_cancel"))
             {
-                if (UIDebugger.Instance.Visible) 
+                if (GameManager.GameConsole.Visible) 
                 {
-                    UIDebugger.ToggleVisibility();
+                    GameManager.GameConsole.ToggleVisibility();
                     return;
                 }
 
