@@ -2,6 +2,7 @@ using Godot;
 using GodotModules.Netcode.Client;
 using GodotModules.Netcode.Server;
 using System;
+using System.Runtime.CompilerServices;
 
 namespace GodotModules
 {
@@ -11,7 +12,7 @@ namespace GodotModules
         public static ModLoader ModLoader { get; set; }
         public static UIGameConsole GameConsole { get; set; }
         public static GodotCommands GodotCommands { get; set; }
-        public static Logger Logger { get; set; }
+        private static Logger Logger { get; set; }
 
         public static string GameName = "Godot Modules";
         public static OptionsData Options { get; set; }
@@ -61,6 +62,13 @@ namespace GodotModules
             popupError.Init(e.Message, e.StackTrace);
             popupError.PopupCentered();
         }
+
+        public static void Log(object v, ConsoleColor color = ConsoleColor.Gray) => Logger.Log(v, color);
+        public static void LogWarning(object v, ConsoleColor color = ConsoleColor.Yellow) => Logger.LogWarning(v, color);
+        public static void LogDebug(object v, ConsoleColor color = ConsoleColor.Magenta, bool trace = true, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0) => Logger.LogDebug(v, color, trace, filePath, lineNumber);
+        public static void LogErr(Exception ex, string hint = "") => Logger.LogErr(ex, hint);
+        public static void LogTODO(object v, ConsoleColor color = ConsoleColor.White) => Logger.LogTODO(v, color);
+        public static void LogMs(Action code) => Logger.LogMs(code);
 
         /// <summary>
         /// This should be used instead of GetTree().Quit() has it will handle cleanup and saving options

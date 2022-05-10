@@ -47,7 +47,7 @@ namespace GodotModules.Netcode.Server
             }
             catch (Exception e)
             {
-                GM.Logger.LogErr(e, "Server");
+                GM.LogErr(e, "Server");
             }
         }
 
@@ -75,7 +75,7 @@ namespace GodotModules.Netcode.Server
 
         public void Send(ServerPacketOpcode opcode, APacket data, PacketFlags flags = PacketFlags.Reliable, params Peer[] peers) => Outgoing.Enqueue(new ServerPacket((byte)opcode, flags, data, peers));
 
-        public void Log(object obj) => GM.Logger.Log($"[Server]: {obj}", ConsoleColor.Cyan);
+        public void Log(object obj) => GM.Log($"[Server]: {obj}", ConsoleColor.Cyan);
 
         protected Peer[] GetOtherPeers(uint id)
         {
@@ -188,7 +188,7 @@ namespace GodotModules.Netcode.Server
 
                         if (!HandlePacket.ContainsKey(opcode))
                         {
-                            GM.Logger.LogWarning($"[Server]: Received malformed opcode: {opcode} (Ignoring)");
+                            GM.LogWarning($"[Server]: Received malformed opcode: {opcode} (Ignoring)");
                             break;
                         }
 
@@ -199,7 +199,7 @@ namespace GodotModules.Netcode.Server
                         }
                         catch (System.IO.EndOfStreamException e)
                         {
-                            GM.Logger.LogWarning($"[Server]: Received malformed opcode: {opcode} {e.Message} (Ignoring)");
+                            GM.LogWarning($"[Server]: Received malformed opcode: {opcode} {e.Message} (Ignoring)");
                             break;
                         }
                         handlePacket.Handle(netEvent.Peer);
