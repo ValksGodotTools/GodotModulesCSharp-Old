@@ -4,14 +4,14 @@ using System;
 namespace GodotModules.Netcode
 {
     // Intervals
-    public struct ClientIntervals
+    public class ClientIntervals
     {
         public static int PlayerDirection = 20;
         public static int PlayerPosition = 150;
         public static int PlayerRotation = 150;
     }
 
-    public struct ServerIntervals
+    public class ServerIntervals
     {
         public static int PlayerTransforms = 150;
     }
