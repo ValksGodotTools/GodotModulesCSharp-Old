@@ -6,7 +6,7 @@ namespace GodotModules
 
         public override void Run(string[] args)
         {
-            GameManager.Exit();
+            GM.Exit();
         }
     }
 }

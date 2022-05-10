@@ -14,13 +14,13 @@ namespace GodotModules
                 SystemFileManager.WriteConfig<OptionsData>(PathOptions);
             }
 
-            GameManager.Options = SystemFileManager.GetConfig<OptionsData>(PathOptions);
+            GM.Options = SystemFileManager.GetConfig<OptionsData>(PathOptions);
             SupportedResolutions = GetSupportedResolutions();
 
             if (OptionsCreatedForFirstTime)
             {
                 // defaults
-                GameManager.Options = new OptionsData
+                GM.Options = new OptionsData
                 {
                     Resolution = SupportedResolutions.Count - 1,
                     FullscreenMode = 0,
@@ -39,17 +39,17 @@ namespace GodotModules
         public static void ApplyOptions()
         {
             // apply settings
-            if (GameManager.Options.FullscreenMode == FullscreenMode.Windowed)
+            if (GM.Options.FullscreenMode == FullscreenMode.Windowed)
             {
-                OS.WindowSize = SupportedResolutions[GameManager.Options.Resolution];
+                OS.WindowSize = SupportedResolutions[GM.Options.Resolution];
                 CenterWindow();
             }
             else
-                SetFullscreenMode(GameManager.Options.FullscreenMode);
+                SetFullscreenMode(GM.Options.FullscreenMode);
 
-            MusicManager.SetVolumeValue(GameManager.Options.VolumeMusic);
+            MusicManager.SetVolumeValue(GM.Options.VolumeMusic);
 
-            OS.VsyncEnabled = GameManager.Options.VSync;
+            OS.VsyncEnabled = GM.Options.VSync;
         }
 
         public static void SetFullscreenBorderless()
@@ -77,13 +77,13 @@ namespace GodotModules
                     break;
             }
 
-            GameManager.Options.FullscreenMode = mode;
+            GM.Options.FullscreenMode = mode;
         }
 
         public static void ToggleFullscreen()
         {
             // for when F11 or Alt+Enter are pressed
-            var mode = GameManager.Options.FullscreenMode;
+            var mode = GM.Options.FullscreenMode;
 
             switch (mode)
             {
@@ -139,9 +139,9 @@ namespace GodotModules
             return supportedResolutions;
         }
 
-        public static string PathOptions => System.IO.Path.Combine(GameManager.GetGameDataPath(), "options.json");
+        public static string PathOptions => System.IO.Path.Combine(GM.GetGameDataPath(), "options.json");
 
-        public static void SaveOptions() => SystemFileManager.WriteConfig(PathOptions, GameManager.Options);
+        public static void SaveOptions() => SystemFileManager.WriteConfig(PathOptions, GM.Options);
     }
 
     public enum FullscreenMode

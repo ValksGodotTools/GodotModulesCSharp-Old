@@ -36,9 +36,9 @@ namespace Game
             AddChild(bullet);
 
             // set game definitions
-            GameManager.ModLoader.Script.Globals["Player", "setHealth"] = (Action<int>)Player.SetHealth;
+            GM.ModLoader.Script.Globals["Player", "setHealth"] = (Action<int>)Player.SetHealth;
 
-            GameManager.ModLoader.Call("OnGameInit");
+            GM.ModLoader.Call("OnGameInit");
 
             if (NetworkManager.IsMultiplayer())
                 InitMultiplayerStuff();
@@ -46,7 +46,7 @@ namespace Game
 
         public override void _PhysicsProcess(float delta)
         {
-            GameManager.ModLoader.Call("OnGameUpdate", delta);
+            GM.ModLoader.Call("OnGameUpdate", delta);
 
             if (SceneManager.PrevSceneName == "Menu") // singleplayer
                 return;
@@ -108,7 +108,7 @@ namespace Game
         private void InitMultiplayerStuff()
         {
             Players[(byte)NetworkManager.PeerId] = Player;
-            Player.SetUsername(GameManager.Options.OnlineUsername);
+            Player.SetUsername(GM.Options.OnlineUsername);
 
             bool IsNotClient(uint id) => id != NetworkManager.PeerId;
 

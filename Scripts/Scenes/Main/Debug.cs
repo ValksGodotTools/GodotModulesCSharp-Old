@@ -13,7 +13,7 @@ namespace GodotModules
                 //var player = GameServer.Players[0];
                 //player.Position = Godot.Vector2.Zero;
 
-                GameManager.SpawnPopupError(new System.Exception("lol beans"));
+                GM.SpawnPopupError(new System.Exception("lol beans"));
             }
         }
     }

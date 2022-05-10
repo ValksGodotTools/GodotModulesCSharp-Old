@@ -45,7 +45,7 @@ namespace GodotModules
             var modName = BtnMod.Text;
 
             BtnModEnabled.Text = Enabled ? "[x]" : "[ ]";
-            GameManager.ModLoader.ModInfo[modName].ModInfo.Enabled = Enabled;
+            GM.ModLoader.ModInfo[modName].ModInfo.Enabled = Enabled;
 
             if (DisplayedInDependencies)
                 UIModLoader.ModInfoList[modName].SetModEnabled(Enabled);

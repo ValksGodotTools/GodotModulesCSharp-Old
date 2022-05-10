@@ -94,7 +94,7 @@ namespace GodotModules
                 Port = port,
                 Description = desc,
                 MaxPlayerCount = ValidatedMaxPlayerCount,
-                LobbyHost = GameManager.Options.OnlineUsername,
+                LobbyHost = GM.Options.OnlineUsername,
                 Public = Public.Pressed
             };
 
@@ -113,7 +113,7 @@ namespace GodotModules
 
                 if (attempts == 0)
                 {
-                    GameManager.SpawnPopupMessage($"The port '{port}' must be port forwarded first");
+                    GM.SpawnPopupMessage($"The port '{port}' must be port forwarded first");
                     NetworkManager.GameServer.Stop();
                     dummyClient.Stop();
                     return;
@@ -131,7 +131,7 @@ namespace GodotModules
                 await NetworkManager.WaitForHostToConnectToServer();
                 await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby(LobbyOpcode.LobbyCreate)
                 {
-                    Username = GameManager.Options.OnlineUsername,
+                    Username = GM.Options.OnlineUsername,
                     LobbyName = name,
                     LobbyDescription = desc
                 });

@@ -75,7 +75,7 @@ namespace GodotModules
                         Console.ResetColor();
 
 #if CLIENT
-                        GameManager.GameConsole.AddMessage(text);
+                        GM.GameConsole.AddMessage(text);
 #endif
                         break;
                     case LoggerOpcode.LogError:
@@ -91,7 +91,7 @@ namespace GodotModules
 
 #if CLIENT
                         ErrorNotifier.IncrementErrorCount();
-                        GameManager.GameConsole.AddMessage(errorText);
+                        GM.GameConsole.AddMessage(errorText);
 #endif
                         break;
                 }

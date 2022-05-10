@@ -5,7 +5,7 @@ using System;
 
 namespace GodotModules
 {
-    public class GameManager : Node
+    public class GM : Node
     {
         [Export] public readonly NodePath NodePathGameConsole;
         public static ModLoader ModLoader { get; set; }
@@ -43,7 +43,7 @@ namespace GodotModules
                 UtilOptions.ToggleFullscreen();
         }
 
-        public static string GetGameDataPath() => System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), GameManager.GameName);
+        public static string GetGameDataPath() => System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), GM.GameName);
 
         public static void SpawnPopupMessage(string message)
         {

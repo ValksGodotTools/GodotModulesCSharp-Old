@@ -18,7 +18,7 @@ namespace GodotModules
 
             if (args[0] == "a")
                 if (NetworkManager.IsServerRunning())
-                    GameManager.Logger.LogDebug(NetworkManager.GameServer.Players.Print());
+                    GM.Logger.LogDebug(NetworkManager.GameServer.Players.Print());
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Game
 
         private async void _on_Multiplayer_pressed()
         {
-            var onlineUsername = GameManager.Options.OnlineUsername;
+            var onlineUsername = GM.Options.OnlineUsername;
 
             if (string.IsNullOrWhiteSpace(onlineUsername))
             {
@@ -37,7 +37,7 @@ namespace Game
             await SceneManager.ChangeScene("GameServers");
         }
 
-        private void _on_Exit_pressed() => GameManager.Exit();
+        private void _on_Exit_pressed() => GM.Exit();
 
         private async void _on_Set_Online_Username_Popup_confirmed()
         {
@@ -50,7 +50,7 @@ namespace Game
             }
 
             UIOptions.Instance.InputUsername.Text = username;
-            GameManager.Options.OnlineUsername = username;
+            GM.Options.OnlineUsername = username;
             PopupOnlineUsername.Hide();
 
             await SceneManager.ChangeScene("GameServers");

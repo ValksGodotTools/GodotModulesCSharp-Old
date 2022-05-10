@@ -96,7 +96,7 @@ namespace GodotModules.Netcode
                 if (LogExceptions)
                 {
                     var message = $"Failed to POST to http://{WEB_SERVER_IP}/api/{path} {e.Message}";
-                    GameManager.Logger.LogWarning(message);
+                    GM.Logger.LogWarning(message);
                 }
                 return new WebServerResponse<string>
                 {
@@ -141,7 +141,7 @@ namespace GodotModules.Netcode
                 if (LogExceptions)
                 {
                     var message = $"Failed to GET from http://{WEB_SERVER_IP}/api/{path} {e.Message}";
-                    GameManager.Logger.LogWarning(message); // no need to notify user of this kind of error
+                    GM.Logger.LogWarning(message); // no need to notify user of this kind of error
                 }
                 return new WebServerResponse<T>
                 {

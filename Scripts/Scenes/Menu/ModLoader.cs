@@ -24,7 +24,7 @@ namespace GodotModules
 
         public void Init()
         {
-            PathMods = Path.Combine(GameManager.GetGameDataPath(), "Mods");
+            PathMods = Path.Combine(GM.GetGameDataPath(), "Mods");
             PathModsEnabled = Path.Combine(PathMods, "enabled.json");
 
             LuaScriptsPath = $"Scripts{SystemFileManager.Separator}Lua";
@@ -132,7 +132,7 @@ namespace GodotModules
             catch (ScriptRuntimeException e)
             {
                 UIModLoader.Log($"{e.DecoratedMessage}");
-                GameManager.Logger.LogErr(e, $"[ModLoader]: ");
+                GM.Logger.LogErr(e, $"[ModLoader]: ");
             }
         }
 
@@ -160,7 +160,7 @@ namespace GodotModules
 
         private void Log(object obj)
         {
-            GameManager.Logger.Log($"[ModLoader]: {obj}");
+            GM.Logger.Log($"[ModLoader]: {obj}");
             UIModLoader.Log($"{obj}");
         }
 
@@ -182,7 +182,7 @@ namespace GodotModules
                     else
                     {
                         UIModLoader.Log($"Could not open file: {absolutePath}");
-                        GameManager.Logger.LogWarning($"Could not open file: {absolutePath}");
+                        GM.Logger.LogWarning($"Could not open file: {absolutePath}");
                     }
                 }
             });
@@ -257,7 +257,7 @@ namespace GodotModules
             {
                 // Mod script did not run right
                 UIModLoader.Log($"{e.DecoratedMessage}");
-                GameManager.Logger.LogErr(e, "[ModLoader]: ");
+                GM.Logger.LogErr(e, "[ModLoader]: ");
             }
         }
 

@@ -59,7 +59,7 @@ namespace GodotModules
                         break;
                 }
 
-                GameManager.SpawnPopupMessage(message);
+                GM.SpawnPopupMessage(message);
             }
 
             await NetworkManager.WebClient.UpdateIsAlive();
@@ -89,14 +89,14 @@ namespace GodotModules
             NetworkManager.CurrentLobby = info;
             NetworkManager.ClientConnectingToLobby = true;
 
-            GameManager.Logger.Log("Connecting to lobby...");
+            GM.Logger.Log("Connecting to lobby...");
             NetworkManager.StartClient(info.Ip, info.Port);
 
             await ClientConnect(async () =>
             {
                 await NetworkManager.GameClient.Send(ClientPacketOpcode.Lobby, new CPacketLobby(LobbyOpcode.LobbyJoin)
                 {
-                    Username = GameManager.Options.OnlineUsername,
+                    Username = GM.Options.OnlineUsername,
                     DirectConnect = directConnect
                 });
             });
@@ -162,7 +162,7 @@ namespace GodotModules
                     }
                     catch (TaskCanceledException)
                     {
-                        GameManager.Logger.LogDebug("Dummy client task cancelled (A)");
+                        GM.Logger.LogDebug("Dummy client task cancelled (A)");
                     }
                 }, CTSPingServers.Token);
 
@@ -173,7 +173,7 @@ namespace GodotModules
                     await task;
                 } catch(TaskCanceledException)
                 {
-                    GameManager.Logger.LogDebug("Dummy client task cancelled (B)");
+                    GM.Logger.LogDebug("Dummy client task cancelled (B)");
                 }
 
                 if (!CTSPingServers.IsCancellationRequested)

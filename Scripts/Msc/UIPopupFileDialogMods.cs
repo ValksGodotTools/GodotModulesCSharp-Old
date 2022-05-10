@@ -15,7 +15,7 @@ namespace GodotModules
 
         public void Open()
         {
-            FileManager.CurrentDir = GameManager.ModLoader.PathMods;
+            FileManager.CurrentDir = GM.ModLoader.PathMods;
             FileManager.PopupCentered();
         }
 

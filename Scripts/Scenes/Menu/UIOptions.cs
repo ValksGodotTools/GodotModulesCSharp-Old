@@ -28,7 +28,7 @@ namespace GodotModules.Settings
         public override void _Ready()
         {
             Instance = this;
-            Options = GameManager.Options;
+            Options = GM.Options;
             SliderMusic = GetNode<HSlider>(NodePathSliderMusic);
             SliderSFX = GetNode<HSlider>(NodePathSliderSFX);
             VSync = GetNode<CheckBox>(NodePathVSync);

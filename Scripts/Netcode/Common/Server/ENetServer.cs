@@ -47,7 +47,7 @@ namespace GodotModules.Netcode.Server
             }
             catch (Exception e)
             {
-                GameManager.Logger.LogErr(e, "Server");
+                GM.Logger.LogErr(e, "Server");
             }
         }
 
@@ -75,7 +75,7 @@ namespace GodotModules.Netcode.Server
 
         public void Send(ServerPacketOpcode opcode, APacket data, PacketFlags flags = PacketFlags.Reliable, params Peer[] peers) => Outgoing.Enqueue(new ServerPacket((byte)opcode, flags, data, peers));
 
-        public void Log(object obj) => GameManager.Logger.Log($"[Server]: {obj}", ConsoleColor.Cyan);
+        public void Log(object obj) => GM.Logger.Log($"[Server]: {obj}", ConsoleColor.Cyan);
 
         protected Peer[] GetOtherPeers(uint id)
         {
@@ -136,7 +136,7 @@ namespace GodotModules.Netcode.Server
                 var message = $"A server is running on port {port} already! {e.Message}";
                 Log(message);
 #if CLIENT
-                GameManager.GodotCommands.Enqueue(GodotOpcode.PopupMessage, message);
+                GM.GodotCommands.Enqueue(GodotOpcode.PopupMessage, message);
                 NetworkManager.GameClient.Stop();
 #endif
                 Stop();
@@ -188,7 +188,7 @@ namespace GodotModules.Netcode.Server
 
                         if (!HandlePacket.ContainsKey(opcode))
                         {
-                            GameManager.Logger.LogWarning($"[Server]: Received malformed opcode: {opcode} (Ignoring)");
+                            GM.Logger.LogWarning($"[Server]: Received malformed opcode: {opcode} (Ignoring)");
                             break;
                         }
 
@@ -199,7 +199,7 @@ namespace GodotModules.Netcode.Server
                         }
                         catch (System.IO.EndOfStreamException e)
                         {
-                            GameManager.Logger.LogWarning($"[Server]: Received malformed opcode: {opcode} {e.Message} (Ignoring)");
+                            GM.Logger.LogWarning($"[Server]: Received malformed opcode: {opcode} {e.Message} (Ignoring)");
                             break;
                         }
                         handlePacket.Handle(netEvent.Peer);

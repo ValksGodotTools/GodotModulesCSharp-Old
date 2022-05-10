@@ -23,7 +23,7 @@ namespace GodotModules
 
             var notifyError = Prefabs.NotifyError.Instance<UINotifyError>();
             notifyError.Count = ErrorCount;
-            GameManager.GameTree.CurrentScene.AddChild(notifyError);
+            GM.GameTree.CurrentScene.AddChild(notifyError);
 
             ErrorCount = 0;
         }
