@@ -10,7 +10,6 @@ namespace GodotModules.Netcode.Server
         public static Dictionary<ushort, Enemy> Enemies = new Dictionary<ushort, Enemy>();
         public static Dictionary<byte, Game.OtherPlayer> Players = new Dictionary<byte, Game.OtherPlayer>();
 
-        private static ushort EnemyId { get; set; }
         private static ServerSimulation Instance { get; set; }
         private static GTimer Timer { get; set; }
         private static Dictionary<byte, PrevCurQueue<Vector2>> PlayerPositions = new Dictionary<byte, PrevCurQueue<Vector2>>();
@@ -92,7 +91,7 @@ namespace GodotModules.Netcode.Server
             var enemy = Prefabs.Enemy.Instance<Enemy>();
             enemy.AddToGroup("Enemy");
             enemy.Position = simEnemy.SpawnForce;
-            Enemies.Add(EnemyId++, enemy);
+            Enemies.Add(simEnemy.Id, enemy);
             Instance.AddChild(enemy);
         }
 

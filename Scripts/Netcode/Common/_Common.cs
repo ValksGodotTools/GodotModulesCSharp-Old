@@ -99,6 +99,7 @@ namespace GodotModules.Netcode
 
     public class SimulationEnemy 
     {
+        public ushort Id { get; set; }
         public Vector2 SpawnForce { get; set; }
 
         public void RandomDirOnSpawn(float force) => SpawnForce = Utils.RandomDir() * force;
