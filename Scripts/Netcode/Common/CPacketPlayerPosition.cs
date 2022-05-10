@@ -25,6 +25,7 @@ namespace GodotModules.Netcode
         public override void Handle(ENet.Peer peer)
         {
             NetworkManager.GameServer.Players[(byte)peer.ID].Position = Position;
+            ServerSimulation.Enqueue(new ThreadCmd<SimulationOpcode>(SimulationOpcode.PlayerPosition, new SimulationPlayerPosition((byte)peer.ID, Position)));
         }
     }
 }
