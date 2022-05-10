@@ -1,3 +1,4 @@
+using Godot;
 using ENet;
 
 namespace GodotModules.Netcode.Server
@@ -6,9 +7,10 @@ namespace GodotModules.Netcode.Server
     {
         public DataLobby Lobby { get; set; }
         public Dictionary<byte, DataPlayer> Players { get; set; }
+        public Dictionary<ushort, DataEnemy> Enemies { get; set; }
         public Dictionary<ushort, DataBullet> Bullets { get; set; }
         public STimer EmitClientTransforms { get; set; }
-        private STimer ServerSimulation { get; set; }
+        private STimer ServerSimPlayerPositions { get; set; } // unused
         public bool DisallowJoiningLobby { get; set; }
 
         public GameServer()
@@ -32,7 +34,7 @@ namespace GodotModules.Netcode.Server
             const int fps = 60;
             const float delta = 1f / fps;
 
-            ServerSimulation = new((double)oneSecondInMs / fps, () =>
+            ServerSimPlayerPositions = new((double)oneSecondInMs / fps, () =>
             {
                 Players.ForEach(x =>
                 {
@@ -69,7 +71,25 @@ namespace GodotModules.Netcode.Server
                     case ENetOpcode.StartGame:
                         EmitClientTransforms.Start();
                         if (NetworkManager.ServerAuthoritativeMovement)
-                            ServerSimulation.Start();
+                            ServerSimPlayerPositions.Start();
+
+                        foreach (var player in Players)
+                        {
+                            ServerSimulation.Enqueue(new ThreadCmd<SimulationOpcode>(SimulationOpcode.CreatePlayer, player.Key));
+                        }
+
+                        for (int i = 0; i < 10; i++)
+                        {
+                            var enemy = new SimulationEnemy();
+                            enemy.RandomDirOnSpawn(50);
+                            ServerSimulation.Enqueue(new ThreadCmd<SimulationOpcode>(SimulationOpcode.CreateEnemy, enemy));
+                        }
+
+                        ServerSimulation.Enqueue(new ThreadCmd<SimulationOpcode>(SimulationOpcode.StartSimulation));
+                        break;
+
+                    case ENetOpcode.EnemyTransforms:
+                        Enemies = (Dictionary<ushort, DataEnemy>)cmd.Data;
                         break;
 
                     case ENetOpcode.StopServer:
@@ -125,8 +145,8 @@ namespace GodotModules.Netcode.Server
             EmitClientTransforms.Dispose();
             if (NetworkManager.ServerAuthoritativeMovement)
             {
-                ServerSimulation.Stop();
-                ServerSimulation.Dispose();
+                ServerSimPlayerPositions.Stop();
+                ServerSimPlayerPositions.Dispose();
             }
         }
 
