@@ -15,7 +15,7 @@ namespace GodotModules
     public class GM : Node
     {
         public static GM Instance { get; set; }
-        public static NetworkManager NetworkManager = new NetworkManager();
+        public static NetworkManager Net = new NetworkManager();
 
         private static Logger _logger = new Logger();
         private static GodotCommands _godotCmds = new GodotCommands();
@@ -26,6 +26,8 @@ namespace GodotModules
         {
             Instance = this;
             await _sceneManager.Init();
+            Net.StartServer(25565, 100);
+            Net.StartClient("127.0.0.1", 25565);
         }
 
         public override void _Process(float delta)
@@ -33,12 +35,12 @@ namespace GodotModules
             _logger.Update();
         }
 
-        public override void _Notification(int what)
+        public override async void _Notification(int what)
         {
             if (what == MainLoop.NotificationWmQuitRequest)
             {
                 GetTree().SetAutoAcceptQuit(false);
-                GetTree().Quit();
+                await Cleanup();
             }
         }
 
@@ -54,5 +56,11 @@ namespace GodotModules
         public static async Task ChangeScene(string name, bool instant = false) => await _sceneManager.ChangeScene(name, instant);
 
         public static bool LoadDirectory(string path, Action<Directory, string> action) => _godotFileManager.LoadDir(path, action);
+
+        private async Task Cleanup()
+        {
+            await Net.Cleanup();
+            GetTree().Quit();
+        }
     }
 }

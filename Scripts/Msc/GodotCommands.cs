@@ -33,7 +33,7 @@ namespace GodotModules
                         break;
 
                     case GodotOpcode.Disconnect:
-                        GM.NetworkManager.DisconnectOpcode = (DisconnectOpcode)cmd.Data;
+                        GM.Net.DisconnectOpcode = (DisconnectOpcode)cmd.Data;
                         await GM.ChangeScene("GameServers");
                         break;
                 }

@@ -3,36 +3,78 @@ using System.Threading;
 
 namespace GodotModules.Netcode.Client 
 {
-    public abstract class ENetClient 
+    public abstract class ENetClient : IDisposable
     {
         public static readonly Dictionary<ServerPacketOpcode, APacketServer> HandlePacket = ReflectionUtils.LoadInstances<ServerPacketOpcode, APacketServer>("SPacket");
 
         public bool IsConnected { get => Interlocked.Read(ref _connected) == 1; }
         public bool IsRunning { get => Interlocked.Read(ref _running) == 1; }
-        public ConcurrentQueue<ENetCmd> ENetCmds = new ConcurrentQueue<ENetCmd>();
 
-        protected CancellationTokenSource CancellationTokenSource { get; set; }
+        protected CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
 
+        private ConcurrentQueue<ENetClientCmd> ENetCmds = new ConcurrentQueue<ENetClientCmd>();
         private long _connected;
         private long _running;
         private ConcurrentDictionary<int, ClientPacket> _outgoing = new ConcurrentDictionary<int, ClientPacket>();
         private int _outgoingId;
 
-        public async Task Send(ClientPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
+        public async void Start(string ip, ushort port) => await StartAsync(ip, port);
+
+        public async Task StartAsync(string ip, ushort port)
+        {
+            try
+            {
+                if (IsRunning)
+                {
+                    GM.Log($"Client is running already");
+                    return;
+                }
+
+                _running = 1;
+                CancellationTokenSource = new CancellationTokenSource();
+
+                await Task.Run(() => ENetThreadWorker(ip, port), CancellationTokenSource.Token);
+            }
+            catch (Exception e)
+            {
+                GM.LogErr(e, "Client");
+            }
+        }
+
+        public void Stop() => ENetCmds.Enqueue(new ENetClientCmd(ENetClientOpcode.Disconnect));
+
+        public async Task StopAsync()
+        {
+            Stop();
+
+            while (IsRunning)
+                await Task.Delay(1);
+        }
+
+        public void Send(ClientPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable) 
         {
             _outgoingId++;
             var success = _outgoing.TryAdd(_outgoingId, new ClientPacket((byte)opcode, flags, data));
 
             if (!success)
-                Log($"Failed to add {opcode} to Outgoing queue because of duplicate key");
+                GM.LogWarning($"Failed to add {opcode} to Outgoing queue because of duplicate key");
+        }
+
+        public async Task SendAsync(ClientPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
+        {
+            Send(opcode, data, flags);
 
             while (_outgoing.ContainsKey(_outgoingId))
                 await Task.Delay(1);
         }
 
+        protected virtual void Connecting() {}
         protected virtual void Connect(Event netEvent) {}
         protected virtual void Disconnect(Event netEvent) {}
         protected virtual void Timeout(Event netEvent) {}
+        protected virtual void Leave(Event netEvent) {}
+        protected virtual void Sent(ClientPacketOpcode opcode) {}
+        protected virtual void Stopped() {}
 
         private Task ENetThreadWorker(string ip, ushort port)
         {
@@ -42,6 +84,7 @@ namespace GodotModules.Netcode.Client
             address.Port = port;
             client.Create();
 
+            Connecting();
             var peer = client.Connect(address);
 
             uint pingInterval = 1000; // Pings are used both to monitor the liveness of the connection and also to dynamically adjust the throttle during periods of low traffic so that the throttle has reasonable responsiveness during traffic spikes.
@@ -52,19 +95,17 @@ namespace GodotModules.Netcode.Client
             peer.PingInterval(pingInterval);
             peer.Timeout(timeout, timeoutMinimum, timeoutMaximum);
 
-            _running = 1;
-
             while (!CancellationTokenSource.IsCancellationRequested)
             {
                 var polled = false;
 
                 // ENet Cmds from Godot Thread
-                while (ENetCmds.TryDequeue(out ENetCmd cmd))
+                while (ENetCmds.TryDequeue(out ENetClientCmd cmd))
                 {
                     switch (cmd.Opcode)
                     {
-                        case ENetOpcode.ClientWantsToExitApp:
-                        case ENetOpcode.ClientWantsToDisconnect:
+                        case ENetClientOpcode.Disconnect:
+                            CancellationTokenSource.Cancel();
                             peer.Disconnect(0);
                             break;
                     }
@@ -77,9 +118,8 @@ namespace GodotModules.Netcode.Client
                     byte channelID = 0; // The channel all networking traffic will be going through
                     var packet = default(Packet);
                     packet.Create(clientPacket.Data, clientPacket.PacketFlags);
-                    //Log("Sent packet: " + (ClientPacketOpcode)clientPacket.Opcode);
                     peer.Send(channelID, ref packet);
-                    GM.NetworkManager.PingSent = DateTime.Now;
+                    Sent((ClientPacketOpcode)clientPacket.Opcode);
                 }
 
                 while (!polled)
@@ -104,7 +144,7 @@ namespace GodotModules.Netcode.Client
                             var packet = netEvent.Packet;
                             if (packet.Length > GamePacket.MaxSize)
                             {
-                                Log($"Tried to read packet from server of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
+                                GM.LogWarning($"Tried to read packet from server of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
                                 packet.Dispose();
                                 continue;
                             }
@@ -113,43 +153,49 @@ namespace GodotModules.Netcode.Client
                             break;
 
                         case EventType.Timeout:
+                            CancellationTokenSource.Cancel();
                             Timeout(netEvent);
+                            Leave(netEvent);
                             break;
 
                         case EventType.Disconnect:
+                            CancellationTokenSource.Cancel();
                             Disconnect(netEvent);
+                            Leave(netEvent);
                             break;
                     }
                 }
 
                 client.Flush();
             }
-
-            Log($"Client stopped");
             
             _running = 0;
+
+            Stopped();
 
             return Task.FromResult(1);
         }
 
-        public void Log(object v) => GM.Log($"[Client]: {v}", ConsoleColor.Yellow);
+        public void Dispose()
+        {
+            CancellationTokenSource.Dispose();
+        }
     }
 
-    public struct ENetCmd 
+    public struct ENetClientCmd 
     {
-        public ENetOpcode Opcode { get; set; }
+        public ENetClientOpcode Opcode { get; set; }
         public object Data { get; set; }
 
-        public ENetCmd(ENetOpcode opcode, object data)
+        public ENetClientCmd(ENetClientOpcode opcode, object data = null)
         {
             Opcode = opcode;
             Data = data;
         }
     }
 
-    public enum ENetOpcode 
+    public enum ENetClientOpcode 
     {
-        ClientWantsToExitApp,
-        ClientWantsToDisconnect
+        Disconnect
     }
 }
