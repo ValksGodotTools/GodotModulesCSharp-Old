@@ -1,4 +1,5 @@
 global using GodotModules;
+global using GodotModules.Netcode;
 global using System;
 global using System.Collections.Generic;
 global using System.Collections.Concurrent;
@@ -13,11 +14,18 @@ namespace GodotModules
 {
     public class GM : Node
     {
+        public static GM Instance { get; set; }
+        public static NetworkManager NetworkManager = new NetworkManager();
+
         private static Logger _logger = new Logger();
+        private static GodotCommands _godotCmds = new GodotCommands();
+        private static SceneManager _sceneManager = new SceneManager();
+        private static GodotFileManager _godotFileManager = new GodotFileManager();
 
-        public override void _Ready()
+        public override async void _Ready()
         {
-
+            Instance = this;
+            await _sceneManager.Init();
         }
 
         public override void _Process(float delta)
@@ -40,5 +48,11 @@ namespace GodotModules
         public static void LogErr(Exception e, string hint = "", ConsoleColor c = ConsoleColor.Red) => _logger.LogErr(e, c, hint);
         public static void LogTodo(object v, ConsoleColor c = ConsoleColor.White) => _logger.LogTodo(v, c);
         public static void LogMs(Action a) => _logger.LogMs(a);
+
+        public static void GodotCmd(GodotOpcode opcode, object v = null) => _godotCmds.Enqueue(opcode, v);
+
+        public static async Task ChangeScene(string name, bool instant = false) => await _sceneManager.ChangeScene(name, instant);
+
+        public static bool LoadDir(string path, Action<Directory, string> action) => _godotFileManager.LoadDir(path, action);
     }
 }
