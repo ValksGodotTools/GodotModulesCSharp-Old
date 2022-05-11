@@ -22,7 +22,7 @@
             "request": "launch",
             "mode": "executable",
             "preLaunchTask": "build",
-            "executable": "C:/Users/VALK-DESKTOP/Downloads/Godot_v3.4.2-stable_mono_win64/Godot_v3.4.2-stable_mono_win64.exe\r",
+            "executable": "C:/Users/VALK-DESKTOP/Downloads/Godot_v3.4.4-stable_mono_win64/Godot_v3.4.4-stable_mono_win64.exe\r",
             "executableArguments": [
                 "--path",
                 "${workspaceRoot}"
@@ -34,7 +34,7 @@
             "request": "launch",
             "mode": "executable",
             "preLaunchTask": "build",
-            "executable": "C:/Users/VALK-DESKTOP/Downloads/Godot_v3.4.2-stable_mono_win64/Godot_v3.4.2-stable_mono_win64.exe\r",
+            "executable": "C:/Users/VALK-DESKTOP/Downloads/Godot_v3.4.4-stable_mono_win64/Godot_v3.4.4-stable_mono_win64.exe\r",
             "executableArguments": [
                 "--path",
                 "${workspaceRoot}",
