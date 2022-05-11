@@ -89,7 +89,7 @@ namespace GodotModules.Netcode.Server
             Log($"Server listening on port {port}");
         }
 
-        protected override void Connect(Event netEvent)
+        protected override void Connect(ref Event netEvent)
         {
             Log($"Client connected with id: {netEvent.Peer.ID}");
         }
@@ -99,17 +99,17 @@ namespace GodotModules.Netcode.Server
             Log($"Received packet: {opcode}");
         }
 
-        protected override void Disconnect(Event netEvent)
+        protected override void Disconnect(ref Event netEvent)
         {
             Log($"Client disconnected with id: {netEvent.Peer.ID}");
         }
 
-        protected override void Timeout(Event netEvent)
+        protected override void Timeout(ref Event netEvent)
         {
             Log($"Client timed out with id: {netEvent.Peer.ID}");
         }
 
-        protected override void Leave(Event netEvent)
+        protected override void Leave(ref Event netEvent)
         {
             Players.Remove((byte)netEvent.Peer.ID);
         }

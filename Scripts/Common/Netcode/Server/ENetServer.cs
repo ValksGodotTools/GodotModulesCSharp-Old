@@ -74,11 +74,11 @@ namespace GodotModules.Netcode.Server
         }
 
         protected virtual void Started(ushort port, int maxClients) { }
-        protected virtual void Connect(Event netEvent) { }
+        protected virtual void Connect(ref Event netEvent) { }
         protected virtual void Received(ClientPacketOpcode opcode) { }
-        protected virtual void Disconnect(Event netEvent) { }
-        protected virtual void Timeout(Event netEvent) { }
-        protected virtual void Leave(Event netEvent) { }
+        protected virtual void Disconnect(ref Event netEvent) { }
+        protected virtual void Timeout(ref Event netEvent) { }
+        protected virtual void Leave(ref Event netEvent) { }
         protected virtual void Stopped() { }
         protected virtual void ServerCmds() { }
 
@@ -166,19 +166,19 @@ namespace GodotModules.Netcode.Server
                         case EventType.Connect:
                             _someoneConnected = 1;
                             Peers[netEvent.Peer.ID] = netEvent.Peer;
-                            Connect(netEvent);
+                            Connect(ref netEvent);
                             break;
 
                         case EventType.Disconnect:
                             Peers.Remove(netEvent.Peer.ID);
-                            Disconnect(netEvent);
-                            Leave(netEvent);
+                            Disconnect(ref netEvent);
+                            Leave(ref netEvent);
                             break;
 
                         case EventType.Timeout:
                             Peers.Remove(netEvent.Peer.ID);
-                            Timeout(netEvent);
-                            Leave(netEvent);
+                            Timeout(ref netEvent);
+                            Leave(ref netEvent);
                             break;
                     }
                 }

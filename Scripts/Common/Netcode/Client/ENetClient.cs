@@ -69,10 +69,10 @@ namespace GodotModules.Netcode.Client
         }
 
         protected virtual void Connecting() {}
-        protected virtual void Connect(Event netEvent) {}
-        protected virtual void Disconnect(Event netEvent) {}
-        protected virtual void Timeout(Event netEvent) {}
-        protected virtual void Leave(Event netEvent) {}
+        protected virtual void Connect(ref Event netEvent) {}
+        protected virtual void Disconnect(ref Event netEvent) {}
+        protected virtual void Timeout(ref Event netEvent) {}
+        protected virtual void Leave(ref Event netEvent) {}
         protected virtual void Sent(ClientPacketOpcode opcode) {}
         protected virtual void Stopped() {}
 
@@ -142,7 +142,7 @@ namespace GodotModules.Netcode.Client
                     {
                         case EventType.Connect:
                             _connected = 1;
-                            Connect(netEvent);
+                            Connect(ref netEvent);
                             break;
 
                         case EventType.Receive:
@@ -160,14 +160,14 @@ namespace GodotModules.Netcode.Client
 
                         case EventType.Timeout:
                             CancellationTokenSource.Cancel();
-                            Timeout(netEvent);
-                            Leave(netEvent);
+                            Timeout(ref netEvent);
+                            Leave(ref netEvent);
                             break;
 
                         case EventType.Disconnect:
                             CancellationTokenSource.Cancel();
-                            Disconnect(netEvent);
-                            Leave(netEvent);
+                            Disconnect(ref netEvent);
+                            Leave(ref netEvent);
                             break;
                     }
                 }
