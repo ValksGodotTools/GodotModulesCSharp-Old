@@ -6,7 +6,7 @@ namespace GodotModules
     {
         private ConcurrentQueue<LogInfo> _messages = new ConcurrentQueue<LogInfo>();
 
-        public void LogErr(Exception e, ConsoleColor c) => _messages.Enqueue(new LogInfo(LoggerOpcode.Exception, $"[Error]: {e.Message}\n{e.StackTrace}", c));
+        public void LogErr(Exception e, ConsoleColor c, string hint) => _messages.Enqueue(new LogInfo(LoggerOpcode.Exception, $"[Error]: {hint}{e.Message}\n{e.StackTrace}", c));
         public void LogDebug(object v, ConsoleColor c, bool trace, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0) => _messages.Enqueue(new LogInfo(LoggerOpcode.Debug, new LogMessageDebug($"[Debug]: {v}", trace, $"   at {filePath.Substring(filePath.IndexOf("Scripts\\"))} line:{lineNumber}"), c));
         public void LogTodo(object v, ConsoleColor c) => Log($"[Todo]: {v}", c);
         public void LogWarning(object v, ConsoleColor c) => Log($"[Warning]: {v}", c);
