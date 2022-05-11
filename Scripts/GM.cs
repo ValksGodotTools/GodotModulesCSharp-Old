@@ -53,6 +53,6 @@ namespace GodotModules
 
         public static async Task ChangeScene(string name, bool instant = false) => await _sceneManager.ChangeScene(name, instant);
 
-        public static bool LoadDir(string path, Action<Directory, string> action) => _godotFileManager.LoadDir(path, action);
+        public static bool LoadDirectory(string path, Action<Directory, string> action) => _godotFileManager.LoadDir(path, action);
     }
 }

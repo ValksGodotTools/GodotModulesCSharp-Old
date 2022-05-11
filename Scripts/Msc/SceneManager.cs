@@ -12,7 +12,7 @@ namespace GodotModules
 
         public async Task Init()
         {
-            var loadedScenes = GM.LoadDir("Scenes/Scenes", (dir, fileName) =>
+            var loadedScenes = GM.LoadDirectory("Scenes/Scenes", (dir, fileName) =>
             {
                 if (!dir.CurrentIsDir())
                     LoadScene(fileName.Replace(".tscn", ""));
