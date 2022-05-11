@@ -58,6 +58,8 @@ namespace GodotModules
 
         public static bool LoadDirectory(string path, Action<Directory, string> action) => _godotFileManager.LoadDir(path, action);
 
+        public static void Exit() => Instance.Notification(MainLoop.NotificationWmQuitRequest);
+
         private async Task Cleanup()
         {
             await Net.Cleanup();
