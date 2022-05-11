@@ -92,12 +92,11 @@ namespace GodotModules.Netcode.Server
             {
                 server.Create(address, maxClients);
             }
-            catch (Exception e)
+            catch (InvalidOperationException e)
             {
                 var message = $"A server is running on port {port} already! {e.Message}";
                 GM.LogWarning(message);
-                GM.Net.Client.Stop();
-                Stop();
+                Cleanup();
                 return Task.FromResult(1);
             }
 
@@ -186,9 +185,7 @@ namespace GodotModules.Netcode.Server
             }
 
             server.Flush();
-
-            _running = 0;
-            Stopped();
+            Cleanup();
 
             if (_queueRestart)
             {
@@ -205,6 +202,12 @@ namespace GodotModules.Netcode.Server
             packet.Create(gamePacket.Data, gamePacket.PacketFlags);
             byte channelID = 0;
             peer.Send(channelID, ref packet);
+        }
+
+        private void Cleanup()
+        {
+            _running = 0;
+            Stopped();
         }
 
         public void Dispose()
