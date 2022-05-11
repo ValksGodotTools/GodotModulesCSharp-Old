@@ -54,11 +54,11 @@ namespace GodotModules
 
         public static void GodotCmd(GodotOpcode opcode, object v = null) => _godotCmds.Enqueue(opcode, v);
 
-        public static async Task ChangeScene(string name, bool instant = false) => await _sceneManager.ChangeScene(name, instant);
+        public static async Task ChangeScene(string name, bool instant = true) => await _sceneManager.ChangeScene(name, instant);
 
         public static bool LoadDirectory(string path, Action<Directory, string> action) => _godotFileManager.LoadDir(path, action);
 
-        public static void Exit() => Instance.Notification(MainLoop.NotificationWmQuitRequest);
+        public static void Quit() => Instance.Notification(MainLoop.NotificationWmQuitRequest);
 
         private async Task Cleanup()
         {
