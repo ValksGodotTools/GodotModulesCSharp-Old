@@ -6,12 +6,12 @@ namespace GodotModules.Netcode.Client
     {
         protected override void Connecting()
         {
-            Log("Connecting...");
+            Log("Client connecting...");
         }
 
         protected override void Connect(Event netEvent)
         {
-            Log("Connected");
+            Log("Client connected");
         }
 
         protected override void Leave(Event netEvent)

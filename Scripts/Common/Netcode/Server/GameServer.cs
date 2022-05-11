@@ -71,6 +71,6 @@ namespace GodotModules.Netcode.Server
             Log("Server stopped");
         }
 
-        private void Log(object obj) => GM.Log($"[Server]: {obj}", ConsoleColor.Cyan);
+        private void Log(object obj) => GM.Log($"[Server]: {obj}", ConsoleColor.Green);
     }
 }
