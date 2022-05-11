@@ -53,11 +53,11 @@ namespace GodotModules.Netcode.Server
         }
 
         public void Stop() => ENetCmds.Enqueue(new ENetServerCmd(ENetServerOpcode.Stop));
-        public async Task StopAsync() 
+        public async Task StopAsync()
         {
             Stop();
 
-            while(IsRunning)
+            while (IsRunning)
                 await Task.Delay(1);
         }
         public void Restart() => ENetCmds.Enqueue(new ENetServerCmd(ENetServerOpcode.Restart));
@@ -73,14 +73,14 @@ namespace GodotModules.Netcode.Server
             return otherPeers.Values.ToArray();
         }
 
-        protected virtual void Started(ushort port, int maxClients) {}
-        protected virtual void Connect(Event netEvent) {}
-        protected virtual void Received(ClientPacketOpcode opcode) {}
-        protected virtual void Disconnect(Event netEvent) {}
-        protected virtual void Timeout(Event netEvent) {}
-        protected virtual void Leave(Event netEvent) {}
-        protected virtual void Stopped() {}
-        protected virtual void ServerCmds() {}
+        protected virtual void Started(ushort port, int maxClients) { }
+        protected virtual void Connect(Event netEvent) { }
+        protected virtual void Received(ClientPacketOpcode opcode) { }
+        protected virtual void Disconnect(Event netEvent) { }
+        protected virtual void Timeout(Event netEvent) { }
+        protected virtual void Leave(Event netEvent) { }
+        protected virtual void Stopped() { }
+        protected virtual void ServerCmds() { }
 
         private Task ENetThreadWorker(ushort port, int maxClients)
         {
@@ -127,59 +127,60 @@ namespace GodotModules.Netcode.Server
                     var peer = netEvent.Peer;
                     var eventType = netEvent.Type;
 
-                    if (eventType == EventType.Receive)
+                    switch (eventType)
                     {
-                        // Receive
-                        var packet = netEvent.Packet;
-                        if (packet.Length > GamePacket.MaxSize)
-                        {
-                            GM.LogWarning($"Tried to read packet from client of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
-                            packet.Dispose();
-                            continue;
-                        }
+                        case EventType.Receive:
+                            var packet = netEvent.Packet;
+                            if (packet.Length > GamePacket.MaxSize)
+                            {
+                                GM.LogWarning($"Tried to read packet from client of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
+                                packet.Dispose();
+                                continue;
+                            }
 
-                        var packetReader = new PacketReader(packet);
-                        var opcode = (ClientPacketOpcode)packetReader.ReadByte();
+                            var packetReader = new PacketReader(packet);
+                            var opcode = (ClientPacketOpcode)packetReader.ReadByte();
 
-                        Received(opcode);
+                            Received(opcode);
 
-                        if (!HandlePacket.ContainsKey(opcode))
-                        {
-                            GM.LogWarning($"[Server]: Received malformed opcode: {opcode} (Ignoring)");
+                            if (!HandlePacket.ContainsKey(opcode))
+                            {
+                                GM.LogWarning($"[Server]: Received malformed opcode: {opcode} (Ignoring)");
+                                break;
+                            }
+
+                            var handlePacket = HandlePacket[opcode];
+                            try
+                            {
+                                handlePacket.Read(packetReader);
+                            }
+                            catch (System.IO.EndOfStreamException e)
+                            {
+                                GM.LogWarning($"[Server]: Received malformed opcode: {opcode} {e.Message} (Ignoring)");
+                                break;
+                            }
+                            handlePacket.Handle(netEvent.Peer);
+
+                            packetReader.Dispose();
                             break;
-                        }
 
-                        var handlePacket = HandlePacket[opcode];
-                        try
-                        {
-                            handlePacket.Read(packetReader);
-                        }
-                        catch (System.IO.EndOfStreamException e)
-                        {
-                            GM.LogWarning($"[Server]: Received malformed opcode: {opcode} {e.Message} (Ignoring)");
+                        case EventType.Connect:
+                            _someoneConnected = 1;
+                            Peers[netEvent.Peer.ID] = netEvent.Peer;
+                            Connect(netEvent);
                             break;
-                        }
-                        handlePacket.Handle(netEvent.Peer);
 
-                        packetReader.Dispose();
-                    }
-                    else if (eventType == EventType.Connect)
-                    {
-                        _someoneConnected = 1;
-                        Peers[netEvent.Peer.ID] = netEvent.Peer;
-                        Connect(netEvent);
-                    }
-                    else if (eventType == EventType.Disconnect)
-                    {
-                        Peers.Remove(netEvent.Peer.ID);
-                        Disconnect(netEvent);
-                        Leave(netEvent);
-                    }
-                    else if (eventType == EventType.Timeout)
-                    {
-                        Peers.Remove(netEvent.Peer.ID);
-                        Timeout(netEvent);
-                        Leave(netEvent);
+                        case EventType.Disconnect:
+                            Peers.Remove(netEvent.Peer.ID);
+                            Disconnect(netEvent);
+                            Leave(netEvent);
+                            break;
+
+                        case EventType.Timeout:
+                            Peers.Remove(netEvent.Peer.ID);
+                            Timeout(netEvent);
+                            Leave(netEvent);
+                            break;
                     }
                 }
             }
