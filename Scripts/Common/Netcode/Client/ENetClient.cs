@@ -182,7 +182,7 @@ namespace GodotModules.Netcode.Client
         }
     }
 
-    public struct ENetClientCmd 
+    public class ENetClientCmd 
     {
         public ENetClientOpcode Opcode { get; set; }
         public object Data { get; set; }

@@ -41,7 +41,7 @@ namespace GodotModules
         }
     }
 
-    public struct GodotCmd 
+    public class GodotCmd 
     {
         public GodotOpcode Opcode { get; set; }
         public object Data { get; set; }
