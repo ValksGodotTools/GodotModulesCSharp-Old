@@ -36,6 +36,13 @@ namespace GodotModules
             _logger.Update();
         }
 
+        public override void _Input(InputEvent @event)
+        {
+            _sceneManager.IfEscapePressed(async () => {
+                await _sceneManager.ChangeScene(_sceneManager.PrevSceneName);
+            });
+        }
+
         public override async void _Notification(int what)
         {
             if (what == MainLoop.NotificationWmQuitRequest)

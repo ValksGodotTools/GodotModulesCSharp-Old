@@ -29,7 +29,7 @@ namespace GodotModules
 
         public async Task ChangeScene(string sceneName, bool instant = true)
         {
-            if (CurSceneName == sceneName)
+            if (CurSceneName == sceneName || string.IsNullOrWhiteSpace(sceneName))
                 return;
                 
             PrevSceneName = CurSceneName;
@@ -48,7 +48,7 @@ namespace GodotModules
             GM.Instance.AddChild(ActiveScene);
         }
 
-        public void EscapePressed(Action action)
+        public void IfEscapePressed(Action code)
         {
             if (Input.IsActionJustPressed("ui_cancel"))
             {
@@ -58,7 +58,7 @@ namespace GodotModules
                     return;
                 }*/
 
-                action();
+                code();
             }
         }
 
