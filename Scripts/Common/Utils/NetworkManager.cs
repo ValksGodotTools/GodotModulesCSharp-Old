@@ -8,6 +8,7 @@ namespace GodotModules.Netcode
         public DateTime PingSent { get; set; }
         public DisconnectOpcode DisconnectOpcode { get; set; }
         public bool ENetInitialized { get; set; }
+        public WebClient WebClient = new WebClient("localhost:4000");
         public GameClient Client = new GameClient();
         public GameServer Server = new GameServer();
         
@@ -39,6 +40,8 @@ namespace GodotModules.Netcode
 
         public async Task Cleanup()
         {
+            WebClient.Dispose();
+
             if (Client.IsRunning) 
             {
                 await Client.StopAsync();

@@ -25,9 +25,10 @@ namespace GodotModules
         public override async void _Ready()
         {
             Instance = this;
-            await _sceneManager.Init();
+            await _sceneManager.InitAsync();
             Net.StartServer(25565, 100);
             Net.StartClient("127.0.0.1", 25565);
+            await Net.WebClient.CheckConnectionAsync();
         }
 
         public override void _Process(float delta)

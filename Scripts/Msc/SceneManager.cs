@@ -10,7 +10,7 @@ namespace GodotModules
         public string CurSceneName { get; set; }
         public Node ActiveScene { get; set; }
 
-        public async Task Init()
+        public async Task InitAsync()
         {
             var loadedScenes = GM.LoadDirectory("Scenes/Scenes", (dir, fileName) =>
             {
