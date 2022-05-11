@@ -216,7 +216,7 @@ namespace GodotModules.Netcode.Server
         }
     }
 
-    public struct ENetServerCmd
+    public class ENetServerCmd
     {
         public ENetServerOpcode Opcode { get; set; }
         public object Data { get; set; }
