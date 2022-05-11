@@ -5,6 +5,7 @@ namespace GodotModules.Netcode.Server
     public class GameServer : ENetServer
     {
         public Dictionary<byte, DataPlayer> Players = new Dictionary<byte, DataPlayer>();
+        public DataLobby Lobby { get; set; }
 
         public Dictionary<byte, DataPlayer> GetOtherPlayers(byte id)
         {
@@ -118,6 +119,6 @@ namespace GodotModules.Netcode.Server
             Log("Server stopped");
         }
 
-        private void Log(object obj) => GM.Log($"[Server]: {obj}", ConsoleColor.Green);
+        public void Log(object obj) => GM.Log($"[Server]: {obj}", ConsoleColor.Green);
     }
 }
