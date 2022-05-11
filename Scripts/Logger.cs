@@ -11,6 +11,14 @@ namespace GodotModules
         public void LogTodo(object v, ConsoleColor c) => Log($"[Todo]: {v}", c);
         public void LogWarning(object v, ConsoleColor c) => Log($"[Warning]: {v}", c);
         public void Log(object v, ConsoleColor c) => _messages.Enqueue(new LogInfo(LoggerOpcode.Message, $"{v}", c));
+        public void LogMs(Action code)
+        {
+            var watch = new Stopwatch();
+            watch.Start();
+            code();
+            watch.Stop();
+            Log($"Took {watch.ElapsedMilliseconds} ms", ConsoleColor.DarkGray);
+        }
 
         public void Update()
         {

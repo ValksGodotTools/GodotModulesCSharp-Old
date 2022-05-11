@@ -17,11 +17,7 @@ namespace GodotModules
 
         public override void _Ready()
         {
-            Log("Hello world");
-            LogWarning("Warning");
-            LogDebug("Debug");
-            LogErr(new Exception("Exception"));
-            LogTodo("Has yet to be done");
+            
         }
 
         public override void _Process(float delta)
@@ -43,5 +39,6 @@ namespace GodotModules
         public static void LogDebug(object v, bool trace = true, ConsoleColor c = ConsoleColor.Magenta, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0) => _logger.LogDebug(v, c, trace, filePath, lineNumber);
         public static void LogErr(Exception e, ConsoleColor c = ConsoleColor.Red) => _logger.LogErr(e, c);
         public static void LogTodo(object v, ConsoleColor c = ConsoleColor.White) => _logger.LogTodo(v, c);
+        public static void LogMs(Action a) => _logger.LogMs(a);
     }
 }
