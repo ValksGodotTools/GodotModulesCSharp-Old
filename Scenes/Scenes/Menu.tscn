@@ -1,12 +1,14 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Themes/Main.tres" type="Theme" id=1]
 [ext_resource path="res://Themes/PanelNoBorder.tres" type="Theme" id=2]
+[ext_resource path="res://Scripts/UI/UIMenu.cs" type="Script" id=3]
 
 [node name="Menu" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 1 )
+script = ExtResource( 3 )
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 anchor_right = 1.0
@@ -42,7 +44,7 @@ margin_right = 55.0
 margin_bottom = 50.0
 text = "Mods"
 
-[node name="Button" type="Button" parent="MarginContainer3/VBoxContainer"]
+[node name="Credits" type="Button" parent="MarginContainer3/VBoxContainer"]
 margin_top = 54.0
 margin_right = 55.0
 margin_bottom = 77.0
@@ -108,3 +110,12 @@ margin_right = 107.0
 margin_bottom = 40.0
 text = "GitHub"
 flat = true
+
+[connection signal="pressed" from="MarginContainer3/VBoxContainer/Options" to="." method="_on_Options_pressed"]
+[connection signal="pressed" from="MarginContainer3/VBoxContainer/Mods" to="." method="_on_Mods_pressed"]
+[connection signal="pressed" from="MarginContainer3/VBoxContainer/Credits" to="." method="_on_Credits_pressed"]
+[connection signal="pressed" from="MarginContainer3/VBoxContainer/Quit" to="." method="_on_Quit_pressed"]
+[connection signal="pressed" from="MarginContainer2/VBoxContainer/Play" to="." method="_on_Play_pressed"]
+[connection signal="pressed" from="MarginContainer2/VBoxContainer/Multiplayer" to="." method="_on_Multiplayer_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/Discord" to="." method="_on_Discord_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/GitHub" to="." method="_on_GitHub_pressed"]
