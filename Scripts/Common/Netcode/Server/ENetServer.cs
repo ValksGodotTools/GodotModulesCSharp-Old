@@ -13,13 +13,13 @@ namespace GodotModules.Netcode.Server
 
         protected Dictionary<uint, Peer> Peers = new Dictionary<uint, Peer>();
         protected CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
+        protected bool _queueRestart { get; set; }
 
-        private bool _queueRestart { get; set; }
         private long _someoneConnected = 0;
         private long _running = 0;
         private ConcurrentQueue<ServerPacket> _outgoing = new ConcurrentQueue<ServerPacket>();
 
-        public async Task Start(ushort port, int maxClients)
+        public async Task StartAsync(ushort port, int maxClients)
         {
             try
             {
@@ -75,6 +75,7 @@ namespace GodotModules.Netcode.Server
 
         protected virtual void Started(ushort port, int maxClients) {}
         protected virtual void Connect(Event netEvent) {}
+        protected virtual void Received(ClientPacketOpcode opcode) {}
         protected virtual void Disconnect(Event netEvent) {}
         protected virtual void Timeout(Event netEvent) {}
         protected virtual void Leave(Event netEvent) {}
@@ -140,7 +141,7 @@ namespace GodotModules.Netcode.Server
                         var packetReader = new PacketReader(packet);
                         var opcode = (ClientPacketOpcode)packetReader.ReadByte();
 
-                        //Log($"Received packet: {opcode}");
+                        Received(opcode);
 
                         if (!HandlePacket.ContainsKey(opcode))
                         {

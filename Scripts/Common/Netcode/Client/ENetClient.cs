@@ -105,6 +105,12 @@ namespace GodotModules.Netcode.Client
                     switch (cmd.Opcode)
                     {
                         case ENetClientOpcode.Disconnect:
+                            if (CancellationTokenSource.IsCancellationRequested)
+                            {
+                                GM.LogWarning("Client is in the middle of stopping");
+                                break;
+                            }
+
                             CancellationTokenSource.Cancel();
                             peer.Disconnect(0);
                             break;

@@ -21,7 +21,7 @@ namespace GodotModules.Netcode.Client
 
         protected override void Stopped() 
         {
-            Log("Stopped");
+            Log("Client stopped");
         }
 
         private void Log(object v) => GM.Log($"[Client]: {v}", ConsoleColor.DarkGreen);

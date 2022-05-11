@@ -29,7 +29,7 @@ namespace GodotModules.Netcode
         {
             Server.Dispose();
             Server = new GameServer();
-            await Server.Start(port, maxPlayers);
+            await Server.StartAsync(port, maxPlayers);
         }
 
         public async Task Cleanup()
