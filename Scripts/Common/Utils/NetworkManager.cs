@@ -14,8 +14,11 @@ namespace GodotModules.Netcode
         public NetworkManager()
         {
             ENetInitialized = ENet.Library.Initialize();
-            if (!ENetInitialized)
-                GM.LogWarning("Failed to initialize ENet! Remember ENet-CSharp.dll AND enet.dll are required in order for ENet to run properly!");
+            if (!ENetInitialized) 
+            {
+                GM.LogWarning("Failed to initialize ENet! Remember ENet-CSharp.dll and enet.dll are required in order for ENet to run properly!");
+                return;
+            }
         }
 
         public async void StartClient(string ip, ushort port)
@@ -31,6 +34,8 @@ namespace GodotModules.Netcode
             Server = new GameServer();
             await Server.StartAsync(port, maxPlayers);
         }
+
+        public bool IsMultiplayer() => Client.IsRunning || Server.IsRunning;
 
         public async Task Cleanup()
         {

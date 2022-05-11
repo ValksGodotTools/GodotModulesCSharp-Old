@@ -4,6 +4,53 @@ namespace GodotModules.Netcode.Server
 {
     public class GameServer : ENetServer
     {
+        public Dictionary<byte, DataPlayer> Players = new Dictionary<byte, DataPlayer>();
+
+        public Dictionary<byte, DataPlayer> GetOtherPlayers(byte id)
+        {
+            var otherPlayers = new Dictionary<byte, DataPlayer>(Players);
+            otherPlayers.Remove(id);
+            return otherPlayers;
+        }
+
+        public Peer[] GetOtherPlayerPeers(uint id) => Players.Keys.Where(x => x != id).Select(x => Peers[x]).ToArray();
+
+        public Peer[] GetAllPlayerPeers() => Players.Keys.Select(x => Peers[x]).ToArray();
+
+        public void SendToAllPlayers(ServerPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
+        {
+            var allPlayers = GetAllPlayerPeers();
+
+            if (data == null)
+                Send(opcode, flags, allPlayers);
+            else
+                Send(opcode, data, flags, allPlayers);
+        }
+
+        public void SendToOtherPeers(uint id, ServerPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
+        {
+            var otherPeers = GetOtherPeers(id);
+            if (otherPeers.Length == 0)
+                return;
+
+            if (data == null)
+                Send(opcode, flags, otherPeers);
+            else
+                Send(opcode, data, flags, otherPeers);
+        }
+
+        public void SendToOtherPlayers(uint id, ServerPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
+        {
+            var otherPlayers = GetOtherPlayerPeers(id);
+            if (otherPlayers.Length == 0)
+                return;
+
+            if (data == null)
+                Send(opcode, flags, otherPlayers);
+            else
+                Send(opcode, data, flags, otherPlayers);
+        }
+
         protected override void ServerCmds()
         {
             while (ENetCmds.TryDequeue(out ENetServerCmd cmd))
@@ -63,7 +110,7 @@ namespace GodotModules.Netcode.Server
 
         protected override void Leave(Event netEvent)
         {
-            //Log($"Client left with id: {netEvent.Peer.ID}");
+            Players.Remove((byte)netEvent.Peer.ID);
         }
 
         protected override void Stopped()
