@@ -11,12 +11,12 @@ namespace GodotModules
 
         private Dictionary<string, PackedScene> Scenes = new Dictionary<string, PackedScene>();
 
-        private GM _gm;
+        private Game _game;
         private GodotFileManager _godotFileManager;
 
-        public SceneManager(GM gm, GodotFileManager godotFileManager) 
+        public SceneManager(Game game, GodotFileManager godotFileManager) 
         {
-            _gm = gm;
+            _game = game;
             _godotFileManager = godotFileManager;
         }
 
@@ -45,9 +45,9 @@ namespace GodotModules
             PrevSceneName = CurSceneName;
             CurSceneName = sceneName;
 
-            if (_gm.GetChildCount() != 0) 
+            if (_game.GetChildCount() != 0) 
             {
-                var scene = _gm.GetChild(0);
+                var scene = _game.GetChild(0);
                 scene.QueueFree();
             }
 
@@ -55,7 +55,7 @@ namespace GodotModules
                 await Task.Delay(1);
 
             ActiveScene = Scenes[sceneName].Instance();
-            _gm.AddChild(ActiveScene);
+            _game.AddChild(ActiveScene);
         }
 
         public void IfEscapePressed(Action code)
