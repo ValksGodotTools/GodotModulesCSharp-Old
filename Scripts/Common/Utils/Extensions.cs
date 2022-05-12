@@ -6,8 +6,8 @@ namespace GodotModules
 {
     public static class Extensions
     {
-        public static bool Duplicate<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, 
-            [CallerLineNumber] int lineNumber = 0, 
+        public static bool Duplicate<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key,
+            [CallerLineNumber] int lineNumber = 0,
             [CallerMemberName] string caller = null,
             [CallerFilePath] string path = null)
         {
@@ -21,8 +21,8 @@ namespace GodotModules
             return false;
         }
 
-        public static bool DoesNotHave<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, 
-            [CallerLineNumber] int lineNumber = 0, 
+        public static bool DoesNotHave<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key,
+            [CallerLineNumber] int lineNumber = 0,
             [CallerMemberName] string caller = null,
             [CallerFilePath] string path = null)
         {
@@ -47,6 +47,17 @@ namespace GodotModules
         public static string AddSpaceBeforeEachCapital(this string value) => string.Concat(value.Select(x => char.IsUpper(x) ? " " + x : x.ToString())).TrimStart(' ');
 
         public static string ToTitleCase(this string value) => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value.ToLower());
+
+        public static string SmallWordsToUpper(this string text, int maxLength = 2)
+        {
+            var words = text.Split(' ');
+
+            for (int i = 0; i < words.Length; i++)
+                if (words[i].Length <= maxLength)
+                    words[i] = words[i].ToUpper();
+
+            return string.Join(" ", words);
+        }
 
         public static bool IsMatch(this string value, string expression) => Regex.IsMatch(value, expression);
 

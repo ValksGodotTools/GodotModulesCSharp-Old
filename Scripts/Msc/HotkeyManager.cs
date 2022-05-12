@@ -4,11 +4,13 @@ namespace GodotModules
 {
     public class HotkeyManager
     {
-        private Dictionary<string, JsonInputKey> _hotkeys = new Dictionary<string, JsonInputKey>();
+        private Dictionary<string, JsonInputKey> _hotkeys;
+        public Dictionary<string, JsonInputKey> Hotkeys => _hotkeys;
         private readonly SystemFileManager _systemFileManager;
 
         public HotkeyManager(SystemFileManager systemFileManager)
         {
+            _hotkeys = new();
             _systemFileManager = systemFileManager;
             LoadDefaultHotkeys();
             if (_systemFileManager.ConfigExists("controls"))

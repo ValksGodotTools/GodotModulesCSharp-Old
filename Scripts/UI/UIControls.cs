@@ -9,9 +9,12 @@ namespace GodotModules
 
         public override void _Ready()
         {
-            var hotkey = Prefabs.UIHotkey.Instance<UIHotkey>();
-            hotkey.Init(_hotkeyManager, "player_move_left");
-            AddChild(hotkey);
+            foreach (var action in _hotkeyManager.Hotkeys.Keys.OrderBy(x => x).ToList()) 
+            {
+                var hotkeyInstance = Prefabs.UIHotkey.Instance<UIHotkey>();
+                hotkeyInstance.Init(_hotkeyManager, action);
+                AddChild(hotkeyInstance);
+            }
         }
     }
 }
