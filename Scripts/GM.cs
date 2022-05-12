@@ -16,7 +16,7 @@ namespace GodotModules
         private static Logger _logger;
         private static SceneManager _sceneManager;
 
-        public GM(Game game, SceneManager sceneManager)
+        public GM(SceneManager sceneManager)
         {
             _sceneManager = sceneManager;
             Net = new();

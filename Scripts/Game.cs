@@ -13,7 +13,7 @@ namespace GodotModules
         public override async void _Ready()
         {
             _sceneManager = new(this, new GodotFileManager());
-            _gm = new GM(this, _sceneManager);
+            _gm = new GM(_sceneManager);
             _systemFileManager = new();
             _hotkeyManager = new(_systemFileManager);
 
