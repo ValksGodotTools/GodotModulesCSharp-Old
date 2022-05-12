@@ -5,17 +5,19 @@ namespace GodotModules
     public class OptionsManager
     {
         public Dictionary<string, JsonInputKey> Hotkeys = new Dictionary<string, JsonInputKey>();
+        private SystemFileManager _systemFileManager;
 
-        public OptionsManager()
+        public OptionsManager(SystemFileManager systemFileManager)
         {
+            _systemFileManager = systemFileManager;
             LoadDefaultHotkeys();
-            if (GM.ConfigExists("controls"))
+            if (_systemFileManager.ConfigExists("controls"))
                 LoadPersistentHotkeys();
         }
 
         public void LoadPersistentHotkeys()
         {
-            Hotkeys = GM.ReadConfig<Dictionary<string, JsonInputKey>>("controls");
+            Hotkeys = _systemFileManager.ReadConfig<Dictionary<string, JsonInputKey>>("controls");
 
             foreach (var pair in Hotkeys)
             {
@@ -43,7 +45,7 @@ namespace GodotModules
             }
         }
 
-        public void SaveHotkeys() => GM.WriteConfig("controls", Hotkeys);
+        public void SaveHotkeys() => _systemFileManager.WriteConfig("controls", Hotkeys);
         public void SetHotkey(string action, InputEventKey inputEventKey) 
         {
             InputMap.ActionEraseEvents(action);

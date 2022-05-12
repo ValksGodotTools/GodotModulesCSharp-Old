@@ -19,7 +19,7 @@ namespace GodotModules
 
         private const string GAME_NAME = "Godot Modules";
         private static Logger _logger;
-        private static SystemFileManager _systemFileManager;
+        private SystemFileManager _systemFileManager;
         private static GodotCommands _godotCmds;
         private static SceneManager _sceneManager;
         private static GodotFileManager _godotFileManager;
@@ -34,7 +34,7 @@ namespace GodotModules
             _godotFileManager = new();
             _godotCmds = new();
             _sceneManager = new();
-            _optionsManager = new();
+            _optionsManager = new(_systemFileManager);
             
             await _sceneManager.InitAsync();
             Net.StartServer(25565, 100);
@@ -67,11 +67,6 @@ namespace GodotModules
         public static Dictionary<string, JsonInputKey> Hotkeys => _optionsManager.Hotkeys;
 
         public static void SetHotkey(string action, InputEventKey inputEventKey) => _optionsManager.SetHotkey(action, inputEventKey);
-
-        public static T WriteConfig<T>(string pathToFile) where T : new() => _systemFileManager.WriteConfig<T>(pathToFile);
-        public static T WriteConfig<T>(string pathToFile, T data) => _systemFileManager.WriteConfig<T>(pathToFile, data);
-        public static T ReadConfig<T>(string pathToFile) => _systemFileManager.ReadConfig<T>(pathToFile);
-        public static bool ConfigExists(string pathToFile) => _systemFileManager.ConfigExists(pathToFile);
 
         public static void Log(object v, ConsoleColor c = ConsoleColor.Gray) => _logger.Log(v, c);
         public static void LogWarning(object v, ConsoleColor c = ConsoleColor.Yellow) => _logger.LogWarning(v, c);
