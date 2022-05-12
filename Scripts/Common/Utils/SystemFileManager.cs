@@ -3,33 +3,35 @@ using System.IO;
 
 namespace GodotModules
 {
-    public static class SystemFileManager
+    public class SystemFileManager
     {
-        public static char Separator => Path.DirectorySeparatorChar;
+        private string _gameDataPath;
 
-        public static T WriteConfig<T>(string path) where T : new() => WriteConfig<T>(path, new T());
+        public SystemFileManager(string gameDataPath) => _gameDataPath = gameDataPath;
 
-        public static T WriteConfig<T>(string path, T data)
+        public T WriteConfig<T>(string pathToFile) where T : new() => WriteConfig<T>(pathToFile, new T());
+
+        public T WriteConfig<T>(string pathToFile, T data)
         {
+            var path = GetConfigPath(pathToFile);
             var contents = JsonConvert.SerializeObject(data, Formatting.Indented);
             Directory.CreateDirectory(Path.GetDirectoryName(path));
             File.WriteAllText(path, contents);
             return data;
         }
 
-        public static T GetConfig<T>(string path)
+        public T ReadConfig<T>(string pathToFile)
         {
+            var path = GetConfigPath(pathToFile);
+
             if (!File.Exists(path))
                 return default(T);
 
             string contents = File.ReadAllText(path);
             return JsonConvert.DeserializeObject<T>(contents);
         }
-    }
 
-    public enum FileStatus
-    {
-        DoesNotExist,
-        Exists
+        public bool ConfigExists(string pathToFile) => File.Exists(GetConfigPath(pathToFile));
+        private string GetConfigPath(string pathToFile) => $"{_gameDataPath}{Path.DirectorySeparatorChar}{pathToFile}.json";
     }
 }
