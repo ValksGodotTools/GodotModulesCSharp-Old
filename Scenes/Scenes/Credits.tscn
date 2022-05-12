@@ -1,20 +1,37 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://Themes/PanelNoBorder.tres" type="Theme" id=1]
+[ext_resource path="res://Scripts/UI/UICredits.cs" type="Script" id=1]
 [ext_resource path="res://Themes/Main.tres" type="Theme" id=2]
 
-[node name="Control" type="Control"]
+[node name="Credits" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 2 )
+script = ExtResource( 1 )
+NodePathTween = NodePath("Tween")
+NodePathCreditsContent = NodePath("Label")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="Tween" type="Tween" parent="."]
+
+[node name="Label" type="Label" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme = ExtResource( 1 )
+margin_bottom = -303.0
+text = "Lead Contributor
+valk
 
-[node name="Label" type="Label" parent="PanelContainer"]
-margin_top = 291.0
-margin_right = 1024.0
-margin_bottom = 308.0
-text = "Credits"
+Contributors
+aer
+Rettoph
+LazerGoat
+Scorpieth
+
+Testers
+LazerGoat
+SCUDSTORM
+
+Music
+Unsolicited Trailer Music by Emma_MA (https://opengameart.org/content/unsolicited-trailer-music)"
+align = 1
+
+[connection signal="tween_completed" from="Tween" to="." method="_on_Tween_tween_completed"]
