@@ -17,14 +17,25 @@ namespace GodotModules
         public static GM Instance { get; set; }
         public static NetworkManager Net = new NetworkManager();
 
-        private static Logger _logger = new Logger();
-        private static GodotCommands _godotCmds = new GodotCommands();
-        private static SceneManager _sceneManager = new SceneManager();
-        private static GodotFileManager _godotFileManager = new GodotFileManager();
+        private const string GAME_NAME = "Godot Modules";
+        private static Logger _logger;
+        private static SystemFileManager _systemFileManager;
+        private static GodotCommands _godotCmds;
+        private static SceneManager _sceneManager;
+        private static GodotFileManager _godotFileManager;
+        private static OptionsManager _optionsManager;
 
         public override async void _Ready()
         {
             Instance = this;
+
+            _logger = new();
+            _systemFileManager = new(System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), GAME_NAME));
+            _godotFileManager = new();
+            _godotCmds = new();
+            _sceneManager = new();
+            _optionsManager = new();
+            
             await _sceneManager.InitAsync();
             Net.StartServer(25565, 100);
             Net.StartClient("127.0.0.1", 25565);
@@ -52,6 +63,15 @@ namespace GodotModules
             }
         }
 
+        public static Dictionary<string, JsonInputKey> Hotkeys => _optionsManager.Hotkeys;
+
+        public static void SetHotkey(string action, InputEventKey inputEventKey) => _optionsManager.SetHotkey(action, inputEventKey);
+
+        public static T WriteConfig<T>(string pathToFile) where T : new() => _systemFileManager.WriteConfig<T>(pathToFile);
+        public static T WriteConfig<T>(string pathToFile, T data) => _systemFileManager.WriteConfig<T>(pathToFile, data);
+        public static T ReadConfig<T>(string pathToFile) => _systemFileManager.ReadConfig<T>(pathToFile);
+        public static bool ConfigExists(string pathToFile) => _systemFileManager.ConfigExists(pathToFile);
+
         public static void Log(object v, ConsoleColor c = ConsoleColor.Gray) => _logger.Log(v, c);
         public static void LogWarning(object v, ConsoleColor c = ConsoleColor.Yellow) => _logger.LogWarning(v, c);
         public static void LogDebug(object v, bool trace = true, ConsoleColor c = ConsoleColor.Magenta, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0) => _logger.LogDebug(v, c, trace, filePath, lineNumber);
@@ -69,6 +89,7 @@ namespace GodotModules
 
         private async Task Cleanup()
         {
+            _optionsManager.SaveHotkeys();
             await Net.Cleanup();
             GetTree().Quit();
         }
