@@ -12,7 +12,7 @@ namespace GodotModules.Netcode
         public GameClient Client { get; set; }
         public GameServer Server { get; set; }
 
-        private static GodotCommands _godotCmds;
+        private GodotCommands _godotCmds;
         
         public NetworkManager()
         {
