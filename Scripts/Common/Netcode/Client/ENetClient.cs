@@ -11,6 +11,7 @@ namespace GodotModules.Netcode.Client
         public bool IsRunning { get => Interlocked.Read(ref _running) == 1; }
 
         protected CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
+        protected GodotCommands _godotCmds;
 
         private ConcurrentQueue<ENetClientCmd> ENetCmds = new ConcurrentQueue<ENetClientCmd>();
         private long _connected;
@@ -155,7 +156,7 @@ namespace GodotModules.Netcode.Client
                                 continue;
                             }
 
-                            GM.GodotCmd(GodotOpcode.ENetPacket, new PacketReader(packet));
+                            _godotCmds.Enqueue(GodotOpcode.ENetPacket, new PacketReader(packet));
                             break;
 
                         case EventType.Timeout:

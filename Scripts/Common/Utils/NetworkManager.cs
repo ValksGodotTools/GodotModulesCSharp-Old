@@ -8,12 +8,18 @@ namespace GodotModules.Netcode
         public DateTime PingSent { get; set; }
         public DisconnectOpcode DisconnectOpcode { get; set; }
         public bool ENetInitialized { get; set; }
-        public WebClient WebClient = new WebClient("localhost:4000");
-        public GameClient Client = new GameClient();
-        public GameServer Server = new GameServer();
+        public WebClient WebClient { get; set; }
+        public GameClient Client { get; set; }
+        public GameServer Server { get; set; }
+
+        private static GodotCommands _godotCmds;
         
         public NetworkManager()
         {
+            _godotCmds = new();
+            WebClient = new("localhost:4000");
+            Client = new(_godotCmds);
+            Server = new();
             ENetInitialized = ENet.Library.Initialize();
             if (!ENetInitialized) 
             {
@@ -22,10 +28,15 @@ namespace GodotModules.Netcode
             }
         }
 
+        public async Task Update()
+        {
+            await _godotCmds.Update();
+        }
+
         public async void StartClient(string ip, ushort port)
         {
             Client.Dispose();
-            Client = new GameClient();
+            Client = new GameClient(_godotCmds);
             await Client.StartAsync(ip, port);
         }
 

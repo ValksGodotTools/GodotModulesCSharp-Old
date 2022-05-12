@@ -5,14 +5,24 @@ namespace GodotModules
 {
     public class SceneManager
     {
-        private Dictionary<string, PackedScene> Scenes = new Dictionary<string, PackedScene>();
         public string PrevSceneName { get; set; }
         public string CurSceneName { get; set; }
         public Node ActiveScene { get; set; }
 
+        private Dictionary<string, PackedScene> Scenes = new Dictionary<string, PackedScene>();
+
+        private GM _gm;
+        private GodotFileManager _godotFileManager;
+
+        public SceneManager(GM gm, GodotFileManager godotFileManager) 
+        {
+            _gm = gm;
+            _godotFileManager = godotFileManager;
+        }
+
         public async Task InitAsync()
         {
-            var loadedScenes = GM.LoadDirectory("Scenes/Scenes", (dir, fileName) =>
+            var loadedScenes = _godotFileManager.LoadDir("Scenes/Scenes", (dir, fileName) =>
             {
                 if (!dir.CurrentIsDir())
                     LoadScene(fileName.Replace(".tscn", ""));
@@ -35,9 +45,9 @@ namespace GodotModules
             PrevSceneName = CurSceneName;
             CurSceneName = sceneName;
 
-            if (GM.Instance.GetChildCount() != 0) 
+            if (_gm.GetChildCount() != 0) 
             {
-                var scene = GM.Instance.GetChild(0);
+                var scene = _gm.GetChild(0);
                 scene.QueueFree();
             }
 
@@ -45,7 +55,7 @@ namespace GodotModules
                 await Task.Delay(1);
 
             ActiveScene = Scenes[sceneName].Instance();
-            GM.Instance.AddChild(ActiveScene);
+            _gm.AddChild(ActiveScene);
         }
 
         public void IfEscapePressed(Action code)

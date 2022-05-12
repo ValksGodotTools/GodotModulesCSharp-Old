@@ -4,6 +4,11 @@ namespace GodotModules.Netcode.Client
 {
     public class GameClient : ENetClient
     {
+        public GameClient(GodotCommands godotCmds)
+        {
+            _godotCmds = godotCmds;
+        }
+
         protected override void Connecting()
         {
             Log("Client connecting...");

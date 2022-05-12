@@ -14,26 +14,25 @@ namespace GodotModules
 {
     public class GM : Node
     {
-        public static GM Instance { get; set; }
-        public static NetworkManager Net = new NetworkManager();
+        public GM Instance { get; set; }
+        public static NetworkManager Net;
 
-        private const string GAME_NAME = "Godot Modules";
         private static Logger _logger;
-        private SystemFileManager _systemFileManager;
-        private static GodotCommands _godotCmds;
         private static SceneManager _sceneManager;
-        private static GodotFileManager _godotFileManager;
         private static OptionsManager _optionsManager;
+
+        private SystemFileManager _systemFileManager;
+        private GodotFileManager _godotFileManager;
 
         public override async void _Ready()
         {
             Instance = this;
 
+            Net = new();
             _logger = new();
-            _systemFileManager = new(System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), GAME_NAME));
+            _systemFileManager = new(System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "Godot Modules"));
             _godotFileManager = new();
-            _godotCmds = new();
-            _sceneManager = new();
+            _sceneManager = new(Instance, _godotFileManager);
             _optionsManager = new(_systemFileManager);
             
             await _sceneManager.InitAsync();
@@ -45,7 +44,7 @@ namespace GodotModules
         public override async void _Process(float delta)
         {
             _logger.Update();
-            await _godotCmds.Update();
+            await Net.Update();
         }
 
         public override void _Input(InputEvent @event)
@@ -65,7 +64,6 @@ namespace GodotModules
         }
 
         public static Dictionary<string, JsonInputKey> Hotkeys => _optionsManager.Hotkeys;
-
         public static void SetHotkey(string action, InputEventKey inputEventKey) => _optionsManager.SetHotkey(action, inputEventKey);
 
         public static void Log(object v, ConsoleColor c = ConsoleColor.Gray) => _logger.Log(v, c);
@@ -75,13 +73,7 @@ namespace GodotModules
         public static void LogTodo(object v, ConsoleColor c = ConsoleColor.White) => _logger.LogTodo(v, c);
         public static void LogMs(Action a) => _logger.LogMs(a);
 
-        public static void GodotCmd(GodotOpcode opcode, object v = null) => _godotCmds.Enqueue(opcode, v);
-
         public static async Task ChangeScene(string name, bool instant = true) => await _sceneManager.ChangeScene(name, instant);
-
-        public static bool LoadDirectory(string path, Action<Directory, string> action) => _godotFileManager.LoadDir(path, action);
-
-        public static void Quit() => Instance.Notification(MainLoop.NotificationWmQuitRequest);
 
         private async Task Cleanup()
         {
