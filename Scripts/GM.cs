@@ -13,14 +13,14 @@ namespace GodotModules
     public class GM
     {
         public static NetworkManager Net;
-        public static SceneManager SceneManager;
         private static Logger _logger;
+        private static SceneManager _sceneManager;
 
-        public GM(Game game)
+        public GM(Game game, SceneManager sceneManager)
         {
+            _sceneManager = sceneManager;
             Net = new();
             _logger = new();
-            SceneManager = new(game, new GodotFileManager());
         }
 
         public async Task Update()
@@ -36,6 +36,6 @@ namespace GodotModules
         public static void LogTodo(object v, ConsoleColor c = ConsoleColor.White) => _logger.LogTodo(v, c);
         public static void LogMs(Action a) => _logger.LogMs(a);
 
-        public static async Task ChangeScene(string name, Action<Godot.Node> setupBeforeReady = null, bool instant = true) => await SceneManager.ChangeScene(name, setupBeforeReady, instant);
+        public static async Task ChangeScene(string name, Action<Godot.Node> setupBeforeReady = null, bool instant = true) => await _sceneManager.ChangeScene(name, setupBeforeReady, instant);
     }
 }

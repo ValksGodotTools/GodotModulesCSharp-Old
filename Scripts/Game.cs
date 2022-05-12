@@ -8,14 +8,16 @@ namespace GodotModules
         private GM _gm;
         private HotkeyManager _hotkeyManager;
         private SystemFileManager _systemFileManager;
+        private SceneManager _sceneManager;
 
         public override async void _Ready()
         {
-            _gm = new GM(this);
+            _sceneManager = new(this, new GodotFileManager());
+            _gm = new GM(this, _sceneManager);
             _systemFileManager = new();
             _hotkeyManager = new(_systemFileManager);
 
-            await GM.SceneManager.InitAsync(_hotkeyManager);
+            await _sceneManager.InitAsync(_hotkeyManager);
             GM.Net.StartServer(25565, 100);
             GM.Net.StartClient("127.0.0.1", 25565);
             await GM.Net.WebClient.CheckConnectionAsync();
@@ -28,9 +30,9 @@ namespace GodotModules
 
         public override void _Input(InputEvent @event)
         {
-            GM.SceneManager.IfEscapePressed(async () =>
+            _sceneManager.IfEscapePressed(async () =>
             {
-                await GM.ChangeScene(GM.SceneManager.PrevSceneName);
+                await GM.ChangeScene(_sceneManager.PrevSceneName);
             });
         }
 
