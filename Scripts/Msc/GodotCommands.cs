@@ -5,6 +5,12 @@ namespace GodotModules
     public class GodotCommands
     {
         private ConcurrentQueue<GodotCmd> _godotCmdQueue = new ConcurrentQueue<GodotCmd>();
+        private NetworkManager _networkManager;
+
+        public GodotCommands(NetworkManager networkManager) 
+        {
+            _networkManager = networkManager;
+        }
 
         public void Enqueue(GodotOpcode opcode, object data = null) => _godotCmdQueue.Enqueue(new GodotCmd(opcode, data));
 
@@ -33,7 +39,7 @@ namespace GodotModules
                         break;
 
                     case GodotOpcode.Disconnect:
-                        GM.Net.DisconnectOpcode = (DisconnectOpcode)cmd.Data;
+                        _networkManager.DisconnectOpcode = (DisconnectOpcode)cmd.Data;
                         await GM.ChangeScene("GameServers");
                         break;
                 }

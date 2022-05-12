@@ -7,21 +7,21 @@ namespace GodotModules.Netcode
     {
         public DateTime PingSent { get; set; }
         public DisconnectOpcode DisconnectOpcode { get; set; }
-        public bool ENetInitialized { get; set; }
         public WebClient WebClient { get; set; }
         public GameClient Client { get; set; }
         public GameServer Server { get; set; }
 
         private GodotCommands _godotCmds;
+        private bool _enetInitialized;
         
         public NetworkManager()
         {
-            _godotCmds = new();
+            _godotCmds = new(this);
             WebClient = new("localhost:4000");
             Client = new(_godotCmds);
             Server = new();
-            ENetInitialized = ENet.Library.Initialize();
-            if (!ENetInitialized) 
+            _enetInitialized = ENet.Library.Initialize();
+            if (!_enetInitialized) 
             {
                 GM.LogWarning("Failed to initialize ENet! Remember ENet-CSharp.dll and enet.dll are required in order for ENet to run properly!");
                 return;
@@ -65,7 +65,7 @@ namespace GodotModules.Netcode
                 Server.Dispose();
             }
 
-            if (ENetInitialized)
+            if (_enetInitialized)
                 ENet.Library.Deinitialize();
         }
     }
