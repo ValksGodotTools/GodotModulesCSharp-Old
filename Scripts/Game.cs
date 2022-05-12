@@ -28,12 +28,9 @@ namespace GodotModules
             await _gm.Update();
         }
 
-        public override void _Input(InputEvent @event)
+        public override async void _Input(InputEvent @event)
         {
-            _sceneManager.IfEscapePressed(async () =>
-            {
-                await GM.ChangeScene(_sceneManager.PrevSceneName);
-            });
+            await GM.IfEscGoToPrevScene();
         }
 
         public override async void _Notification(int what)

@@ -37,5 +37,6 @@ namespace GodotModules
         public static void LogMs(Action a) => _logger.LogMs(a);
 
         public static async Task ChangeScene(string name, Action<Godot.Node> setupBeforeReady = null, bool instant = true) => await _sceneManager.ChangeScene(name, setupBeforeReady, instant);
+        public static async Task IfEscGoToPrevScene() => await _sceneManager.IfEscGoToPrevScene();
     }
 }

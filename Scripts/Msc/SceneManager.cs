@@ -5,14 +5,14 @@ namespace GodotModules
 {
     public class SceneManager
     {
-        public string PrevSceneName { get; set; }
-        public string CurSceneName { get; set; }
         public Node ActiveScene { get; set; }
 
-        private Dictionary<string, PackedScene> Scenes = new Dictionary<string, PackedScene>();
+        private string _curSceneName { get; set; }
+        private string _prevSceneName { get; set; }
 
-        private Game _game;
-        private GodotFileManager _godotFileManager;
+        private readonly Dictionary<string, PackedScene> _scenes = new Dictionary<string, PackedScene>();
+        private readonly Game _game;
+        private readonly GodotFileManager _godotFileManager;
 
         public SceneManager(Game game, GodotFileManager godotFileManager) 
         {
@@ -35,18 +35,18 @@ namespace GodotModules
                 });
         }
 
-        public bool InMainMenu() => CurSceneName == "Menu";
-        public bool InGameServers() => CurSceneName == "GameServers";
-        public bool InLobby() => CurSceneName == "Lobby";
-        public bool InGame() => CurSceneName == "Game";
+        public bool InMainMenu() => _curSceneName == "Menu";
+        public bool InGameServers() => _curSceneName == "GameServers";
+        public bool InLobby() => _curSceneName == "Lobby";
+        public bool InGame() => _curSceneName == "Game";
 
         public async Task ChangeScene(string sceneName, Action<Node> setupBeforeReady = null, bool instant = true)
         {
-            if (CurSceneName == sceneName || string.IsNullOrWhiteSpace(sceneName))
+            if (_curSceneName == sceneName || string.IsNullOrWhiteSpace(sceneName))
                 return;
                 
-            PrevSceneName = CurSceneName;
-            CurSceneName = sceneName;
+            _prevSceneName = _curSceneName;
+            _curSceneName = sceneName;
 
             if (_game.GetChildCount() != 0) 
             {
@@ -57,12 +57,20 @@ namespace GodotModules
             if (!instant)
                 await Task.Delay(1);
 
-            ActiveScene = Scenes[sceneName].Instance();
+            ActiveScene = _scenes[sceneName].Instance();
 
             if (setupBeforeReady != null)
                 setupBeforeReady(ActiveScene);
 
             _game.AddChild(ActiveScene);
+        }
+
+        public async Task IfEscGoToPrevScene() 
+        {
+            if (Input.IsActionJustPressed("ui_cancel"))
+            {
+                await ChangeScene(_prevSceneName);
+            }
         }
 
         public void IfEscapePressed(Action code)
@@ -79,6 +87,6 @@ namespace GodotModules
             }
         }
 
-        private void LoadScene(string scene) => Scenes[scene] = ResourceLoader.Load<PackedScene>($"res://Scenes/Scenes/{scene}.tscn");
+        private void LoadScene(string scene) => _scenes[scene] = ResourceLoader.Load<PackedScene>($"res://Scenes/Scenes/{scene}.tscn");
     }
 }
