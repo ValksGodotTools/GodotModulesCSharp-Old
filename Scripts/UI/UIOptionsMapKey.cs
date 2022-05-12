@@ -13,6 +13,7 @@ namespace GodotModules
         {
             var key = (InputEvent)InputMap.GetActionList(Action)[0];
             Text = key.AsText();
+            _hotkey = key.AsText();
         }
 
         public override void _Input(InputEvent @event)
