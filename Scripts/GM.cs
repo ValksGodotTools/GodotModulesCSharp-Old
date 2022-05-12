@@ -42,9 +42,10 @@ namespace GodotModules
             await Net.WebClient.CheckConnectionAsync();
         }
 
-        public override void _Process(float delta)
+        public override async void _Process(float delta)
         {
             _logger.Update();
+            await _godotCmds.Update();
         }
 
         public override void _Input(InputEvent @event)
