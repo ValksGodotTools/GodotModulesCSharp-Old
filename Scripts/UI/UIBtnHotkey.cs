@@ -2,19 +2,11 @@ using Godot;
 
 namespace GodotModules
 {
-    public class UIOptionsMapKey : Button
+    public class UIBtnHotkey : Button
     {
-        [Export] public readonly string Action;
-
+        private string _action;
         private string _hotkey = "";
         private bool _waitingForHotkey;
-
-        public override void _Ready()
-        {
-            var key = (InputEvent)InputMap.GetActionList(Action)[0];
-            Text = key.AsText();
-            _hotkey = key.AsText();
-        }
 
         public override void _Input(InputEvent @event)
         {
@@ -23,12 +15,20 @@ namespace GodotModules
                 _waitingForHotkey = false;
                 _hotkey = @event.AsText();
                 Text = @event.AsText();
-                GM.SetHotkey(Action, keyEvent);
+                GM.SetHotkey(_action, keyEvent);
             }
 
             if (@event is InputEventMouseButton mouseEvent && mouseEvent.Pressed)
                 if (!GetGlobalRect().HasPoint(mouseEvent.Position))
                     LostFocus();
+        }
+
+        public void Init(string action)
+        {
+            _action = action;
+            var key = (InputEvent)InputMap.GetActionList(_action)[0];
+            Text = key.AsText();
+            _hotkey = key.AsText();
         }
 
         private void _on_Btn_pressed()

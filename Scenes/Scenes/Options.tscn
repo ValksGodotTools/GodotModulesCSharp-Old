@@ -3,7 +3,7 @@
 [ext_resource path="res://Themes/PanelNoBorder.tres" type="Theme" id=1]
 [ext_resource path="res://Themes/Main.tres" type="Theme" id=2]
 [ext_resource path="res://Scripts/UI/UIOptions.cs" type="Script" id=3]
-[ext_resource path="res://Scripts/UI/UIOptionsMapKey.cs" type="Script" id=5]
+[ext_resource path="res://Scripts/UI/UIControls.cs" type="Script" id=4]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -151,26 +151,7 @@ size_flags_horizontal = 3
 [node name="Controls" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Control/Controls"]
-margin_right = 741.0
-margin_bottom = 23.0
-
-[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/Control/Controls/HBoxContainer"]
-margin_top = 3.0
-margin_right = 150.0
-margin_bottom = 20.0
-rect_min_size = Vector2( 150, 0 )
-text = "Move Left"
-
-[node name="Btn" type="Button" parent="MarginContainer/HBoxContainer/Control/Controls/HBoxContainer"]
-margin_left = 154.0
-margin_right = 229.0
-margin_bottom = 23.0
-rect_min_size = Vector2( 75, 0 )
-focus_mode = 0
-script = ExtResource( 5 )
-Action = "player_move_left"
+script = ExtResource( 4 )
 
 [node name="Multiplayer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Control"]
 visible = false
@@ -209,6 +190,3 @@ margin_left = 154.0
 margin_right = 304.0
 margin_bottom = 17.0
 rect_min_size = Vector2( 150, 0 )
-
-[connection signal="focus_exited" from="MarginContainer/HBoxContainer/Control/Controls/HBoxContainer/Btn" to="MarginContainer/HBoxContainer/Control/Controls/HBoxContainer/Btn" method="_on_Btn_focus_exited"]
-[connection signal="pressed" from="MarginContainer/HBoxContainer/Control/Controls/HBoxContainer/Btn" to="MarginContainer/HBoxContainer/Control/Controls/HBoxContainer/Btn" method="_on_Btn_pressed"]

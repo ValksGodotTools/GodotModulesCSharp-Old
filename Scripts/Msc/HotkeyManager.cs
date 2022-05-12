@@ -2,12 +2,12 @@ using Godot;
 
 namespace GodotModules
 {
-    public class OptionsManager
+    public class HotkeyManager
     {
-        public Dictionary<string, JsonInputKey> Hotkeys = new Dictionary<string, JsonInputKey>();
+        private Dictionary<string, JsonInputKey> _hotkeys = new Dictionary<string, JsonInputKey>();
         private SystemFileManager _systemFileManager;
 
-        public OptionsManager(SystemFileManager systemFileManager)
+        public HotkeyManager(SystemFileManager systemFileManager)
         {
             _systemFileManager = systemFileManager;
             LoadDefaultHotkeys();
@@ -17,9 +17,9 @@ namespace GodotModules
 
         public void LoadPersistentHotkeys()
         {
-            Hotkeys = _systemFileManager.ReadConfig<Dictionary<string, JsonInputKey>>("controls");
+            _hotkeys = _systemFileManager.ReadConfig<Dictionary<string, JsonInputKey>>("controls");
 
-            foreach (var pair in Hotkeys)
+            foreach (var pair in _hotkeys)
             {
                 var inputEvent = pair.Value;
                 var inputKey = ConvertJsonInputKeyToInputKey(inputEvent);
@@ -41,16 +41,16 @@ namespace GodotModules
                 var inputEvent = (InputEventKey)InputMap.GetActionList(action)[0];
                 var inputKey = ConvertInputKeyToJsonInputKey(inputEvent);
 
-                Hotkeys[action] = inputKey;
+                _hotkeys[action] = inputKey;
             }
         }
 
-        public void SaveHotkeys() => _systemFileManager.WriteConfig("controls", Hotkeys);
+        public void SaveHotkeys() => _systemFileManager.WriteConfig("controls", _hotkeys);
         public void SetHotkey(string action, InputEventKey inputEventKey) 
         {
             InputMap.ActionEraseEvents(action);
             InputMap.ActionAddEvent(action, inputEventKey);
-            Hotkeys[action] = ConvertInputKeyToJsonInputKey(inputEventKey);
+            _hotkeys[action] = ConvertInputKeyToJsonInputKey(inputEventKey);
         }
 
         private JsonInputKey ConvertInputKeyToJsonInputKey(InputEventKey inputEventKey) => 

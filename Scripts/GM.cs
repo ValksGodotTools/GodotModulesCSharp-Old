@@ -19,7 +19,7 @@ namespace GodotModules
 
         private static Logger _logger;
         private static SceneManager _sceneManager;
-        private static OptionsManager _optionsManager;
+        private static HotkeyManager _hotkeyManager;
 
         private SystemFileManager _systemFileManager;
         private GodotFileManager _godotFileManager;
@@ -30,10 +30,10 @@ namespace GodotModules
 
             Net = new();
             _logger = new();
-            _systemFileManager = new(System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "Godot Modules"));
+            _systemFileManager = new();
             _godotFileManager = new();
             _sceneManager = new(Instance, _godotFileManager);
-            _optionsManager = new(_systemFileManager);
+            _hotkeyManager = new(_systemFileManager);
             
             await _sceneManager.InitAsync();
             Net.StartServer(25565, 100);
@@ -63,8 +63,7 @@ namespace GodotModules
             }
         }
 
-        public static Dictionary<string, JsonInputKey> Hotkeys => _optionsManager.Hotkeys;
-        public static void SetHotkey(string action, InputEventKey inputEventKey) => _optionsManager.SetHotkey(action, inputEventKey);
+        public static void SetHotkey(string action, InputEventKey inputEventKey) => _hotkeyManager.SetHotkey(action, inputEventKey);
 
         public static void Log(object v, ConsoleColor c = ConsoleColor.Gray) => _logger.Log(v, c);
         public static void LogWarning(object v, ConsoleColor c = ConsoleColor.Yellow) => _logger.LogWarning(v, c);
@@ -77,7 +76,7 @@ namespace GodotModules
 
         private async Task Cleanup()
         {
-            _optionsManager.SaveHotkeys();
+            _hotkeyManager.SaveHotkeys();
             await Net.Cleanup();
             GetTree().Quit();
         }
