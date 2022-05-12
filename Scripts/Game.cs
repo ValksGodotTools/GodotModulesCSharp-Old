@@ -11,7 +11,7 @@ namespace GodotModules
         {
             _gm = new GM(this);
 
-            await GM._sceneManager.InitAsync(_gm._hotkeyManager);
+            await GM._sceneManager.InitAsync(_gm.HotkeyManager);
             GM.Net.StartServer(25565, 100);
             GM.Net.StartClient("127.0.0.1", 25565);
             await GM.Net.WebClient.CheckConnectionAsync();
@@ -19,15 +19,14 @@ namespace GodotModules
 
         public override async void _Process(float delta)
         {
-            GM._logger.Update();
-            await GM.Net.Update();
+            await _gm.Update();
         }
 
         public override void _Input(InputEvent @event)
         {
             GM._sceneManager.IfEscapePressed(async () =>
             {
-                await GM._sceneManager.ChangeScene(GM._sceneManager.PrevSceneName);
+                await GM.ChangeScene(GM._sceneManager.PrevSceneName);
             });
         }
 
@@ -42,7 +41,7 @@ namespace GodotModules
 
         private async Task Cleanup()
         {
-            _gm._hotkeyManager.SaveHotkeys();
+            _gm.HotkeyManager.SaveHotkeys();
             await GM.Net.Cleanup();
             GetTree().Quit();
         }

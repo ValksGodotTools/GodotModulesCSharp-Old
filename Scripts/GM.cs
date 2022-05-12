@@ -13,22 +13,29 @@ namespace GodotModules
     public class GM
     {
         public static NetworkManager Net;
-
-        public static Logger _logger;
         public static SceneManager _sceneManager;
-        public HotkeyManager _hotkeyManager;
 
-        public SystemFileManager _systemFileManager;
+        public readonly HotkeyManager HotkeyManager;
+        public readonly SystemFileManager SystemFileManager;
+
+        private static Logger _logger;
+
         private GodotFileManager _godotFileManager;
 
         public GM(Game game)
         {
             Net = new();
             _logger = new();
-            _systemFileManager = new();
+            SystemFileManager = new();
             _godotFileManager = new();
             _sceneManager = new(game, _godotFileManager);
-            _hotkeyManager = new(_systemFileManager);
+            HotkeyManager = new(SystemFileManager);
+        }
+
+        public async Task Update()
+        {
+            _logger.Update();
+            await Net.Update();
         }
 
         public static void Log(object v, ConsoleColor c = ConsoleColor.Gray) => _logger.Log(v, c);
