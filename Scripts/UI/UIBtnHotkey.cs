@@ -7,6 +7,7 @@ namespace GodotModules
         private string _action;
         private string _hotkey = "";
         private bool _waitingForHotkey;
+        private HotkeyManager _hotkeyManager;
 
         public override void _Input(InputEvent @event)
         {
@@ -15,7 +16,7 @@ namespace GodotModules
                 _waitingForHotkey = false;
                 _hotkey = @event.AsText();
                 Text = @event.AsText();
-                GM.SetHotkey(_action, keyEvent);
+                _hotkeyManager.SetHotkey(_action, keyEvent);
             }
 
             if (@event is InputEventMouseButton mouseEvent && mouseEvent.Pressed)
@@ -23,8 +24,9 @@ namespace GodotModules
                     LostFocus();
         }
 
-        public void Init(string action)
+        public void Init(HotkeyManager hotkeyManager, string action)
         {
+            _hotkeyManager = hotkeyManager;
             _action = action;
             var key = (InputEvent)InputMap.GetActionList(_action)[0];
             Text = key.AsText();

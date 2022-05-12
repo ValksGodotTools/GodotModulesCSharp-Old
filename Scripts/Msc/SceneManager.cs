@@ -20,7 +20,7 @@ namespace GodotModules
             _godotFileManager = godotFileManager;
         }
 
-        public async Task InitAsync()
+        public async Task InitAsync(HotkeyManager hotkeyManager)
         {
             var loadedScenes = _godotFileManager.LoadDir("Scenes/Scenes", (dir, fileName) =>
             {
@@ -29,7 +29,10 @@ namespace GodotModules
             });
 
             if (loadedScenes)
-                await ChangeScene("Menu");
+                await ChangeScene("Menu", (scene) => {
+                    var menu = (UIMenu)scene;
+                    menu.HotkeyManager = hotkeyManager;
+                });
         }
 
         public bool InMainMenu() => CurSceneName == "Menu";
@@ -37,7 +40,7 @@ namespace GodotModules
         public bool InLobby() => CurSceneName == "Lobby";
         public bool InGame() => CurSceneName == "Game";
 
-        public async Task ChangeScene(string sceneName, bool instant = true)
+        public async Task ChangeScene(string sceneName, Action<Node> setupBeforeReady = null, bool instant = true)
         {
             if (CurSceneName == sceneName || string.IsNullOrWhiteSpace(sceneName))
                 return;
@@ -55,6 +58,10 @@ namespace GodotModules
                 await Task.Delay(1);
 
             ActiveScene = Scenes[sceneName].Instance();
+
+            if (setupBeforeReady != null)
+                setupBeforeReady(ActiveScene);
+
             _game.AddChild(ActiveScene);
         }
 

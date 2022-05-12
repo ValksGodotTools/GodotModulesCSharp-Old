@@ -11,7 +11,7 @@ namespace GodotModules
         {
             _gm = new GM(this);
 
-            await GM._sceneManager.InitAsync();
+            await GM._sceneManager.InitAsync(_gm._hotkeyManager);
             GM.Net.StartServer(25565, 100);
             GM.Net.StartClient("127.0.0.1", 25565);
             await GM.Net.WebClient.CheckConnectionAsync();
@@ -42,7 +42,7 @@ namespace GodotModules
 
         private async Task Cleanup()
         {
-            GM._hotkeyManager.SaveHotkeys();
+            _gm._hotkeyManager.SaveHotkeys();
             await GM.Net.Cleanup();
             GetTree().Quit();
         }

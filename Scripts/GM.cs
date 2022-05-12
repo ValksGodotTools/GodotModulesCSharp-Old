@@ -16,9 +16,9 @@ namespace GodotModules
 
         public static Logger _logger;
         public static SceneManager _sceneManager;
-        public static HotkeyManager _hotkeyManager;
+        public HotkeyManager _hotkeyManager;
 
-        private SystemFileManager _systemFileManager;
+        public SystemFileManager _systemFileManager;
         private GodotFileManager _godotFileManager;
 
         public GM(Game game)
@@ -31,8 +31,6 @@ namespace GodotModules
             _hotkeyManager = new(_systemFileManager);
         }
 
-        public static void SetHotkey(string action, Godot.InputEventKey inputEventKey) => _hotkeyManager.SetHotkey(action, inputEventKey);
-
         public static void Log(object v, ConsoleColor c = ConsoleColor.Gray) => _logger.Log(v, c);
         public static void LogWarning(object v, ConsoleColor c = ConsoleColor.Yellow) => _logger.LogWarning(v, c);
         public static void LogDebug(object v, bool trace = true, ConsoleColor c = ConsoleColor.Magenta, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0) => _logger.LogDebug(v, c, trace, filePath, lineNumber);
@@ -40,6 +38,6 @@ namespace GodotModules
         public static void LogTodo(object v, ConsoleColor c = ConsoleColor.White) => _logger.LogTodo(v, c);
         public static void LogMs(Action a) => _logger.LogMs(a);
 
-        public static async Task ChangeScene(string name, bool instant = true) => await _sceneManager.ChangeScene(name, instant);
+        public static async Task ChangeScene(string name, Action<Godot.Node> setupBeforeReady = null, bool instant = true) => await _sceneManager.ChangeScene(name, setupBeforeReady, instant);
     }
 }

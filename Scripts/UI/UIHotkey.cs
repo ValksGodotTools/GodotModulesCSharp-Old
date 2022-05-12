@@ -11,6 +11,7 @@ namespace GodotModules
         private Label _label;
         private UIBtnHotkey _btnHotkey;
 
+        private HotkeyManager _hotkeyManager;
         private string _action;
 
         public override void _Ready()
@@ -18,11 +19,12 @@ namespace GodotModules
             _label = GetNode<Label>(NodePathLabel);
             _btnHotkey = GetNode<UIBtnHotkey>(NodePathBtnHotkey);
             _label.Text = _action.Replace("_", " ").ToTitleCase();
-            _btnHotkey.Init(_action);
+            _btnHotkey.Init(_hotkeyManager, _action);
         }
 
-        public void Init(string action)
+        public void Init(HotkeyManager hotkeyManager, string action)
         {
+            _hotkeyManager = hotkeyManager;
             _action = action;
         }
     }
