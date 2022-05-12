@@ -1,26 +1,29 @@
 using Godot;
 using System;
 
-public class UIHotkey : Node
+namespace GodotModules
 {
-    [Export] public readonly NodePath NodePathLabel;
-    [Export] public readonly NodePath NodePathBtnHotkey;
-
-    private Label _label;
-    private UIBtnHotkey _btnHotkey;
-
-    private string _action;
-
-    public override void _Ready()
+    public class UIHotkey : Node
     {
-        _label = GetNode<Label>(NodePathLabel);
-        _btnHotkey = GetNode<UIBtnHotkey>(NodePathBtnHotkey);
-        _label.Text = _action.Replace("_", " ").ToTitleCase();
-        _btnHotkey.Init(_action);
-    }
+        [Export] public readonly NodePath NodePathLabel;
+        [Export] public readonly NodePath NodePathBtnHotkey;
 
-    public void Init(string action)
-    {
-        _action = action;
+        private Label _label;
+        private UIBtnHotkey _btnHotkey;
+
+        private string _action;
+
+        public override void _Ready()
+        {
+            _label = GetNode<Label>(NodePathLabel);
+            _btnHotkey = GetNode<UIBtnHotkey>(NodePathBtnHotkey);
+            _label.Text = _action.Replace("_", " ").ToTitleCase();
+            _btnHotkey.Init(_action);
+        }
+
+        public void Init(string action)
+        {
+            _action = action;
+        }
     }
 }
