@@ -5,7 +5,7 @@ namespace GodotModules
     public class HotkeyManager
     {
         private Dictionary<string, JsonInputKey> _hotkeys = new Dictionary<string, JsonInputKey>();
-        private SystemFileManager _systemFileManager;
+        private readonly SystemFileManager _systemFileManager;
 
         public HotkeyManager(SystemFileManager systemFileManager)
         {

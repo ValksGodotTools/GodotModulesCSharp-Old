@@ -11,8 +11,8 @@ namespace GodotModules.Netcode
         public GameClient Client { get; set; }
         public GameServer Server { get; set; }
 
-        private GodotCommands _godotCmds;
-        private bool _enetInitialized;
+        private readonly GodotCommands _godotCmds;
+        private readonly bool _enetInitialized;
         
         public NetworkManager()
         {

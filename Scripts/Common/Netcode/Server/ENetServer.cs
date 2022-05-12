@@ -9,15 +9,15 @@ namespace GodotModules.Netcode.Server
 
         public bool HasSomeoneConnected { get => Interlocked.Read(ref _someoneConnected) == 1; }
         public bool IsRunning { get => Interlocked.Read(ref _running) == 1; }
-        public ConcurrentQueue<ENetServerCmd> ENetCmds = new ConcurrentQueue<ENetServerCmd>();
+        public readonly ConcurrentQueue<ENetServerCmd> ENetCmds = new ConcurrentQueue<ENetServerCmd>();
 
-        protected Dictionary<uint, Peer> Peers = new Dictionary<uint, Peer>();
+        protected readonly Dictionary<uint, Peer> Peers = new Dictionary<uint, Peer>();
         protected CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
         protected bool _queueRestart { get; set; }
 
         private long _someoneConnected = 0;
         private long _running = 0;
-        private ConcurrentQueue<ServerPacket> _outgoing = new ConcurrentQueue<ServerPacket>();
+        private readonly ConcurrentQueue<ServerPacket> _outgoing = new ConcurrentQueue<ServerPacket>();
 
         public async Task StartAsync(ushort port, int maxClients)
         {

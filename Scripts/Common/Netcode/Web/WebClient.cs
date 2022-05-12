@@ -9,8 +9,8 @@ namespace GodotModules.Netcode
         public bool LogExceptions { get; set; }
         public string ExternalIp { get; set; }
 
-        private HttpClient _client;
-        private string _ip;
+        private readonly HttpClient _client;
+        private readonly string _ip;
 
         public WebClient(string ip)
         {

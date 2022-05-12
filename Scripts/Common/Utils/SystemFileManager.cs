@@ -5,7 +5,7 @@ namespace GodotModules
 {
     public class SystemFileManager
     {
-        private string _gameDataPath = System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "Godot Modules");
+        private readonly string _gameDataPath = System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "Godot Modules");
 
         public T WriteConfig<T>(string pathToFile) where T : new() => WriteConfig<T>(pathToFile, new T());
 

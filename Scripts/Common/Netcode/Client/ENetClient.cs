@@ -13,10 +13,10 @@ namespace GodotModules.Netcode.Client
         protected CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
         protected GodotCommands _godotCmds;
 
-        private ConcurrentQueue<ENetClientCmd> ENetCmds = new ConcurrentQueue<ENetClientCmd>();
+        private readonly ConcurrentQueue<ENetClientCmd> ENetCmds = new ConcurrentQueue<ENetClientCmd>();
         private long _connected;
         private long _running;
-        private ConcurrentDictionary<int, ClientPacket> _outgoing = new ConcurrentDictionary<int, ClientPacket>();
+        private readonly ConcurrentDictionary<int, ClientPacket> _outgoing = new ConcurrentDictionary<int, ClientPacket>();
         private int _outgoingId;
 
         public async void Start(string ip, ushort port) => await StartAsync(ip, port);

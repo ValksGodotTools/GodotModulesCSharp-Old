@@ -4,29 +4,29 @@ namespace GodotModules
 {
     public class GTimer
     {
-        private Timer Timer = new Timer();
+        private readonly Timer _timer = new Timer();
 
         public GTimer(int delayMs, bool loop = true, bool autoStart = true)
         {
-            Timer.WaitTime = delayMs / 1000f;
-            Timer.OneShot = !loop;
-            Timer.Autostart = autoStart;
+            _timer.WaitTime = delayMs / 1000f;
+            _timer.OneShot = !loop;
+            _timer.Autostart = autoStart;
         }
 
         public void Connect(Node target, string methodName)
         {
-            Timer.Connect("timeout", target, methodName);
-            target.AddChild(Timer);
+            _timer.Connect("timeout", target, methodName);
+            target.AddChild(_timer);
         }
 
         public void Start(float delayMs)
         {
-            Timer.WaitTime = delayMs / 1000;
+            _timer.WaitTime = delayMs / 1000;
             Start();
         }
 
-        public void Start() => Timer.Start();
-        public void Stop() => Timer.Stop();
-        public void QueueFree() => Timer.QueueFree();
+        public void Start() => _timer.Start();
+        public void Stop() => _timer.Stop();
+        public void QueueFree() => _timer.QueueFree();
     }
 }

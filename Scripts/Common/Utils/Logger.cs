@@ -4,7 +4,7 @@ namespace GodotModules
 {
     public class Logger
     {
-        private ConcurrentQueue<LogInfo> _messages = new ConcurrentQueue<LogInfo>();
+        private readonly ConcurrentQueue<LogInfo> _messages = new ConcurrentQueue<LogInfo>();
 
         public void LogErr(Exception e, ConsoleColor c, string hint) => _messages.Enqueue(new LogInfo(LoggerOpcode.Exception, $"[Error]: {(string.IsNullOrWhiteSpace(hint) ? "" : $"'{hint}' ")}{e.Message}\n{e.StackTrace}", c));
         public void LogDebug(object v, ConsoleColor c, bool trace, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0) => _messages.Enqueue(new LogInfo(LoggerOpcode.Debug, new LogMessageDebug($"[Debug]: {v}", trace, $"   at {filePath.Substring(filePath.IndexOf("Scripts\\"))} line:{lineNumber}"), c));
