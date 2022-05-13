@@ -9,16 +9,12 @@ namespace GodotModules.Netcode
 
         public override void Write(PacketWriter writer)
         {
-            writer.Write((float)Math.Round(Position.x, 1));
-            writer.Write((float)Math.Round(Position.y, 1));
+            writer.Write(Position);
         }
 
         public override void Read(PacketReader reader)
         {
-            var pos = new Vector2();
-            pos.x = reader.ReadFloat();
-            pos.y = reader.ReadFloat();
-            Position = pos;
+            Position = reader.ReadVector2();
         }
 
         public override void Handle(ENet.Peer peer)

@@ -1,4 +1,4 @@
-using System;
+using Godot;
 using System.IO;
 
 namespace GodotModules.Netcode
@@ -28,6 +28,12 @@ namespace GodotModules.Netcode
         public void Write(long v) => _writer.Write(v);
         public void Write(ulong v) => _writer.Write(v);
         public void Write(byte[] v) => _writer.Write(v);
+
+        public void Write(Vector2 v)
+        {
+            _writer.Write((float)Math.Round(v.x, 1));
+            _writer.Write((float)Math.Round(v.y, 1));
+        }
 
         public void Dispose()
         {
