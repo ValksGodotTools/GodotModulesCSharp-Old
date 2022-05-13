@@ -58,26 +58,6 @@ namespace GodotModules
             _game.AddChild(ActiveScene);
         }
 
-        public async Task IfEscGoToPrevScene() 
-        {
-            if (Input.IsActionJustPressed("ui_cancel"))
-                await ChangeScene(PrevScene);
-        }
-
-        public void IfEscapePressed(Action code)
-        {
-            if (Input.IsActionJustPressed("ui_cancel"))
-            {
-                /*if (GM.GameConsoleVisible) 
-                {
-                    GM.ToggleConsoleVisibility();
-                    return;
-                }*/
-
-                code();
-            }
-        }
-
         private void LoadScene(string scene) => _scenes[(Scene)Enum.Parse(typeof(Scene), scene)] = ResourceLoader.Load<PackedScene>($"res://Scenes/Scenes/{scene}.tscn");
     }
 
