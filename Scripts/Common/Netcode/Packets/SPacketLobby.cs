@@ -1,6 +1,6 @@
 namespace GodotModules.Netcode
 {
-    public class SPacketLobby : APacketServerPeerId
+    public class SPacketLobby : PacketServerPeerId
     {
         private LobbyOpcode LobbyOpcode { get; set; }
 

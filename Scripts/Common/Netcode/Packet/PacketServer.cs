@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 
 namespace GodotModules.Netcode
 {
-    public abstract class APacketServer : APacket
+    public abstract class PacketServer : Packet
     {
         /// <summary>
         /// The packet handled client-side

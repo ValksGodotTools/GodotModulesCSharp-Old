@@ -5,7 +5,7 @@ namespace GodotModules.Netcode.Client
 {
     public abstract class ENetClient : IDisposable
     {
-        public static readonly Dictionary<ServerPacketOpcode, APacketServer> HandlePacket = ReflectionUtils.LoadInstances<ServerPacketOpcode, APacketServer>("SPacket");
+        public static readonly Dictionary<ServerPacketOpcode, PacketServer> HandlePacket = ReflectionUtils.LoadInstances<ServerPacketOpcode, PacketServer>("SPacket");
 
         public bool IsConnected { get => Interlocked.Read(ref _connected) == 1; }
         public bool IsRunning { get => Interlocked.Read(ref _running) == 1; }
@@ -52,7 +52,7 @@ namespace GodotModules.Netcode.Client
                 await Task.Delay(1);
         }
 
-        public void Send(ClientPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable) 
+        public void Send(ClientPacketOpcode opcode, Packet data = null, PacketFlags flags = PacketFlags.Reliable) 
         {
             _outgoingId++;
             var success = _outgoing.TryAdd(_outgoingId, new ClientPacket((byte)opcode, flags, data));
@@ -61,7 +61,7 @@ namespace GodotModules.Netcode.Client
                 GM.LogWarning($"Failed to add {opcode} to Outgoing queue because of duplicate key");
         }
 
-        public async Task SendAsync(ClientPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
+        public async Task SendAsync(ClientPacketOpcode opcode, Packet data = null, PacketFlags flags = PacketFlags.Reliable)
         {
             Send(opcode, data, flags);
 
@@ -123,7 +123,7 @@ namespace GodotModules.Netcode.Client
                 {
                     _outgoingId--;
                     byte channelID = 0; // The channel all networking traffic will be going through
-                    var packet = default(Packet);
+                    var packet = default(ENet.Packet);
                     packet.Create(clientPacket.Data, clientPacket.PacketFlags);
                     peer.Send(channelID, ref packet);
                     Sent((ClientPacketOpcode)clientPacket.Opcode);

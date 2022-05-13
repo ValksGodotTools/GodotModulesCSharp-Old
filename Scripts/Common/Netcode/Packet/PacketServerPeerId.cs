@@ -1,6 +1,6 @@
 namespace GodotModules.Netcode
 {
-    public abstract class APacketServerPeerId : APacketServer
+    public abstract class PacketServerPeerId : PacketServer
     {
         public byte Id { get; set; }
 

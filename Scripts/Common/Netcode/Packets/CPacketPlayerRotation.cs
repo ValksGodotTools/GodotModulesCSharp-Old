@@ -2,7 +2,7 @@ using System;
 
 namespace GodotModules.Netcode
 {
-    public class CPacketPlayerRotation : APacketClient
+    public class CPacketPlayerRotation : PacketClient
     {
         public float Rotation { get; set; }
 

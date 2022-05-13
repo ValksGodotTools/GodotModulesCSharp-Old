@@ -10,7 +10,7 @@ namespace GodotModules.Netcode
         private readonly BinaryReader _reader;
         private readonly byte[] ReadBuffer = new byte[GamePacket.MaxSize];
 
-        public PacketReader(Packet packet)
+        public PacketReader(ENet.Packet packet)
         {
             _stream = new(ReadBuffer);
             _reader = new(_stream);
