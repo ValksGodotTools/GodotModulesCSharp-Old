@@ -123,6 +123,7 @@ margin_bottom = 17.0
 text = "Nothing in video right now :D"
 
 [node name="Display" type="VBoxContainer" parent="Padding/HBox/Sections"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 9 )
@@ -233,39 +234,41 @@ size_flags_horizontal = 0
 text = "Reset to Defaults"
 
 [node name="Multiplayer" type="VBoxContainer" parent="Padding/HBox/Sections"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 8 )
+NodePathOnlineUsername = NodePath("HBox1/OnlineUsername")
+NodePathWebServerAddress = NodePath("HBox2/WebServerAddress")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Padding/HBox/Sections/Multiplayer"]
+[node name="HBox1" type="HBoxContainer" parent="Padding/HBox/Sections/Multiplayer"]
 margin_right = 741.0
 margin_bottom = 17.0
 
-[node name="Label" type="Label" parent="Padding/HBox/Sections/Multiplayer/HBoxContainer"]
+[node name="Label" type="Label" parent="Padding/HBox/Sections/Multiplayer/HBox1"]
 margin_right = 150.0
 margin_bottom = 17.0
 rect_min_size = Vector2( 150, 0 )
 text = "Online Username"
 
-[node name="LineEdit" type="LineEdit" parent="Padding/HBox/Sections/Multiplayer/HBoxContainer"]
+[node name="OnlineUsername" type="LineEdit" parent="Padding/HBox/Sections/Multiplayer/HBox1"]
 margin_left = 154.0
 margin_right = 304.0
 margin_bottom = 17.0
 rect_min_size = Vector2( 150, 0 )
+max_length = 15
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Padding/HBox/Sections/Multiplayer"]
+[node name="HBox2" type="HBoxContainer" parent="Padding/HBox/Sections/Multiplayer"]
 margin_top = 21.0
 margin_right = 741.0
 margin_bottom = 38.0
 
-[node name="Label" type="Label" parent="Padding/HBox/Sections/Multiplayer/HBoxContainer2"]
+[node name="Label" type="Label" parent="Padding/HBox/Sections/Multiplayer/HBox2"]
 margin_right = 150.0
 margin_bottom = 17.0
 rect_min_size = Vector2( 150, 0 )
 text = "Web Server Address"
 
-[node name="LineEdit" type="LineEdit" parent="Padding/HBox/Sections/Multiplayer/HBoxContainer2"]
+[node name="WebServerAddress" type="LineEdit" parent="Padding/HBox/Sections/Multiplayer/HBox2"]
 margin_left = 154.0
 margin_right = 304.0
 margin_bottom = 17.0
@@ -282,3 +285,5 @@ rect_min_size = Vector2( 150, 0 )
 [connection signal="value_changed" from="Padding/HBox/Sections/Audio/HBox1/Music" to="Padding/HBox/Sections/Audio" method="_on_Music_value_changed"]
 [connection signal="value_changed" from="Padding/HBox/Sections/Audio/HBox2/SFX" to="Padding/HBox/Sections/Audio" method="_on_SFX_value_changed"]
 [connection signal="pressed" from="Padding/HBox/Sections/Controls/VBox/Reset Hotkeys" to="Padding/HBox/Sections/Controls" method="_on_Reset_Hotkeys_pressed"]
+[connection signal="text_changed" from="Padding/HBox/Sections/Multiplayer/HBox1/OnlineUsername" to="Padding/HBox/Sections/Multiplayer" method="_on_OnlineUsername_text_changed"]
+[connection signal="text_changed" from="Padding/HBox/Sections/Multiplayer/HBox2/WebServerAddress" to="Padding/HBox/Sections/Multiplayer" method="_on_WebServerAddress_text_changed"]
