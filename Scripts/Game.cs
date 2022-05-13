@@ -16,12 +16,6 @@ namespace GodotModules
             _hotkeyManager = new(_systemFileManager);
             _sceneManager = new(this, new GodotFileManager(), _hotkeyManager);
 
-            _sceneManager.PreInit[Scene.Menu] = (scene) =>
-            {
-                var menu = (UIMenu)scene;
-                menu.HotkeyManager = _hotkeyManager;
-            };
-
             _sceneManager.PreInit[Scene.Options] = (scene) =>
             {
                 var options = (UIOptions)scene;
