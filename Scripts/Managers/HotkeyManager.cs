@@ -12,6 +12,7 @@ namespace GodotModules
         public HotkeyManager(SystemFileManager systemFileManager)
         {
             _hotkeys = new();
+            _defaultHotkeys = new();
             _systemFileManager = systemFileManager;
             LoadDefaultHotkeys();
             if (_systemFileManager.ConfigExists("controls"))
@@ -50,10 +51,10 @@ namespace GodotModules
                 if (arr.Count == 0)
                     continue;
 
-                _hotkeys[action] = (InputEventKey)InputMap.GetActionList(action)[0];
+                _defaultHotkeys[action] = (InputEventKey)InputMap.GetActionList(action)[0];
             }
 
-            _defaultHotkeys = _hotkeys;
+            _hotkeys = new Dictionary<string, InputEventKey>(_defaultHotkeys);
         }
 
         public void SaveHotkeys() => _systemFileManager.WriteConfig("controls", _hotkeys.ToDictionary(x => x.Key, x => ConvertToJson(x.Value)));
