@@ -9,13 +9,14 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 1 )
 script = ExtResource( 3 )
+NodePathBtnPlay = NodePath("Left Sidebar/VBoxContainer/Play")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="Back Panel" type="PanelContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 2 )
 
-[node name="MarginContainer3" type="MarginContainer" parent="."]
+[node name="Right Sidebar" type="MarginContainer" parent="."]
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
@@ -28,35 +29,35 @@ custom_constants/margin_top = 0
 custom_constants/margin_left = 50
 custom_constants/margin_bottom = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer3"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Right Sidebar"]
 margin_left = 50.0
 margin_right = 105.0
 margin_bottom = 104.0
 
-[node name="Options" type="Button" parent="MarginContainer3/VBoxContainer"]
+[node name="Options" type="Button" parent="Right Sidebar/VBoxContainer"]
 margin_right = 55.0
 margin_bottom = 23.0
 text = "Options"
 
-[node name="Mods" type="Button" parent="MarginContainer3/VBoxContainer"]
+[node name="Mods" type="Button" parent="Right Sidebar/VBoxContainer"]
 margin_top = 27.0
 margin_right = 55.0
 margin_bottom = 50.0
 text = "Mods"
 
-[node name="Credits" type="Button" parent="MarginContainer3/VBoxContainer"]
+[node name="Credits" type="Button" parent="Right Sidebar/VBoxContainer"]
 margin_top = 54.0
 margin_right = 55.0
 margin_bottom = 77.0
 text = "Credits"
 
-[node name="Quit" type="Button" parent="MarginContainer3/VBoxContainer"]
+[node name="Quit" type="Button" parent="Right Sidebar/VBoxContainer"]
 margin_top = 81.0
 margin_right = 55.0
 margin_bottom = 104.0
 text = "Quit"
 
-[node name="MarginContainer2" type="MarginContainer" parent="."]
+[node name="Left Sidebar" type="MarginContainer" parent="."]
 anchor_top = 0.5
 anchor_bottom = 0.5
 margin_top = -20.0
@@ -67,23 +68,23 @@ custom_constants/margin_top = 0
 custom_constants/margin_left = 50
 custom_constants/margin_bottom = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer2"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Left Sidebar"]
 margin_left = 50.0
 margin_right = 125.0
 margin_bottom = 50.0
 
-[node name="Play" type="Button" parent="MarginContainer2/VBoxContainer"]
+[node name="Play" type="Button" parent="Left Sidebar/VBoxContainer"]
 margin_right = 75.0
 margin_bottom = 23.0
 text = "Play"
 
-[node name="Multiplayer" type="Button" parent="MarginContainer2/VBoxContainer"]
+[node name="Multiplayer" type="Button" parent="Left Sidebar/VBoxContainer"]
 margin_top = 27.0
 margin_right = 75.0
 margin_bottom = 50.0
 text = "Multiplayer"
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="Social Links" type="MarginContainer" parent="."]
 anchor_top = 1.0
 anchor_bottom = 1.0
 margin_top = -40.0
@@ -93,29 +94,29 @@ custom_constants/margin_top = 0
 custom_constants/margin_left = 10
 custom_constants/margin_bottom = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Social Links"]
 margin_left = 10.0
 margin_right = 117.0
 margin_bottom = 40.0
 
-[node name="Discord" type="Button" parent="MarginContainer/HBoxContainer"]
+[node name="Discord" type="Button" parent="Social Links/HBoxContainer"]
 margin_right = 53.0
 margin_bottom = 40.0
 text = "Discord"
 flat = true
 
-[node name="GitHub" type="Button" parent="MarginContainer/HBoxContainer"]
+[node name="GitHub" type="Button" parent="Social Links/HBoxContainer"]
 margin_left = 57.0
 margin_right = 107.0
 margin_bottom = 40.0
 text = "GitHub"
 flat = true
 
-[connection signal="pressed" from="MarginContainer3/VBoxContainer/Options" to="." method="_on_Options_pressed"]
-[connection signal="pressed" from="MarginContainer3/VBoxContainer/Mods" to="." method="_on_Mods_pressed"]
-[connection signal="pressed" from="MarginContainer3/VBoxContainer/Credits" to="." method="_on_Credits_pressed"]
-[connection signal="pressed" from="MarginContainer3/VBoxContainer/Quit" to="." method="_on_Quit_pressed"]
-[connection signal="pressed" from="MarginContainer2/VBoxContainer/Play" to="." method="_on_Play_pressed"]
-[connection signal="pressed" from="MarginContainer2/VBoxContainer/Multiplayer" to="." method="_on_Multiplayer_pressed"]
-[connection signal="pressed" from="MarginContainer/HBoxContainer/Discord" to="." method="_on_Discord_pressed"]
-[connection signal="pressed" from="MarginContainer/HBoxContainer/GitHub" to="." method="_on_GitHub_pressed"]
+[connection signal="pressed" from="Right Sidebar/VBoxContainer/Options" to="." method="_on_Options_pressed"]
+[connection signal="pressed" from="Right Sidebar/VBoxContainer/Mods" to="." method="_on_Mods_pressed"]
+[connection signal="pressed" from="Right Sidebar/VBoxContainer/Credits" to="." method="_on_Credits_pressed"]
+[connection signal="pressed" from="Right Sidebar/VBoxContainer/Quit" to="." method="_on_Quit_pressed"]
+[connection signal="pressed" from="Left Sidebar/VBoxContainer/Play" to="." method="_on_Play_pressed"]
+[connection signal="pressed" from="Left Sidebar/VBoxContainer/Multiplayer" to="." method="_on_Multiplayer_pressed"]
+[connection signal="pressed" from="Social Links/HBoxContainer/Discord" to="." method="_on_Discord_pressed"]
+[connection signal="pressed" from="Social Links/HBoxContainer/GitHub" to="." method="_on_GitHub_pressed"]

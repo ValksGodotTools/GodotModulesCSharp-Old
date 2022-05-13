@@ -4,6 +4,10 @@ namespace GodotModules
 {
     public class UIMenu : Node
     {
+        [Export] public readonly NodePath NodePathBtnPlay;
+
+        public override void _Ready() => GetNode<Button>(NodePathBtnPlay).GrabFocus();
+
         private async void _on_Play_pressed() => await GM.ChangeScene(Scene.Game);
         private async void _on_Multiplayer_pressed() => await GM.ChangeScene(Scene.GameServers);
         private async void _on_Options_pressed() => await GM.ChangeScene(Scene.Options);
