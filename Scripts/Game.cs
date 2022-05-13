@@ -5,23 +5,33 @@ namespace GodotModules
 {
     public class Game : Node
     {
+        [Export] public readonly NodePath NodePathAudioStreamPlayer;
+        private AudioStreamPlayer _audioStreamPlayer;
+
         private GM _gm;
         private HotkeyManager _hotkeyManager;
         private SystemFileManager _systemFileManager;
         private SceneManager _sceneManager;
         private OptionsManager _optionsManager;
+        private MusicManager _musicManager;
 
         public override async void _Ready()
         {
+            _audioStreamPlayer = GetNode<AudioStreamPlayer>(NodePathAudioStreamPlayer);
+
             _systemFileManager = new();
             _hotkeyManager = new(_systemFileManager);
             _optionsManager = new(_systemFileManager, _hotkeyManager);
+            _musicManager = new(_audioStreamPlayer, _optionsManager);
             _sceneManager = new(this, new GodotFileManager(), _hotkeyManager);
+
+            _musicManager.LoadTrack("Menu", "Audio/Music/Unsolicited trailer music loop edit.wav");
+            _musicManager.PlayTrack("Menu");
 
             _sceneManager.PreInit[Scene.Options] = (scene) =>
             {
                 var options = (UIOptions)scene;
-                options.PreInit(_hotkeyManager, _optionsManager);
+                options.PreInit(_hotkeyManager, _optionsManager, _musicManager);
             };
 
             _sceneManager.EscPressed[Scene.Credits] = async () => await _sceneManager.ChangeScene(Scene.Menu);

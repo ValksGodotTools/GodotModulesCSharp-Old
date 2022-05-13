@@ -127,6 +127,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 9 )
 NodePathFullscreen = NodePath("Fullscreen")
+NodePathVSync = NodePath("HBoxContainer/VSync")
 
 [node name="Fullscreen" type="OptionButton" parent="Padding/HBox/Sections/Display"]
 margin_right = 100.0
@@ -157,39 +158,47 @@ visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 7 )
+NodePathMusic = NodePath("HBox1/Music")
+NodePathSFX = NodePath("HBox2/SFX")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Padding/HBox/Sections/Audio"]
+[node name="HBox1" type="HBoxContainer" parent="Padding/HBox/Sections/Audio"]
 margin_right = 741.0
 margin_bottom = 17.0
 
-[node name="Label" type="Label" parent="Padding/HBox/Sections/Audio/HBoxContainer"]
+[node name="Label" type="Label" parent="Padding/HBox/Sections/Audio/HBox1"]
 margin_right = 50.0
 margin_bottom = 17.0
 rect_min_size = Vector2( 50, 0 )
 text = "Music"
 
-[node name="HSlider" type="HSlider" parent="Padding/HBox/Sections/Audio/HBoxContainer"]
+[node name="Music" type="HSlider" parent="Padding/HBox/Sections/Audio/HBox1"]
 margin_left = 54.0
 margin_right = 741.0
 margin_bottom = 16.0
 size_flags_horizontal = 3
+min_value = -40.0
+max_value = 0.0
+step = 0.1
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Padding/HBox/Sections/Audio"]
+[node name="HBox2" type="HBoxContainer" parent="Padding/HBox/Sections/Audio"]
 margin_top = 21.0
 margin_right = 741.0
 margin_bottom = 38.0
 
-[node name="Label2" type="Label" parent="Padding/HBox/Sections/Audio/HBoxContainer2"]
+[node name="Label" type="Label" parent="Padding/HBox/Sections/Audio/HBox2"]
 margin_right = 50.0
 margin_bottom = 17.0
 rect_min_size = Vector2( 50, 0 )
 text = "SFX"
 
-[node name="HSlider2" type="HSlider" parent="Padding/HBox/Sections/Audio/HBoxContainer2"]
+[node name="SFX" type="HSlider" parent="Padding/HBox/Sections/Audio/HBox2"]
 margin_left = 54.0
 margin_right = 741.0
 margin_bottom = 16.0
 size_flags_horizontal = 3
+min_value = -40.0
+max_value = 0.0
+step = 0.1
 
 [node name="Controls" type="PanelContainer" parent="Padding/HBox/Sections"]
 visible = false
@@ -270,4 +279,6 @@ rect_min_size = Vector2( 150, 0 )
 [connection signal="focus_entered" from="Padding/HBox/Nav/Multiplayer" to="." method="_on_Multiplayer_focus_entered"]
 [connection signal="item_selected" from="Padding/HBox/Sections/Display/Fullscreen" to="Padding/HBox/Sections/Display" method="_on_Fullscreen_item_selected"]
 [connection signal="toggled" from="Padding/HBox/Sections/Display/HBoxContainer/VSync" to="Padding/HBox/Sections/Display" method="_on_VSync_toggled"]
+[connection signal="value_changed" from="Padding/HBox/Sections/Audio/HBox1/Music" to="Padding/HBox/Sections/Audio" method="_on_Music_value_changed"]
+[connection signal="value_changed" from="Padding/HBox/Sections/Audio/HBox2/SFX" to="Padding/HBox/Sections/Audio" method="_on_SFX_value_changed"]
 [connection signal="pressed" from="Padding/HBox/Sections/Controls/VBox/Reset Hotkeys" to="Padding/HBox/Sections/Controls" method="_on_Reset_Hotkeys_pressed"]

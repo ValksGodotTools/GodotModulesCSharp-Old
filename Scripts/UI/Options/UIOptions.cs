@@ -29,17 +29,18 @@ namespace GodotModules
         private Button _btnMultiplayer;
         private Dictionary<OptionSection, Control> _optionSections;
 
-        public void PreInit(HotkeyManager hotkeyManager, OptionsManager optionsManager)
+        public void PreInit(HotkeyManager hotkeyManager, OptionsManager optionsManager, MusicManager musicManager)
         {
             _optionSections = new();
-            _optionSections[OptionSection.Game] = GetNode<Control>(NodePathOptionsGame);
-            _optionSections[OptionSection.Video] = GetNode<Control>(NodePathOptionsVideo);
+            _optionSections[OptionSection.Game] = GetNode<UIOptionsGame>(NodePathOptionsGame);
+            _optionSections[OptionSection.Video] = GetNode<UIOptionsVideo>(NodePathOptionsVideo);
             _optionSections[OptionSection.Display] = GetNode<UIOptionsDisplay>(NodePathOptionsDisplay);
-            _optionSections[OptionSection.Audio] = GetNode<Control>(NodePathOptionsAudio);
+            _optionSections[OptionSection.Audio] = GetNode<UIOptionsAudio>(NodePathOptionsAudio);
             _optionSections[OptionSection.Controls] = GetNode<UIOptionsControls>(NodePathOptionsControls);
-            _optionSections[OptionSection.Multiplayer] = GetNode<Control>(NodePathOptionsMultiplayer);
+            _optionSections[OptionSection.Multiplayer] = GetNode<UIOptionsMultiplayer>(NodePathOptionsMultiplayer);
 
             ((UIOptionsDisplay)_optionSections[OptionSection.Display]).PreInit(optionsManager);
+            ((UIOptionsAudio)_optionSections[OptionSection.Audio]).PreInit(musicManager, optionsManager);
             ((UIOptionsControls)_optionSections[OptionSection.Controls]).PreInit(hotkeyManager);
         }
 

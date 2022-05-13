@@ -63,8 +63,20 @@ namespace GodotModules
         {
             if (_systemFileManager.ConfigExists("options"))
                 Options = _systemFileManager.ReadConfig<OptionsData>("options");
-            else
-                Options = new OptionsData();
+            else 
+            {
+                var defaultOptions = new OptionsData {
+                    VSync = true,
+                    FullscreenMode = FullscreenMode.Borderless,
+                    MusicVolume = -20,
+                    SFXVolume = -20
+                };
+
+                Options = defaultOptions;
+            }
+
+            SetVSync(Options.VSync);
+            SetFullscreenMode(Options.FullscreenMode);
         }
 
         public void SaveOptions() 
@@ -78,5 +90,7 @@ namespace GodotModules
     {
         public bool VSync { get; set; }
         public FullscreenMode FullscreenMode { get; set; }
+        public float MusicVolume { get; set; }
+        public float SFXVolume { get; set; }
     }
 }
