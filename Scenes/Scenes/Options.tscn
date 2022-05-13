@@ -15,6 +15,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 2 )
 script = ExtResource( 3 )
+NodePathBtnGame = NodePath("Padding/HBox/Nav/Game")
+NodePathBtnVideo = NodePath("Padding/HBox/Nav/Video")
+NodePathBtnDisplay = NodePath("Padding/HBox/Nav/Display")
+NodePathBtnAudio = NodePath("Padding/HBox/Nav/Audio")
+NodePathBtnControls = NodePath("Padding/HBox/Nav/Controls")
+NodePathBtnMultiplayer = NodePath("Padding/HBox/Nav/Multiplayer")
 NodePathOptionsGame = NodePath("Padding/HBox/Sections/Game")
 NodePathOptionsVideo = NodePath("Padding/HBox/Sections/Video")
 NodePathOptionsDisplay = NodePath("Padding/HBox/Sections/Display")
@@ -126,6 +132,7 @@ NodePathFullscreen = NodePath("Fullscreen")
 margin_right = 100.0
 margin_bottom = 23.0
 rect_min_size = Vector2( 100, 0 )
+focus_neighbour_left = NodePath("../../../Nav/Display")
 size_flags_horizontal = 0
 text = "Fullscreen"
 
@@ -213,7 +220,6 @@ size_flags_vertical = 3
 margin_top = 477.0
 margin_right = 112.0
 margin_bottom = 500.0
-focus_mode = 0
 size_flags_horizontal = 0
 text = "Reset to Defaults"
 
@@ -256,12 +262,12 @@ margin_right = 304.0
 margin_bottom = 17.0
 rect_min_size = Vector2( 150, 0 )
 
-[connection signal="pressed" from="Padding/HBox/Nav/Game" to="." method="_on_Game_pressed"]
-[connection signal="pressed" from="Padding/HBox/Nav/Video" to="." method="_on_Video_pressed"]
-[connection signal="pressed" from="Padding/HBox/Nav/Display" to="." method="_on_Display_pressed"]
-[connection signal="pressed" from="Padding/HBox/Nav/Audio" to="." method="_on_Audio_pressed"]
-[connection signal="pressed" from="Padding/HBox/Nav/Controls" to="." method="_on_Controls_pressed"]
-[connection signal="pressed" from="Padding/HBox/Nav/Multiplayer" to="." method="_on_Multiplayer_pressed"]
+[connection signal="focus_entered" from="Padding/HBox/Nav/Game" to="." method="_on_Game_focus_entered"]
+[connection signal="focus_entered" from="Padding/HBox/Nav/Video" to="." method="_on_Video_focus_entered"]
+[connection signal="focus_entered" from="Padding/HBox/Nav/Display" to="." method="_on_Display_focus_entered"]
+[connection signal="focus_entered" from="Padding/HBox/Nav/Audio" to="." method="_on_Audio_focus_entered"]
+[connection signal="focus_entered" from="Padding/HBox/Nav/Controls" to="." method="_on_Controls_focus_entered"]
+[connection signal="focus_entered" from="Padding/HBox/Nav/Multiplayer" to="." method="_on_Multiplayer_focus_entered"]
 [connection signal="item_selected" from="Padding/HBox/Sections/Display/Fullscreen" to="Padding/HBox/Sections/Display" method="_on_Fullscreen_item_selected"]
 [connection signal="toggled" from="Padding/HBox/Sections/Display/HBoxContainer/VSync" to="Padding/HBox/Sections/Display" method="_on_VSync_toggled"]
 [connection signal="pressed" from="Padding/HBox/Sections/Controls/VBox/Reset Hotkeys" to="Padding/HBox/Sections/Controls" method="_on_Reset_Hotkeys_pressed"]
