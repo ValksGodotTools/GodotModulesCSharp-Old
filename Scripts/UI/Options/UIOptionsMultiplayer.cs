@@ -20,24 +20,7 @@ namespace GodotModules
 
         private void _on_OnlineUsername_text_changed(string newText)
         {
-            LineEditFilter(_onlineUsername, ref prevTextOnlineUsername, (text) => Regex.IsMatch(text, "^[A-Za-z]+$"));
-        }
-
-        private void LineEditFilter(LineEdit lineEdit, ref string prevText, Func<string, bool> filter) 
-        {
-            var text = lineEdit.Text;
-
-            if (string.IsNullOrWhiteSpace(text))
-                return;
-
-            if (!filter(text)) 
-            {
-                _onlineUsername.Text = prevTextOnlineUsername;
-                _onlineUsername.CaretPosition = text.Length;
-                return;
-            }
-
-            prevTextOnlineUsername = text;
+            _onlineUsername.Filter((text) => Regex.IsMatch(text, "^[A-Za-z]+$"));
         }
 
         private void _on_WebServerAddress_text_changed(string newText)
