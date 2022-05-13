@@ -29,9 +29,9 @@ script = ExtResource( 2 )
 
 [node name="Reset To Default" type="Button" parent="."]
 margin_left = 233.0
-margin_right = 741.0
+margin_right = 258.0
 margin_bottom = 23.0
-size_flags_horizontal = 3
+rect_min_size = Vector2( 25, 0 )
 icon = ExtResource( 4 )
 flat = true
 expand_icon = true
