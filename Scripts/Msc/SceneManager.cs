@@ -7,20 +7,23 @@ namespace GodotModules
     {
         public Node ActiveScene { get; set; }
 
-        private string _curSceneName { get; set; }
-        private string _prevSceneName { get; set; }
+        private Scene _curScene { get; set; }
+        private Scene _prevScene { get; set; }
 
-        private readonly Dictionary<string, PackedScene> _scenes = new Dictionary<string, PackedScene>();
+        private readonly Dictionary<Scene, PackedScene> _scenes = new Dictionary<Scene, PackedScene>();
+        private readonly Dictionary<Scene, Action<Node>> _preInit = new Dictionary<Scene, Action<Node>>();
         private readonly Game _game;
         private readonly GodotFileManager _godotFileManager;
+        private readonly HotkeyManager _hotkeyManager;
 
-        public SceneManager(Game game, GodotFileManager godotFileManager) 
+        public SceneManager(Game game, GodotFileManager godotFileManager, HotkeyManager hotkeyManager) 
         {
             _game = game;
             _godotFileManager = godotFileManager;
+            _hotkeyManager = hotkeyManager;
         }
 
-        public async Task InitAsync(HotkeyManager hotkeyManager)
+        public async Task InitAsync()
         {
             var loadedScenes = _godotFileManager.LoadDir("Scenes/Scenes", (dir, fileName) =>
             {
@@ -29,38 +32,34 @@ namespace GodotModules
             });
 
             if (loadedScenes)
-                await ChangeScene("Menu", (scene) => {
-                    var menu = (UIMenu)scene;
-                    menu.HotkeyManager = hotkeyManager;
-                });
+                await ChangeScene(Scene.Menu);
         }
 
-        public bool InMainMenu() => _curSceneName == "Menu";
-        public bool InGameServers() => _curSceneName == "GameServers";
-        public bool InLobby() => _curSceneName == "Lobby";
-        public bool InGame() => _curSceneName == "Game";
-
-        public async Task ChangeScene(string sceneName, Action<Node> setupBeforeReady = null, bool instant = true)
+        public void PreInit(Scene scene, Action<Node> codeBeforeSceneReady)
         {
-            if (_curSceneName == sceneName || string.IsNullOrWhiteSpace(sceneName))
+            _preInit[scene] = (scene) => {
+                codeBeforeSceneReady(scene);
+            };
+        }
+
+        public async Task ChangeScene(Scene scene, bool instant = true)
+        {
+            if (_curScene == scene)
                 return;
                 
-            _prevSceneName = _curSceneName;
-            _curSceneName = sceneName;
+            _prevScene = _curScene;
+            _curScene = scene;
 
             if (_game.GetChildCount() != 0) 
-            {
-                var scene = _game.GetChild(0);
-                scene.QueueFree();
-            }
+                _game.GetChild(0).QueueFree();
 
             if (!instant)
                 await Task.Delay(1);
 
-            ActiveScene = _scenes[sceneName].Instance();
+            ActiveScene = _scenes[scene].Instance();
 
-            if (setupBeforeReady != null)
-                setupBeforeReady(ActiveScene);
+            if (_preInit.ContainsKey(scene))
+                _preInit[scene](ActiveScene);
 
             _game.AddChild(ActiveScene);
         }
@@ -68,9 +67,7 @@ namespace GodotModules
         public async Task IfEscGoToPrevScene() 
         {
             if (Input.IsActionJustPressed("ui_cancel"))
-            {
-                await ChangeScene(_prevSceneName);
-            }
+                await ChangeScene(_prevScene);
         }
 
         public void IfEscapePressed(Action code)
@@ -87,6 +84,17 @@ namespace GodotModules
             }
         }
 
-        private void LoadScene(string scene) => _scenes[scene] = ResourceLoader.Load<PackedScene>($"res://Scenes/Scenes/{scene}.tscn");
+        private void LoadScene(string scene) => _scenes[(Scene)Enum.Parse(typeof(Scene), scene)] = ResourceLoader.Load<PackedScene>($"res://Scenes/Scenes/{scene}.tscn");
+    }
+
+    public enum Scene
+    {
+        Game,
+        GameServers,
+        Lobby,
+        Menu,
+        Options,
+        Mods,
+        Credits
     }
 }

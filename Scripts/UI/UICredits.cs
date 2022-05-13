@@ -21,7 +21,7 @@ namespace GodotModules
             Tween.Start();
         }
 
-        private async void _on_Tween_tween_completed(object obj, NodePath key) => await GM.ChangeScene("Menu");
+        private async void _on_Tween_tween_completed(object obj, NodePath key) => await GM.ChangeScene(Scene.Menu);
     }
 }
 

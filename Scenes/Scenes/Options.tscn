@@ -11,6 +11,11 @@ anchor_bottom = 1.0
 theme = ExtResource( 2 )
 script = ExtResource( 3 )
 NodePathUIControls = NodePath("MarginContainer/HBoxContainer/Control/Controls")
+NodePathOptionsGame = NodePath("MarginContainer/HBoxContainer/Control/Game")
+NodePathOptionsVideo = NodePath("MarginContainer/HBoxContainer/Control/Video")
+NodePathOptionsAudio = NodePath("MarginContainer/HBoxContainer/Control/Audio")
+NodePathOptionsControls = NodePath("MarginContainer/HBoxContainer/Control/Controls")
+NodePathOptionsMultiplayer = NodePath("MarginContainer/HBoxContainer/Control/Multiplayer")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 anchor_right = 1.0
@@ -83,6 +88,11 @@ visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/Control/Game"]
+margin_right = 741.0
+margin_bottom = 17.0
+text = "Nothing in game settings at the moment!"
+
 [node name="Video" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Control"]
 visible = false
 anchor_right = 1.0
@@ -150,6 +160,7 @@ margin_bottom = 16.0
 size_flags_horizontal = 3
 
 [node name="Controls" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Control"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 4 )
@@ -191,3 +202,9 @@ margin_left = 154.0
 margin_right = 304.0
 margin_bottom = 17.0
 rect_min_size = Vector2( 150, 0 )
+
+[connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/Game" to="." method="_on_Game_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/Video" to="." method="_on_Video_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/Audio" to="." method="_on_Audio_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/Controls" to="." method="_on_Controls_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/Multiplayer" to="." method="_on_Multiplayer_pressed"]

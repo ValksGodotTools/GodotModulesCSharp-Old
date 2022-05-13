@@ -12,12 +12,25 @@ namespace GodotModules
 
         public override async void _Ready()
         {
-            _sceneManager = new(this, new GodotFileManager());
-            _gm = new GM(_sceneManager);
             _systemFileManager = new();
             _hotkeyManager = new(_systemFileManager);
+            _sceneManager = new(this, new GodotFileManager(), _hotkeyManager);
+            
+            _sceneManager.PreInit(Scene.Menu, (scene) =>
+            {
+                var menu = (UIMenu)scene;
+                menu.HotkeyManager = _hotkeyManager;
+            });
 
-            await _sceneManager.InitAsync(_hotkeyManager);
+            _sceneManager.PreInit(Scene.Options, (scene) =>
+            {
+                var options = (UIOptions)scene;
+                options.PreInit(_hotkeyManager);
+            });
+
+            _gm = new GM(_sceneManager);
+
+            await _sceneManager.InitAsync();
             GM.Net.StartServer(25565, 100);
             GM.Net.StartClient("127.0.0.1", 25565);
             await GM.Net.WebClient.CheckConnectionAsync();

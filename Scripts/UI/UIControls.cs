@@ -3,7 +3,7 @@ using System;
 
 namespace GodotModules
 {
-    public class UIControls : Node
+    public class UIControls : Control
     {
         public HotkeyManager _hotkeyManager { get; set; }
 

@@ -33,15 +33,6 @@ namespace GodotModules
 
                         packetReader.Dispose();
                         break;
-
-                    case GodotOpcode.ChangeScene:
-                        await GM.ChangeScene($"{cmd.Data}");
-                        break;
-
-                    case GodotOpcode.Disconnect:
-                        _networkManager.DisconnectOpcode = (DisconnectOpcode)cmd.Data;
-                        await GM.ChangeScene("GameServers");
-                        break;
                 }
             }
         }
