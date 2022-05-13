@@ -15,18 +15,25 @@ namespace GodotModules
             _systemFileManager = new();
             _hotkeyManager = new(_systemFileManager);
             _sceneManager = new(this, new GodotFileManager(), _hotkeyManager);
-            
-            _sceneManager.PreInit(Scene.Menu, (scene) =>
+
+            _sceneManager.PreInit[Scene.Menu] = (scene) =>
             {
                 var menu = (UIMenu)scene;
                 menu.HotkeyManager = _hotkeyManager;
-            });
+            };
 
-            _sceneManager.PreInit(Scene.Options, (scene) =>
+            _sceneManager.PreInit[Scene.Options] = (scene) =>
             {
                 var options = (UIOptions)scene;
                 options.PreInit(_hotkeyManager);
-            });
+            };
+
+            _sceneManager.EscPressed[Scene.Credits] = async () => await _sceneManager.ChangeScene(Scene.Menu);
+            _sceneManager.EscPressed[Scene.GameServers] = async () => await _sceneManager.ChangeScene(Scene.Menu);
+            _sceneManager.EscPressed[Scene.Mods] = async () => await _sceneManager.ChangeScene(Scene.Menu);
+            _sceneManager.EscPressed[Scene.Options] = async () => await _sceneManager.ChangeScene(Scene.Menu);
+            _sceneManager.EscPressed[Scene.Lobby] = async () => await _sceneManager.ChangeScene(Scene.GameServers);
+            _sceneManager.EscPressed[Scene.Game] = async () => await _sceneManager.ChangeScene(Scene.Menu);
 
             _gm = new GM(_sceneManager);
 
@@ -41,9 +48,11 @@ namespace GodotModules
             await _gm.Update();
         }
 
-        public override async void _Input(InputEvent @event)
+        public override void _Input(InputEvent @event)
         {
-            await GM.IfEscGoToPrevScene();
+            if (Input.IsActionJustPressed("ui_cancel"))
+                if (_sceneManager.EscPressed.ContainsKey(_sceneManager.CurScene))
+                    _sceneManager.EscPressed[_sceneManager.CurScene]();
         }
 
         public override async void _Notification(int what)

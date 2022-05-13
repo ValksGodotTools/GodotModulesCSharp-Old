@@ -5,13 +5,14 @@ namespace GodotModules
 {
     public class SceneManager
     {
+        public readonly Dictionary<Scene, Action> EscPressed = new Dictionary<Scene, Action>();
+        public readonly Dictionary<Scene, Action<Node>> PreInit = new Dictionary<Scene, Action<Node>>();
         public Node ActiveScene { get; set; }
 
-        private Scene _curScene { get; set; }
-        private Scene _prevScene { get; set; }
+        public Scene CurScene { get; set; }
+        public Scene PrevScene { get; set; }
 
         private readonly Dictionary<Scene, PackedScene> _scenes = new Dictionary<Scene, PackedScene>();
-        private readonly Dictionary<Scene, Action<Node>> _preInit = new Dictionary<Scene, Action<Node>>();
         private readonly Game _game;
         private readonly GodotFileManager _godotFileManager;
         private readonly HotkeyManager _hotkeyManager;
@@ -35,20 +36,13 @@ namespace GodotModules
                 await ChangeScene(Scene.Menu);
         }
 
-        public void PreInit(Scene scene, Action<Node> codeBeforeSceneReady)
-        {
-            _preInit[scene] = (scene) => {
-                codeBeforeSceneReady(scene);
-            };
-        }
-
         public async Task ChangeScene(Scene scene, bool instant = true)
         {
-            if (_curScene == scene)
+            if (CurScene == scene)
                 return;
                 
-            _prevScene = _curScene;
-            _curScene = scene;
+            PrevScene = CurScene;
+            CurScene = scene;
 
             if (_game.GetChildCount() != 0) 
                 _game.GetChild(0).QueueFree();
@@ -58,8 +52,8 @@ namespace GodotModules
 
             ActiveScene = _scenes[scene].Instance();
 
-            if (_preInit.ContainsKey(scene))
-                _preInit[scene](ActiveScene);
+            if (PreInit.ContainsKey(scene))
+                PreInit[scene](ActiveScene);
 
             _game.AddChild(ActiveScene);
         }
@@ -67,7 +61,7 @@ namespace GodotModules
         public async Task IfEscGoToPrevScene() 
         {
             if (Input.IsActionJustPressed("ui_cancel"))
-                await ChangeScene(_prevScene);
+                await ChangeScene(PrevScene);
         }
 
         public void IfEscapePressed(Action code)
