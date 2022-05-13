@@ -15,19 +15,19 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 2 )
 script = ExtResource( 3 )
-NodePathOptionsGame = NodePath("MarginContainer/HBoxContainer/Sections/Game")
-NodePathOptionsVideo = NodePath("MarginContainer/HBoxContainer/Sections/Video")
-NodePathOptionsDisplay = NodePath("MarginContainer/HBoxContainer/Sections/Display")
-NodePathOptionsAudio = NodePath("MarginContainer/HBoxContainer/Sections/Audio")
-NodePathOptionsControls = NodePath("MarginContainer/HBoxContainer/Sections/Controls")
-NodePathOptionsMultiplayer = NodePath("MarginContainer/HBoxContainer/Sections/Multiplayer")
+NodePathOptionsGame = NodePath("Padding/HBox/Sections/Game")
+NodePathOptionsVideo = NodePath("Padding/HBox/Sections/Video")
+NodePathOptionsDisplay = NodePath("Padding/HBox/Sections/Display")
+NodePathOptionsAudio = NodePath("Padding/HBox/Sections/Audio")
+NodePathOptionsControls = NodePath("Padding/HBox/Sections/Controls")
+NodePathOptionsMultiplayer = NodePath("Padding/HBox/Sections/Multiplayer")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="BackPanel" type="PanelContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 1 )
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="Padding" type="MarginContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 custom_constants/margin_right = 50
@@ -35,181 +35,181 @@ custom_constants/margin_top = 50
 custom_constants/margin_left = 50
 custom_constants/margin_bottom = 50
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+[node name="HBox" type="HBoxContainer" parent="Padding"]
 margin_left = 50.0
 margin_top = 50.0
 margin_right = 974.0
 margin_bottom = 550.0
 
-[node name="Nav" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+[node name="Nav" type="VBoxContainer" parent="Padding/HBox"]
 margin_right = 75.0
 margin_bottom = 500.0
 alignment = 1
 
-[node name="Game" type="Button" parent="MarginContainer/HBoxContainer/Nav"]
+[node name="Game" type="Button" parent="Padding/HBox/Nav"]
 margin_top = 171.0
 margin_right = 75.0
 margin_bottom = 194.0
 text = "Game"
 
-[node name="Video" type="Button" parent="MarginContainer/HBoxContainer/Nav"]
+[node name="Video" type="Button" parent="Padding/HBox/Nav"]
 margin_top = 198.0
 margin_right = 75.0
 margin_bottom = 221.0
 text = "Video"
 
-[node name="Display" type="Button" parent="MarginContainer/HBoxContainer/Nav"]
+[node name="Display" type="Button" parent="Padding/HBox/Nav"]
 margin_top = 225.0
 margin_right = 75.0
 margin_bottom = 248.0
 text = "Display"
 
-[node name="Audio" type="Button" parent="MarginContainer/HBoxContainer/Nav"]
+[node name="Audio" type="Button" parent="Padding/HBox/Nav"]
 margin_top = 252.0
 margin_right = 75.0
 margin_bottom = 275.0
 text = "Audio"
 
-[node name="Controls" type="Button" parent="MarginContainer/HBoxContainer/Nav"]
+[node name="Controls" type="Button" parent="Padding/HBox/Nav"]
 margin_top = 279.0
 margin_right = 75.0
 margin_bottom = 302.0
 text = "Controls"
 
-[node name="Multiplayer" type="Button" parent="MarginContainer/HBoxContainer/Nav"]
+[node name="Multiplayer" type="Button" parent="Padding/HBox/Nav"]
 margin_top = 306.0
 margin_right = 75.0
 margin_bottom = 329.0
 text = "Multiplayer"
 
-[node name="Padding" type="Control" parent="MarginContainer/HBoxContainer"]
+[node name="Padding" type="Control" parent="Padding/HBox"]
 margin_left = 79.0
 margin_right = 179.0
 margin_bottom = 500.0
 rect_min_size = Vector2( 100, 0 )
 
-[node name="Sections" type="Control" parent="MarginContainer/HBoxContainer"]
+[node name="Sections" type="Control" parent="Padding/HBox"]
 margin_left = 183.0
 margin_right = 924.0
 margin_bottom = 500.0
 size_flags_horizontal = 3
 
-[node name="Game" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Sections"]
+[node name="Game" type="VBoxContainer" parent="Padding/HBox/Sections"]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 6 )
 
-[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/Sections/Game"]
+[node name="Label" type="Label" parent="Padding/HBox/Sections/Game"]
 margin_right = 741.0
 margin_bottom = 17.0
 text = "Nothing in game settings at the moment!"
 
-[node name="Video" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Sections"]
+[node name="Video" type="VBoxContainer" parent="Padding/HBox/Sections"]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 5 )
 
-[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/Sections/Video"]
+[node name="Label" type="Label" parent="Padding/HBox/Sections/Video"]
 margin_right = 741.0
 margin_bottom = 17.0
 text = "Nothing in video right now :D"
 
-[node name="Display" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Sections"]
+[node name="Display" type="VBoxContainer" parent="Padding/HBox/Sections"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 9 )
 NodePathFullscreen = NodePath("Fullscreen")
 
-[node name="Fullscreen" type="OptionButton" parent="MarginContainer/HBoxContainer/Sections/Display"]
+[node name="Fullscreen" type="OptionButton" parent="Padding/HBox/Sections/Display"]
 margin_right = 100.0
 margin_bottom = 23.0
 rect_min_size = Vector2( 100, 0 )
 size_flags_horizontal = 0
 text = "Fullscreen"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Sections/Display"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Padding/HBox/Sections/Display"]
 margin_top = 27.0
 margin_right = 741.0
 margin_bottom = 50.0
 
-[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/Sections/Display/HBoxContainer"]
+[node name="Label" type="Label" parent="Padding/HBox/Sections/Display/HBoxContainer"]
 margin_top = 3.0
 margin_right = 39.0
 margin_bottom = 20.0
 text = "VSync"
 
-[node name="VSync" type="CheckBox" parent="MarginContainer/HBoxContainer/Sections/Display/HBoxContainer"]
+[node name="VSync" type="CheckBox" parent="Padding/HBox/Sections/Display/HBoxContainer"]
 margin_left = 43.0
 margin_right = 65.0
 margin_bottom = 23.0
 
-[node name="Audio" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Sections"]
+[node name="Audio" type="VBoxContainer" parent="Padding/HBox/Sections"]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 7 )
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Sections/Audio"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Padding/HBox/Sections/Audio"]
 margin_right = 741.0
 margin_bottom = 17.0
 
-[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/Sections/Audio/HBoxContainer"]
+[node name="Label" type="Label" parent="Padding/HBox/Sections/Audio/HBoxContainer"]
 margin_right = 50.0
 margin_bottom = 17.0
 rect_min_size = Vector2( 50, 0 )
 text = "Music"
 
-[node name="HSlider" type="HSlider" parent="MarginContainer/HBoxContainer/Sections/Audio/HBoxContainer"]
+[node name="HSlider" type="HSlider" parent="Padding/HBox/Sections/Audio/HBoxContainer"]
 margin_left = 54.0
 margin_right = 741.0
 margin_bottom = 16.0
 size_flags_horizontal = 3
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Sections/Audio"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Padding/HBox/Sections/Audio"]
 margin_top = 21.0
 margin_right = 741.0
 margin_bottom = 38.0
 
-[node name="Label2" type="Label" parent="MarginContainer/HBoxContainer/Sections/Audio/HBoxContainer2"]
+[node name="Label2" type="Label" parent="Padding/HBox/Sections/Audio/HBoxContainer2"]
 margin_right = 50.0
 margin_bottom = 17.0
 rect_min_size = Vector2( 50, 0 )
 text = "SFX"
 
-[node name="HSlider2" type="HSlider" parent="MarginContainer/HBoxContainer/Sections/Audio/HBoxContainer2"]
+[node name="HSlider2" type="HSlider" parent="Padding/HBox/Sections/Audio/HBoxContainer2"]
 margin_left = 54.0
 margin_right = 741.0
 margin_bottom = 16.0
 size_flags_horizontal = 3
 
-[node name="Controls" type="PanelContainer" parent="MarginContainer/HBoxContainer/Sections"]
+[node name="Controls" type="PanelContainer" parent="Padding/HBox/Sections"]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 1 )
 script = ExtResource( 4 )
-NodePathVBoxHotkeys = NodePath("VBoxContainer/Controls/Hotkeys")
+NodePathVBoxHotkeys = NodePath("VBox/Controls/Hotkeys")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Sections/Controls"]
+[node name="VBox" type="VBoxContainer" parent="Padding/HBox/Sections/Controls"]
 margin_right = 741.0
 margin_bottom = 500.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Controls" type="ScrollContainer" parent="MarginContainer/HBoxContainer/Sections/Controls/VBoxContainer"]
+[node name="Controls" type="ScrollContainer" parent="Padding/HBox/Sections/Controls/VBox"]
 margin_right = 741.0
 margin_bottom = 473.0
 size_flags_vertical = 3
 
-[node name="Hotkeys" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Sections/Controls/VBoxContainer/Controls"]
+[node name="Hotkeys" type="VBoxContainer" parent="Padding/HBox/Sections/Controls/VBox/Controls"]
 margin_right = 741.0
 margin_bottom = 473.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Reset Hotkeys" type="Button" parent="MarginContainer/HBoxContainer/Sections/Controls/VBoxContainer"]
+[node name="Reset Hotkeys" type="Button" parent="Padding/HBox/Sections/Controls/VBox"]
 margin_top = 477.0
 margin_right = 112.0
 margin_bottom = 500.0
@@ -217,51 +217,51 @@ focus_mode = 0
 size_flags_horizontal = 0
 text = "Reset to Defaults"
 
-[node name="Multiplayer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Sections"]
+[node name="Multiplayer" type="VBoxContainer" parent="Padding/HBox/Sections"]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 8 )
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Sections/Multiplayer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Padding/HBox/Sections/Multiplayer"]
 margin_right = 741.0
 margin_bottom = 17.0
 
-[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/Sections/Multiplayer/HBoxContainer"]
+[node name="Label" type="Label" parent="Padding/HBox/Sections/Multiplayer/HBoxContainer"]
 margin_right = 150.0
 margin_bottom = 17.0
 rect_min_size = Vector2( 150, 0 )
 text = "Online Username"
 
-[node name="LineEdit" type="LineEdit" parent="MarginContainer/HBoxContainer/Sections/Multiplayer/HBoxContainer"]
+[node name="LineEdit" type="LineEdit" parent="Padding/HBox/Sections/Multiplayer/HBoxContainer"]
 margin_left = 154.0
 margin_right = 304.0
 margin_bottom = 17.0
 rect_min_size = Vector2( 150, 0 )
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Sections/Multiplayer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Padding/HBox/Sections/Multiplayer"]
 margin_top = 21.0
 margin_right = 741.0
 margin_bottom = 38.0
 
-[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/Sections/Multiplayer/HBoxContainer2"]
+[node name="Label" type="Label" parent="Padding/HBox/Sections/Multiplayer/HBoxContainer2"]
 margin_right = 150.0
 margin_bottom = 17.0
 rect_min_size = Vector2( 150, 0 )
 text = "Web Server Address"
 
-[node name="LineEdit" type="LineEdit" parent="MarginContainer/HBoxContainer/Sections/Multiplayer/HBoxContainer2"]
+[node name="LineEdit" type="LineEdit" parent="Padding/HBox/Sections/Multiplayer/HBoxContainer2"]
 margin_left = 154.0
 margin_right = 304.0
 margin_bottom = 17.0
 rect_min_size = Vector2( 150, 0 )
 
-[connection signal="pressed" from="MarginContainer/HBoxContainer/Nav/Game" to="." method="_on_Game_pressed"]
-[connection signal="pressed" from="MarginContainer/HBoxContainer/Nav/Video" to="." method="_on_Video_pressed"]
-[connection signal="pressed" from="MarginContainer/HBoxContainer/Nav/Display" to="." method="_on_Display_pressed"]
-[connection signal="pressed" from="MarginContainer/HBoxContainer/Nav/Audio" to="." method="_on_Audio_pressed"]
-[connection signal="pressed" from="MarginContainer/HBoxContainer/Nav/Controls" to="." method="_on_Controls_pressed"]
-[connection signal="pressed" from="MarginContainer/HBoxContainer/Nav/Multiplayer" to="." method="_on_Multiplayer_pressed"]
-[connection signal="item_selected" from="MarginContainer/HBoxContainer/Sections/Display/Fullscreen" to="MarginContainer/HBoxContainer/Sections/Display" method="_on_Fullscreen_item_selected"]
-[connection signal="toggled" from="MarginContainer/HBoxContainer/Sections/Display/HBoxContainer/VSync" to="MarginContainer/HBoxContainer/Sections/Display" method="_on_VSync_toggled"]
-[connection signal="pressed" from="MarginContainer/HBoxContainer/Sections/Controls/VBoxContainer/Reset Hotkeys" to="MarginContainer/HBoxContainer/Sections/Controls" method="_on_Reset_Hotkeys_pressed"]
+[connection signal="pressed" from="Padding/HBox/Nav/Game" to="." method="_on_Game_pressed"]
+[connection signal="pressed" from="Padding/HBox/Nav/Video" to="." method="_on_Video_pressed"]
+[connection signal="pressed" from="Padding/HBox/Nav/Display" to="." method="_on_Display_pressed"]
+[connection signal="pressed" from="Padding/HBox/Nav/Audio" to="." method="_on_Audio_pressed"]
+[connection signal="pressed" from="Padding/HBox/Nav/Controls" to="." method="_on_Controls_pressed"]
+[connection signal="pressed" from="Padding/HBox/Nav/Multiplayer" to="." method="_on_Multiplayer_pressed"]
+[connection signal="item_selected" from="Padding/HBox/Sections/Display/Fullscreen" to="Padding/HBox/Sections/Display" method="_on_Fullscreen_item_selected"]
+[connection signal="toggled" from="Padding/HBox/Sections/Display/HBoxContainer/VSync" to="Padding/HBox/Sections/Display" method="_on_VSync_toggled"]
+[connection signal="pressed" from="Padding/HBox/Sections/Controls/VBox/Reset Hotkeys" to="Padding/HBox/Sections/Controls" method="_on_Reset_Hotkeys_pressed"]
