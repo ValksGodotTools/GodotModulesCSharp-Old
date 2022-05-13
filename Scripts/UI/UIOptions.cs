@@ -18,7 +18,7 @@ namespace GodotModules
         public void PreInit(HotkeyManager hotkeyManager)
         {
             _uiControls = GetNode<UIControls>(NodePathUIControls);
-            _uiControls._hotkeyManager = hotkeyManager;
+            _uiControls.PreInit(hotkeyManager);
         }
 
         public override void _Ready()
