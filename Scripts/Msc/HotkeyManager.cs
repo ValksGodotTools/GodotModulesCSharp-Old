@@ -30,6 +30,14 @@ namespace GodotModules
             }
         }
 
+        public void ResetHotkey(string key) 
+        {
+            _hotkeys[key] = _defaultHotkeys[key];
+
+            InputMap.ActionEraseEvents(key);
+            InputMap.ActionAddEvent(key, _hotkeys[key]);
+        }
+
         public void ResetToDefaultHotkeys()
         {
             _hotkeys = _defaultHotkeys;

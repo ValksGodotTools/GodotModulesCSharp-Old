@@ -29,5 +29,11 @@ namespace GodotModules
         }
 
         public void SetHotkeyText(string v) => _btnHotkey.SetHotkeyText(v);
+
+        private void _on_Reset_To_Default_pressed() 
+        {
+            _hotkeyManager.ResetHotkey(_action);
+            SetHotkeyText(_hotkeyManager.Hotkeys[_action].AsText());
+        }
     }
 }
