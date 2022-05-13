@@ -52,17 +52,10 @@ namespace GodotModules
         {
             var words = text.Split(' ');
 
-            if (filter != null)
-            {
-                for (int i = 0; i < words.Length; i++)
-                    if (filter(words[i]))
-                        if (words[i].Length <= maxLength)
-                            words[i] = words[i].ToUpper();
-            }
-            else
-                for (int j = 0; j < words.Length; j++)
-                    if (words[j].Length <= maxLength)
-                        words[j] = words[j].ToUpper();
+            for (int i = 0; i < words.Length; i++)
+                if (filter == null || filter(words[i]))
+                    if (words[i].Length <= maxLength)
+                        words[i] = words[i].ToUpper();
 
             return string.Join(" ", words);
         }
