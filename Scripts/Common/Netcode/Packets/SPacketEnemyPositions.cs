@@ -15,9 +15,7 @@ namespace GodotModules.Netcode
             foreach (var pair in Enemies)
             {
                 writer.Write((ushort)pair.Key); // id
-                var pos = pair.Value.Position;
-                writer.Write((float)Math.Round(pos.x, 1));
-                writer.Write((float)Math.Round(pos.y, 1));
+                writer.Write(pair.Value.Position);
             }
         }
 
@@ -28,9 +26,7 @@ namespace GodotModules.Netcode
             for (int i = 0; i < count; i++)
             {
                 var id = reader.ReadUShort();
-                var pos = Vector2.Zero;
-                pos.x = reader.ReadFloat();
-                pos.y = reader.ReadFloat();
+                var pos = reader.ReadVector2();
 
                 Enemies.Add(id, new DataEnemy
                 {

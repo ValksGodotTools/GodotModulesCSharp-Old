@@ -1,5 +1,5 @@
 using ENet;
-using System;
+using Godot;
 using System.IO;
 
 namespace GodotModules.Netcode
@@ -32,6 +32,9 @@ namespace GodotModules.Netcode
         public long ReadLong() => _reader.ReadInt64();
         public ulong ReadULong() => _reader.ReadUInt64();
         public byte[] ReadBytes(int count) => _reader.ReadBytes(count);
+
+        public Vector2 ReadVector2() =>
+            new(ReadFloat(), ReadFloat());
 
         public void Dispose()
         {

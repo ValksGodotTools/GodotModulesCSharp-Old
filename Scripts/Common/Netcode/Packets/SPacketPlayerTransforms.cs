@@ -15,8 +15,7 @@ namespace GodotModules.Netcode
                 var transform = pair.Value;
 
                 writer.Write((byte)pair.Key); // id
-                writer.Write((float)Math.Round(transform.Position.x, 1));
-                writer.Write((float)Math.Round(transform.Position.y, 1));
+                writer.Write(transform.Position);
                 writer.Write((float)Math.Round(transform.Rotation, 1));
             });
         }
@@ -28,12 +27,11 @@ namespace GodotModules.Netcode
             for (int i = 0; i < count; i++)
             {
                 var id = reader.ReadByte();
-                var x = reader.ReadFloat();
-                var y = reader.ReadFloat();
+                var pos = reader.ReadVector2();
                 var rot = reader.ReadFloat();
 
                 PlayerTransforms[id] = new DataTransform {
-                    Position = new Vector2(x, y),
+                    Position = pos,
                     Rotation = rot
                 };
             }

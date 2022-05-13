@@ -1,16 +1,15 @@
-using System;
+using Godot;
 using System.IO;
 
 namespace GodotModules.Netcode
 {
     public class PacketWriter : IDisposable
     {
-        public MemoryStream Stream { get; }
+        public MemoryStream Stream { get; } = new();
         private readonly BinaryWriter _writer;
 
         public PacketWriter()
         {
-            Stream = new();
             _writer = new(Stream);
         }
 
@@ -28,6 +27,12 @@ namespace GodotModules.Netcode
         public void Write(long v) => _writer.Write(v);
         public void Write(ulong v) => _writer.Write(v);
         public void Write(byte[] v) => _writer.Write(v);
+
+        public void Write(Vector2 v)
+        {
+            _writer.Write(v.x);
+            _writer.Write(v.y);
+        }
 
         public void Dispose()
         {
