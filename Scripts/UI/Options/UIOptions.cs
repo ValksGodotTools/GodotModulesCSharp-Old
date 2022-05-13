@@ -9,6 +9,7 @@ namespace GodotModules
 
         [Export] public readonly NodePath NodePathOptionsGame;
         [Export] public readonly NodePath NodePathOptionsVideo;
+        [Export] public readonly NodePath NodePathOptionsDisplay;
         [Export] public readonly NodePath NodePathOptionsAudio;
         [Export] public readonly NodePath NodePathOptionsControls;
         [Export] public readonly NodePath NodePathOptionsMultiplayer;
@@ -20,6 +21,7 @@ namespace GodotModules
             _optionSections = new();
             _optionSections[OptionSection.Game] = GetNode<Control>(NodePathOptionsGame);
             _optionSections[OptionSection.Video] = GetNode<Control>(NodePathOptionsVideo);
+            _optionSections[OptionSection.Display] = GetNode<Control>(NodePathOptionsDisplay);
             _optionSections[OptionSection.Audio] = GetNode<Control>(NodePathOptionsAudio);
             _optionSections[OptionSection.Controls] = GetNode<UIOptionsControls>(NodePathOptionsControls);
             _optionSections[OptionSection.Multiplayer] = GetNode<Control>(NodePathOptionsMultiplayer);
@@ -34,6 +36,7 @@ namespace GodotModules
 
         private void _on_Game_pressed() => ShowSection(OptionSection.Game);
         private void _on_Video_pressed() => ShowSection(OptionSection.Video);
+        private void _on_Display_pressed() => ShowSection(OptionSection.Display);
         private void _on_Audio_pressed() => ShowSection(OptionSection.Audio);
         private void _on_Controls_pressed() => ShowSection(OptionSection.Controls);
         private void _on_Multiplayer_pressed() => ShowSection(OptionSection.Multiplayer);
@@ -51,6 +54,7 @@ namespace GodotModules
         {
             Game,
             Video,
+            Display,
             Audio,
             Controls,
             Multiplayer
