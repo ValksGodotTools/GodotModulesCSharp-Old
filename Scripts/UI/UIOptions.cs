@@ -21,10 +21,10 @@ namespace GodotModules
             _optionSections[OptionSection.Game] = GetNode<Control>(NodePathOptionsGame);
             _optionSections[OptionSection.Video] = GetNode<Control>(NodePathOptionsVideo);
             _optionSections[OptionSection.Audio] = GetNode<Control>(NodePathOptionsAudio);
-            _optionSections[OptionSection.Controls] = GetNode<UIControls>(NodePathOptionsControls);
+            _optionSections[OptionSection.Controls] = GetNode<UIOptionsControls>(NodePathOptionsControls);
             _optionSections[OptionSection.Multiplayer] = GetNode<Control>(NodePathOptionsMultiplayer);
 
-            ((UIControls)_optionSections[OptionSection.Controls]).PreInit(hotkeyManager);
+            ((UIOptionsControls)_optionSections[OptionSection.Controls]).PreInit(hotkeyManager);
         }
 
         public override void _Ready()

@@ -3,7 +3,7 @@ using System;
 
 namespace GodotModules
 {
-    public class UIControls : Control
+    public class UIOptionsControls : Control
     {
         [Export] public readonly NodePath NodePathVBoxHotkeys;
         private Control _vboxHotkeys;
