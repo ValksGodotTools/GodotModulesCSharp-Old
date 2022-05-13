@@ -32,6 +32,7 @@ margin_left = 233.0
 margin_right = 258.0
 margin_bottom = 23.0
 rect_min_size = Vector2( 25, 0 )
+focus_mode = 0
 icon = ExtResource( 4 )
 flat = true
 expand_icon = true

@@ -167,6 +167,7 @@ script = ExtResource( 4 )
 [node name="Reset Hotkeys" type="Button" parent="MarginContainer/HBoxContainer/Control/Controls"]
 margin_right = 112.0
 margin_bottom = 23.0
+focus_mode = 0
 size_flags_horizontal = 0
 text = "Reset to Defaults"
 
