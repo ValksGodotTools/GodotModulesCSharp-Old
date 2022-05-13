@@ -1,6 +1,8 @@
 # Contributing
 Contributions / pull requests are very much welcomed. If you want to help contribute, get the project running on your PC and see how everything works. My code isn't the best and it would be nice if others peer reviewed it pointing out things I could do better. 
 
+## Important: The whole project is being done from scratch on the [dev branch](https://github.com/GodotModules/GodotModulesCSharp/tree/dev)
+
 [Godot Modules Discord](https://discord.gg/866cg8yfxZ) (if you have any questions, contact valk#9904 though here)
 
 ## Setup
