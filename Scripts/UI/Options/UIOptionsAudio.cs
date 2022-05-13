@@ -28,6 +28,6 @@ namespace GodotModules
         }
 
         private void _on_Music_value_changed(float v) => _musicManager.SetVolumeValue(v);
-        private void _on_SFX_value_changed(float v) => GM.LogTodo("SFX not implemented yet");
+        private void _on_SFX_value_changed(float v) {} // TODO
     }
 }
