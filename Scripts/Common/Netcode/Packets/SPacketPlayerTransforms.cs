@@ -3,7 +3,7 @@ using System;
 
 namespace GodotModules.Netcode
 {
-    public class SPacketPlayerTransforms : PacketServer
+    public class SPacketPlayerTransforms : APacketServer
     {
         public Dictionary<byte, DataTransform> PlayerTransforms { get; set; }
 

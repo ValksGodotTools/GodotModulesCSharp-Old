@@ -5,7 +5,7 @@ namespace GodotModules.Netcode.Server
 {
     public abstract class ENetServer : IDisposable
     {
-        private static readonly Dictionary<ClientPacketOpcode, PacketClient> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, PacketClient>("CPacket");
+        private static readonly Dictionary<ClientPacketOpcode, APacketClient> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, APacketClient>("CPacket");
 
         public bool HasSomeoneConnected { get => Interlocked.Read(ref _someoneConnected) == 1; }
         public bool IsRunning { get => Interlocked.Read(ref _running) == 1; }
@@ -62,9 +62,9 @@ namespace GodotModules.Netcode.Server
         }
         public void Restart() => ENetCmds.Enqueue(new ENetServerCmd(ENetServerOpcode.Restart));
         public void Send(ServerPacketOpcode opcode, params Peer[] peers) => Send(opcode, null, PacketFlags.Reliable, peers);
-        public void Send(ServerPacketOpcode opcode, Packet data, params Peer[] peers) => Send(opcode, data, PacketFlags.Reliable, peers);
+        public void Send(ServerPacketOpcode opcode, APacket data, params Peer[] peers) => Send(opcode, data, PacketFlags.Reliable, peers);
         public void Send(ServerPacketOpcode opcode, PacketFlags flags = PacketFlags.Reliable, params Peer[] peers) => Send(opcode, null, flags, peers);
-        public void Send(ServerPacketOpcode opcode, Packet data, PacketFlags flags = PacketFlags.Reliable, params Peer[] peers) => _outgoing.Enqueue(new ServerPacket((byte)opcode, flags, data, peers));
+        public void Send(ServerPacketOpcode opcode, APacket data, PacketFlags flags = PacketFlags.Reliable, params Peer[] peers) => _outgoing.Enqueue(new ServerPacket((byte)opcode, flags, data, peers));
 
         protected Peer[] GetOtherPeers(uint id)
         {
@@ -198,7 +198,7 @@ namespace GodotModules.Netcode.Server
 
         private void Send(ServerPacket gamePacket, Peer peer)
         {
-            var packet = default(ENet.Packet);
+            var packet = default(Packet);
             packet.Create(gamePacket.Data, gamePacket.PacketFlags);
             byte channelID = 0;
             peer.Send(channelID, ref packet);

@@ -18,7 +18,7 @@ namespace GodotModules.Netcode.Server
 
         public Peer[] GetAllPlayerPeers() => Players.Keys.Select(x => Peers[x]).ToArray();
 
-        public void SendToAllPlayers(ServerPacketOpcode opcode, Packet data = null, PacketFlags flags = PacketFlags.Reliable)
+        public void SendToAllPlayers(ServerPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
         {
             var allPlayers = GetAllPlayerPeers();
 
@@ -28,7 +28,7 @@ namespace GodotModules.Netcode.Server
                 Send(opcode, data, flags, allPlayers);
         }
 
-        public void SendToOtherPeers(uint id, ServerPacketOpcode opcode, Packet data = null, PacketFlags flags = PacketFlags.Reliable)
+        public void SendToOtherPeers(uint id, ServerPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
         {
             var otherPeers = GetOtherPeers(id);
             if (otherPeers.Length == 0)
@@ -40,7 +40,7 @@ namespace GodotModules.Netcode.Server
                 Send(opcode, data, flags, otherPeers);
         }
 
-        public void SendToOtherPlayers(uint id, ServerPacketOpcode opcode, Packet data = null, PacketFlags flags = PacketFlags.Reliable)
+        public void SendToOtherPlayers(uint id, ServerPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
         {
             var otherPlayers = GetOtherPlayerPeers(id);
             if (otherPlayers.Length == 0)

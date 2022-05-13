@@ -3,7 +3,7 @@ using GodotModules.Netcode.Server;
 
 namespace GodotModules.Netcode
 {
-    public class CPacketLobby : PacketClient
+    public class CPacketLobby : APacketClient
     {
         private LobbyOpcode LobbyOpcode { get; set; }
 

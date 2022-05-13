@@ -3,7 +3,7 @@ using System;
 
 namespace GodotModules.Netcode
 {
-    public class CPacketPlayerPosition : PacketClient
+    public class CPacketPlayerPosition : APacketClient
     {
         public Vector2 Position { get; set; }
 

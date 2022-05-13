@@ -3,7 +3,7 @@ using System;
 
 namespace GodotModules.Netcode
 {
-    public class SPacketEnemyPositions : PacketServer
+    public class SPacketEnemyPositions : APacketServer
     {
         private GameOpcode GameOpcode { get; set; }
         public Dictionary<ushort, DataEnemy> Enemies { get; set; }

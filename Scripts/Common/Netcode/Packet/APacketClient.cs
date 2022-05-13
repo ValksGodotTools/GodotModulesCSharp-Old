@@ -1,6 +1,6 @@
 namespace GodotModules.Netcode
 {
-    public abstract class PacketClient : Packet
+    public abstract class APacketClient : APacket
     {
         /// <summary>
         /// The packet handled server-side

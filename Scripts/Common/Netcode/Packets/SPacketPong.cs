@@ -2,7 +2,7 @@ using System;
 
 namespace GodotModules.Netcode
 {
-    public class SPacketPong : PacketServer
+    public class SPacketPong : APacketServer
     {
 #if CLIENT
         public override async Task Handle()

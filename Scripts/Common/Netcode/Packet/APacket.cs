@@ -1,6 +1,6 @@
 namespace GodotModules.Netcode
 {
-    public abstract class Packet
+    public abstract class APacket
     {
         public virtual void Write(PacketWriter writer)
         { }

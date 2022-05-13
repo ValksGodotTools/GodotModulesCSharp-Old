@@ -1,6 +1,6 @@
 namespace GodotModules.Netcode
 {
-    public class CPacketPing : PacketClient
+    public class CPacketPing : APacketClient
     {
         public override void Handle(ENet.Peer peer)
         {
