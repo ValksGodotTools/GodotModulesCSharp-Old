@@ -29,16 +29,17 @@ namespace GodotModules
         private Button _btnMultiplayer;
         private Dictionary<OptionSection, Control> _optionSections;
 
-        public void PreInit(HotkeyManager hotkeyManager)
+        public void PreInit(HotkeyManager hotkeyManager, OptionsManager optionsManager)
         {
             _optionSections = new();
             _optionSections[OptionSection.Game] = GetNode<Control>(NodePathOptionsGame);
             _optionSections[OptionSection.Video] = GetNode<Control>(NodePathOptionsVideo);
-            _optionSections[OptionSection.Display] = GetNode<Control>(NodePathOptionsDisplay);
+            _optionSections[OptionSection.Display] = GetNode<UIOptionsDisplay>(NodePathOptionsDisplay);
             _optionSections[OptionSection.Audio] = GetNode<Control>(NodePathOptionsAudio);
             _optionSections[OptionSection.Controls] = GetNode<UIOptionsControls>(NodePathOptionsControls);
             _optionSections[OptionSection.Multiplayer] = GetNode<Control>(NodePathOptionsMultiplayer);
 
+            ((UIOptionsDisplay)_optionSections[OptionSection.Display]).PreInit(optionsManager);
             ((UIOptionsControls)_optionSections[OptionSection.Controls]).PreInit(hotkeyManager);
         }
 

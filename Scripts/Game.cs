@@ -9,17 +9,19 @@ namespace GodotModules
         private HotkeyManager _hotkeyManager;
         private SystemFileManager _systemFileManager;
         private SceneManager _sceneManager;
+        private OptionsManager _optionsManager;
 
         public override async void _Ready()
         {
             _systemFileManager = new();
             _hotkeyManager = new(_systemFileManager);
+            _optionsManager = new(_systemFileManager, _hotkeyManager);
             _sceneManager = new(this, new GodotFileManager(), _hotkeyManager);
 
             _sceneManager.PreInit[Scene.Options] = (scene) =>
             {
                 var options = (UIOptions)scene;
-                options.PreInit(_hotkeyManager);
+                options.PreInit(_hotkeyManager, _optionsManager);
             };
 
             _sceneManager.EscPressed[Scene.Credits] = async () => await _sceneManager.ChangeScene(Scene.Menu);
@@ -60,7 +62,7 @@ namespace GodotModules
 
         private async Task Cleanup()
         {
-            _hotkeyManager.SaveHotkeys();
+            _optionsManager.SaveOptions();
             await GM.Net.Cleanup();
             GetTree().Quit();
         }

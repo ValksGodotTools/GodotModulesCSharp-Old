@@ -6,6 +6,12 @@ namespace GodotModules
     {
         [Export] public readonly NodePath NodePathFullscreen;
         private OptionButton _fullscreen;
+        private OptionsManager _optionsManager;
+
+        public void PreInit(OptionsManager optionsManager)
+        {
+            _optionsManager = optionsManager;
+        }
 
         public override void _Ready()
         {
@@ -17,48 +23,12 @@ namespace GodotModules
 
         private void _on_VSync_toggled(bool v)
         {
-            OS.VsyncEnabled = v;
+            _optionsManager.SetVSync(v);
         }
 
         private void _on_Fullscreen_item_selected(int v)
         {
-            SetFullscreenMode((FullscreenMode)v);
-        }
-
-        private void SetFullscreenMode(FullscreenMode mode)
-        {
-            switch (mode)
-            {
-                case FullscreenMode.Windowed:
-                    SetWindowedMode();
-                    break;
-
-                case FullscreenMode.Borderless:
-                    SetFullscreenBorderless();
-                    break;
-
-                case FullscreenMode.Fullscreen:
-                    OS.WindowFullscreen = true;
-                    break;
-            }
-        }
-
-        private void SetWindowedMode()
-        {
-            OS.WindowFullscreen = false;
-            OS.WindowBorderless = false;
-            OS.WindowSize = OS.GetScreenSize();
-            CenterWindow();
-        }
-
-        private void CenterWindow() => OS.WindowPosition = OS.GetScreenSize() / 2 - OS.WindowSize / 2;
-
-        private void SetFullscreenBorderless()
-        {
-            OS.WindowFullscreen = false;
-            OS.WindowBorderless = true;
-            OS.WindowPosition = new Vector2(0, 0);
-            OS.WindowSize = OS.GetScreenSize() + new Vector2(1, 1); // need to add (1, 1) otherwise will act like fullscreen mode (seems like a Godot bug)
+            _optionsManager.SetFullscreenMode((FullscreenMode)v);
         }
     }
 
