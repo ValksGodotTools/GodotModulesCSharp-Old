@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://Scripts/UI/UIHotkey.cs" type="Script" id=1]
-[ext_resource path="res://Scripts/UI/UIBtnHotkey.cs" type="Script" id=2]
+[ext_resource path="res://Scripts/UI/Options/UIHotkey.cs" type="Script" id=1]
+[ext_resource path="res://Scripts/UI/Options/UIBtnHotkey.cs" type="Script" id=2]
 [ext_resource path="res://Themes/Main.tres" type="Theme" id=3]
 [ext_resource path="res://Sprites/undo.png" type="Texture" id=4]
 
