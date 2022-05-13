@@ -160,10 +160,15 @@ margin_bottom = 16.0
 size_flags_horizontal = 3
 
 [node name="Controls" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Control"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 4 )
+
+[node name="Reset Hotkeys" type="Button" parent="MarginContainer/HBoxContainer/Control/Controls"]
+margin_right = 112.0
+margin_bottom = 23.0
+size_flags_horizontal = 0
+text = "Reset to Defaults"
 
 [node name="Multiplayer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Control"]
 visible = false
@@ -208,3 +213,4 @@ rect_min_size = Vector2( 150, 0 )
 [connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/Audio" to="." method="_on_Audio_pressed"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/Controls" to="." method="_on_Controls_pressed"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/Multiplayer" to="." method="_on_Multiplayer_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/Control/Controls/Reset Hotkeys" to="MarginContainer/HBoxContainer/Control/Controls" method="_on_Reset_Hotkeys_pressed"]
