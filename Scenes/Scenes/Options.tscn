@@ -10,7 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 2 )
 script = ExtResource( 3 )
-NodePathUIControls = NodePath("MarginContainer/HBoxContainer/Control/Controls")
+NodePathUIControls = NodePath("MarginContainer/HBoxContainer/Control/Controls/VBoxContainer/Controls")
 NodePathOptionsGame = NodePath("MarginContainer/HBoxContainer/Control/Game")
 NodePathOptionsVideo = NodePath("MarginContainer/HBoxContainer/Control/Video")
 NodePathOptionsAudio = NodePath("MarginContainer/HBoxContainer/Control/Audio")
@@ -159,14 +159,34 @@ margin_right = 741.0
 margin_bottom = 16.0
 size_flags_horizontal = 3
 
-[node name="Controls" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Control"]
+[node name="Controls" type="PanelContainer" parent="MarginContainer/HBoxContainer/Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource( 4 )
+theme = ExtResource( 1 )
 
-[node name="Reset Hotkeys" type="Button" parent="MarginContainer/HBoxContainer/Control/Controls"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Control/Controls"]
+margin_right = 741.0
+margin_bottom = 500.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Controls" type="ScrollContainer" parent="MarginContainer/HBoxContainer/Control/Controls/VBoxContainer"]
+margin_right = 741.0
+margin_bottom = 473.0
+size_flags_vertical = 3
+script = ExtResource( 4 )
+NodePathVBoxHotkeys = NodePath("Hotkeys")
+
+[node name="Hotkeys" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Control/Controls/VBoxContainer/Controls"]
+margin_right = 741.0
+margin_bottom = 473.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Reset Hotkeys" type="Button" parent="MarginContainer/HBoxContainer/Control/Controls/VBoxContainer"]
+margin_top = 477.0
 margin_right = 112.0
-margin_bottom = 23.0
+margin_bottom = 500.0
 focus_mode = 0
 size_flags_horizontal = 0
 text = "Reset to Defaults"
@@ -214,4 +234,4 @@ rect_min_size = Vector2( 150, 0 )
 [connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/Audio" to="." method="_on_Audio_pressed"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/Controls" to="." method="_on_Controls_pressed"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/Multiplayer" to="." method="_on_Multiplayer_pressed"]
-[connection signal="pressed" from="MarginContainer/HBoxContainer/Control/Controls/Reset Hotkeys" to="MarginContainer/HBoxContainer/Control/Controls" method="_on_Reset_Hotkeys_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/Control/Controls/VBoxContainer/Reset Hotkeys" to="MarginContainer/HBoxContainer/Control/Controls/VBoxContainer/Controls" method="_on_Reset_Hotkeys_pressed"]
