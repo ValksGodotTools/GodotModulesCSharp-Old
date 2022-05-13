@@ -52,8 +52,28 @@ namespace GodotModules
             _btnAudio = GetNode<Button>(NodePathBtnAudio);
             _btnControls = GetNode<Button>(NodePathBtnControls);
             _btnMultiplayer = GetNode<Button>(NodePathBtnMultiplayer);
-            _btnGame.GrabFocus();
-            ShowSection(_currentSection);
+
+            switch (_currentSection)
+            {
+                case OptionSection.Game:
+                    _btnGame.GrabFocus();
+                    break;
+                case OptionSection.Video:
+                    _btnVideo.GrabFocus();
+                    break;
+                case OptionSection.Display:
+                    _btnDisplay.GrabFocus();
+                    break;
+                case OptionSection.Audio:
+                    _btnAudio.GrabFocus();
+                    break;
+                case OptionSection.Controls:
+                    _btnControls.GrabFocus();
+                    break;
+                case OptionSection.Multiplayer:
+                    _btnMultiplayer.GrabFocus();
+                    break;
+            }
 
             foreach (var pair in _optionSections)
             {
