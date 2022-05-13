@@ -48,13 +48,21 @@ namespace GodotModules
 
         public static string ToTitleCase(this string value) => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value.ToLower());
 
-        public static string SmallWordsToUpper(this string text, int maxLength = 2)
+        public static string SmallWordsToUpper(this string text, int maxLength = 2, Func<string, bool> filter = null)
         {
             var words = text.Split(' ');
 
-            for (int i = 0; i < words.Length; i++)
-                if (words[i].Length <= maxLength)
-                    words[i] = words[i].ToUpper();
+            if (filter != null)
+            {
+                for (int i = 0; i < words.Length; i++)
+                    if (filter(words[i]))
+                        if (words[i].Length <= maxLength)
+                            words[i] = words[i].ToUpper();
+            }
+            else
+                for (int j = 0; j < words.Length; j++)
+                    if (words[j].Length <= maxLength)
+                        words[j] = words[j].ToUpper();
 
             return string.Join(" ", words);
         }
