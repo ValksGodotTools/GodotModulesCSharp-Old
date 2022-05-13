@@ -36,7 +36,7 @@ namespace GodotModules
 
         public void ResetToDefaultHotkeys()
         {
-            _hotkeys = _defaultHotkeys;
+            _hotkeys = new Dictionary<string, InputEventKey>(_defaultHotkeys);
 
             foreach (var pair in _hotkeys) 
                 SetHotkeyEvent(pair.Key, pair.Value);
