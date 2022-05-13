@@ -33,12 +33,8 @@ namespace GodotModules.Netcode
         public ulong ReadULong() => _reader.ReadUInt64();
         public byte[] ReadBytes(int count) => _reader.ReadBytes(count);
 
-        public Vector2 ReadVector2()
-        {
-            var x = ReadFloat();
-            var y = ReadFloat();
-            return new(x, y);
-        }
+        public Vector2 ReadVector2() =>
+            new(ReadFloat(), ReadFloat());
 
         public void Dispose()
         {
