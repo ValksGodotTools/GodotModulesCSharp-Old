@@ -45,7 +45,6 @@ namespace GodotModules
         {
             OS.WindowFullscreen = false;
             OS.WindowBorderless = false;
-            OS.WindowSize = OS.GetScreenSize();
             CenterWindow();
         }
 
