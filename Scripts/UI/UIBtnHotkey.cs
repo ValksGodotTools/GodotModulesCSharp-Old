@@ -28,8 +28,7 @@ namespace GodotModules
             if (@event is InputEventKey keyEvent && !keyEvent.Pressed && _waitingForHotkey)
             {
                 _waitingForHotkey = false;
-                _hotkey = @event.AsText();
-                Text = @event.AsText();
+                SetHotkeyText(@event.AsText());
                 _hotkeyManager.SetHotkey(_action, keyEvent);
             }
 
