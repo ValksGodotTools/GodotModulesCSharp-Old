@@ -28,7 +28,7 @@ namespace GodotModules.Netcode
         public void Write(ulong v) => _writer.Write(v);
         public void Write(byte[] v) => _writer.Write(v);
 
-        public void Write(Vector2 v, int precision = 1)
+        public void Write(Vector2 v)
         {
             _writer.Write(v.x);
             _writer.Write(v.y);
