@@ -27,5 +27,7 @@ namespace GodotModules
             _hotkeyManager = hotkeyManager;
             _action = action;
         }
+
+        public void SetHotkeyText(string v) => _btnHotkey.SetHotkeyText(v);
     }
 }

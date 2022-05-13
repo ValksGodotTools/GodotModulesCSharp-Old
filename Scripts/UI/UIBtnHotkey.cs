@@ -38,6 +38,12 @@ namespace GodotModules
                     LostFocus();
         }
 
+        public void SetHotkeyText(string v) 
+        {
+            _hotkey = v;
+            Text = v;
+        }
+
         private void _on_Btn_pressed()
         {
             _waitingForHotkey = true;
