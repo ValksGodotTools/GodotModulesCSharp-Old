@@ -5,6 +5,8 @@ namespace GodotModules
 {
     public class UIOptions : Node
     {
+        private static OptionSection _currentSection = OptionSection.Game;
+
         [Export] public readonly NodePath NodePathUIControls;
         [Export] public readonly NodePath NodePathOptionsGame;
         [Export] public readonly NodePath NodePathOptionsVideo;
@@ -29,7 +31,7 @@ namespace GodotModules
             _optionSections[OptionSection.Audio] = GetNode<Control>(NodePathOptionsAudio);
             _optionSections[OptionSection.Controls] = GetNode<Control>(NodePathOptionsControls);
             _optionSections[OptionSection.Multiplayer] = GetNode<Control>(NodePathOptionsMultiplayer);
-            ShowSection(OptionSection.Game);
+            ShowSection(_currentSection);
         }
 
         private void _on_Game_pressed() => ShowSection(OptionSection.Game);
@@ -44,6 +46,7 @@ namespace GodotModules
 
             HideAllSections();
             _optionSections[section].Visible = true;
+            _currentSection = section;
         }
 
         private enum OptionSection 
