@@ -18,11 +18,6 @@ namespace GodotModules
             _hotkey = key.AsText();
         }
 
-        public override void _Ready()
-        {
-            FocusMode = FocusModeEnum.None;
-        }
-
         public override void _Input(InputEvent @event)
         {
             if (@event is InputEventKey keyEvent && !keyEvent.Pressed && _waitingForHotkey)
