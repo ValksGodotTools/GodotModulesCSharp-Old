@@ -7,30 +7,28 @@ namespace GodotModules
     {
         private static OptionSection _currentSection = OptionSection.Game;
 
-        [Export] public readonly NodePath NodePathUIControls;
         [Export] public readonly NodePath NodePathOptionsGame;
         [Export] public readonly NodePath NodePathOptionsVideo;
         [Export] public readonly NodePath NodePathOptionsAudio;
         [Export] public readonly NodePath NodePathOptionsControls;
         [Export] public readonly NodePath NodePathOptionsMultiplayer;
 
-        private UIControls _uiControls;
         private Dictionary<OptionSection, Control> _optionSections;
 
         public void PreInit(HotkeyManager hotkeyManager)
-        {
-            _uiControls = GetNode<UIControls>(NodePathUIControls);
-            _uiControls.PreInit(hotkeyManager);
-        }
-
-        public override void _Ready()
         {
             _optionSections = new();
             _optionSections[OptionSection.Game] = GetNode<Control>(NodePathOptionsGame);
             _optionSections[OptionSection.Video] = GetNode<Control>(NodePathOptionsVideo);
             _optionSections[OptionSection.Audio] = GetNode<Control>(NodePathOptionsAudio);
-            _optionSections[OptionSection.Controls] = GetNode<Control>(NodePathOptionsControls);
+            _optionSections[OptionSection.Controls] = GetNode<UIControls>(NodePathOptionsControls);
             _optionSections[OptionSection.Multiplayer] = GetNode<Control>(NodePathOptionsMultiplayer);
+
+            ((UIControls)_optionSections[OptionSection.Controls]).PreInit(hotkeyManager);
+        }
+
+        public override void _Ready()
+        {
             ShowSection(_currentSection);
         }
 

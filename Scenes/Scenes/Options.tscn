@@ -5,12 +5,11 @@
 [ext_resource path="res://Scripts/UI/UIOptions.cs" type="Script" id=3]
 [ext_resource path="res://Scripts/UI/UIControls.cs" type="Script" id=4]
 
-[node name="Control" type="Control"]
+[node name="UIOptions" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 2 )
 script = ExtResource( 3 )
-NodePathUIControls = NodePath("MarginContainer/HBoxContainer/Control/Controls/VBoxContainer/Controls")
 NodePathOptionsGame = NodePath("MarginContainer/HBoxContainer/Control/Game")
 NodePathOptionsVideo = NodePath("MarginContainer/HBoxContainer/Control/Video")
 NodePathOptionsAudio = NodePath("MarginContainer/HBoxContainer/Control/Audio")
@@ -94,7 +93,6 @@ margin_bottom = 17.0
 text = "Nothing in game settings at the moment!"
 
 [node name="Video" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Control"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 
@@ -160,9 +158,12 @@ margin_bottom = 16.0
 size_flags_horizontal = 3
 
 [node name="Controls" type="PanelContainer" parent="MarginContainer/HBoxContainer/Control"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 1 )
+script = ExtResource( 4 )
+NodePathVBoxHotkeys = NodePath("VBoxContainer/Controls/Hotkeys")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Control/Controls"]
 margin_right = 741.0
@@ -174,8 +175,6 @@ size_flags_vertical = 3
 margin_right = 741.0
 margin_bottom = 473.0
 size_flags_vertical = 3
-script = ExtResource( 4 )
-NodePathVBoxHotkeys = NodePath("Hotkeys")
 
 [node name="Hotkeys" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Control/Controls/VBoxContainer/Controls"]
 margin_right = 741.0
@@ -234,4 +233,4 @@ rect_min_size = Vector2( 150, 0 )
 [connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/Audio" to="." method="_on_Audio_pressed"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/Controls" to="." method="_on_Controls_pressed"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/Multiplayer" to="." method="_on_Multiplayer_pressed"]
-[connection signal="pressed" from="MarginContainer/HBoxContainer/Control/Controls/VBoxContainer/Reset Hotkeys" to="MarginContainer/HBoxContainer/Control/Controls/VBoxContainer/Controls" method="_on_Reset_Hotkeys_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/Control/Controls/VBoxContainer/Reset Hotkeys" to="MarginContainer/HBoxContainer/Control/Controls" method="_on_Reset_Hotkeys_pressed"]
