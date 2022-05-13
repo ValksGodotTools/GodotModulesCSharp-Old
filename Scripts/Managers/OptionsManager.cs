@@ -45,6 +45,7 @@ namespace GodotModules
         {
             OS.WindowFullscreen = false;
             OS.WindowBorderless = false;
+            OS.WindowSize = Options.WindowSize;
             CenterWindow();
         }
 
@@ -68,7 +69,8 @@ namespace GodotModules
                     VSync = true,
                     FullscreenMode = FullscreenMode.Borderless,
                     MusicVolume = -20,
-                    SFXVolume = -20
+                    SFXVolume = -20,
+                    WindowSize = OS.WindowSize
                 };
 
                 Options = defaultOptions;
@@ -81,6 +83,8 @@ namespace GodotModules
         public void SaveOptions() 
         {
             _hotkeyManager.SaveHotkeys();
+
+            Options.WindowSize = OS.WindowSize;
             _systemFileManager.WriteConfig("options", Options);
         }
     }
@@ -89,6 +93,7 @@ namespace GodotModules
     {
         public bool VSync { get; set; }
         public FullscreenMode FullscreenMode { get; set; }
+        public Vector2 WindowSize { get; set; }
         public float MusicVolume { get; set; }
         public float SFXVolume { get; set; }
     }
