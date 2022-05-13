@@ -1,9 +1,13 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Themes/PanelNoBorder.tres" type="Theme" id=1]
 [ext_resource path="res://Themes/Main.tres" type="Theme" id=2]
 [ext_resource path="res://Scripts/UI/Options/UIOptions.cs" type="Script" id=3]
 [ext_resource path="res://Scripts/UI/Options/UIOptionsControls.cs" type="Script" id=4]
+[ext_resource path="res://Scripts/UI/Options/UIOptionsVideo.cs" type="Script" id=5]
+[ext_resource path="res://Scripts/UI/Options/UIOptionsGame.cs" type="Script" id=6]
+[ext_resource path="res://Scripts/UI/Options/UIOptionsAudio.cs" type="Script" id=7]
+[ext_resource path="res://Scripts/UI/Options/UIOptionsMultiplayer.cs" type="Script" id=8]
 
 [node name="UIOptions" type="Control"]
 anchor_right = 1.0
@@ -86,6 +90,7 @@ size_flags_horizontal = 3
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
+script = ExtResource( 6 )
 
 [node name="Label" type="Label" parent="MarginContainer/HBoxContainer/Sections/Game"]
 margin_right = 741.0
@@ -95,6 +100,7 @@ text = "Nothing in game settings at the moment!"
 [node name="Video" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Sections"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+script = ExtResource( 5 )
 
 [node name="OptionButton" type="OptionButton" parent="MarginContainer/HBoxContainer/Sections/Video"]
 margin_right = 100.0
@@ -123,6 +129,7 @@ margin_bottom = 23.0
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
+script = ExtResource( 7 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Sections/Audio"]
 margin_right = 741.0
@@ -194,6 +201,7 @@ text = "Reset to Defaults"
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
+script = ExtResource( 8 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Sections/Multiplayer"]
 margin_right = 741.0
