@@ -20,16 +20,14 @@ namespace GodotModules
 
             if (!filter(text)) 
             {
-                lineEdit.CaretPosition = text.Length;
-
                 if (!_prevTexts.ContainsKey(id)) 
                 {
-                    lineEdit.Text = "";
+                    lineEdit.ChangeLineEditText("");
                     return null;
                 }
                 else
                 {
-                    lineEdit.Text = _prevTexts[id];
+                    lineEdit.ChangeLineEditText(_prevTexts[id]);
                     return _prevTexts[id];
                 }
             }
@@ -53,14 +51,12 @@ namespace GodotModules
             {
                 if (!_prevNums.ContainsKey(id)) 
                 {
-                    lineEdit.Text = "";
-                    lineEdit.CaretPosition = "".Length;
+                    lineEdit.ChangeLineEditText("");
                     return minRange - 1;
                 }
                 else
                 {
-                    lineEdit.Text = $"{_prevNums[id]}";
-                    lineEdit.CaretPosition = $"{_prevNums[id]}".Length;
+                    lineEdit.ChangeLineEditText($"{_prevNums[id]}");
                     return _prevNums[id];
                 }
             }
@@ -78,19 +74,23 @@ namespace GodotModules
             if (numAttempts > maxRange)
             {
                 numAttempts = maxRange;
-                lineEdit.Text = $"{maxRange}";
-                lineEdit.CaretPosition = $"{maxRange}".Length;
+                lineEdit.ChangeLineEditText($"{maxRange}");
             }
 
             if (numAttempts < minRange) 
             {
                 numAttempts = minRange;
-                lineEdit.Text = $"{minRange}";
-                lineEdit.CaretPosition = $"{minRange}".Length;
+                lineEdit.ChangeLineEditText($"{minRange}");
             }
 
             _prevNums[id] = numAttempts;
             return numAttempts;
+        }
+
+        private static void ChangeLineEditText(this LineEdit lineEdit, string text) 
+        {
+            lineEdit.Text = text;
+            lineEdit.CaretPosition = text.Length;
         }
     }
 }
