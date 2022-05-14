@@ -1,6 +1,7 @@
 using ENet;
 using Godot;
 using System.IO;
+using System.Reflection;
 
 namespace GodotModules.Netcode
 {
@@ -93,7 +94,27 @@ namespace GodotModules.Netcode
                 }
             }
 
-            throw new NotImplementedException("PacketWriter: " + t + " is not a supported type.");
+            if (t.IsEnum)
+            {
+                var v = ReadByte();
+                return Enum.ToObject(t, v);
+            }
+
+            if (t.IsValueType)
+            {
+                var v = Activator.CreateInstance(t);
+
+                var fields = t
+                    .GetFields(BindingFlags.Public | BindingFlags.Instance)
+                    .OrderBy(field => field.MetadataToken);
+
+                foreach (var f in fields)
+                    f.SetValue(v, Read(f.FieldType));
+
+                return v;
+            }
+
+            throw new NotImplementedException("PacketReader: " + t + " is not a supported type.");
         }
 
         public T Read<T>() =>
