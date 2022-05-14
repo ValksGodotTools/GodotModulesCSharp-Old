@@ -7,7 +7,7 @@ namespace GodotModules.Netcode.Server
     {
         private readonly Timer _timer;
 
-        public STimer(double delayMs, Action action, bool enabled = true, bool autoreset = true)
+        public STimer(Action action, double delayMs = 1000, bool autoreset = true, bool enabled = true)
         {
             void Callback(Object source, ElapsedEventArgs e) => action();
             _timer = new Timer(delayMs);
