@@ -6,15 +6,11 @@ namespace GodotModules
     {
         private readonly Timer _timer = new Timer();
 
-        public GTimer(int delayMs, bool loop = true, bool autoStart = true)
+        public GTimer(Node target, string methodName, int delayMs = 1000, bool loop = true, bool autoStart = true)
         {
             _timer.WaitTime = delayMs / 1000f;
             _timer.OneShot = !loop;
             _timer.Autostart = autoStart;
-        }
-
-        public void Connect(Node target, string methodName)
-        {
             _timer.Connect("timeout", target, methodName);
             target.AddChild(_timer);
         }
