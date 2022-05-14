@@ -32,9 +32,72 @@ namespace GodotModules.Netcode
         public long ReadLong() => _reader.ReadInt64();
         public ulong ReadULong() => _reader.ReadUInt64();
         public byte[] ReadBytes(int count) => _reader.ReadBytes(count);
+        public byte[] ReadBytes() => ReadBytes(ReadInt());
 
         public Vector2 ReadVector2() =>
             new(ReadFloat(), ReadFloat());
+
+        public dynamic Read(Type t)
+        {
+            if (t == typeof(byte))    return ReadByte();
+            if (t == typeof(sbyte))   return ReadSByte();
+            if (t == typeof(char))    return ReadChar();
+            if (t == typeof(string))  return ReadString();
+            if (t == typeof(bool))    return ReadBool();
+            if (t == typeof(short))   return ReadShort();
+            if (t == typeof(ushort))  return ReadUShort();
+            if (t == typeof(int))     return ReadInt();
+            if (t == typeof(uint))    return ReadUInt();
+            if (t == typeof(float))   return ReadFloat();
+            if (t == typeof(double))  return ReadDouble();
+            if (t == typeof(long))    return ReadLong();
+            if (t == typeof(ulong))   return ReadULong();
+            if (t == typeof(byte[]))  return ReadBytes();
+            if (t == typeof(Vector2)) return ReadVector2();
+
+            if (t.IsGenericType)
+            {
+                var g = t.GetGenericTypeDefinition();
+
+                if (g == typeof(IList<>) || g == typeof(List<>))
+                {
+                    var vt = t.GetGenericArguments()[0];
+
+                    var count = ReadInt();
+
+                    dynamic list = Activator
+                        .CreateInstance(typeof(List<>)
+                        .MakeGenericType(vt));
+
+                    for (var i = 0; i < count; i++)
+                        list.Add(Read((Type)vt));
+
+                    return list;
+                }
+
+                if (g == typeof(IDictionary<,>) || g == typeof(Dictionary<,>))
+                {
+                    var kt = t.GetGenericArguments()[0];
+                    var vt = t.GetGenericArguments()[1];
+
+                    var count = ReadInt();
+
+                    dynamic dict = Activator
+                        .CreateInstance(typeof(Dictionary<,>)
+                        .MakeGenericType(kt, vt));
+
+                    for (var i = 0; i < count; i++)
+                        dict.Add(Read(kt), Read(vt));
+
+                    return dict;
+                }
+            }
+
+            throw new NotImplementedException("PacketWriter: " + t + " is not a supported type.");
+        }
+
+        public T Read<T>() =>
+            Read(typeof(T));
 
         public void Dispose()
         {
