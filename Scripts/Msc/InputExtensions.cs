@@ -4,7 +4,8 @@ namespace GodotModules
 {
     public static class InputExtensions 
     {
-        private static Dictionary<ulong, string> _prevTexts = new Dictionary<ulong, string>();
+        private static Dictionary<ulong, string> _prevTexts = new();
+        private static Dictionary<ulong, int> _prevNums = new();
 
         public static string Filter(this LineEdit lineEdit, Func<string, bool> filter) 
         {
@@ -37,12 +38,59 @@ namespace GodotModules
             return text;
         }
 
-        /*public static int FilterNum(this LineEdit lineEdit, int maxRange, int minRange = 0) 
+        public static int FilterRange(this LineEdit lineEdit, int maxRange, int minRange = 0) 
         {
             var text = lineEdit.Text;
+            var id = lineEdit.GetInstanceId();
 
             if (string.IsNullOrWhiteSpace(text))
                 return minRange - 1;
-        }*/
+
+            if (text == "-")
+                return minRange - 1;
+
+            if (!int.TryParse(text.Trim(), out int numAttempts))
+            {
+                if (!_prevNums.ContainsKey(id)) 
+                {
+                    lineEdit.Text = "";
+                    lineEdit.CaretPosition = "".Length;
+                    return minRange - 1;
+                }
+                else
+                {
+                    lineEdit.Text = $"{_prevNums[id]}";
+                    lineEdit.CaretPosition = $"{_prevNums[id]}".Length;
+                    return _prevNums[id];
+                }
+            }
+
+            if (text.Length > maxRange.ToString().Length && numAttempts <= maxRange)
+            {
+                var spliced = text.Remove(text.Length - 1);
+                _prevNums[id] = int.Parse(spliced);
+
+                lineEdit.Text = spliced;
+                lineEdit.CaretPosition = spliced.Length;
+                return _prevNums[id];
+            }
+
+            if (numAttempts > maxRange)
+            {
+                numAttempts = maxRange;
+                lineEdit.Text = $"{maxRange}";
+                lineEdit.CaretPosition = $"{maxRange}".Length;
+            }
+
+            if (numAttempts < minRange) 
+            {
+                numAttempts = minRange;
+                lineEdit.Text = $"{minRange}";
+                lineEdit.CaretPosition = $"{minRange}".Length;
+            }
+
+            _prevNums[id] = numAttempts;
+            return numAttempts;
+        }
     }
 }
