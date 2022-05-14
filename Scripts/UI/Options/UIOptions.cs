@@ -39,9 +39,12 @@ namespace GodotModules
             _optionSections[OptionSection.Controls] = GetNode<UIOptionsControls>(NodePathOptionsControls);
             _optionSections[OptionSection.Multiplayer] = GetNode<UIOptionsMultiplayer>(NodePathOptionsMultiplayer);
 
+            ((UIOptionsGame)_optionSections[OptionSection.Game]).PreInit(optionsManager);
+            ((UIOptionsVideo)_optionSections[OptionSection.Video]).PreInit(optionsManager);
             ((UIOptionsDisplay)_optionSections[OptionSection.Display]).PreInit(optionsManager);
             ((UIOptionsAudio)_optionSections[OptionSection.Audio]).PreInit(musicManager, optionsManager);
             ((UIOptionsControls)_optionSections[OptionSection.Controls]).PreInit(hotkeyManager);
+            ((UIOptionsMultiplayer)_optionSections[OptionSection.Multiplayer]).PreInit(optionsManager);
         }
 
         public override void _Ready()

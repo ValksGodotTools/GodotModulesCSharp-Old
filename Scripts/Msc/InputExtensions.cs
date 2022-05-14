@@ -19,16 +19,16 @@ namespace GodotModules
 
             if (!filter(text)) 
             {
+                lineEdit.CaretPosition = text.Length;
+
                 if (!_prevTexts.ContainsKey(id)) 
                 {
                     lineEdit.Text = "";
-                    lineEdit.CaretPosition = text.Length;
                     return null;
                 }
                 else
                 {
                     lineEdit.Text = _prevTexts[id];
-                    lineEdit.CaretPosition = text.Length;
                     return _prevTexts[id];
                 }
             }

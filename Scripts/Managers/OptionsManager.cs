@@ -70,7 +70,8 @@ namespace GodotModules
                     FullscreenMode = FullscreenMode.Borderless,
                     MusicVolume = -20,
                     SFXVolume = -20,
-                    WindowSize = OS.WindowSize
+                    WindowSize = OS.WindowSize,
+                    WebServerAddress = "localhost:4000"
                 };
 
                 Options = defaultOptions;
@@ -96,5 +97,7 @@ namespace GodotModules
         public Vector2 WindowSize { get; set; }
         public float MusicVolume { get; set; }
         public float SFXVolume { get; set; }
+        public string OnlineUsername { get; set; }
+        public string WebServerAddress { get; set; }
     }
 }
