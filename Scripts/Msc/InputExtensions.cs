@@ -6,21 +6,43 @@ namespace GodotModules
     {
         private static Dictionary<ulong, string> _prevTexts = new Dictionary<ulong, string>();
 
-        public static void Filter(this LineEdit lineEdit, Func<string, bool> filter) 
+        public static string Filter(this LineEdit lineEdit, Func<string, bool> filter) 
+        {
+            var text = lineEdit.Text;
+            var id = lineEdit.GetInstanceId();
+
+            if (string.IsNullOrWhiteSpace(text))
+                if (_prevTexts.ContainsKey(id))
+                    return _prevTexts[id];
+                else
+                    return null;
+
+            if (!filter(text)) 
+            {
+                if (!_prevTexts.ContainsKey(id)) 
+                {
+                    lineEdit.Text = "";
+                    lineEdit.CaretPosition = text.Length;
+                    return null;
+                }
+                else
+                {
+                    lineEdit.Text = _prevTexts[id];
+                    lineEdit.CaretPosition = text.Length;
+                    return _prevTexts[id];
+                }
+            }
+
+            _prevTexts[id] = text;
+            return text;
+        }
+
+        /*public static int FilterNum(this LineEdit lineEdit, int maxRange, int minRange = 0) 
         {
             var text = lineEdit.Text;
 
             if (string.IsNullOrWhiteSpace(text))
-                return;
-
-            if (!filter(text)) 
-            {
-                lineEdit.Text = _prevTexts[lineEdit.GetInstanceId()];
-                lineEdit.CaretPosition = text.Length;
-                return;
-            }
-
-            _prevTexts[lineEdit.GetInstanceId()] = text;
-        }
+                return minRange - 1;
+        }*/
     }
 }

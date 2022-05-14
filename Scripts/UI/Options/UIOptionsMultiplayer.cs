@@ -16,16 +16,16 @@ namespace GodotModules
             _webServerAddress = GetNode<LineEdit>(NodePathWebServerAddress);
         }
 
-        private string prevTextOnlineUsername = "";
-
         private void _on_OnlineUsername_text_changed(string newText)
         {
             _onlineUsername.Filter((text) => Regex.IsMatch(text, "^[A-Za-z]+$"));
         }
 
+        private string prevText;
+
         private void _on_WebServerAddress_text_changed(string newText)
         {
-
+            
         }
     }
 }
