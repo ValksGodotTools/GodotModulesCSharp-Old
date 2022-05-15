@@ -101,6 +101,7 @@ margin_bottom = 500.0
 size_flags_horizontal = 3
 
 [node name="Game" type="VBoxContainer" parent="Padding/HBox/Sections"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 6 )
@@ -303,12 +304,11 @@ max_value = 0.0
 step = 0.1
 
 [node name="Controls" type="PanelContainer" parent="Padding/HBox/Sections"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 1 )
 script = ExtResource( 4 )
-NodePathVBoxHotkeys = NodePath("VBox/Controls/Hotkeys")
+NodePathTabContainer = NodePath("VBox/TabContainer")
 
 [node name="VBox" type="VBoxContainer" parent="Padding/HBox/Sections/Controls"]
 margin_right = 741.0
@@ -316,15 +316,9 @@ margin_bottom = 500.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Controls" type="ScrollContainer" parent="Padding/HBox/Sections/Controls/VBox"]
+[node name="TabContainer" type="TabContainer" parent="Padding/HBox/Sections/Controls/VBox"]
 margin_right = 741.0
 margin_bottom = 473.0
-size_flags_vertical = 3
-
-[node name="Hotkeys" type="VBoxContainer" parent="Padding/HBox/Sections/Controls/VBox/Controls"]
-margin_right = 741.0
-margin_bottom = 473.0
-size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Reset Hotkeys" type="Button" parent="Padding/HBox/Sections/Controls/VBox"]
