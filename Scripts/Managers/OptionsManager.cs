@@ -57,7 +57,7 @@ namespace GodotModules
             OS.WindowSize = OS.GetScreenSize() + new Vector2(1, 1); // need to add (1, 1) otherwise will act like fullscreen mode (seems like a Godot bug)
         }
 
-        private void CenterWindow() => OS.WindowPosition = OS.GetScreenSize() / 2 - OS.WindowSize / 2;
+        public void CenterWindow() => OS.WindowPosition = OS.GetScreenSize() / 2 - OS.WindowSize / 2;
 
         private void LoadOptions()
         {
@@ -99,5 +99,12 @@ namespace GodotModules
         public float SFXVolume { get; set; }
         public string OnlineUsername { get; set; }
         public string WebServerAddress { get; set; }
+    }
+
+    public enum FullscreenMode
+    {
+        Windowed,
+        Borderless,
+        Fullscreen
     }
 }

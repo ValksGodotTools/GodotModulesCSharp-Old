@@ -6,8 +6,12 @@ namespace GodotModules
     {
         [Export] public readonly NodePath NodePathFullscreen;
         [Export] public readonly NodePath NodePathVSync;
-        private OptionButton _fullscreen;
-        private CheckBox _vsync;
+        [Export] public readonly NodePath NodePathWindowSizeWidth;
+        [Export] public readonly NodePath NotePathWindowSizeHeight;
+        private LineEdit _windowSizeWidth;
+        private LineEdit _windowSizeHeight;
+        private Vector2 _windowSize;
+
         private OptionsManager _optionsManager;
 
         public void PreInit(OptionsManager optionsManager)
@@ -17,14 +21,24 @@ namespace GodotModules
 
         public override void _Ready()
         {
-            _fullscreen = GetNode<OptionButton>(NodePathFullscreen);
-            _vsync = GetNode<CheckBox>(NodePathVSync);
-            _fullscreen.AddItem("Windowed");
-            _fullscreen.AddItem("Borderless");
-            _fullscreen.AddItem("Exclusive Fullscreen");
+            var options = _optionsManager.Options;
 
-            _vsync.Pressed = _optionsManager.Options.VSync;
-            _fullscreen.Selected = (int)_optionsManager.Options.FullscreenMode;
+            var fullscreen = GetNode<OptionButton>(NodePathFullscreen);
+            fullscreen.AddItem("Windowed");
+            fullscreen.AddItem("Borderless");
+            fullscreen.AddItem("Exclusive Fullscreen");
+            fullscreen.Selected = (int)options.FullscreenMode;
+
+            _windowSizeWidth = GetNode<LineEdit>(NodePathWindowSizeWidth);
+            _windowSizeHeight = GetNode<LineEdit>(NotePathWindowSizeHeight);
+
+            var windowWidth = options.WindowSize.x;
+            var windowHeight = options.WindowSize.y;
+
+            GetNode<CheckBox>(NodePathVSync).Pressed = options.VSync;
+            _windowSizeWidth.Text = "" + windowWidth;
+            _windowSizeHeight.Text = "" + windowHeight;
+            _windowSize = new Vector2(windowWidth, windowHeight);
         }
 
         private void _on_VSync_toggled(bool v)
@@ -36,13 +50,23 @@ namespace GodotModules
         {
             _optionsManager.SetFullscreenMode((FullscreenMode)v);
         }
-    }
 
-    public enum FullscreenMode
-    {
-        Windowed,
-        Borderless,
-        Fullscreen
+        private void _on_Window_Size_Width_text_changed(string text) 
+        {
+            _windowSize.x = _windowSizeWidth.FilterRange((int)OS.GetScreenSize().x);
+        }
+
+        private void _on_Window_Size_Height_text_changed(string text)
+        {
+            _windowSize.y = _windowSizeHeight.FilterRange((int)OS.GetScreenSize().y);
+        }
+
+        private void _on_Set_Window_Size_pressed()
+        {
+            OS.WindowSize = _windowSize;
+            _optionsManager.CenterWindow();
+            _optionsManager.Options.WindowSize = _windowSize;
+        }
     }
 }
 
