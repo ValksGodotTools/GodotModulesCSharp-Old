@@ -7,5 +7,8 @@
 [node name="Game" type="Node" parent="."]
 script = ExtResource( 1 )
 NodePathAudioStreamPlayer = NodePath("../AudioStreamPlayer")
+NodePathWebRequestList = NodePath("../WebRequests")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="WebRequests" type="Node" parent="."]

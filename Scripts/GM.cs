@@ -8,18 +8,20 @@ global using System.Runtime.CompilerServices;
 global using System.Threading.Tasks;
 global using System.Linq;
 
+using Godot;
+
 namespace GodotModules
 {
     public class GM
     {
-        public static NetworkManager Net;
+        public static NetworkManager Net { get; private set; }
         private static Logger _logger;
         private static SceneManager _sceneManager;
 
-        public GM(SceneManager sceneManager)
+        public GM(SceneManager sceneManager, Node webRequestList)
         {
             _sceneManager = sceneManager;
-            Net = new();
+            Net = new(webRequestList);
             _logger = new();
         }
 

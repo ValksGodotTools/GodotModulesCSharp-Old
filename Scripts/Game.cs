@@ -6,7 +6,9 @@ namespace GodotModules
     public class Game : Node
     {
         [Export] public readonly NodePath NodePathAudioStreamPlayer;
+        [Export] public readonly NodePath NodePathWebRequestList;
         private AudioStreamPlayer _audioStreamPlayer;
+        private Node _webRequestList;
 
         private GM _gm;
         private HotkeyManager _hotkeyManager;
@@ -18,6 +20,7 @@ namespace GodotModules
         public override async void _Ready()
         {
             _audioStreamPlayer = GetNode<AudioStreamPlayer>(NodePathAudioStreamPlayer);
+            _webRequestList = GetNode<Node>(NodePathWebRequestList);
 
             _systemFileManager = new();
             _hotkeyManager = new(_systemFileManager);
@@ -41,12 +44,13 @@ namespace GodotModules
             _sceneManager.EscPressed[Scene.Lobby] = async () => await _sceneManager.ChangeScene(Scene.GameServers);
             _sceneManager.EscPressed[Scene.Game] = async () => await _sceneManager.ChangeScene(Scene.Menu);
 
-            _gm = new GM(_sceneManager);
+            _gm = new GM(_sceneManager, _webRequestList);
 
             await _sceneManager.InitAsync();
-            GM.Net.StartServer(25565, 100);
-            GM.Net.StartClient("127.0.0.1", 25565);
-            await GM.Net.WebClient.CheckConnectionAsync();
+
+            //GM.Net.StartServer(25565, 100);
+            //GM.Net.StartClient("127.0.0.1", 25565);
+            await GM.Net.Setup();
         }
 
         public override async void _Process(float delta)
