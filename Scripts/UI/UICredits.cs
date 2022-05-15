@@ -9,6 +9,12 @@ namespace GodotModules
         [Export] public readonly NodePath NodePathCreditsContent;
         private Tween Tween { get; set; }
         private Control CreditsContent { get; set; }
+        private SceneManager _sceneManager;
+
+        public void PreInit(SceneManager sceneManager) 
+        {
+            _sceneManager = sceneManager;
+        }
 
         public override void _Ready()
         {
@@ -21,7 +27,7 @@ namespace GodotModules
             Tween.Start();
         }
 
-        private async void _on_Tween_tween_completed(object obj, NodePath key) => await GM.ChangeScene(Scene.Menu);
+        private async void _on_Tween_tween_completed(object obj, NodePath key) => await _sceneManager.ChangeScene(Scene.Menu);
     }
 }
 

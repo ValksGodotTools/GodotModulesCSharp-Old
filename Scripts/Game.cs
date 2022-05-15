@@ -1,5 +1,14 @@
+global using GodotModules;
+global using GodotModules.Netcode;
+global using System;
+global using System.Collections.Generic;
+global using System.Collections.Concurrent;
+global using System.Diagnostics;
+global using System.Runtime.CompilerServices;
+global using System.Threading.Tasks;
+global using System.Linq;
+
 using Godot;
-using System;
 
 namespace GodotModules
 {
@@ -31,10 +40,18 @@ namespace GodotModules
             _musicManager.PlayTrack("Menu");
 
             _sceneManager = new(this, new GodotFileManager(), _hotkeyManager);
+            _sceneManager.PreInit[Scene.Menu] = (scene) => {
+                var menu = (UIMenu)scene;
+                menu.PreInit(_sceneManager);
+            };
             _sceneManager.PreInit[Scene.Options] = (scene) =>
             {
                 var options = (UIOptions)scene;
                 options.PreInit(_hotkeyManager, _optionsManager, _musicManager);
+            };
+            _sceneManager.PreInit[Scene.Credits] = (scene) => {
+                var credits = (UICredits)scene;
+                credits.PreInit(_sceneManager);
             };
             _sceneManager.EscPressed[Scene.Credits] = async () => await _sceneManager.ChangeScene(Scene.Menu);
             _sceneManager.EscPressed[Scene.GameServers] = async () => await _sceneManager.ChangeScene(Scene.Menu);
@@ -43,7 +60,7 @@ namespace GodotModules
             _sceneManager.EscPressed[Scene.Lobby] = async () => await _sceneManager.ChangeScene(Scene.GameServers);
             _sceneManager.EscPressed[Scene.Game] = async () => await _sceneManager.ChangeScene(Scene.Menu);
             await _sceneManager.InitAsync();
-            _gm = new GM(_sceneManager);
+            _gm = new GM();
 
             _networkManager = new(_webRequestList);
             _networkManager.StartServer(25565, 100);
