@@ -14,7 +14,7 @@ namespace GodotModules
             parent.AddChild(this);
             var error = Connect("request_completed", this, nameof(OnRequestCompleted));
             if (error != Error.Ok)
-                GM.LogWarning("Failed to connect request_completed signal for WebRequest");
+                Logger.LogWarning("Failed to connect request_completed signal for WebRequest");
         }
 
         public async Task<WebServerResponse> GetAsync(string url)
@@ -25,7 +25,7 @@ namespace GodotModules
 
             if (errorRequest != Error.Ok)
             {
-                //GM.LogWarning($"Failed to make GET request to {url}");
+                //Logger.LogWarning($"Failed to make GET request to {url}");
                 return new WebServerResponse(errorRequest);
             }
 
@@ -46,7 +46,7 @@ namespace GodotModules
 
             if (errorRequest != Error.Ok)
             {
-                //GM.LogWarning($"Failed to make GET request to {url}");
+                //Logger.LogWarning($"Failed to make GET request to {url}");
                 return new WebServerResponse(errorRequest);
             }
 

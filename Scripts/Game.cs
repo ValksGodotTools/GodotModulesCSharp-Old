@@ -19,7 +19,6 @@ namespace GodotModules
         private AudioStreamPlayer _audioStreamPlayer;
         private Node _webRequestList;
 
-        private GM _gm;
         private HotkeyManager _hotkeyManager;
         private SystemFileManager _systemFileManager;
         private SceneManager _sceneManager;
@@ -60,7 +59,6 @@ namespace GodotModules
             _sceneManager.EscPressed[Scene.Lobby] = async () => await _sceneManager.ChangeScene(Scene.GameServers);
             _sceneManager.EscPressed[Scene.Game] = async () => await _sceneManager.ChangeScene(Scene.Menu);
             await _sceneManager.InitAsync();
-            _gm = new GM();
 
             _networkManager = new(_webRequestList);
             _networkManager.StartServer(25565, 100);
@@ -70,7 +68,7 @@ namespace GodotModules
 
         public override async void _Process(float delta)
         {
-            _gm.Update();
+            Logger.Update();
             await _networkManager.Update();
         }
 

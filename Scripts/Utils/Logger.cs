@@ -2,16 +2,16 @@ using Godot;
 
 namespace GodotModules
 {
-    public class Logger
+    public static class Logger
     {
-        private readonly ConcurrentQueue<LogInfo> _messages = new ConcurrentQueue<LogInfo>();
+        private static readonly ConcurrentQueue<LogInfo> _messages = new ConcurrentQueue<LogInfo>();
 
-        public void LogErr(Exception e, ConsoleColor c, string hint) => _messages.Enqueue(new LogInfo(LoggerOpcode.Exception, $"[Error]: {(string.IsNullOrWhiteSpace(hint) ? "" : $"'{hint}' ")}{e.Message}\n{e.StackTrace}", c));
-        public void LogDebug(object v, ConsoleColor c, bool trace, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0) => _messages.Enqueue(new LogInfo(LoggerOpcode.Debug, new LogMessageDebug($"[Debug]: {v}", trace, $"   at {filePath.Substring(filePath.IndexOf("Scripts\\"))} line:{lineNumber}"), c));
-        public void LogTodo(object v, ConsoleColor c) => Log($"[Todo]: {v}", c);
-        public void LogWarning(object v, ConsoleColor c) => Log($"[Warning]: {v}", c);
-        public void Log(object v, ConsoleColor c) => _messages.Enqueue(new LogInfo(LoggerOpcode.Message, $"{v}", c));
-        public void LogMs(Action code)
+        public static void LogErr(Exception e, string hint = "", ConsoleColor c = ConsoleColor.Red) => _messages.Enqueue(new LogInfo(LoggerOpcode.Exception, $"[Error]: {(string.IsNullOrWhiteSpace(hint) ? "" : $"'{hint}' ")}{e.Message}\n{e.StackTrace}", c));
+        public static void LogDebug(object v, ConsoleColor c = ConsoleColor.Magenta, bool trace = true, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0) => _messages.Enqueue(new LogInfo(LoggerOpcode.Debug, new LogMessageDebug($"[Debug]: {v}", trace, $"   at {filePath.Substring(filePath.IndexOf("Scripts\\"))} line:{lineNumber}"), c));
+        public static void LogTodo(object v, ConsoleColor c = ConsoleColor.White) => Log($"[Todo]: {v}", c);
+        public static void LogWarning(object v, ConsoleColor c = ConsoleColor.Yellow) => Log($"[Warning]: {v}", c);
+        public static void Log(object v, ConsoleColor c = ConsoleColor.Gray) => _messages.Enqueue(new LogInfo(LoggerOpcode.Message, $"{v}", c));
+        public static void LogMs(Action code)
         {
             var watch = new Stopwatch();
             watch.Start();
@@ -20,7 +20,7 @@ namespace GodotModules
             Log($"Took {watch.ElapsedMilliseconds} ms", ConsoleColor.DarkGray);
         }
 
-        public void Update()
+        public static void Update()
         {
             if (_messages.TryDequeue(out LogInfo result))
             {
@@ -47,13 +47,13 @@ namespace GodotModules
             }
         }
 
-        private void Print(object v, ConsoleColor color)
+        private static void Print(object v, ConsoleColor color)
         {
             Console.ForegroundColor = color;
             GD.Print(v);
         }
 
-        private void PrintErr(object v, ConsoleColor color)
+        private static void PrintErr(object v, ConsoleColor color)
         {
             Console.ForegroundColor = color;
             GD.PrintErr(v);

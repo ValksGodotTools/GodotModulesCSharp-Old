@@ -31,7 +31,7 @@ namespace GodotModules.Netcode.Server
             {
                 if (IsRunning)
                 {
-                    GM.Log("Server is running already");
+                    Logger.Log("Server is running already");
                     return;
                 }
 
@@ -42,7 +42,7 @@ namespace GodotModules.Netcode.Server
             }
             catch (Exception e)
             {
-                GM.LogErr(e, "Server");
+                Logger.LogErr(e, "Server");
             }
         }
 
@@ -101,7 +101,7 @@ namespace GodotModules.Netcode.Server
             catch (InvalidOperationException e)
             {
                 var message = $"A server is running on port {port} already! {e.Message}";
-                GM.LogWarning(message);
+                Logger.LogWarning(message);
                 Cleanup();
                 return Task.FromResult(1);
             }
@@ -138,7 +138,7 @@ namespace GodotModules.Netcode.Server
                             var packet = netEvent.Packet;
                             if (packet.Length > GamePacket.MaxSize)
                             {
-                                GM.LogWarning($"Tried to read packet from client of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
+                                Logger.LogWarning($"Tried to read packet from client of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
                                 packet.Dispose();
                                 continue;
                             }

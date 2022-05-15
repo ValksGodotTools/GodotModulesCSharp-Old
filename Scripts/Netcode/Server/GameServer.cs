@@ -102,7 +102,7 @@ namespace GodotModules.Netcode.Server
 
             if (!HandlePacket.ContainsKey(opcode))
             {
-                GM.LogWarning($"[Server]: Received malformed opcode: {opcode} (Ignoring)");
+                Logger.LogWarning($"[Server]: Received malformed opcode: {opcode} (Ignoring)");
                 return;
             }
 
@@ -113,7 +113,7 @@ namespace GodotModules.Netcode.Server
             }
             catch (System.IO.EndOfStreamException e)
             {
-                GM.LogWarning($"[Server]: Received malformed opcode: {opcode} {e.Message} (Ignoring)");
+                Logger.LogWarning($"[Server]: Received malformed opcode: {opcode} {e.Message} (Ignoring)");
                 return;
             }
             handlePacket.Handle(this, peer);
@@ -139,6 +139,6 @@ namespace GodotModules.Netcode.Server
             Log("Server stopped");
         }
 
-        public void Log(object obj) => GM.Log($"[Server]: {obj}", ConsoleColor.Green);
+        public void Log(object obj) => Logger.Log($"[Server]: {obj}", ConsoleColor.Green);
     }
 }

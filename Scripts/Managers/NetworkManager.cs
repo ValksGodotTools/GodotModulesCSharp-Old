@@ -28,7 +28,7 @@ namespace GodotModules.Netcode
             _enetInitialized = ENet.Library.Initialize();
             if (!_enetInitialized) 
             {
-                GM.LogWarning("Failed to initialize ENet! Remember ENet-CSharp.dll and enet.dll are required in order for ENet to run properly!");
+                Logger.LogWarning("Failed to initialize ENet! Remember ENet-CSharp.dll and enet.dll are required in order for ENet to run properly!");
                 return;
             }
         }

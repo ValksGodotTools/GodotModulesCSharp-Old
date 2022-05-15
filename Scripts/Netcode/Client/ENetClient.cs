@@ -33,7 +33,7 @@ namespace GodotModules.Netcode.Client
             {
                 if (IsRunning)
                 {
-                    GM.Log($"Client is running already");
+                    Logger.Log($"Client is running already");
                     return;
                 }
 
@@ -44,7 +44,7 @@ namespace GodotModules.Netcode.Client
             }
             catch (Exception e)
             {
-                GM.LogErr(e, "Client");
+                Logger.LogErr(e, "Client");
             }
         }
 
@@ -64,7 +64,7 @@ namespace GodotModules.Netcode.Client
             var success = _outgoing.TryAdd(_outgoingId, new ClientPacket((byte)opcode, flags, data));
 
             if (!success)
-                GM.LogWarning($"Failed to add {opcode} to Outgoing queue because of duplicate key");
+                Logger.LogWarning($"Failed to add {opcode} to Outgoing queue because of duplicate key");
         }
 
         public async Task SendAsync(ClientPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
@@ -115,7 +115,7 @@ namespace GodotModules.Netcode.Client
                         case ENetClientOpcode.Disconnect:
                             if (CancellationTokenSource.IsCancellationRequested)
                             {
-                                GM.LogWarning("Client is in the middle of stopping");
+                                Logger.LogWarning("Client is in the middle of stopping");
                                 break;
                             }
 
@@ -158,7 +158,7 @@ namespace GodotModules.Netcode.Client
                             var packet = netEvent.Packet;
                             if (packet.Length > GamePacket.MaxSize)
                             {
-                                GM.LogWarning($"Tried to read packet from server of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
+                                Logger.LogWarning($"Tried to read packet from server of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
                                 packet.Dispose();
                                 continue;
                             }

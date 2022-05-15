@@ -13,7 +13,7 @@ namespace GodotModules
         {
             if (dict.ContainsKey(key))
             {
-                GM.LogWarning($"'{caller}' tried to add duplicate key '{key}' to dictionary\n" +
+                Logger.LogWarning($"'{caller}' tried to add duplicate key '{key}' to dictionary\n" +
                     $"   at {path} line:{lineNumber}");
                 return true;
             }
@@ -28,7 +28,7 @@ namespace GodotModules
         {
             if (!dict.ContainsKey(key))
             {
-                GM.LogWarning($"'{caller}' tried to access non-existent key '{key}' from dictionary\n" +
+                Logger.LogWarning($"'{caller}' tried to access non-existent key '{key}' from dictionary\n" +
                     $"   at {path} line:{lineNumber}");
                 return true;
             }
