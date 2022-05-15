@@ -7,11 +7,11 @@ namespace GodotModules
     {
         public readonly Dictionary<Scene, Action> EscPressed = new Dictionary<Scene, Action>();
         public readonly Dictionary<Scene, Action<Node>> PreInit = new Dictionary<Scene, Action<Node>>();
-        public Node ActiveScene { get; set; }
 
         public Scene CurScene { get; set; }
         public Scene PrevScene { get; set; }
 
+        private Node _activeScene;
         private readonly Dictionary<Scene, PackedScene> _scenes = new Dictionary<Scene, PackedScene>();
         private readonly Game _game;
         private readonly GodotFileManager _godotFileManager;
@@ -50,12 +50,12 @@ namespace GodotModules
             if (!instant)
                 await Task.Delay(1);
 
-            ActiveScene = _scenes[scene].Instance();
+            _activeScene = _scenes[scene].Instance();
 
             if (PreInit.ContainsKey(scene))
-                PreInit[scene](ActiveScene);
+                PreInit[scene](_activeScene);
 
-            _game.AddChild(ActiveScene);
+            _game.AddChild(_activeScene);
         }
 
         private void LoadScene(string scene) => _scenes[(Scene)Enum.Parse(typeof(Scene), scene)] = ResourceLoader.Load<PackedScene>($"res://Scenes/Scenes/{scene}.tscn");
