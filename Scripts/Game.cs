@@ -66,7 +66,7 @@ namespace GodotModules
             _networkManager.StartClient("127.0.0.1", 25565);
 
             var _webRequests = new WebRequests(_webRequestList);
-            _webManager = new WebManager(_webRequests, "localhost:4000");
+            _webManager = new WebManager(_webRequests, _optionsManager.Options.WebServerAddress);
 
             await _webManager.CheckConnectionAsync();
             if (_webManager.ConnectionAlive)
