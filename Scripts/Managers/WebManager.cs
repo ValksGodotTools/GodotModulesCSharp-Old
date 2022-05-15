@@ -33,10 +33,7 @@ namespace GodotModules
             if (res == null)
                 return;
 
-            if (res.Error != Error.Ok)
-                ConnectionAlive = false;
-            else
-                ConnectionAlive = true;
+            ConnectionAlive = res.Error == Error.Ok;
         }
 
         public async Task<WebServerResponse> RemoveLobbyPlayerAsync() => await PostAsync("servers/players/remove", DataExternalIp, "remove_lobby_player");

@@ -2,13 +2,8 @@ namespace GodotModules
 {
     public static class CollectionExtensions 
     {
-        public static string Print<T>(this IEnumerable<T> value, bool newLine = true)
-        {
-            if (value != null)
-                return string.Join(newLine ? "\n" : ", ", value);
-            else
-                return null;
-        }
+        public static string Print<T>(this IEnumerable<T> value, bool newLine = true) =>
+            value != null ? string.Join(newLine ? "\n" : ", ", value) : null;
 
         public static void ForEach<T>(this IEnumerable<T> value, Action<T> action)
         {
