@@ -48,9 +48,9 @@ namespace GodotModules
 
             await _sceneManager.InitAsync();
 
-            //GM.Net.StartServer(25565, 100);
-            //GM.Net.StartClient("127.0.0.1", 25565);
-            await GM.Net.Setup();
+            _gm.Net.StartServer(25565, 100);
+            _gm.Net.StartClient("127.0.0.1", 25565);
+            await _gm.Net.Setup();
         }
 
         public override async void _Process(float delta)
@@ -77,7 +77,7 @@ namespace GodotModules
         private async Task Cleanup()
         {
             _optionsManager.SaveOptions();
-            await GM.Net.Cleanup();
+            await _gm.Net.Cleanup();
             GetTree().Quit();
         }
     }

@@ -23,8 +23,8 @@ namespace GodotModules.Netcode
             var _webRequests = new WebRequests(webRequestList);
             _webManager = new WebManager(_webRequests, "localhost:4000");
 
-            Client = new(_godotCmds);
-            Server = new();
+            Client = new(this, _godotCmds);
+            Server = new(this);
             _enetInitialized = ENet.Library.Initialize();
             if (!_enetInitialized) 
             {
@@ -48,14 +48,14 @@ namespace GodotModules.Netcode
         public async void StartClient(string ip, ushort port)
         {
             Client.Dispose();
-            Client = new GameClient(_godotCmds);
+            Client = new GameClient(this, _godotCmds);
             await Client.StartAsync(ip, port);
         }
 
         public async void StartServer(ushort port, int maxPlayers)
         {
             Server.Dispose();
-            Server = new GameServer();
+            Server = new GameServer(this);
             await Server.StartAsync(port, maxPlayers);
         }
 
@@ -63,8 +63,6 @@ namespace GodotModules.Netcode
 
         public async Task Cleanup()
         {
-            //WebClient.Dispose();
-
             if (Client.IsRunning) 
             {
                 await Client.StopAsync();

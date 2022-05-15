@@ -21,7 +21,8 @@ namespace GodotModules
                 switch (cmd.Opcode)
                 {
                     case GodotOpcode.ENetPacket:
-                        var packetReader = (PacketReader)cmd.Data;
+                        var packetInfo = (PacketInfo)cmd.Data;
+                        var packetReader = packetInfo.PacketReader;
                         var opcode = (ServerPacketOpcode)packetReader.ReadByte();
 
                         //GM.Log($"[Client]: Received {opcode}");
@@ -29,7 +30,7 @@ namespace GodotModules
                         var handlePacket = ENetClient.HandlePacket[opcode];
                         handlePacket.Read(packetReader);
 
-                        await handlePacket.Handle();
+                        await handlePacket.Handle(packetInfo.GameClient);
 
                         packetReader.Dispose();
                         break;

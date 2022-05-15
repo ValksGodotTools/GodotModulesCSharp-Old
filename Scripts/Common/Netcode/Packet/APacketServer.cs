@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+using GodotModules.Netcode.Client;
 
 namespace GodotModules.Netcode
 {
@@ -7,6 +7,6 @@ namespace GodotModules.Netcode
         /// <summary>
         /// The packet handled client-side
         /// </summary>
-        public virtual Task Handle() => Task.FromResult(1);
+        public virtual Task Handle(GameClient client) => Task.FromResult(1);
     }
 }

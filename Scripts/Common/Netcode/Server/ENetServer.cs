@@ -5,7 +5,7 @@ namespace GodotModules.Netcode.Server
 {
     public abstract class ENetServer : IDisposable
     {
-        private static readonly Dictionary<ClientPacketOpcode, APacketClient> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, APacketClient>("CPacket");
+        protected static readonly Dictionary<ClientPacketOpcode, APacketClient> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, APacketClient>("CPacket");
 
         public bool HasSomeoneConnected { get => Interlocked.Read(ref _someoneConnected) == 1; }
         public bool IsRunning { get => Interlocked.Read(ref _running) == 1; }
@@ -18,6 +18,12 @@ namespace GodotModules.Netcode.Server
         private long _someoneConnected = 0;
         private long _running = 0;
         private readonly ConcurrentQueue<ServerPacket> _outgoing = new ConcurrentQueue<ServerPacket>();
+        private readonly NetworkManager _networkManager;
+
+        public ENetServer(NetworkManager networkManager) 
+        {
+            _networkManager = networkManager;
+        }
 
         public async Task StartAsync(ushort port, int maxClients)
         {
@@ -75,7 +81,7 @@ namespace GodotModules.Netcode.Server
 
         protected virtual void Started(ushort port, int maxClients) { }
         protected virtual void Connect(ref Event netEvent) { }
-        protected virtual void Received(ClientPacketOpcode opcode) { }
+        protected virtual void Received(Peer peer, PacketReader packetReader, ClientPacketOpcode opcode) { }
         protected virtual void Disconnect(ref Event netEvent) { }
         protected virtual void Timeout(ref Event netEvent) { }
         protected virtual void Leave(ref Event netEvent) { }
@@ -139,26 +145,7 @@ namespace GodotModules.Netcode.Server
 
                             var packetReader = new PacketReader(packet);
                             var opcode = (ClientPacketOpcode)packetReader.ReadByte();
-
-                            Received(opcode);
-
-                            if (!HandlePacket.ContainsKey(opcode))
-                            {
-                                GM.LogWarning($"[Server]: Received malformed opcode: {opcode} (Ignoring)");
-                                break;
-                            }
-
-                            var handlePacket = HandlePacket[opcode];
-                            try
-                            {
-                                handlePacket.Read(packetReader);
-                            }
-                            catch (System.IO.EndOfStreamException e)
-                            {
-                                GM.LogWarning($"[Server]: Received malformed opcode: {opcode} {e.Message} (Ignoring)");
-                                break;
-                            }
-                            handlePacket.Handle(netEvent.Peer);
+                            Received(netEvent.Peer, packetReader, opcode);
 
                             packetReader.Dispose();
                             break;
@@ -190,7 +177,7 @@ namespace GodotModules.Netcode.Server
             if (_queueRestart)
             {
                 _queueRestart = false;
-                GM.Net.StartServer(port, maxClients);
+                _networkManager.StartServer(port, maxClients);
             }
 
             return Task.FromResult(1);

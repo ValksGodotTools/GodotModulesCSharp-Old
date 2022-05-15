@@ -4,7 +4,7 @@ namespace GodotModules.Netcode.Client
 {
     public class GameClient : ENetClient
     {
-        public GameClient(GodotCommands godotCmds)
+        public GameClient(NetworkManager networkManager, GodotCommands godotCmds) : base(networkManager)
         {
             _godotCmds = godotCmds;
         }
@@ -12,6 +12,11 @@ namespace GodotModules.Netcode.Client
         protected override void Connecting()
         {
             Log("Client connecting...");
+        }
+
+        protected override void Receive(PacketReader reader)
+        {
+            _godotCmds.Enqueue(GodotOpcode.ENetPacket, new PacketInfo(reader, this));
         }
 
         protected override void Connect(ref Event netEvent)

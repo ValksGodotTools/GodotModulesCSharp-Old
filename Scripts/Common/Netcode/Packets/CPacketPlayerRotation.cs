@@ -1,4 +1,5 @@
 using System;
+using GodotModules.Netcode.Server;
 
 namespace GodotModules.Netcode
 {
@@ -16,9 +17,9 @@ namespace GodotModules.Netcode
             Rotation = reader.ReadFloat();
         }
 
-        public override void Handle(ENet.Peer peer)
+        public override void Handle(GameServer server, ENet.Peer peer)
         {
-            var player = GM.Net.Server.Players[(byte)peer.ID];
+            var player = server.Players[(byte)peer.ID];
             player.Rotation = Rotation;
         }
     }

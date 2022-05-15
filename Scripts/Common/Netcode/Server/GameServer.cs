@@ -7,6 +7,8 @@ namespace GodotModules.Netcode.Server
         public Dictionary<byte, DataPlayer> Players = new Dictionary<byte, DataPlayer>();
         public DataLobby Lobby { get; set; }
 
+        public GameServer(NetworkManager networkManager) : base(networkManager) {}
+
         public Dictionary<byte, DataPlayer> GetOtherPlayers(byte id)
         {
             var otherPlayers = new Dictionary<byte, DataPlayer>(Players);
@@ -94,9 +96,27 @@ namespace GodotModules.Netcode.Server
             Log($"Client connected with id: {netEvent.Peer.ID}");
         }
 
-        protected override void Received(ClientPacketOpcode opcode)
+        protected override void Received(Peer peer, PacketReader packetReader, ClientPacketOpcode opcode)
         {
             Log($"Received packet: {opcode}");
+
+            if (!HandlePacket.ContainsKey(opcode))
+            {
+                GM.LogWarning($"[Server]: Received malformed opcode: {opcode} (Ignoring)");
+                return;
+            }
+
+            var handlePacket = HandlePacket[opcode];
+            try
+            {
+                handlePacket.Read(packetReader);
+            }
+            catch (System.IO.EndOfStreamException e)
+            {
+                GM.LogWarning($"[Server]: Received malformed opcode: {opcode} {e.Message} (Ignoring)");
+                return;
+            }
+            handlePacket.Handle(this, peer);
         }
 
         protected override void Disconnect(ref Event netEvent)

@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using GodotModules.Netcode.Client;
 
 namespace GodotModules.Netcode
 {
@@ -36,7 +37,7 @@ namespace GodotModules.Netcode
         }
 
 #if CLIENT
-        public override async Task Handle()
+        public override async Task Handle(GameClient client)
         {
             //var sceneGameScript = SceneManager.GetActiveSceneScript<Game.SceneGame>();
 

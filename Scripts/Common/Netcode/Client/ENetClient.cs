@@ -18,6 +18,12 @@ namespace GodotModules.Netcode.Client
         private long _running;
         private readonly ConcurrentDictionary<int, ClientPacket> _outgoing = new ConcurrentDictionary<int, ClientPacket>();
         private int _outgoingId;
+        protected readonly NetworkManager _networkManager;
+
+        public ENetClient(NetworkManager networkManager)
+        {
+            _networkManager = networkManager;
+        }
 
         public async void Start(string ip, ushort port) => await StartAsync(ip, port);
 
@@ -72,6 +78,7 @@ namespace GodotModules.Netcode.Client
         protected virtual void Connecting() {}
         protected virtual void Connect(ref Event netEvent) {}
         protected virtual void Disconnect(ref Event netEvent) {}
+        protected virtual void Receive(PacketReader reader){}
         protected virtual void Timeout(ref Event netEvent) {}
         protected virtual void Leave(ref Event netEvent) {}
         protected virtual void Sent(ClientPacketOpcode opcode) {}
@@ -156,7 +163,7 @@ namespace GodotModules.Netcode.Client
                                 continue;
                             }
 
-                            _godotCmds.Enqueue(GodotOpcode.ENetPacket, new PacketReader(packet));
+                            Receive(new PacketReader(packet));
                             break;
 
                         case EventType.Timeout:
@@ -186,6 +193,18 @@ namespace GodotModules.Netcode.Client
         public void Dispose()
         {
             CancellationTokenSource.Dispose();
+        }
+    }
+
+    public class PacketInfo 
+    {
+        public PacketReader PacketReader { get; set; }
+        public GameClient GameClient { get; set; }
+
+        public PacketInfo(PacketReader reader, GameClient client)
+        {
+            PacketReader = reader;
+            GameClient = client;
         }
     }
 

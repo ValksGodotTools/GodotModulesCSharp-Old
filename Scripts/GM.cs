@@ -14,7 +14,7 @@ namespace GodotModules
 {
     public class GM
     {
-        public static NetworkManager Net { get; private set; }
+        public NetworkManager Net { get; private set; }
         private static Logger _logger;
         private static SceneManager _sceneManager;
 

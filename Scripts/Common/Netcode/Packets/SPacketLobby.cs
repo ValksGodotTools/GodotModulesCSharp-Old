@@ -1,3 +1,5 @@
+using GodotModules.Netcode.Client;
+
 namespace GodotModules.Netcode
 {
     public class SPacketLobby : APacketServerPeerId
@@ -145,12 +147,8 @@ namespace GodotModules.Netcode
         }
 
 #if CLIENT
-        private GodotModules.Netcode.Client.GameClient Client { get; set; }
-
-        public override async Task Handle()
+        public override async Task Handle(GameClient client)
         {
-            Client = GM.Net.Client;
-
             switch (LobbyOpcode)
             {
                 case LobbyOpcode.LobbyCreate:
@@ -195,6 +193,7 @@ namespace GodotModules.Netcode
             Client.Players[Id] = GM.Options.OnlineUsername;
 
             await SceneManager.ChangeScene("Lobby");*/
+            await Task.FromResult(1);
         }
 
         private void HandleChatMessage()
@@ -220,6 +219,7 @@ namespace GodotModules.Netcode
                 NetworkManager.GameServer.ENetCmds.Enqueue(new ThreadCmd<ENetOpcode>(ENetOpcode.StartGame));
 
             await SceneManager.ChangeScene("Game");*/
+            await Task.FromResult(1);
         }
 
         private async Task HandleInfo()
@@ -236,6 +236,7 @@ namespace GodotModules.Netcode
             currentLobby.MaxPlayerCount = LobbyMaxPlayerCount;
 
             await SceneManager.ChangeScene("Lobby");*/
+            await Task.FromResult(1);
         }
 
         private void HandleJoin()
