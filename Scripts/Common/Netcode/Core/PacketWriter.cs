@@ -1,5 +1,6 @@
 using Godot;
 using System.IO;
+using System.Reflection;
 
 namespace GodotModules.Netcode
 {
@@ -91,6 +92,24 @@ namespace GodotModules.Netcode
 
                     return;
                 }
+            }
+
+            if (t.IsEnum)
+            {
+                Write((byte)d);
+                return;
+            }
+
+            if (t.IsValueType)
+            {
+                var fields = t
+                    .GetFields(BindingFlags.Public | BindingFlags.Instance)
+                    .OrderBy(field => field.MetadataToken);
+
+                foreach (var field in fields)
+                    Write<dynamic>(field.GetValue(d));
+
+                return;
             }
 
             throw new NotImplementedException("PacketWriter: " + t + " is not a supported type.");
