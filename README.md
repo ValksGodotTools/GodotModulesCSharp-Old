@@ -1,6 +1,6 @@
 # Godot Modules
-![[GitHub forks](https://github.com/GodotModules/GodotModulesCSharp/fork)](https://img.shields.io/github/forks/GodotModules/GodotModules?label=forks&logo=github&style=flat-square&color=purple)
-![[Discord](https://discord.gg/866cg8yfxZ)](https://img.shields.io/static/v1?style=flat-square&logo=discord&logoColor=white&color=blue&label=discord&message=valks%20games)
+[![](https://img.shields.io/github/forks/GodotModules/GodotModules?label=forks&logo=github&style=flat-square&color=purple)](https://github.com/GodotModules/GodotModulesCSharp/fork)
+[![](https://img.shields.io/static/v1?style=flat-square&logo=discord&logoColor=white&color=blue&label=discord&message=valks%20games)](https://discord.gg/866cg8yfxZ)
 
 
 [Godot Moules](https://github.com/GodotModules/GodotModulesCSharp) is a collection of useful modules and scripts writing [Godot](https://godotengine.org/) games in C#.
