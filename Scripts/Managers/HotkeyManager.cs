@@ -35,11 +35,11 @@ namespace GodotModules
             _hotkeys = dict;
 
             foreach (var pair1 in _hotkeys)
-                foreach (var pair2 in pair1.Value) 
+                foreach (var pair2 in pair1.Value)
                     SetHotkeyEvent(pair2.Key, pair2.Value);
         }
 
-        public void ResetHotkey(string key) 
+        public void ResetHotkey(string key)
         {
             var category = GetHotkeyCategory(key);
             _hotkeys[category][key] = _defaultHotkeys[category][key];
@@ -75,7 +75,7 @@ namespace GodotModules
             _hotkeys = new(_defaultHotkeys);
         }
 
-        public void SaveHotkeys() 
+        public void SaveHotkeys()
         {
             var json = new Dictionary<HotkeyCategory, List<JsonInputKey>>();
 
@@ -89,14 +89,14 @@ namespace GodotModules
             _systemFileManager.WriteConfig("controls", json);
         }
 
-        public void SetHotkey(string action, InputEventKey inputEventKey) 
+        public void SetHotkey(string action, InputEventKey inputEventKey)
         {
             SetHotkeyEvent(action, inputEventKey);
             var category = GetHotkeyCategory(action);
             _hotkeys[category][action] = inputEventKey;
         }
 
-        private void SetHotkeyEvent(string action, InputEventKey inputEventKey) 
+        private void SetHotkeyEvent(string action, InputEventKey inputEventKey)
         {
             InputMap.ActionEraseEvents(action);
             InputMap.ActionAddEvent(action, inputEventKey);
@@ -116,7 +116,7 @@ namespace GodotModules
             return hotkeyCategory;
         }
 
-        private JsonInputKey ConvertToJson(string action, InputEventKey inputEventKey) => 
+        private JsonInputKey ConvertToJson(string action, InputEventKey inputEventKey) =>
             new JsonInputKey
             {
                 Action = action,
@@ -146,7 +146,7 @@ namespace GodotModules
             };
     }
 
-    public enum HotkeyCategory 
+    public enum HotkeyCategory
     {
         UI,
         Player
