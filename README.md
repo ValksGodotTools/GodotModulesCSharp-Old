@@ -74,6 +74,7 @@ Thank you to the following wonderful people who helped make this project become 
 
 
 ### Programming
+- irj [[GitHub]](https://github.com/irj)
 - LazerGoat [[GitHub]](https://github.com/LazerGoat)
 - Scorpieth [[GitHub]](https://github.com/Scorpieth)
 
