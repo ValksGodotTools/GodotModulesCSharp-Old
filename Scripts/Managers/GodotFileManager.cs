@@ -4,25 +4,15 @@ namespace GodotModules
 {
     public class GodotFileManager
     {
-        public string GetProjectPath()
-        {
-            string pathExeDir;
-
-            if (OS.HasFeature("standalone")) // check if game is exported
-                // set to exported release dir
-                pathExeDir = $"{System.IO.Directory.GetParent(OS.GetExecutablePath()).FullName}";
-            else
-                // set to project dir
-                pathExeDir = ProjectSettings.GlobalizePath("res://");
-
-            return pathExeDir;
-        }
+        public string GetProjectPath() => OS.HasFeature("standalone")
+            ? System.IO.Directory.GetParent(OS.GetExecutablePath()).FullName
+            : ProjectSettings.GlobalizePath("res://");
 
         public bool LoadDir(string path, System.Action<Directory, string> action)
         {
             var dir = new Directory();
-            var error = dir.Open($"res://{path}");
-            if (error != Error.Ok)
+
+            if (dir.Open($"res://{path}") != Error.Ok)
             {
                 Logger.LogWarning($"Failed to open {path}");
                 return false;
@@ -30,13 +20,14 @@ namespace GodotModules
 
             dir.ListDirBegin(true);
             var fileName = dir.GetNext();
+            
             while (fileName != "")
             {
                 action(dir, fileName);
                 fileName = dir.GetNext();
             }
-            dir.ListDirEnd();
 
+            dir.ListDirEnd();
             return true;
         }
     }

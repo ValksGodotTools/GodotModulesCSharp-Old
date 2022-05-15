@@ -20,11 +20,9 @@ namespace GodotModules.Netcode
             Client = new(this, _godotCmds);
             Server = new(this);
             _enetInitialized = ENet.Library.Initialize();
+
             if (!_enetInitialized) 
-            {
                 Logger.LogWarning("Failed to initialize ENet! Remember ENet-CSharp.dll and enet.dll are required in order for ENet to run properly!");
-                return;
-            }
         }
 
         public async Task Update()

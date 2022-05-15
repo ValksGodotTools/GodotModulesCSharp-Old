@@ -13,10 +13,7 @@ namespace GodotModules
             var id = lineEdit.GetInstanceId();
 
             if (string.IsNullOrWhiteSpace(text))
-                if (_prevTexts.ContainsKey(id))
-                    return _prevTexts[id];
-                else
-                    return null;
+                return _prevTexts.ContainsKey(id) ? _prevTexts[id] : null;
 
             if (!filter(text)) 
             {
@@ -25,11 +22,9 @@ namespace GodotModules
                     lineEdit.ChangeLineEditText("");
                     return null;
                 }
-                else
-                {
-                    lineEdit.ChangeLineEditText(_prevTexts[id]);
-                    return _prevTexts[id];
-                }
+
+                lineEdit.ChangeLineEditText(_prevTexts[id]);
+                return _prevTexts[id];
             }
 
             _prevTexts[id] = text;
@@ -54,11 +49,9 @@ namespace GodotModules
                     lineEdit.ChangeLineEditText("");
                     return minRange - 1;
                 }
-                else
-                {
-                    lineEdit.ChangeLineEditText($"{_prevNums[id]}");
-                    return _prevNums[id];
-                }
+
+                lineEdit.ChangeLineEditText($"{_prevNums[id]}");
+                return _prevNums[id];
             }
 
             if (text.Length > maxRange.ToString().Length && numAttempts <= maxRange)
