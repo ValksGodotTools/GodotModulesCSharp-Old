@@ -19,7 +19,7 @@ namespace GodotModules
 
         public async Task<WebServerResponse> GetAsync(string url)
         {
-            Name = $"Request GET ({++_id}) to {url}";
+            Name = $"Request GET ({++_id})";
 
             var errorRequest = Request(url);
 
@@ -38,7 +38,7 @@ namespace GodotModules
 
         public async Task<WebServerResponse> PostAsync(string url, object data)
         {
-            Name = $"Request POST ({++_id}) to {url}";
+            Name = $"Request POST ({++_id})";
 
             var query = JSON.Print(data);
             var headers = new string[] { "Content-Type: application/json" };
