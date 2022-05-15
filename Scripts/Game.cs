@@ -5,6 +5,7 @@ global using System.Collections.Generic;
 global using System.Collections.Concurrent;
 global using System.Diagnostics;
 global using System.Runtime.CompilerServices;
+global using System.Threading;
 global using System.Text.RegularExpressions;
 global using System.Threading.Tasks;
 global using System.Linq;
@@ -37,8 +38,9 @@ namespace GodotModules
             _hotkeyManager = new(_systemFileManager);
             _optionsManager = new(_systemFileManager, _hotkeyManager);
             _musicManager = new(_audioStreamPlayer, _optionsManager);
-            _musicManager.LoadTrack("Menu", "Audio/Music/Unsolicited trailer music loop edit.wav");
-            _musicManager.PlayTrack("Menu");
+
+            var _webRequests = new WebRequests(_webRequestList);
+            _webManager = new WebManager(_webRequests, _optionsManager.Options.WebServerAddress);
 
             _sceneManager = new(this, new GodotFileManager(), _hotkeyManager);
             _sceneManager.PreInit[Scene.Menu] = (scene) =>
@@ -49,7 +51,7 @@ namespace GodotModules
             _sceneManager.PreInit[Scene.Options] = (scene) =>
             {
                 var options = (UIOptions)scene;
-                options.PreInit(_hotkeyManager, _optionsManager, _musicManager);
+                options.PreInit(_hotkeyManager, _optionsManager, _musicManager, _webManager, _sceneManager);
             };
             _sceneManager.PreInit[Scene.Credits] = (scene) =>
             {
@@ -64,12 +66,12 @@ namespace GodotModules
             _sceneManager.EscPressed[Scene.Game] = async () => await _sceneManager.ChangeScene(Scene.Menu);
             await _sceneManager.InitAsync();
 
+            _musicManager.LoadTrack("Menu", "Audio/Music/Unsolicited trailer music loop edit.wav");
+            _musicManager.PlayTrack("Menu");
+
             _networkManager = new();
             _networkManager.StartServer(25565, 100);
             _networkManager.StartClient("127.0.0.1", 25565);
-
-            var _webRequests = new WebRequests(_webRequestList);
-            _webManager = new WebManager(_webRequests, _optionsManager.Options.WebServerAddress);
 
             await _webManager.CheckConnectionAsync();
             if (_webManager.ConnectionAlive)
@@ -102,6 +104,7 @@ namespace GodotModules
         {
             _optionsManager.SaveOptions();
             await _networkManager.Cleanup();
+            _webManager.Cleanup();
             GetTree().Quit();
         }
     }
