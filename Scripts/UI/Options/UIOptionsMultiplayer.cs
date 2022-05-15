@@ -17,12 +17,14 @@ namespace GodotModules
         private OptionsManager _optionsManager;
         private WebManager _webManager;
         private SceneManager _sceneManager;
+        private TokenManager _tokenManager;
 
-        public void PreInit(OptionsManager optionsManager, WebManager webManager, SceneManager sceneManager)
+        public void PreInit(OptionsManager optionsManager, WebManager webManager, SceneManager sceneManager, TokenManager tokenManager)
         {
             _optionsManager = optionsManager;
             _webManager = webManager;
             _sceneManager = sceneManager;
+            _tokenManager = tokenManager;
         }
 
         public override void _Ready()
@@ -53,9 +55,9 @@ namespace GodotModules
             _btnCheckConnection.Disabled = true;
             _webServerStatus.Text = "Checking...";
 
-            await _webManager.CheckConnectionAsync();
+            await _webManager.CheckConnectionAsync(_tokenManager.Create("check_connection"));
 
-            if (_sceneManager.CurScene == Scene.Options) // player could go to menu while this task is still executing
+            if (!_tokenManager.Cancelled("check_connection"))
             {
                 _btnCheckConnection.Disabled = false;
                 SetWebServerStatus(_webManager.ConnectionAlive);
