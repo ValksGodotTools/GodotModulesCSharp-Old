@@ -5,6 +5,7 @@ global using System.Collections.Generic;
 global using System.Collections.Concurrent;
 global using System.Diagnostics;
 global using System.Runtime.CompilerServices;
+global using System.Text.RegularExpressions;
 global using System.Threading.Tasks;
 global using System.Linq;
 
@@ -40,7 +41,8 @@ namespace GodotModules
             _musicManager.PlayTrack("Menu");
 
             _sceneManager = new(this, new GodotFileManager(), _hotkeyManager);
-            _sceneManager.PreInit[Scene.Menu] = (scene) => {
+            _sceneManager.PreInit[Scene.Menu] = (scene) =>
+            {
                 var menu = (UIMenu)scene;
                 menu.PreInit(_sceneManager);
             };
@@ -49,7 +51,8 @@ namespace GodotModules
                 var options = (UIOptions)scene;
                 options.PreInit(_hotkeyManager, _optionsManager, _musicManager);
             };
-            _sceneManager.PreInit[Scene.Credits] = (scene) => {
+            _sceneManager.PreInit[Scene.Credits] = (scene) =>
+            {
                 var credits = (UICredits)scene;
                 credits.PreInit(_sceneManager);
             };
