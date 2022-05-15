@@ -18,12 +18,15 @@ namespace GodotModules
         public override void _Ready()
         {
             _vboxHotkeys = GetNode<Control>(NodePathVBoxHotkeys);
-            foreach (var action in _hotkeyManager.Hotkeys.Keys.OrderBy(x => x).ToList()) 
+            foreach (var pair1 in _hotkeyManager.Hotkeys)
             {
-                var hotkeyInstance = Prefabs.UIHotkey.Instance<UIHotkey>();
-                hotkeyInstance.Init(_hotkeyManager, action);
-                _vboxHotkeys.AddChild(hotkeyInstance);
-                _uiHotkeys[action] = hotkeyInstance;
+                foreach (var pair2 in pair1.Value)
+                {
+                    var hotkeyInstance = Prefabs.UIHotkey.Instance<UIHotkey>();
+                    hotkeyInstance.Init(_hotkeyManager, pair2.Key);
+                    _vboxHotkeys.AddChild(hotkeyInstance);
+                    _uiHotkeys[pair2.Key] = hotkeyInstance;
+                }
             }
         }
 
@@ -31,8 +34,9 @@ namespace GodotModules
         {
             _hotkeyManager.ResetToDefaultHotkeys();
 
-            foreach (var pair in _hotkeyManager.Hotkeys) 
-                _uiHotkeys[pair.Key].SetHotkeyText(pair.Value.AsText());
+            foreach (var pair1 in _hotkeyManager.Hotkeys)
+                foreach (var pair2 in pair1.Value)
+                    _uiHotkeys[pair2.Key].SetHotkeyText(pair2.Value.AsText()); 
         }
     }
 }

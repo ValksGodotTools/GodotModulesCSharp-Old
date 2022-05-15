@@ -33,7 +33,8 @@ namespace GodotModules
         private void _on_Reset_To_Default_pressed() 
         {
             _hotkeyManager.ResetHotkey(_action);
-            SetHotkeyText(_hotkeyManager.Hotkeys[_action].AsText());
+            var category = _hotkeyManager.GetHotkeyCategory(_action);
+            SetHotkeyText(_hotkeyManager.Hotkeys[category][_action].AsText());
         }
     }
 }
