@@ -1,6 +1,6 @@
 using Godot;
 
-namespace GodotModules 
+namespace GodotModules
 {
     public class WebRequest : HTTPRequest
     {
@@ -17,43 +17,63 @@ namespace GodotModules
                 Logger.LogWarning("Failed to connect request_completed signal for WebRequest");
         }
 
-        public async Task<WebServerResponse> GetAsync(string url)
+        public async Task<WebServerResponse> GetAsync(string url, CancellationTokenSource cts)
         {
-            Name = $"Request GET ({++_id})";
-
-            var errorRequest = Request(url);
-
-            if (errorRequest != Error.Ok)
+            try
             {
-                //Logger.LogWarning($"Failed to make GET request to {url}");
-                return new WebServerResponse(errorRequest);
-            }
+                using var task = Task.Run(async () =>
+                {
+                    Name = $"Request GET ({++_id})";
 
-            await ToSignal(this, "request_completed");
-            
-            _id--;
-            QueueFree();
+                    var errorRequest = Request(url);
+
+                    if (errorRequest != Error.Ok)
+                    {
+                        //Logger.LogWarning($"Failed to make GET request to {url}");
+                        await Task.FromResult(new WebServerResponse(errorRequest));
+                    }
+
+                    while (_webServerResponse == null)
+                        await Task.Delay(1, cts.Token);
+
+                    _id--;
+                    QueueFree();
+                }, cts.Token);
+                await task;
+            }
+            catch (TaskCanceledException) { }
+
             return _webServerResponse;
         }
 
-        public async Task<WebServerResponse> PostAsync(string url, object data)
+        public async Task<WebServerResponse> PostAsync(string url, object data, CancellationTokenSource cts)
         {
-            Name = $"Request POST ({++_id})";
-
-            var query = JSON.Print(data);
-            var headers = new string[] { "Content-Type: application/json" };
-            var errorRequest = Request(url, headers, true, HTTPClient.Method.Post, query);
-
-            if (errorRequest != Error.Ok)
+            try
             {
-                //Logger.LogWarning($"Failed to make GET request to {url}");
-                return new WebServerResponse(errorRequest);
+                using var task = Task.Run(async () =>
+                {
+                    Name = $"Request POST ({++_id})";
+
+                    var query = JSON.Print(data);
+                    var headers = new string[] { "Content-Type: application/json" };
+                    var errorRequest = Request(url, headers, true, HTTPClient.Method.Post, query);
+
+                    if (errorRequest != Error.Ok)
+                    {
+                        //Logger.LogWarning($"Failed to make GET request to {url}");
+                        await Task.FromResult(new WebServerResponse(errorRequest));
+                    }
+
+                    while (_webServerResponse == null)
+                        await Task.Delay(1, cts.Token);
+
+                    _id--;
+                    QueueFree();
+                }, cts.Token);
+                await task;
             }
+            catch (TaskCanceledException) {}
 
-            await ToSignal(this, "request_completed");
-
-            _id--;
-            QueueFree();
             return _webServerResponse;
         }
 
@@ -74,7 +94,7 @@ namespace GodotModules
         }
     }
 
-    public class WebServerResponse 
+    public class WebServerResponse
     {
         public Error Error { get; set; }
         public string Response { get; set; }
