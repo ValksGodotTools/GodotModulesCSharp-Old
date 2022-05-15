@@ -4,9 +4,9 @@ namespace GodotModules
 {
     public class HotkeyManager
     {
-        private Dictionary<string, InputEventKey> _defaultHotkeys;
-        private Dictionary<string, InputEventKey> _hotkeys;
-        public Dictionary<string, InputEventKey> Hotkeys => _hotkeys;
+        private Dictionary<string, Hotkey> _defaultHotkeys;
+        private Dictionary<string, Hotkey> _hotkeys;
+        public Dictionary<string, Hotkey> Hotkeys => _hotkeys;
         private readonly SystemFileManager _systemFileManager;
 
         public HotkeyManager(SystemFileManager systemFileManager)
@@ -21,14 +21,14 @@ namespace GodotModules
 
         public void LoadPersistentHotkeys()
         {
-            var jsonData = _systemFileManager.ReadConfig<Dictionary<string, JsonInputKey>>("controls");
-            _hotkeys = jsonData.ToDictionary(x => x.Key, x => ConvertToInputKey(x.Value));
+            var jsonData = _systemFileManager.ReadConfig<Dictionary<string, JsonHotkey>>("controls");
+            _hotkeys = jsonData.ToDictionary(x => x.Key, x => ConvertJsonToHotkey(x.Value));
 
             foreach (var pair in _hotkeys)
                 SetHotkeyEvent(pair.Key, pair.Value);
         }
 
-        public void ResetHotkey(string key) 
+        public void ResetHotkey(string key)
         {
             _hotkeys[key] = _defaultHotkeys[key];
             SetHotkeyEvent(key, _hotkeys[key]);
@@ -36,9 +36,9 @@ namespace GodotModules
 
         public void ResetToDefaultHotkeys()
         {
-            _hotkeys = new Dictionary<string, InputEventKey>(_defaultHotkeys);
+            _hotkeys = new(_defaultHotkeys);
 
-            foreach (var pair in _hotkeys) 
+            foreach (var pair in _hotkeys)
                 SetHotkeyEvent(pair.Key, pair.Value);
         }
 
@@ -51,28 +51,48 @@ namespace GodotModules
                 if (arr.Count == 0)
                     continue;
 
-                _defaultHotkeys[action] = (InputEventKey)InputMap.GetActionList(action)[0];
+                var category = GetHotkeyCategory(action);
+
+                _defaultHotkeys[action] = new Hotkey(category, (InputEventKey)InputMap.GetActionList(action)[0]);
             }
 
-            _hotkeys = new Dictionary<string, InputEventKey>(_defaultHotkeys);
+            _hotkeys = new(_defaultHotkeys);
         }
 
-        public void SaveHotkeys() => _systemFileManager.WriteConfig("controls", _hotkeys.ToDictionary(x => x.Key, x => ConvertToJson(x.Value)));
-        public void SetHotkey(string action, InputEventKey inputEventKey) 
+        private HotkeyCategory GetHotkeyCategory(string action)
         {
-            SetHotkeyEvent(action, inputEventKey);
-            _hotkeys[action] = inputEventKey;
+            var text = action.ToLower();
+
+            var hotkeyCategory = HotkeyCategory.UI;
+
+            if (text.Contains("ui"))
+                hotkeyCategory = HotkeyCategory.UI;
+            if (text.Contains("player"))
+                hotkeyCategory = HotkeyCategory.Player;
+
+            return hotkeyCategory;
         }
 
-        private void SetHotkeyEvent(string action, InputEventKey inputEventKey) 
+        public void SaveHotkeys() => _systemFileManager.WriteConfig("controls", _hotkeys.ToDictionary(x => x.Key, x => ConvertHotkeyToJson(x.Value)));
+        public void SetHotkey(string action, InputEventKey inputEventKey)
+        {
+            var hotkey = new Hotkey(GetHotkeyCategory(action), inputEventKey);
+            SetHotkeyEvent(action, hotkey);
+            _hotkeys[action] = hotkey;
+        }
+
+        private void SetHotkeyEvent(string action, Hotkey hotkey)
         {
             InputMap.ActionEraseEvents(action);
-            InputMap.ActionAddEvent(action, inputEventKey);
+            InputMap.ActionAddEvent(action, hotkey.InputEventKey);
         }
 
-        private JsonInputKey ConvertToJson(InputEventKey inputEventKey) => 
-            new JsonInputKey
+        private JsonHotkey ConvertHotkeyToJson(Hotkey hotkey) 
+        {
+            var inputEventKey = hotkey.InputEventKey;
+            return new JsonHotkey
             {
+                Category = hotkey.Category,
                 Scancode = inputEventKey.Scancode,
                 PhysicalScancode = inputEventKey.PhysicalScancode,
                 Unicode = inputEventKey.Unicode,
@@ -83,24 +103,45 @@ namespace GodotModules
                 Command = inputEventKey.Command,
                 Device = inputEventKey.Device
             };
+        }
+            
 
-        private InputEventKey ConvertToInputKey(JsonInputKey inputEvent) =>
-            new InputEventKey()
+        private Hotkey ConvertJsonToHotkey(JsonHotkey jsonHotkey) =>
+            new Hotkey(jsonHotkey.Category, new InputEventKey()
             {
-                Scancode = inputEvent.Scancode,
-                PhysicalScancode = inputEvent.PhysicalScancode,
-                Unicode = inputEvent.Unicode,
-                Alt = inputEvent.Alt,
-                Shift = inputEvent.Shift,
-                Control = inputEvent.Control,
-                Meta = inputEvent.Meta,
-                Command = inputEvent.Command,
-                Device = inputEvent.Device
-            };
+                Scancode = jsonHotkey.Scancode,
+                PhysicalScancode = jsonHotkey.PhysicalScancode,
+                Unicode = jsonHotkey.Unicode,
+                Alt = jsonHotkey.Alt,
+                Shift = jsonHotkey.Shift,
+                Control = jsonHotkey.Control,
+                Meta = jsonHotkey.Meta,
+                Command = jsonHotkey.Command,
+                Device = jsonHotkey.Device
+            });
     }
 
-    public struct JsonInputKey
+    public class Hotkey
     {
+        public HotkeyCategory Category { get; set; }
+        public InputEventKey InputEventKey { get; set; }
+
+        public Hotkey(HotkeyCategory category, InputEventKey inputEventKey)
+        {
+            Category = category;
+            InputEventKey = inputEventKey;
+        }
+    }
+
+    public enum HotkeyCategory
+    {
+        UI,
+        Player
+    }
+
+    public struct JsonHotkey
+    {
+        public HotkeyCategory Category { get; set; }
         public uint Scancode { get; set; }
         public uint PhysicalScancode { get; set; }
         public uint Unicode { get; set; }

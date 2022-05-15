@@ -32,7 +32,7 @@ namespace GodotModules
             _hotkeyManager.ResetToDefaultHotkeys();
 
             foreach (var pair in _hotkeyManager.Hotkeys) 
-                _uiHotkeys[pair.Key].SetHotkeyText(pair.Value.AsText());
+                _uiHotkeys[pair.Key].SetHotkeyText(pair.Value.InputEventKey.AsText());
         }
     }
 }
