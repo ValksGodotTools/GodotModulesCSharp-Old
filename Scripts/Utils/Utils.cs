@@ -6,7 +6,7 @@ namespace GodotModules
     {
         public static Vector2 RandomDir() 
         {
-            float angle = GD.Randf();
+            float angle = GD.Randf() * Mathf.Pi * 2;
             return new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
         }
 
