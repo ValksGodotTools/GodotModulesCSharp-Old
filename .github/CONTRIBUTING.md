@@ -1,21 +1,29 @@
 # Contributing
-Contributions / pull requests are very much welcomed. If you want to help contribute, get the project running on your PC and see how everything works. My code isn't the best and it would be nice if others peer reviewed it pointing out things I could do better. 
+Contributions and pull requests are very much welcomed. If you want to help contribute, get the project running on your PC and see how everything works. My code isn't the best and it would be nice if others peer reviewed it and pointed out things I could do better. 
 
-## Important: The whole project is being done from scratch on the [dev branch](https://github.com/GodotModules/GodotModulesCSharp/tree/dev)
 
-[Godot Modules Discord](https://discord.gg/866cg8yfxZ) (if you have any questions, contact valk#9904 though here)
+> ⚠️ **IMPORTANT**: The whole project is being done from scratch on the [dev branch](https://github.com/GodotModules/GodotModulesCSharp/tree/dev).
+
+
+You can discuss about the project in the [Godot Modules Discord Server](https://discord.gg/866cg8yfxZ). If you have any questions, contact `valk#9904` though the server.
+
 
 ## Setup
+
+
 ### Godot Mono (C#)
 1. Install [Godot Mono 64 Bit](https://godotengine.org)
 2. Install [.NET SDK from this link](https://dotnet.microsoft.com/en-us/download)
 3. Install [.NET Framework 4.7.2](https://duckduckgo.com/?q=.net+framework+4.7.2)
 4. Launch Godot through [VSCode](#vscode)
-5. In Godot Editor > Editor Settings > Mono > Builds > Make sure `Build Tool` is set to `dotnet CLI`
+5. In `Godot Editor > Editor Settings > Mono > Builds`: Make sure `Build Tool` is set to `dotnet CLI`
 
 If the startup scene is the main menu, the [game server](https://github.com/Raccoons-Rise-Up/server/blob/main/.github/CONTRIBUTING.md#setup) and [web server](https://github.com/Raccoons-Rise-Up/website/blob/main/.github/CONTRIBUTING.md) will need to be running to get past the login screen to the main game scene, otherwise you can change the startup scene to the main game scene by going to `Godot > Project Settings > Application > Run > Main Scene`.
 
-[Common Mistakes](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/COMMON_MISTAKES.md)  
+
+### Common Mistakes
+Some common mistakes are listed in [this](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/COMMON_MISTAKES.md) page.
+
 
 ### VSCode
 VSCode is a UI friendly text editor for developers
@@ -28,14 +36,18 @@ VSCode is a UI friendly text editor for developers
     - [MoonSharp Debug](https://marketplace.visualstudio.com/items?itemName=xanathar.moonsharp-debug) (only if debugging lua)
 3. Launch Godot through VSCode by hitting `F1` to open up VSCode command and run `godot tools: open workspace with godot editor` or simply click the `Open Godot Editor` button bottom right
 
+
 ## Debugging C#
 Launch the VSCode configuration `Play in Editor` (if configuration is set to this already then just press `F5`)
+
 
 ## Debugging Lua
 While the C# debugger is running in the editor launch the VSCode configuration `MoonSharp Attach`
 
+
 ## Debugging Netcode
 Export a release of the game to a folder. Open cmd in this folder and run exe. Do again for another client.
+
 
 ## Exporting
 Do not forget to copy enet.dll to exported release folder
