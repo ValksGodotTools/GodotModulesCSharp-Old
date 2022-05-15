@@ -14,7 +14,7 @@ namespace GodotModules
         public WebManager(WebRequests webRequests, string ip)
         {
             _webRequests = webRequests;
-            _ip = ip;
+            _ip = ip.IsAddress() ? ip : "localhost:4000";
         }
 
         public async Task CheckConnectionAsync()
