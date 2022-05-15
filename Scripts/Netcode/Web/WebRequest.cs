@@ -35,13 +35,13 @@ namespace GodotModules
 
                     while (_webServerResponse == null)
                         await Task.Delay(1, cts.Token);
-
-                    _id--;
-                    QueueFree();
                 }, cts.Token);
                 await task;
             }
             catch (TaskCanceledException) { }
+
+            _id--;
+            QueueFree();
 
             return _webServerResponse;
         }
@@ -66,13 +66,13 @@ namespace GodotModules
 
                     while (_webServerResponse == null)
                         await Task.Delay(1, cts.Token);
-
-                    _id--;
-                    QueueFree();
                 }, cts.Token);
                 await task;
             }
             catch (TaskCanceledException) {}
+
+            _id--;
+            QueueFree();
 
             return _webServerResponse;
         }
