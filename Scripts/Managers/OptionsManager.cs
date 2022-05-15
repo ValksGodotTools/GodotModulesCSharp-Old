@@ -73,9 +73,9 @@ namespace GodotModules
                     WindowSize = OS.WindowSize,
                     WebServerAddress = "localhost:4000",
                     Colors = new OptionColors {
-                        Player = new Color("53ff7e"),
-                        Enemy = new Color("ff5353"),
-                        ChatText = new Color("a0a0a0")
+                        Player = "53ff7e",
+                        Enemy = "ff5353",
+                        ChatText = "a0a0a0"
                     }
                 };
 
@@ -109,9 +109,9 @@ namespace GodotModules
 
     public struct OptionColors 
     {
-        public Color Player { get; set; }
-        public Color Enemy { get; set; }
-        public Color ChatText { get; set; }
+        public string Player { get; set; }
+        public string Enemy { get; set; }
+        public string ChatText { get; set; }
     }
 
     public enum FullscreenMode
