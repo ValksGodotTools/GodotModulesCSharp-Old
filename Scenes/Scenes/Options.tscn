@@ -101,15 +101,78 @@ margin_bottom = 500.0
 size_flags_horizontal = 3
 
 [node name="Game" type="VBoxContainer" parent="Padding/HBox/Sections"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 6 )
+NodePathColorPlayer = NodePath("Color Player/Color Player")
+NodePathColorEnemy = NodePath("Color Enemy/Color Enemy")
+NodePathColorChatText = NodePath("Color Chat Text/Color Chat Text")
 
 [node name="Label" type="Label" parent="Padding/HBox/Sections/Game"]
 margin_right = 741.0
 margin_bottom = 17.0
-text = "Nothing in game settings at the moment!"
+text = "Colors"
+align = 1
+
+[node name="Color Player" type="HBoxContainer" parent="Padding/HBox/Sections/Game"]
+margin_top = 21.0
+margin_right = 741.0
+margin_bottom = 44.0
+
+[node name="Label" type="Label" parent="Padding/HBox/Sections/Game/Color Player"]
+margin_top = 3.0
+margin_right = 100.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 100, 0 )
+text = "Player"
+
+[node name="Color Player" type="ColorPickerButton" parent="Padding/HBox/Sections/Game/Color Player"]
+margin_left = 104.0
+margin_right = 154.0
+margin_bottom = 23.0
+rect_min_size = Vector2( 50, 0 )
+size_flags_horizontal = 0
+color = Color( 0.32549, 1, 0.494118, 1 )
+
+[node name="Color Enemy" type="HBoxContainer" parent="Padding/HBox/Sections/Game"]
+margin_top = 48.0
+margin_right = 741.0
+margin_bottom = 71.0
+
+[node name="Label" type="Label" parent="Padding/HBox/Sections/Game/Color Enemy"]
+margin_top = 3.0
+margin_right = 100.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 100, 0 )
+text = "Enemy"
+
+[node name="Color Enemy" type="ColorPickerButton" parent="Padding/HBox/Sections/Game/Color Enemy"]
+margin_left = 104.0
+margin_right = 154.0
+margin_bottom = 23.0
+rect_min_size = Vector2( 50, 0 )
+size_flags_horizontal = 0
+color = Color( 1, 0.32549, 0.32549, 1 )
+
+[node name="Color Chat Text" type="HBoxContainer" parent="Padding/HBox/Sections/Game"]
+margin_top = 75.0
+margin_right = 741.0
+margin_bottom = 98.0
+
+[node name="Label" type="Label" parent="Padding/HBox/Sections/Game/Color Chat Text"]
+margin_top = 3.0
+margin_right = 100.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 100, 0 )
+text = "Chat Text"
+
+[node name="Color Chat Text" type="ColorPickerButton" parent="Padding/HBox/Sections/Game/Color Chat Text"]
+margin_left = 104.0
+margin_right = 154.0
+margin_bottom = 23.0
+rect_min_size = Vector2( 50, 0 )
+size_flags_horizontal = 0
+color = Color( 0.627451, 0.627451, 0.627451, 1 )
 
 [node name="Video" type="VBoxContainer" parent="Padding/HBox/Sections"]
 visible = false
@@ -123,6 +186,7 @@ margin_bottom = 17.0
 text = "Nothing in video right now :D"
 
 [node name="Display" type="VBoxContainer" parent="Padding/HBox/Sections"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 9 )
@@ -338,6 +402,9 @@ text = "Status"
 [connection signal="focus_entered" from="Padding/HBox/Nav/Audio" to="." method="_on_Audio_focus_entered"]
 [connection signal="focus_entered" from="Padding/HBox/Nav/Controls" to="." method="_on_Controls_focus_entered"]
 [connection signal="focus_entered" from="Padding/HBox/Nav/Multiplayer" to="." method="_on_Multiplayer_focus_entered"]
+[connection signal="color_changed" from="Padding/HBox/Sections/Game/Color Player/Color Player" to="Padding/HBox/Sections/Game" method="_on_Color_Player_color_changed"]
+[connection signal="color_changed" from="Padding/HBox/Sections/Game/Color Enemy/Color Enemy" to="Padding/HBox/Sections/Game" method="_on_Color_Enemy_color_changed"]
+[connection signal="color_changed" from="Padding/HBox/Sections/Game/Color Chat Text/Color Chat Text" to="Padding/HBox/Sections/Game" method="_on_Color_Chat_Text_color_changed"]
 [connection signal="item_selected" from="Padding/HBox/Sections/Display/Fullscreen" to="Padding/HBox/Sections/Display" method="_on_Fullscreen_item_selected"]
 [connection signal="toggled" from="Padding/HBox/Sections/Display/VSync/VSync" to="Padding/HBox/Sections/Display" method="_on_VSync_toggled"]
 [connection signal="text_changed" from="Padding/HBox/Sections/Display/Custom Size/Window Size Width" to="Padding/HBox/Sections/Display" method="_on_Window_Size_Width_text_changed"]

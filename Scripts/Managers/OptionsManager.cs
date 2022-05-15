@@ -71,7 +71,12 @@ namespace GodotModules
                     MusicVolume = -20,
                     SFXVolume = -20,
                     WindowSize = OS.WindowSize,
-                    WebServerAddress = "localhost:4000"
+                    WebServerAddress = "localhost:4000",
+                    Colors = new OptionColors {
+                        Player = new Color("53ff7e"),
+                        Enemy = new Color("ff5353"),
+                        ChatText = new Color("a0a0a0")
+                    }
                 };
 
                 Options = defaultOptions;
@@ -99,6 +104,14 @@ namespace GodotModules
         public float SFXVolume { get; set; }
         public string OnlineUsername { get; set; }
         public string WebServerAddress { get; set; }
+        public OptionColors Colors { get; set; }
+    }
+
+    public struct OptionColors 
+    {
+        public Color Player { get; set; }
+        public Color Enemy { get; set; }
+        public Color ChatText { get; set; }
     }
 
     public enum FullscreenMode
