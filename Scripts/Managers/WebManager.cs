@@ -4,71 +4,108 @@ namespace GodotModules
 {
     public class WebManager
     {
+        public string Ip { get; set; }
         public bool ConnectionAlive { get; private set; }
 
         private string _externalIp;
+
+        private Dictionary<string, CancellationTokenSource> _cts = new();
+
         private readonly WebRequests _webRequests;
-        private readonly string _ip;
-        private Task<WebServerResponse> _checkConnection;
 
         public WebManager(WebRequests webRequests, string ip)
         {
             _webRequests = webRequests;
-            _ip = ip.IsAddress() ? ip : "localhost:4000";
+            Ip = ip.IsAddress() ? ip : "localhost:4000";
         }
 
         public async Task CheckConnectionAsync()
         {
-            if (_checkConnection != null && !_checkConnection.IsCompleted) // only one task checking the liveness of the connection should be active at a time
+            var taskName = "check_connection";
+            if (_cts.ContainsKey(taskName)) 
+            {
+                _cts[taskName].Cancel();
+                _cts[taskName].Dispose();
+            }
+            _cts[taskName] = new();
+            var res = await _webRequests.GetAsync($"http://{Ip}/api/ping", _cts[taskName]);
+
+            if (res == null)
                 return;
 
-            _checkConnection = _webRequests.GetAsync($"http://{_ip}/api/ping");
-
-            await _checkConnection;
-
-            if (_checkConnection.Result.Error != Error.Ok)
+            if (res.Error != Error.Ok)
                 ConnectionAlive = false;
             else
                 ConnectionAlive = true;
         }
 
-        public async Task<WebServerResponse> RemoveLobbyPlayerAsync() => await PostAsync("servers/players/remove", DataExternalIp);
-        public async Task<WebServerResponse> AddLobbyPlayerAsync() => await PostAsync("servers/players/add", DataExternalIp);
-        public async Task<WebServerResponse> RemoveLobbyAsync() => await PostAsync("server/remove", DataExternalIp);
+        public async Task<WebServerResponse> RemoveLobbyPlayerAsync() => await PostAsync("servers/players/remove", DataExternalIp, "remove_lobby_player");
+        public async Task<WebServerResponse> AddLobbyPlayerAsync() => await PostAsync("servers/players/add", DataExternalIp, "add_lobby_player");
+        public async Task<WebServerResponse> RemoveLobbyAsync() => await PostAsync("server/remove", DataExternalIp, "remove_lobby");
         /*public async Task<WebServerResponse> AddLobbyAsync() =>
             await PostAsync("servers/add", lobby)*/
-        
+
         private Dictionary<string, string> DataExternalIp => new() { { "Ip", _externalIp } };
 
-        public async Task<WebServerResponse> SendErrorAsync(string errorText, string errorDescription) =>
+        public async Task<WebServerResponse> SendErrorAsync(string errorText, string errorDescription) => 
             await PostAsync("errors/post", new Dictionary<string, string> {
                 { "error", errorText },
                 { "description", errorDescription }
-            });
+            }, "send_error");
 
-        public async Task GetExternalIpAsync() 
+        public async Task GetExternalIpAsync()
         {
             if (!ConnectionAlive)
                 return;
-            
-            var res = await _webRequests.GetAsync("http://icanhazip.com");
+
+            var taskName = "get_external_ip";
+            if (_cts.ContainsKey(taskName)) 
+            {
+                _cts[taskName].Cancel();
+                _cts[taskName].Dispose();
+            }
+            _cts[taskName] = new();
+            var res = await _webRequests.GetAsync("http://icanhazip.com", _cts[taskName]);
             _externalIp = res.Response;
         }
 
-        public async Task<WebServerResponse> GetAsync(string path) 
+        public async Task<WebServerResponse> GetAsync(string path, string taskName)
         {
             if (!ConnectionAlive)
-                return new WebServerResponse(Error.ConnectionError);
+                return new(Error.ConnectionError);
 
-            return await _webRequests.GetAsync($"http://{_ip}/api/{path}");
+            if (_cts.ContainsKey(taskName)) 
+            {
+                _cts[taskName].Cancel();
+                _cts[taskName].Dispose();
+            }
+            _cts[taskName] = new();
+
+            return await _webRequests.GetAsync($"http://{Ip}/api/{path}", _cts[taskName]);
         }
 
-        public async Task<WebServerResponse> PostAsync(string path, object data) 
+        public async Task<WebServerResponse> PostAsync(string path, object data, string taskName)
         {
             if (!ConnectionAlive)
-                return new WebServerResponse(Error.ConnectionError);
+                return new(Error.ConnectionError);
 
-            return await _webRequests.PostAsync($"http://{_ip}/api/{path}", data);
+            if (_cts.ContainsKey(taskName)) 
+            {
+                _cts[taskName].Cancel();
+                _cts[taskName].Dispose();
+            }
+            _cts[taskName] = new();
+
+            return await _webRequests.PostAsync($"http://{Ip}/api/{path}", data, _cts[taskName]);
+        }
+
+        public void Cleanup()
+        {
+            _cts.ForEach(x => {
+                var cts = x.Value;
+                cts.Cancel();
+                cts.Dispose();
+            });
         }
     }
 }
