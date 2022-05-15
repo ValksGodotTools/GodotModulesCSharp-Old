@@ -1,16 +1,15 @@
-using System;
 using System.Timers;
 
 namespace GodotModules.Netcode.Server
 {
     public class STimer : IDisposable
     {
-        private readonly Timer _timer;
+        private readonly System.Timers.Timer _timer;
 
         public STimer(Action action, double delayMs = 1000, bool autoreset = true, bool enabled = true)
         {
             void Callback(Object source, ElapsedEventArgs e) => action();
-            _timer = new Timer(delayMs);
+            _timer = new System.Timers.Timer(delayMs);
             _timer.Enabled = enabled;
             _timer.AutoReset = autoreset;
             _timer.Elapsed += Callback;

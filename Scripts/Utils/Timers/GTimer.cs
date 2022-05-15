@@ -1,12 +1,10 @@
-using Godot;
-
 namespace GodotModules
 {
     public class GTimer
     {
-        private readonly Timer _timer = new Timer();
+        private readonly Godot.Timer _timer = new Godot.Timer();
 
-        public GTimer(Node target, string methodName, int delayMs = 1000, bool loop = true, bool autoStart = true)
+        public GTimer(Godot.Node target, string methodName, int delayMs = 1000, bool loop = true, bool autoStart = true)
         {
             _timer.WaitTime = delayMs / 1000f;
             _timer.OneShot = !loop;
