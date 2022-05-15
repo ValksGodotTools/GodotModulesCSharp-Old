@@ -29,7 +29,7 @@ namespace GodotModules
         private Button _btnMultiplayer;
         private Dictionary<OptionSection, Control> _optionSections;
 
-        public void PreInit(HotkeyManager hotkeyManager, OptionsManager optionsManager, MusicManager musicManager, WebManager webManager, SceneManager sceneManager)
+        public void PreInit(HotkeyManager hotkeyManager, OptionsManager optionsManager, MusicManager musicManager, WebManager webManager, SceneManager sceneManager, TokenManager tokenManager)
         {
             _optionSections = new();
             _optionSections[OptionSection.Game] = GetNode<UIOptionsGame>(NodePathOptionsGame);
@@ -44,7 +44,7 @@ namespace GodotModules
             ((UIOptionsDisplay)_optionSections[OptionSection.Display]).PreInit(optionsManager);
             ((UIOptionsAudio)_optionSections[OptionSection.Audio]).PreInit(musicManager, optionsManager);
             ((UIOptionsControls)_optionSections[OptionSection.Controls]).PreInit(hotkeyManager);
-            ((UIOptionsMultiplayer)_optionSections[OptionSection.Multiplayer]).PreInit(optionsManager, webManager, sceneManager);
+            ((UIOptionsMultiplayer)_optionSections[OptionSection.Multiplayer]).PreInit(optionsManager, webManager, sceneManager, tokenManager);
         }
 
         public override void _Ready()
