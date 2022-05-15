@@ -8,27 +8,22 @@ global using System.Runtime.CompilerServices;
 global using System.Threading.Tasks;
 global using System.Linq;
 
-using Godot;
-
 namespace GodotModules
 {
     public class GM
     {
-        public NetworkManager Net { get; private set; }
         private static Logger _logger;
         private static SceneManager _sceneManager;
 
-        public GM(SceneManager sceneManager, Node webRequestList)
+        public GM(SceneManager sceneManager)
         {
             _sceneManager = sceneManager;
-            Net = new(webRequestList);
             _logger = new();
         }
 
-        public async Task Update()
+        public void Update()
         {
             _logger.Update();
-            await Net.Update();
         }
 
         public static void Log(object v, ConsoleColor c = ConsoleColor.Gray) => _logger.Log(v, c);
