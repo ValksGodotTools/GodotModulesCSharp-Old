@@ -25,6 +25,7 @@ namespace GodotModules
         private OptionsManager _optionsManager;
         private MusicManager _musicManager;
         private NetworkManager _networkManager;
+        private WebManager _webManager;
 
         public override async void _Ready()
         {
@@ -60,10 +61,16 @@ namespace GodotModules
             _sceneManager.EscPressed[Scene.Game] = async () => await _sceneManager.ChangeScene(Scene.Menu);
             await _sceneManager.InitAsync();
 
-            _networkManager = new(_webRequestList);
+            _networkManager = new();
             _networkManager.StartServer(25565, 100);
             _networkManager.StartClient("127.0.0.1", 25565);
-            await _networkManager.Setup();
+
+            var _webRequests = new WebRequests(_webRequestList);
+            _webManager = new WebManager(_webRequests, "localhost:4000");
+
+            await _webManager.CheckConnectionAsync();
+            if (_webManager.ConnectionAlive)
+                await _webManager.GetExternalIpAsync();
         }
 
         public override async void _Process(float delta)
