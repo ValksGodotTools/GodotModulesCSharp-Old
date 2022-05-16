@@ -3,7 +3,7 @@ using System;
 
 namespace GodotModules
 {
-    public class UICredits : Node
+    public class UICredits : AScene
     {
         [Export] public readonly NodePath NodePathTween;
         [Export] public readonly NodePath NodePathCreditsContent;
@@ -11,10 +11,7 @@ namespace GodotModules
         private Control CreditsContent { get; set; }
         private SceneManager _sceneManager;
 
-        public void PreInit(SceneManager sceneManager) 
-        {
-            _sceneManager = sceneManager;
-        }
+        public override void PreInit(Managers managers) => _sceneManager = managers.Scene;
 
         public override void _Ready()
         {

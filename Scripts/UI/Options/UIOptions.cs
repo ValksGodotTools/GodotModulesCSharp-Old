@@ -3,7 +3,7 @@ using System;
 
 namespace GodotModules
 {
-    public class UIOptions : Node
+    public class UIOptions : AScene
     {
         private static OptionSection _currentSection = OptionSection.Game;
 
@@ -29,7 +29,7 @@ namespace GodotModules
         private Button _btnMultiplayer;
         private Dictionary<OptionSection, Control> _optionSections;
 
-        public void PreInit(HotkeyManager hotkeyManager, OptionsManager optionsManager, MusicManager musicManager, WebManager webManager, SceneManager sceneManager, TokenManager tokenManager)
+        public override void PreInit(Managers managers)
         {
             _optionSections = new();
             _optionSections[OptionSection.Game] = GetNode<UIOptionsGame>(NodePathOptionsGame);
@@ -39,12 +39,14 @@ namespace GodotModules
             _optionSections[OptionSection.Controls] = GetNode<UIOptionsControls>(NodePathOptionsControls);
             _optionSections[OptionSection.Multiplayer] = GetNode<UIOptionsMultiplayer>(NodePathOptionsMultiplayer);
 
-            ((UIOptionsGame)_optionSections[OptionSection.Game]).PreInit(optionsManager);
-            ((UIOptionsVideo)_optionSections[OptionSection.Video]).PreInit(optionsManager);
-            ((UIOptionsDisplay)_optionSections[OptionSection.Display]).PreInit(optionsManager);
-            ((UIOptionsAudio)_optionSections[OptionSection.Audio]).PreInit(musicManager, optionsManager);
-            ((UIOptionsControls)_optionSections[OptionSection.Controls]).PreInit(hotkeyManager);
-            ((UIOptionsMultiplayer)_optionSections[OptionSection.Multiplayer]).PreInit(optionsManager, webManager, sceneManager, tokenManager);
+            var options = managers.Options;
+
+            ((UIOptionsGame)_optionSections[OptionSection.Game]).PreInit(options);
+            ((UIOptionsVideo)_optionSections[OptionSection.Video]).PreInit(options);
+            ((UIOptionsDisplay)_optionSections[OptionSection.Display]).PreInit(options);
+            ((UIOptionsAudio)_optionSections[OptionSection.Audio]).PreInit(managers.Music, options);
+            ((UIOptionsControls)_optionSections[OptionSection.Controls]).PreInit(managers.Hotkey);
+            ((UIOptionsMultiplayer)_optionSections[OptionSection.Multiplayer]).PreInit(options, managers.Web, managers.Token);
         }
 
         public override void _Ready()

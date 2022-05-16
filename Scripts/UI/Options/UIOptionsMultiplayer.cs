@@ -16,14 +16,12 @@ namespace GodotModules
 
         private OptionsManager _optionsManager;
         private WebManager _webManager;
-        private SceneManager _sceneManager;
         private TokenManager _tokenManager;
 
-        public void PreInit(OptionsManager optionsManager, WebManager webManager, SceneManager sceneManager, TokenManager tokenManager)
+        public void PreInit(OptionsManager optionsManager, WebManager webManager, TokenManager tokenManager)
         {
             _optionsManager = optionsManager;
             _webManager = webManager;
-            _sceneManager = sceneManager;
             _tokenManager = tokenManager;
         }
 

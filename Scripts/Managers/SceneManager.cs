@@ -6,22 +6,23 @@ namespace GodotModules
     public class SceneManager
     {
         public readonly Dictionary<GameScene, Action> EscPressed = new Dictionary<GameScene, Action>();
-        public readonly Dictionary<GameScene, Action<Node>> PreInit = new Dictionary<GameScene, Action<Node>>();
 
         public GameScene CurScene { get; set; }
         public GameScene PrevScene { get; set; }
 
-        private Node _activeScene;
+        private AScene _activeScene;
         private readonly Dictionary<GameScene, PackedScene> _scenes = new Dictionary<GameScene, PackedScene>();
         private readonly GodotFileManager _godotFileManager;
         private readonly HotkeyManager _hotkeyManager;
         private readonly Control _sceneList;
+        private Managers _managers;
 
-        public SceneManager(Control sceneList, GodotFileManager godotFileManager, HotkeyManager hotkeyManager) 
+        public SceneManager(Control sceneList, GodotFileManager godotFileManager, HotkeyManager hotkeyManager, Managers managers) 
         {
             _sceneList = sceneList;
             _godotFileManager = godotFileManager;
             _hotkeyManager = hotkeyManager;
+            _managers = managers;
         }
 
         public async Task InitAsync()
@@ -50,10 +51,8 @@ namespace GodotModules
             if (!instant)
                 await Task.Delay(1);
 
-            _activeScene = _scenes[scene].Instance();
-
-            if (PreInit.ContainsKey(scene))
-                PreInit[scene](_activeScene);
+            _activeScene = (AScene)_scenes[scene].Instance();
+            _activeScene.PreInit(_managers);
 
             _sceneList.AddChild(_activeScene);
         }

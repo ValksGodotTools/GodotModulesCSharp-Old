@@ -113,24 +113,7 @@ namespace GodotModules
 
         public async Task InitSceneManager(Control sceneList, HotkeyManager hotkeyManager)
         {
-            Scene = new(sceneList, new GodotFileManager(), hotkeyManager);
-
-            // Pre Initialization
-            Scene.PreInit[GameScene.Menu] = (scene) =>
-            {
-                var menu = (UIMenu)scene;
-                menu.PreInit(Scene, Network, Popup);
-            };
-            Scene.PreInit[GameScene.Options] = (scene) =>
-            {
-                var options = (UIOptions)scene;
-                options.PreInit(hotkeyManager, Options, Music, Web, Scene, Token);
-            };
-            Scene.PreInit[GameScene.Credits] = (scene) =>
-            {
-                var credits = (UICredits)scene;
-                credits.PreInit(Scene);
-            };
+            Scene = new(sceneList, new GodotFileManager(), hotkeyManager, this);
 
             // Esc Pressed
             Scene.EscPressed[GameScene.Credits] = async () => await Scene.ChangeScene(GameScene.Menu);
