@@ -12,10 +12,12 @@ namespace GodotModules.Netcode
         public bool EnetInitialized { get; }
 
         private readonly GodotCommands _godotCmds;
+        private readonly PopupManager _popupManager;
         
-        public NetworkManager()
+        public NetworkManager(PopupManager popupManager)
         {
-            _godotCmds = new(this);
+            _popupManager = popupManager;
+            _godotCmds = new(this, popupManager);
 
             Client = new(this, _godotCmds);
             Server = new(this);
@@ -26,11 +28,13 @@ namespace GodotModules.Netcode
             }
             catch (DllNotFoundException) 
             {
-                Logger.LogWarning("ENet failed to initialize because enet.dll was not found. Please restart the game and make sure enet.dll is right next to the games executable. Because ENet failed to initialize multiplayer has been disabled.");
+                var message = "ENet failed to initialize because enet.dll was not found. Please restart the game and make sure enet.dll is right next to the games executable. Because ENet failed to initialize multiplayer has been disabled.";
+                Logger.LogWarning(message);
+                popupManager.SpawnPopupMessage(message);
                 return;
             }
 
-            if (!EnetInitialized) 
+            if (!EnetInitialized) // probably won't get logged but lets keep it here because why not
                 Logger.LogWarning("Failed to initialize ENet! Remember ENet-CSharp.dll and enet.dll are required in order for ENet to run properly!");
         }
 
