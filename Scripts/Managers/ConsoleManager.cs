@@ -1,9 +1,8 @@
 using Godot;
-using System;
 
 namespace GodotModules
 {
-    public class UIConsole : Control
+    public class ConsoleManager : Control
     {
         [Export] public readonly NodePath NodePathConsoleLogs;
         [Export] public readonly NodePath NodePathConsoleInput;
