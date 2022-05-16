@@ -2,7 +2,7 @@ using Godot;
 
 namespace GodotModules
 {
-    public class UIMenu : AScene
+    public class SceneMenu : AScene
     {
         [Export] public readonly NodePath NodePathBtnPlay;
 

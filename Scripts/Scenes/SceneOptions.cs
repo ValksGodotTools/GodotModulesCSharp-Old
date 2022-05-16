@@ -3,7 +3,7 @@ using System;
 
 namespace GodotModules
 {
-    public class UIOptions : AScene
+    public class SceneOptions : AScene
     {
         private static OptionSection _currentSection = OptionSection.Game;
 

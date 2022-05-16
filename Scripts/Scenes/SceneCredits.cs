@@ -3,7 +3,7 @@ using System;
 
 namespace GodotModules
 {
-    public class UICredits : AScene
+    public class SceneCredits : AScene
     {
         [Export] public readonly NodePath NodePathTween;
         [Export] public readonly NodePath NodePathCreditsContent;
