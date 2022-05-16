@@ -55,7 +55,7 @@ namespace GodotModules
             _btnCheckConnection.Disabled = true;
             _webServerStatus.Text = "Checking...";
 
-            await _webManager.CheckConnectionAsync(_tokenManager.Create("check_connection"));
+            await _webManager.CheckConnectionAsync();
 
             if (!_tokenManager.Cancelled("check_connection"))
             {

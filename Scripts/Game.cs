@@ -48,9 +48,9 @@ namespace GodotModules
             _networkManager.StartServer(25565, 100);
             _networkManager.StartClient("127.0.0.1", 25565);
 
-            await _webManager.CheckConnectionAsync(_tokenManager.Create("check_connection"));
+            await _webManager.CheckConnectionAsync();
             if (_webManager.ConnectionAlive)
-                await _webManager.GetExternalIpAsync(_tokenManager.Create("get_external_ip"));
+                await _webManager.GetExternalIpAsync();
         }
 
         public override async void _Process(float delta)
@@ -93,10 +93,10 @@ namespace GodotModules
             var systemFileManager = new SystemFileManager();
             var hotkeyManager = new HotkeyManager(systemFileManager, new List<string>() {"UI", "Player"});
             _optionsManager = new(systemFileManager, hotkeyManager);
-            _webManager = new(new WebRequests(GetNode<Node>(NodePathWebRequestList)), _optionsManager.Options.WebServerAddress);
+            _tokenManager = new();
+            _webManager = new(new WebRequests(GetNode<Node>(NodePathWebRequestList)), _tokenManager, _optionsManager.Options.WebServerAddress);
             _musicManager = new(GetNode<AudioStreamPlayer>(NodePathAudioStreamPlayer), _optionsManager);
             
-            _tokenManager = new();
             _networkManager = new();
             await InitSceneManager(hotkeyManager);
         }
