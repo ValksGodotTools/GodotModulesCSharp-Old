@@ -10,16 +10,18 @@ namespace GodotModules
         private string _externalIp;
 
         private readonly WebRequests _webRequests;
+        private readonly TokenManager _tokenManager;
 
-        public WebManager(WebRequests webRequests, string ip)
+        public WebManager(WebRequests webRequests, TokenManager tokenManager, string ip)
         {
+            _tokenManager = tokenManager;
             _webRequests = webRequests;
             Ip = ip.IsAddress() ? ip : "localhost:4000";
         }
 
-        public async Task CheckConnectionAsync(CancellationTokenSource cts)
+        public async Task CheckConnectionAsync()
         {
-            var res = await _webRequests.GetAsync($"http://{Ip}/api/ping", cts);
+            var res = await _webRequests.GetAsync($"http://{Ip}/api/ping", _tokenManager.Create("check_connection")); // by not doing GetAPIAsync or GetAsync we are skipping the bool ConnectionAlive check
 
             if (res == null)
                 return;
@@ -27,43 +29,45 @@ namespace GodotModules
             ConnectionAlive = res.Error == Error.Ok;
         }
 
-        public async Task<WebServerResponse> RemoveLobbyPlayerAsync(CancellationTokenSource cts) => await PostAsync("servers/players/remove", DataExternalIp, cts);
-        public async Task<WebServerResponse> AddLobbyPlayerAsync(CancellationTokenSource cts) => await PostAsync("servers/players/add", DataExternalIp, cts);
-        public async Task<WebServerResponse> RemoveLobbyAsync(CancellationTokenSource cts) => await PostAsync("server/remove", DataExternalIp, cts);
+        public async Task<WebServerResponse> RemoveLobbyPlayerAsync()
+            => await PostAPIAsync("servers/players/remove", DataExternalIp, "remove_lobby_player");
+
+        public async Task<WebServerResponse> AddLobbyPlayerAsync()
+            => await PostAPIAsync("servers/players/add", DataExternalIp, "add_lobby_player");
+
+        public async Task<WebServerResponse> RemoveLobbyAsync()
+            => await PostAPIAsync("server/remove", DataExternalIp, "remove_lobby");
+
         /*public async Task<WebServerResponse> AddLobbyAsync(CancellationTokenSource cts) =>
-            await PostAsync("servers/add", lobby)*/
+            await PostAPIAsync("servers/add", lobby)*/
 
         private Dictionary<string, string> DataExternalIp => new() { { "Ip", _externalIp } };
 
-        public async Task<WebServerResponse> SendErrorAsync(string errorText, string errorDescription, CancellationTokenSource cts) => 
-            await PostAsync("errors/post", new Dictionary<string, string> {
+        public async Task<WebServerResponse> SendErrorAsync(string errorText, string errorDescription) =>
+            await PostAPIAsync("errors/post", new Dictionary<string, string> {
                 { "error", errorText },
                 { "description", errorDescription }
-            }, cts);
+            }, "send_error");
 
-        public async Task GetExternalIpAsync(CancellationTokenSource cts)
+        public async Task GetExternalIpAsync()
         {
             if (!ConnectionAlive)
                 return;
 
-            var res = await _webRequests.GetAsync("http://icanhazip.com", cts);
+            var res = await GetAsync("http://icanhazip.com", "get_external_ip");
             _externalIp = res.Response;
         }
 
-        public async Task<WebServerResponse> GetAsync(string path, CancellationTokenSource cts)
-        {
-            if (!ConnectionAlive)
-                return new(Error.ConnectionError);
+        public async Task<WebServerResponse> GetAPIAsync(string path, string ctsName)
+            => await GetAsync($"http://{Ip}/api/{path}", ctsName);
 
-            return await _webRequests.GetAsync($"http://{Ip}/api/{path}", cts);
-        }
+        public async Task<WebServerResponse> PostAPIAsync(string path, object data, string ctsName)
+            => await PostAsync($"http://{Ip}/api/{path}", data, ctsName);
 
-        public async Task<WebServerResponse> PostAsync(string path, object data, CancellationTokenSource cts)
-        {
-            if (!ConnectionAlive)
-                return new(Error.ConnectionError);
+        private async Task<WebServerResponse> GetAsync(string path, string ctsName)
+            => ConnectionAlive ? await _webRequests.GetAsync(path, _tokenManager.Create(ctsName)) : new(Error.ConnectionError);
 
-            return await _webRequests.PostAsync($"http://{Ip}/api/{path}", data, cts);
-        }
+        private async Task<WebServerResponse> PostAsync(string path, object data, string ctsName)
+            => ConnectionAlive ? await _webRequests.PostAsync(path, data, _tokenManager.Create(ctsName)) : new(Error.ConnectionError);
     }
 }
