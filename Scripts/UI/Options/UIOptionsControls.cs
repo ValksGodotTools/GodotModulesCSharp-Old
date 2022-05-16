@@ -19,7 +19,7 @@ namespace GodotModules
         {
             _tabContainer = GetNode<TabContainer>(NodePathTabContainer);
 
-            var vboxs = new Dictionary<HotkeyCategory, VBoxContainer>();
+            var vboxs = new Dictionary<string, VBoxContainer>();
 
             foreach (var pair1 in _hotkeyManager.Hotkeys)
             {

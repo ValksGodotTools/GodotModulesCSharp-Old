@@ -34,6 +34,7 @@ namespace GodotModules
         {
             _hotkeyManager.ResetHotkey(_action);
             var category = _hotkeyManager.GetHotkeyCategory(_action);
+            Logger.LogDebug(_hotkeyManager.Hotkeys[category][_action].AsText());
             SetHotkeyText(_hotkeyManager.Hotkeys[category][_action].AsText());
         }
     }

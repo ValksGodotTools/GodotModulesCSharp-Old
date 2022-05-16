@@ -83,7 +83,7 @@ namespace GodotModules
         private async Task InitManagers()
         {
             var systemFileManager = new SystemFileManager();
-            var hotkeyManager = new HotkeyManager(systemFileManager);
+            var hotkeyManager = new HotkeyManager(systemFileManager, new List<string>() {"UI", "Player"});
             _optionsManager = new(systemFileManager, hotkeyManager);
             _webManager = new(new WebRequests(GetNode<Node>(NodePathWebRequestList)), _optionsManager.Options.WebServerAddress);
             _musicManager = new(GetNode<AudioStreamPlayer>(NodePathAudioStreamPlayer), _optionsManager);

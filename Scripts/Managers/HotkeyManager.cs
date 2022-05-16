@@ -4,16 +4,19 @@ namespace GodotModules
 {
     public class HotkeyManager
     {
-        private Dictionary<HotkeyCategory, Dictionary<string, InputEventKey>> _defaultHotkeys;
-        private Dictionary<HotkeyCategory, Dictionary<string, InputEventKey>> _hotkeys;
-        public Dictionary<HotkeyCategory, Dictionary<string, InputEventKey>> Hotkeys => _hotkeys;
+        // Data is stored like this -> Dictionary<Category, Dictioanry<Action, InputEventKey>>
+        private Dictionary<string, Dictionary<string, InputEventKey>> _defaultHotkeys;
+        private Dictionary<string, Dictionary<string, InputEventKey>> _hotkeys;
+        public Dictionary<string, Dictionary<string, InputEventKey>> Hotkeys => _hotkeys;
         private readonly SystemFileManager _systemFileManager;
+        private List<string> _categories;
 
-        public HotkeyManager(SystemFileManager systemFileManager)
+        public HotkeyManager(SystemFileManager systemFileManager, List<string> categories)
         {
             _hotkeys = new();
             _defaultHotkeys = new();
             _systemFileManager = systemFileManager;
+            _categories = categories;
             LoadDefaultHotkeys();
             if (_systemFileManager.ConfigExists("controls"))
                 LoadPersistentHotkeys();
@@ -21,11 +24,11 @@ namespace GodotModules
 
         public void LoadPersistentHotkeys()
         {
-            var jsonData = _systemFileManager.ReadConfig<Dictionary<HotkeyCategory, List<JsonInputKey>>>("controls");
+            var jsonData = _systemFileManager.ReadConfig<Dictionary<string, List<JsonInputKey>>>("controls");
 
-            var dict = new Dictionary<HotkeyCategory, Dictionary<string, InputEventKey>>();
+            var dict = new Dictionary<string, Dictionary<string, InputEventKey>>();
 
-            foreach (var category in Utils.GetEnumList<HotkeyCategory>())
+            foreach (var category in _categories)
                 dict.Add(category, new());
 
             foreach (var pair1 in jsonData)
@@ -50,14 +53,14 @@ namespace GodotModules
         {
             _hotkeys = new(_defaultHotkeys);
 
-            foreach (var pair1 in _hotkeys)
+            foreach (var pair1 in _defaultHotkeys)
                 foreach (var pair2 in pair1.Value)
                     SetHotkeyEvent(pair2.Key, pair2.Value);
         }
 
         private void LoadDefaultHotkeys()
         {
-            foreach (var category in Utils.GetEnumList<HotkeyCategory>())
+            foreach (var category in _categories)
                 _defaultHotkeys.Add(category, new());
 
             foreach (string action in InputMap.GetActions())
@@ -77,9 +80,9 @@ namespace GodotModules
 
         public void SaveHotkeys()
         {
-            var json = new Dictionary<HotkeyCategory, List<JsonInputKey>>();
+            var json = new Dictionary<string, List<JsonInputKey>>();
 
-            foreach (var category in Utils.GetEnumList<HotkeyCategory>())
+            foreach (var category in _categories)
                 json.Add(category, new());
 
             foreach (var pair1 in _hotkeys)
@@ -102,18 +105,17 @@ namespace GodotModules
             InputMap.ActionAddEvent(action, inputEventKey);
         }
 
-        public HotkeyCategory GetHotkeyCategory(string action)
+        public string GetHotkeyCategory(string action)
         {
             var text = action.ToLower();
 
-            var hotkeyCategory = HotkeyCategory.UI;
+            foreach (var category in _categories)
+            {
+                if (text.Contains(category.ToLower()))
+                    return category;
+            }
 
-            if (text.Contains("ui"))
-                hotkeyCategory = HotkeyCategory.UI;
-            if (text.Contains("player"))
-                hotkeyCategory = HotkeyCategory.Player;
-
-            return hotkeyCategory;
+            return _categories[0];
         }
 
         private JsonInputKey ConvertToJson(string action, InputEventKey inputEventKey) =>
@@ -144,12 +146,6 @@ namespace GodotModules
                 Command = inputEvent.Command,
                 Device = inputEvent.Device
             };
-    }
-
-    public enum HotkeyCategory
-    {
-        UI,
-        Player
     }
 
     public struct JsonInputKey
