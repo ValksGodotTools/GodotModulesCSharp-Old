@@ -97,9 +97,8 @@ namespace GodotModules
             _musicManager = new(GetNode<AudioStreamPlayer>(NodePathAudioStreamPlayer), _optionsManager);
             
             _tokenManager = new();
-            await InitSceneManager(hotkeyManager);
-
             _networkManager = new();
+            await InitSceneManager(hotkeyManager);
         }
 
         private async Task InitSceneManager(HotkeyManager hotkeyManager)
