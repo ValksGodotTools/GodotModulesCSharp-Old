@@ -4,6 +4,7 @@ namespace GodotModules
 {
     public static class Logger
     {
+        public static UIConsole UIConsole { get; set; }
         private static readonly ConcurrentQueue<LogInfo> _messages = new ConcurrentQueue<LogInfo>();
 
         public static void LogErr(Exception e, string hint = "", ConsoleColor c = ConsoleColor.Red) => _messages.Enqueue(new LogInfo(LoggerOpcode.Exception, $"[Error]: {(string.IsNullOrWhiteSpace(hint) ? "" : $"'{hint}' ")}{e.Message}\n{e.StackTrace}", c));
@@ -27,20 +28,26 @@ namespace GodotModules
                 switch (result.Opcode)
                 {
                     case LoggerOpcode.Message:
+                        UIConsole.AddMessage((string)result.Data);
                         Print((string)result.Data, result.Color);
                         Console.ResetColor();
                         break;
 
                     case LoggerOpcode.Exception:
+                        UIConsole.AddMessage((string)result.Data);
                         PrintErr((string)result.Data, result.Color);
                         Console.ResetColor();
                         break;
 
                     case LoggerOpcode.Debug:
                         var data = (LogMessageDebug)result.Data;
+                        UIConsole.AddMessage((string)data.Message);
                         Print(data.Message, result.Color);
-                        if (data.Trace)
+                        if (data.Trace) 
+                        {
+                            UIConsole.AddMessage(data.TracePath);
                             Print(data.TracePath, ConsoleColor.DarkGray);
+                        }
                         Console.ResetColor();
                         break;
                 }
