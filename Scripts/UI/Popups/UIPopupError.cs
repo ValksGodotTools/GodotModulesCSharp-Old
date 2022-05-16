@@ -7,9 +7,11 @@ public class UIPopupError : WindowDialog
 
     private string _message;
     private string _title;
+    private PopupManager _popupManager;
 
-    public void PreInit(Exception exception, string title = "") 
+    public void PreInit(PopupManager popupManager, Exception exception, string title = "") 
     {
+        _popupManager = popupManager;
         _message = exception.StackTrace;
         if (!string.IsNullOrWhiteSpace(title))
             _title = title;
@@ -23,7 +25,11 @@ public class UIPopupError : WindowDialog
         GetNode<TextEdit>(NodePathError).Text = _message;
     }
 
-    private void _on_UIPopupError_popup_hide() => QueueFree();
+    private void _on_UIPopupError_popup_hide() 
+    {
+        _popupManager.SpawnNextPopup();
+        QueueFree();
+    }
 
-    private void _on_Ok_pressed() => QueueFree();
+    private void _on_Ok_pressed() => Hide();
 }
