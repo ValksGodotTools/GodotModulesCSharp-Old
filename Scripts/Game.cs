@@ -23,40 +23,36 @@ namespace GodotModules
         [Export] public readonly NodePath NodePathErrorNotifierManager;
         [Export] public readonly NodePath NodePathPopupManager;
 
+        private Managers _managers;
         private UIConsole _console;
-        private OptionsManager _optionsManager;
-        private TokenManager _tokenManager;
-        private NetworkManager _networkManager;
-        private SceneManager _sceneManager;
-        private WebManager _webManager;
-        private MusicManager _musicManager;
-        private ErrorNotifierManager _errorNotifierManager;
-        private PopupManager _popupManager;
 
         public override async void _Ready()
         {
-            await InitManagers();
+            _managers = new(GetNode<Node>(NodePathWebRequestList), GetNode<AudioStreamPlayer>(NodePathAudioStreamPlayer), 
+                GetNode<ErrorNotifierManager>(NodePathErrorNotifierManager), GetNode<PopupManager>(NodePathPopupManager));
+            await _managers.InitSceneManager(GetNode<Control>(NodePathScenes), _managers.HotkeyManager);
+
             _console = GetNode<UIConsole>(NodePathConsole);
             
             // how else would you pass this information to Logger?
             Logger.UIConsole = _console;
-            Logger.ErrorNotifierManager = _errorNotifierManager;
+            Logger.ErrorNotifierManager = _managers.ErrorNotifierManager;
 
-            _musicManager.LoadTrack("Menu", "Audio/Music/Unsolicited trailer music loop edit.wav");
-            _musicManager.PlayTrack("Menu");
+            _managers.MusicManager.LoadTrack("Menu", "Audio/Music/Unsolicited trailer music loop edit.wav");
+            _managers.MusicManager.PlayTrack("Menu");
 
-            _networkManager.StartServer(25565, 100);
-            _networkManager.StartClient("127.0.0.1", 25565);
+            _managers.NetworkManager.StartServer(25565, 100);
+            _managers.NetworkManager.StartClient("127.0.0.1", 25565);
 
-            await _webManager.CheckConnectionAsync();
-            if (_webManager.ConnectionAlive)
-                await _webManager.GetExternalIpAsync();
+            await _managers.WebManager.CheckConnectionAsync();
+            if (_managers.WebManager.ConnectionAlive)
+                await _managers.WebManager.GetExternalIpAsync();
         }
 
         public override async void _Process(float delta)
         {
             Logger.Update();
-            await _networkManager.Update();
+            await _managers.NetworkManager.Update();
         }
 
         public override void _Input(InputEvent @event)
@@ -64,8 +60,8 @@ namespace GodotModules
             if (Input.IsActionJustPressed("ui_cancel"))
                 if (_console.Visible)
                     _console.ToggleVisibility();
-                else if (_sceneManager.EscPressed.ContainsKey(_sceneManager.CurScene))
-                    _sceneManager.EscPressed[_sceneManager.CurScene]();
+                else if (_managers.SceneManager.EscPressed.ContainsKey(_managers.SceneManager.CurScene))
+                    _managers.SceneManager.EscPressed[_managers.SceneManager.CurScene]();
 
             if (Input.IsActionJustPressed("ui_console"))
                 _console.ToggleVisibility();
@@ -82,60 +78,72 @@ namespace GodotModules
 
         private async Task Cleanup()
         {
-            _optionsManager.SaveOptions();
-            await _networkManager.Cleanup();
-            _tokenManager.Cleanup();
+            _managers.OptionsManager.SaveOptions();
+            await _managers.NetworkManager.Cleanup();
+            _managers.TokenManager.Cleanup();
             GetTree().Quit();
         }
+    }
 
-        private async Task InitManagers()
+    public class Managers 
+    {
+        public OptionsManager OptionsManager { get; private set; }
+        public TokenManager TokenManager;
+        public NetworkManager NetworkManager;
+        public SceneManager SceneManager;
+        public WebManager WebManager;
+        public MusicManager MusicManager;
+        public ErrorNotifierManager ErrorNotifierManager;
+        public PopupManager PopupManager;
+        public HotkeyManager HotkeyManager;
+
+        public Managers(Node webRequestList, AudioStreamPlayer audioStreamPlayer, ErrorNotifierManager errorNotifierManager, PopupManager popupManager)
         {
             var systemFileManager = new SystemFileManager();
-            var hotkeyManager = new HotkeyManager(systemFileManager, new List<string>() {"UI", "Player"});
-            _optionsManager = new(systemFileManager, hotkeyManager);
-            _tokenManager = new();
-            _webManager = new(new WebRequests(GetNode<Node>(NodePathWebRequestList)), _tokenManager, _optionsManager.Options.WebServerAddress);
-            _musicManager = new(GetNode<AudioStreamPlayer>(NodePathAudioStreamPlayer), _optionsManager);
+            HotkeyManager = new HotkeyManager(systemFileManager, new List<string>() {"UI", "Player"});
+            OptionsManager = new(systemFileManager, HotkeyManager);
+            TokenManager = new();
+            WebManager = new(new WebRequests(webRequestList), TokenManager, OptionsManager.Options.WebServerAddress);
+            MusicManager = new(audioStreamPlayer, OptionsManager);
             
-            _errorNotifierManager = GetNode<ErrorNotifierManager>(NodePathErrorNotifierManager);
-            _popupManager = GetNode<PopupManager>(NodePathPopupManager);
-            _networkManager = new(_popupManager);
-            await InitSceneManager(hotkeyManager);
+            ErrorNotifierManager = errorNotifierManager;
+            PopupManager = popupManager;
+            NetworkManager = new(PopupManager);
         }
 
-        private async Task InitSceneManager(HotkeyManager hotkeyManager)
+        public async Task InitSceneManager(Control sceneList, HotkeyManager hotkeyManager)
         {
-            _sceneManager = new(GetNode<Control>(NodePathScenes), new GodotFileManager(), hotkeyManager);
+            SceneManager = new(sceneList, new GodotFileManager(), hotkeyManager);
 
             // Pre Initialization
-            _sceneManager.PreInit[Scene.Menu] = (scene) =>
+            SceneManager.PreInit[Scene.Menu] = (scene) =>
             {
                 var menu = (UIMenu)scene;
-                menu.PreInit(_sceneManager, _networkManager, _popupManager);
+                menu.PreInit(SceneManager, NetworkManager, PopupManager);
             };
-            _sceneManager.PreInit[Scene.Options] = (scene) =>
+            SceneManager.PreInit[Scene.Options] = (scene) =>
             {
                 var options = (UIOptions)scene;
-                options.PreInit(hotkeyManager, _optionsManager, _musicManager, _webManager, _sceneManager, _tokenManager);
+                options.PreInit(hotkeyManager, OptionsManager, MusicManager, WebManager, SceneManager, TokenManager);
             };
-            _sceneManager.PreInit[Scene.Credits] = (scene) =>
+            SceneManager.PreInit[Scene.Credits] = (scene) =>
             {
                 var credits = (UICredits)scene;
-                credits.PreInit(_sceneManager);
+                credits.PreInit(SceneManager);
             };
 
             // Esc Pressed
-            _sceneManager.EscPressed[Scene.Credits] = async () => await _sceneManager.ChangeScene(Scene.Menu);
-            _sceneManager.EscPressed[Scene.GameServers] = async () => await _sceneManager.ChangeScene(Scene.Menu);
-            _sceneManager.EscPressed[Scene.Mods] = async () => await _sceneManager.ChangeScene(Scene.Menu);
-            _sceneManager.EscPressed[Scene.Options] = async () => {
-                _tokenManager.Cancel("check_connection");
-                await _sceneManager.ChangeScene(Scene.Menu);
+            SceneManager.EscPressed[Scene.Credits] = async () => await SceneManager.ChangeScene(Scene.Menu);
+            SceneManager.EscPressed[Scene.GameServers] = async () => await SceneManager.ChangeScene(Scene.Menu);
+            SceneManager.EscPressed[Scene.Mods] = async () => await SceneManager.ChangeScene(Scene.Menu);
+            SceneManager.EscPressed[Scene.Options] = async () => {
+                TokenManager.Cancel("check_connection");
+                await SceneManager.ChangeScene(Scene.Menu);
             };
-            _sceneManager.EscPressed[Scene.Lobby] = async () => await _sceneManager.ChangeScene(Scene.GameServers);
-            _sceneManager.EscPressed[Scene.Game] = async () => await _sceneManager.ChangeScene(Scene.Menu);
+            SceneManager.EscPressed[Scene.Lobby] = async () => await SceneManager.ChangeScene(Scene.GameServers);
+            SceneManager.EscPressed[Scene.Game] = async () => await SceneManager.ChangeScene(Scene.Menu);
 
-            await _sceneManager.InitAsync();
+            await SceneManager.InitAsync();
         }
     }
 }
