@@ -6,13 +6,18 @@ namespace GodotModules
     {
         private Dictionary<string, AudioStream> _tracks = new Dictionary<string, AudioStream>();
         private AudioStreamPlayer _audioStreamPlayer;
-        private OptionsManager _optionsManager;
 
-        public MusicManager(AudioStreamPlayer audioStreamPlayer, OptionsManager optionsManager)
+        [Inject] private OptionsManager _optionsManager;
+
+        public MusicManager(AudioStreamPlayer audioStreamPlayer)
         {
             _audioStreamPlayer = audioStreamPlayer;
-            _optionsManager = optionsManager;
-            _audioStreamPlayer.VolumeDb = optionsManager.Options.MusicVolume;
+        }
+
+        [AfterInject]
+        private void Init()
+        {
+            _audioStreamPlayer.VolumeDb = _optionsManager.Options.MusicVolume;
         }
 
         public void LoadTrack(string name, string path)

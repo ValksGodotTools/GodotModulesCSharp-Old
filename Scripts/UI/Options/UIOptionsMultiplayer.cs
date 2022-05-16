@@ -14,18 +14,10 @@ namespace GodotModules
         private Button _btnCheckConnection;
         private Label _webServerStatus;
 
-        private OptionsManager _optionsManager;
-        private WebManager _webManager;
-        private SceneManager _sceneManager;
-        private TokenManager _tokenManager;
-
-        public void PreInit(OptionsManager optionsManager, WebManager webManager, SceneManager sceneManager, TokenManager tokenManager)
-        {
-            _optionsManager = optionsManager;
-            _webManager = webManager;
-            _sceneManager = sceneManager;
-            _tokenManager = tokenManager;
-        }
+        [Inject] private OptionsManager _optionsManager;
+        [Inject] private WebManager _webManager;
+        [Inject] private SceneManager _sceneManager;
+        [Inject] private TokenManager _tokenManager;
 
         public override void _Ready()
         {

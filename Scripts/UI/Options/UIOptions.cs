@@ -29,22 +29,16 @@ namespace GodotModules
         private Button _btnMultiplayer;
         private Dictionary<OptionSection, Control> _optionSections;
 
-        public void PreInit(HotkeyManager hotkeyManager, OptionsManager optionsManager, MusicManager musicManager, WebManager webManager, SceneManager sceneManager, TokenManager tokenManager)
+        [AfterInject]
+        private void PreInit()
         {
             _optionSections = new();
-            _optionSections[OptionSection.Game] = GetNode<UIOptionsGame>(NodePathOptionsGame);
-            _optionSections[OptionSection.Video] = GetNode<UIOptionsVideo>(NodePathOptionsVideo);
-            _optionSections[OptionSection.Display] = GetNode<UIOptionsDisplay>(NodePathOptionsDisplay);
-            _optionSections[OptionSection.Audio] = GetNode<UIOptionsAudio>(NodePathOptionsAudio);
-            _optionSections[OptionSection.Controls] = GetNode<UIOptionsControls>(NodePathOptionsControls);
-            _optionSections[OptionSection.Multiplayer] = GetNode<UIOptionsMultiplayer>(NodePathOptionsMultiplayer);
-
-            ((UIOptionsGame)_optionSections[OptionSection.Game]).PreInit(optionsManager);
-            ((UIOptionsVideo)_optionSections[OptionSection.Video]).PreInit(optionsManager);
-            ((UIOptionsDisplay)_optionSections[OptionSection.Display]).PreInit(optionsManager);
-            ((UIOptionsAudio)_optionSections[OptionSection.Audio]).PreInit(musicManager, optionsManager);
-            ((UIOptionsControls)_optionSections[OptionSection.Controls]).PreInit(hotkeyManager);
-            ((UIOptionsMultiplayer)_optionSections[OptionSection.Multiplayer]).PreInit(optionsManager, webManager, sceneManager, tokenManager);
+            _optionSections[OptionSection.Game] = Container.Inject(GetNode<UIOptionsGame>(NodePathOptionsGame));
+            _optionSections[OptionSection.Video] = Container.Inject(GetNode<UIOptionsVideo>(NodePathOptionsVideo));
+            _optionSections[OptionSection.Display] = Container.Inject(GetNode<UIOptionsDisplay>(NodePathOptionsDisplay));
+            _optionSections[OptionSection.Audio] = Container.Inject(GetNode<UIOptionsAudio>(NodePathOptionsAudio));
+            _optionSections[OptionSection.Controls] = Container.Inject(GetNode<UIOptionsControls>(NodePathOptionsControls));
+            _optionSections[OptionSection.Multiplayer] = Container.Inject(GetNode<UIOptionsMultiplayer>(NodePathOptionsMultiplayer));
         }
 
         public override void _Ready()

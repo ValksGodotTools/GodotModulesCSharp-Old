@@ -7,13 +7,8 @@ namespace GodotModules
         [Export] public readonly NodePath NodePathTabContainer;
         private TabContainer _tabContainer;
 
-        private HotkeyManager _hotkeyManager { get; set; }
+        [Inject] private HotkeyManager _hotkeyManager;
         private Dictionary<string, UIHotkey> _uiHotkeys = new Dictionary<string, UIHotkey>();
-
-        public void PreInit(HotkeyManager hotkeyManager)
-        {
-            _hotkeyManager = hotkeyManager;
-        }
 
         public override void _Ready()
         {

@@ -8,12 +8,12 @@ namespace GodotModules
         [Export] public readonly NodePath NodePathColorEnemy;
         [Export] public readonly NodePath NodePathColorChatText;
 
-        private OptionsManager _optionsManager;
+        [Inject] private OptionsManager _optionsManager;
         private OptionColors _optionColors;
 
-        public void PreInit(OptionsManager optionsManager)
+        [AfterInject]
+        private void PreInit()
         {
-            _optionsManager = optionsManager;
             _optionColors = _optionsManager.Options.Colors;
         }
 

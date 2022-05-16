@@ -9,15 +9,16 @@ namespace GodotModules.Netcode
         public DisconnectOpcode DisconnectOpcode { get; set; }
         public GameClient Client { get; set; }
         public GameServer Server { get; set; }
-        public bool EnetInitialized { get; }
+        public bool EnetInitialized { get; private set; }
 
-        private readonly GodotCommands _godotCmds;
-        private readonly PopupManager _popupManager;
+        private GodotCommands _godotCmds;
+
+        [Inject] private PopupManager _popupManager;
         
-        public NetworkManager(PopupManager popupManager)
+        [AfterInject]
+        void Init()
         {
-            _popupManager = popupManager;
-            _godotCmds = new(this, popupManager);
+            _godotCmds = new(this, _popupManager);
 
             Client = new(this, _godotCmds);
             Server = new(this);
@@ -30,7 +31,7 @@ namespace GodotModules.Netcode
             {
                 var message = "ENet failed to initialize because enet.dll was not found. Please restart the game and make sure enet.dll is right next to the games executable. Because ENet failed to initialize multiplayer has been disabled.";
                 Logger.LogWarning(message);
-                popupManager.SpawnPopupMessage(message);
+                _popupManager.SpawnPopupMessage(message);
                 return;
             }
 
