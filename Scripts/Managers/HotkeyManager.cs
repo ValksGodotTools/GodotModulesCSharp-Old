@@ -1,23 +1,25 @@
 using Godot;
 
+using HotkeyMap = System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, Godot.InputEventKey>>;
+
 namespace GodotModules
 {
     public class HotkeyManager
     {
         // Data is stored like this -> Dictionary<Category, Dictioanry<Action, InputEventKey>>
-        private Dictionary<string, Dictionary<string, InputEventKey>> _defaultHotkeys;
-        private Dictionary<string, Dictionary<string, InputEventKey>> _hotkeys;
-        public Dictionary<string, Dictionary<string, InputEventKey>> Hotkeys => _hotkeys;
+        private HotkeyMap _defaultHotkeys = new();
+        private HotkeyMap _hotkeys = new();
+        public HotkeyMap Hotkeys => _hotkeys;
         private readonly SystemFileManager _systemFileManager;
         private List<string> _categories;
 
         public HotkeyManager(SystemFileManager systemFileManager, List<string> categories)
         {
-            _hotkeys = new();
-            _defaultHotkeys = new();
             _systemFileManager = systemFileManager;
             _categories = categories;
+
             LoadDefaultHotkeys();
+
             if (_systemFileManager.ConfigExists("controls"))
                 LoadPersistentHotkeys();
         }
@@ -25,17 +27,14 @@ namespace GodotModules
         public void LoadPersistentHotkeys()
         {
             var jsonData = _systemFileManager.ReadConfig<Dictionary<string, List<JsonInputKey>>>("controls");
-
-            var dict = new Dictionary<string, Dictionary<string, InputEventKey>>();
+            _hotkeys = new HotkeyMap();
 
             foreach (var category in _categories)
-                dict.Add(category, new());
+                _hotkeys.Add(category, new());
 
             foreach (var pair1 in jsonData)
                 foreach (var pair2 in pair1.Value)
-                    dict[pair1.Key][pair2.Action] = ConvertToInputKey(pair2);
-
-            _hotkeys = dict;
+                    _hotkeys[pair1.Key][pair2.Action] = ConvertToInputKey(pair2);
 
             foreach (var pair1 in _hotkeys)
                 foreach (var pair2 in pair1.Value)
@@ -51,7 +50,7 @@ namespace GodotModules
 
         public void ResetToDefaultHotkeys()
         {
-            _hotkeys = new(_defaultHotkeys);
+            _hotkeys = Clone(_defaultHotkeys);
 
             foreach (var pair1 in _defaultHotkeys)
                 foreach (var pair2 in pair1.Value)
@@ -70,12 +69,10 @@ namespace GodotModules
                 if (actionList.Count == 0)
                     continue;
 
-                var category = GetHotkeyCategory(action);
-
-                _defaultHotkeys[category][action] = (InputEventKey)actionList[0];
+                _defaultHotkeys[GetHotkeyCategory(action)][action] = (InputEventKey)actionList[0];
             }
 
-            _hotkeys = new(_defaultHotkeys);
+            _hotkeys = Clone(_defaultHotkeys);
         }
 
         public void SaveHotkeys()
@@ -94,9 +91,8 @@ namespace GodotModules
 
         public void SetHotkey(string action, InputEventKey inputEventKey)
         {
+            _hotkeys[GetHotkeyCategory(action)][action] = inputEventKey;
             SetHotkeyEvent(action, inputEventKey);
-            var category = GetHotkeyCategory(action);
-            _hotkeys[category][action] = inputEventKey;
         }
 
         private void SetHotkeyEvent(string action, InputEventKey inputEventKey)
@@ -110,12 +106,20 @@ namespace GodotModules
             var text = action.ToLower();
 
             foreach (var category in _categories)
-            {
                 if (text.Contains(category.ToLower()))
                     return category;
-            }
 
             return _categories[0];
+        }
+
+        private HotkeyMap Clone(HotkeyMap dict)
+        {
+            HotkeyMap clone = new();
+
+            foreach (var pair in dict)
+                clone.Add(pair.Key, new(pair.Value));
+
+            return clone;
         }
 
         private JsonInputKey ConvertToJson(string action, InputEventKey inputEventKey) =>
