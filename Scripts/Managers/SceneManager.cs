@@ -10,7 +10,7 @@ namespace GodotModules
         public GameScene CurScene { get; set; }
         public GameScene PrevScene { get; set; }
 
-        private AScene _activeScene;
+        private Node _activeScene;
         private readonly Dictionary<GameScene, PackedScene> _scenes = new Dictionary<GameScene, PackedScene>();
         private readonly GodotFileManager _godotFileManager;
         private readonly HotkeyManager _hotkeyManager;
@@ -51,8 +51,9 @@ namespace GodotModules
             if (!instant)
                 await Task.Delay(1);
 
-            _activeScene = (AScene)_scenes[scene].Instance();
-            _activeScene.PreInit(_managers);
+            _activeScene = _scenes[scene].Instance();
+            if (_activeScene is AScene ascene)
+                ascene.PreInit(_managers);
 
             _sceneList.AddChild(_activeScene);
         }
