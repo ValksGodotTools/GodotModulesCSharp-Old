@@ -110,7 +110,7 @@ namespace GodotModules
             _sceneManager.PreInit[Scene.Menu] = (scene) =>
             {
                 var menu = (UIMenu)scene;
-                menu.PreInit(_sceneManager);
+                menu.PreInit(_sceneManager, _networkManager);
             };
             _sceneManager.PreInit[Scene.Options] = (scene) =>
             {
