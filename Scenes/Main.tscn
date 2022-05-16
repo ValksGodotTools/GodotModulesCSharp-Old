@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Scripts/Game.cs" type="Script" id=1]
 [ext_resource path="res://Themes/Main.tres" type="Theme" id=2]
 [ext_resource path="res://Scripts/UI/Console/UIConsole.cs" type="Script" id=3]
+[ext_resource path="res://Scripts/Managers/ErrorNotifierManager.cs" type="Script" id=4]
 
 [sub_resource type="StyleBoxEmpty" id=2]
 
@@ -20,6 +21,7 @@ script = ExtResource( 1 )
 NodePathAudioStreamPlayer = NodePath("../AudioStreamPlayer")
 NodePathWebRequestList = NodePath("../WebRequests")
 NodePathConsole = NodePath("../Persistent GUI/Console")
+NodePathErrorNotifierManager = NodePath("../Persistent GUI/ErrorNotifier")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 
@@ -55,5 +57,8 @@ wrap_enabled = true
 margin_top = 584.0
 margin_right = 1024.0
 margin_bottom = 600.0
+
+[node name="ErrorNotifier" type="Node" parent="Persistent GUI"]
+script = ExtResource( 4 )
 
 [connection signal="text_entered" from="Persistent GUI/Console/Console Input" to="Persistent GUI/Console" method="_on_Console_Input_text_entered"]
