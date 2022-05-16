@@ -5,14 +5,14 @@ namespace GodotModules
 {
     public class SceneManager
     {
-        public readonly Dictionary<Scene, Action> EscPressed = new Dictionary<Scene, Action>();
-        public readonly Dictionary<Scene, Action<Node>> PreInit = new Dictionary<Scene, Action<Node>>();
+        public readonly Dictionary<GameScene, Action> EscPressed = new Dictionary<GameScene, Action>();
+        public readonly Dictionary<GameScene, Action<Node>> PreInit = new Dictionary<GameScene, Action<Node>>();
 
-        public Scene CurScene { get; set; }
-        public Scene PrevScene { get; set; }
+        public GameScene CurScene { get; set; }
+        public GameScene PrevScene { get; set; }
 
         private Node _activeScene;
-        private readonly Dictionary<Scene, PackedScene> _scenes = new Dictionary<Scene, PackedScene>();
+        private readonly Dictionary<GameScene, PackedScene> _scenes = new Dictionary<GameScene, PackedScene>();
         private readonly GodotFileManager _godotFileManager;
         private readonly HotkeyManager _hotkeyManager;
         private readonly Control _sceneList;
@@ -33,10 +33,10 @@ namespace GodotModules
             });
 
             if (loadedScenes)
-                await ChangeScene(Scene.Menu);
+                await ChangeScene(GameScene.Menu);
         }
 
-        public async Task ChangeScene(Scene scene, bool instant = true)
+        public async Task ChangeScene(GameScene scene, bool instant = true)
         {
             if (CurScene == scene)
                 return;
@@ -58,10 +58,10 @@ namespace GodotModules
             _sceneList.AddChild(_activeScene);
         }
 
-        private void LoadScene(string scene) => _scenes[(Scene)Enum.Parse(typeof(Scene), scene)] = ResourceLoader.Load<PackedScene>($"res://Scenes/Scenes/{scene}.tscn");
+        private void LoadScene(string scene) => _scenes[(GameScene)Enum.Parse(typeof(GameScene), scene)] = ResourceLoader.Load<PackedScene>($"res://Scenes/Scenes/{scene}.tscn");
     }
 
-    public enum Scene
+    public enum GameScene
     {
         Game,
         GameServers,

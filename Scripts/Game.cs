@@ -116,32 +116,32 @@ namespace GodotModules
             Scene = new(sceneList, new GodotFileManager(), hotkeyManager);
 
             // Pre Initialization
-            Scene.PreInit[GodotModules.Scene.Menu] = (scene) =>
+            Scene.PreInit[GameScene.Menu] = (scene) =>
             {
                 var menu = (UIMenu)scene;
                 menu.PreInit(Scene, Network, Popup);
             };
-            Scene.PreInit[GodotModules.Scene.Options] = (scene) =>
+            Scene.PreInit[GameScene.Options] = (scene) =>
             {
                 var options = (UIOptions)scene;
                 options.PreInit(hotkeyManager, Options, Music, Web, Scene, Token);
             };
-            Scene.PreInit[GodotModules.Scene.Credits] = (scene) =>
+            Scene.PreInit[GameScene.Credits] = (scene) =>
             {
                 var credits = (UICredits)scene;
                 credits.PreInit(Scene);
             };
 
             // Esc Pressed
-            Scene.EscPressed[GodotModules.Scene.Credits] = async () => await Scene.ChangeScene(GodotModules.Scene.Menu);
-            Scene.EscPressed[GodotModules.Scene.GameServers] = async () => await Scene.ChangeScene(GodotModules.Scene.Menu);
-            Scene.EscPressed[GodotModules.Scene.Mods] = async () => await Scene.ChangeScene(GodotModules.Scene.Menu);
-            Scene.EscPressed[GodotModules.Scene.Options] = async () => {
+            Scene.EscPressed[GameScene.Credits] = async () => await Scene.ChangeScene(GameScene.Menu);
+            Scene.EscPressed[GameScene.GameServers] = async () => await Scene.ChangeScene(GameScene.Menu);
+            Scene.EscPressed[GameScene.Mods] = async () => await Scene.ChangeScene(GameScene.Menu);
+            Scene.EscPressed[GameScene.Options] = async () => {
                 Token.Cancel("check_connection");
-                await Scene.ChangeScene(GodotModules.Scene.Menu);
+                await Scene.ChangeScene(GameScene.Menu);
             };
-            Scene.EscPressed[GodotModules.Scene.Lobby] = async () => await Scene.ChangeScene(GodotModules.Scene.GameServers);
-            Scene.EscPressed[GodotModules.Scene.Game] = async () => await Scene.ChangeScene(GodotModules.Scene.Menu);
+            Scene.EscPressed[GameScene.Lobby] = async () => await Scene.ChangeScene(GameScene.GameServers);
+            Scene.EscPressed[GameScene.Game] = async () => await Scene.ChangeScene(GameScene.Menu);
 
             await Scene.InitAsync();
         }
