@@ -18,7 +18,9 @@ namespace GodotModules
     {
         [Export] public readonly NodePath NodePathAudioStreamPlayer;
         [Export] public readonly NodePath NodePathWebRequestList;
+        [Export] public readonly NodePath NodePathConsole;
 
+        private UIConsole _console;
         private OptionsManager _optionsManager;
         private TokenManager _tokenManager;
         private NetworkManager _networkManager;
@@ -29,6 +31,8 @@ namespace GodotModules
         public override async void _Ready()
         {
             await InitManagers();
+            _console = GetNode<UIConsole>(NodePathConsole);
+            Logger.UIConsole = _console;
 
             _musicManager.LoadTrack("Menu", "Audio/Music/Unsolicited trailer music loop edit.wav");
             _musicManager.PlayTrack("Menu");
@@ -50,8 +54,13 @@ namespace GodotModules
         public override void _Input(InputEvent @event)
         {
             if (Input.IsActionJustPressed("ui_cancel"))
-                if (_sceneManager.EscPressed.ContainsKey(_sceneManager.CurScene))
+                if (_console.Visible)
+                    _console.ToggleVisibility();
+                else if (_sceneManager.EscPressed.ContainsKey(_sceneManager.CurScene))
                     _sceneManager.EscPressed[_sceneManager.CurScene]();
+
+            if (Input.IsActionJustPressed("ui_console"))
+                _console.ToggleVisibility();
         }
 
         public override async void _Notification(int what)
