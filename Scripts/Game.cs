@@ -20,6 +20,7 @@ namespace GodotModules
         [Export] public readonly NodePath NodePathWebRequestList;
         [Export] public readonly NodePath NodePathConsole;
         [Export] public readonly NodePath NodePathErrorNotifierManager;
+        [Export] public readonly NodePath NodePathPopupManager;
 
         private UIConsole _console;
         private OptionsManager _optionsManager;
@@ -29,14 +30,16 @@ namespace GodotModules
         private WebManager _webManager;
         private MusicManager _musicManager;
         private ErrorNotifierManager _errorNotifierManager;
+        private PopupManager _popupManager;
 
         public override async void _Ready()
         {
             await InitManagers();
             _console = GetNode<UIConsole>(NodePathConsole);
 
-            // this is sort of a special case manager, it extends from Node (that is why it's not grouped with the other managers in InitManagers())
+            // these are sort of special case managers, they extend from Node (that is why they are not grouped with the other managers in InitManagers())
             _errorNotifierManager = GetNode<ErrorNotifierManager>(NodePathErrorNotifierManager);
+            _popupManager = GetNode<PopupManager>(NodePathPopupManager);
 
             // how else would you pass this information to Logger?
             Logger.UIConsole = _console;
