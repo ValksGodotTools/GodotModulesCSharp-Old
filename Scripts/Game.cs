@@ -24,18 +24,16 @@ namespace GodotModules
         [Export] public readonly NodePath NodePathPopupManager;
 
         private Managers _managers;
-        private UIConsole _console;
 
         public override async void _Ready()
         {
             _managers = new(GetNode<Node>(NodePathWebRequestList), GetNode<AudioStreamPlayer>(NodePathAudioStreamPlayer), 
-                GetNode<ErrorNotifierManager>(NodePathErrorNotifierManager), GetNode<PopupManager>(NodePathPopupManager));
+                GetNode<ErrorNotifierManager>(NodePathErrorNotifierManager), GetNode<PopupManager>(NodePathPopupManager),
+                GetNode<ConsoleManager>(NodePathConsole));
             await _managers.InitSceneManager(GetNode<Control>(NodePathScenes), _managers.HotkeyManager);
-
-            _console = GetNode<UIConsole>(NodePathConsole);
             
             // how else would you pass this information to Logger?
-            Logger.UIConsole = _console;
+            Logger.UIConsole = _managers.ConsoleManager;
             Logger.ErrorNotifierManager = _managers.ErrorNotifierManager;
 
             _managers.MusicManager.LoadTrack("Menu", "Audio/Music/Unsolicited trailer music loop edit.wav");
@@ -58,13 +56,13 @@ namespace GodotModules
         public override void _Input(InputEvent @event)
         {
             if (Input.IsActionJustPressed("ui_cancel"))
-                if (_console.Visible)
-                    _console.ToggleVisibility();
+                if (_managers.ConsoleManager.Visible)
+                    _managers.ConsoleManager.ToggleVisibility();
                 else if (_managers.SceneManager.EscPressed.ContainsKey(_managers.SceneManager.CurScene))
                     _managers.SceneManager.EscPressed[_managers.SceneManager.CurScene]();
 
             if (Input.IsActionJustPressed("ui_console"))
-                _console.ToggleVisibility();
+                _managers.ConsoleManager.ToggleVisibility();
         }
 
         public override async void _Notification(int what)
@@ -96,8 +94,9 @@ namespace GodotModules
         public ErrorNotifierManager ErrorNotifierManager;
         public PopupManager PopupManager;
         public HotkeyManager HotkeyManager;
+        public ConsoleManager ConsoleManager;
 
-        public Managers(Node webRequestList, AudioStreamPlayer audioStreamPlayer, ErrorNotifierManager errorNotifierManager, PopupManager popupManager)
+        public Managers(Node webRequestList, AudioStreamPlayer audioStreamPlayer, ErrorNotifierManager errorNotifierManager, PopupManager popupManager, ConsoleManager consoleManager)
         {
             var systemFileManager = new SystemFileManager();
             HotkeyManager = new HotkeyManager(systemFileManager, new List<string>() {"UI", "Player"});
@@ -109,6 +108,7 @@ namespace GodotModules
             ErrorNotifierManager = errorNotifierManager;
             PopupManager = popupManager;
             NetworkManager = new(PopupManager);
+            ConsoleManager = consoleManager;
         }
 
         public async Task InitSceneManager(Control sceneList, HotkeyManager hotkeyManager)

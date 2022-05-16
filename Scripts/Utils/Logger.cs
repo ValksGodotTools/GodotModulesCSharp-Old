@@ -4,7 +4,7 @@ namespace GodotModules
 {
     public static class Logger
     {
-        public static UIConsole UIConsole { get; set; }
+        public static ConsoleManager UIConsole { get; set; }
         public static ErrorNotifierManager ErrorNotifierManager { get; set; }
         private static readonly ConcurrentQueue<LogInfo> _messages = new ConcurrentQueue<LogInfo>();
 
