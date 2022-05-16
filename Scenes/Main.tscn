@@ -1,9 +1,12 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Scripts/Game.cs" type="Script" id=1]
 [ext_resource path="res://Themes/Main.tres" type="Theme" id=2]
 [ext_resource path="res://Scripts/UI/Console/UIConsole.cs" type="Script" id=3]
 [ext_resource path="res://Scripts/Managers/ErrorNotifierManager.cs" type="Script" id=4]
+[ext_resource path="res://Scripts/Managers/PopupManager.cs" type="Script" id=5]
+
+[sub_resource type="StyleBoxEmpty" id=5]
 
 [sub_resource type="StyleBoxEmpty" id=2]
 
@@ -14,14 +17,17 @@ bg_color = Color( 0, 0, 0, 0.352941 )
 
 [sub_resource type="StyleBoxEmpty" id=4]
 
+[sub_resource type="StyleBoxEmpty" id=6]
+
 [node name="Main" type="Node2D"]
 
 [node name="Game" type="Node" parent="."]
 script = ExtResource( 1 )
 NodePathAudioStreamPlayer = NodePath("../AudioStreamPlayer")
 NodePathWebRequestList = NodePath("../WebRequests")
-NodePathConsole = NodePath("../Persistent GUI/Console")
-NodePathErrorNotifierManager = NodePath("../Persistent GUI/ErrorNotifier")
+NodePathConsole = NodePath("../Persistent GUI/Control/Console")
+NodePathErrorNotifierManager = NodePath("../Persistent GUI/Control/ErrorNotifier")
+NodePathPopupManager = NodePath("../Persistent GUI/Control/PopupManager")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 
@@ -29,16 +35,22 @@ NodePathErrorNotifierManager = NodePath("../Persistent GUI/ErrorNotifier")
 
 [node name="Persistent GUI" type="CanvasLayer" parent="."]
 
-[node name="Console" type="VBoxContainer" parent="Persistent GUI"]
-visible = false
+[node name="Control" type="PanelContainer" parent="Persistent GUI"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 5 )
+
+[node name="Console" type="VBoxContainer" parent="Persistent GUI/Control"]
+visible = false
+margin_right = 1024.0
+margin_bottom = 600.0
 theme = ExtResource( 2 )
 script = ExtResource( 3 )
 NodePathConsoleLogs = NodePath("Console Logs")
 NodePathConsoleInput = NodePath("Console Input")
 
-[node name="Console Logs" type="TextEdit" parent="Persistent GUI/Console"]
+[node name="Console Logs" type="TextEdit" parent="Persistent GUI/Control/Console"]
 margin_right = 1024.0
 margin_bottom = 580.0
 size_flags_horizontal = 3
@@ -53,12 +65,24 @@ show_line_numbers = true
 highlight_all_occurrences = true
 wrap_enabled = true
 
-[node name="Console Input" type="LineEdit" parent="Persistent GUI/Console"]
+[node name="Console Input" type="LineEdit" parent="Persistent GUI/Control/Console"]
 margin_top = 584.0
 margin_right = 1024.0
 margin_bottom = 600.0
+caret_blink = true
+caret_blink_speed = 0.5
 
-[node name="ErrorNotifier" type="Node" parent="Persistent GUI"]
+[node name="ErrorNotifier" type="Control" parent="Persistent GUI/Control"]
+margin_right = 1024.0
+margin_bottom = 600.0
+mouse_filter = 2
 script = ExtResource( 4 )
 
-[connection signal="text_entered" from="Persistent GUI/Console/Console Input" to="Persistent GUI/Console" method="_on_Console_Input_text_entered"]
+[node name="PopupManager" type="PanelContainer" parent="Persistent GUI/Control"]
+margin_right = 1024.0
+margin_bottom = 600.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 6 )
+script = ExtResource( 5 )
+
+[connection signal="text_entered" from="Persistent GUI/Control/Console/Console Input" to="Persistent GUI/Control/Console" method="_on_Console_Input_text_entered"]
