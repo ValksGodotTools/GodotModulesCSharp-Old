@@ -13,13 +13,13 @@ namespace GodotModules
 
         private Node _activeScene;
         private readonly Dictionary<Scene, PackedScene> _scenes = new Dictionary<Scene, PackedScene>();
-        private readonly Game _game;
         private readonly GodotFileManager _godotFileManager;
         private readonly HotkeyManager _hotkeyManager;
+        private readonly Control _sceneList;
 
-        public SceneManager(Game game, GodotFileManager godotFileManager, HotkeyManager hotkeyManager) 
+        public SceneManager(Control sceneList, GodotFileManager godotFileManager, HotkeyManager hotkeyManager) 
         {
-            _game = game;
+            _sceneList = sceneList;
             _godotFileManager = godotFileManager;
             _hotkeyManager = hotkeyManager;
         }
@@ -44,8 +44,8 @@ namespace GodotModules
             PrevScene = CurScene;
             CurScene = scene;
 
-            if (_game.GetChildCount() != 0) 
-                _game.GetChild(0).QueueFree();
+            if (_sceneList.GetChildCount() != 0) 
+                _sceneList.GetChild(0).QueueFree();
 
             if (!instant)
                 await Task.Delay(1);
@@ -55,7 +55,7 @@ namespace GodotModules
             if (PreInit.ContainsKey(scene))
                 PreInit[scene](_activeScene);
 
-            _game.AddChild(_activeScene);
+            _sceneList.AddChild(_activeScene);
         }
 
         private void LoadScene(string scene) => _scenes[(Scene)Enum.Parse(typeof(Scene), scene)] = ResourceLoader.Load<PackedScene>($"res://Scenes/Scenes/{scene}.tscn");

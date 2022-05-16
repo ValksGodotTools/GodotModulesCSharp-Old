@@ -18,6 +18,7 @@ namespace GodotModules
     {
         [Export] public readonly NodePath NodePathAudioStreamPlayer;
         [Export] public readonly NodePath NodePathWebRequestList;
+        [Export] public readonly NodePath NodePathScenes;
         [Export] public readonly NodePath NodePathConsole;
         [Export] public readonly NodePath NodePathErrorNotifierManager;
         [Export] public readonly NodePath NodePathPopupManager;
@@ -104,7 +105,7 @@ namespace GodotModules
 
         private async Task InitSceneManager(HotkeyManager hotkeyManager)
         {
-            _sceneManager = new(this, new GodotFileManager(), hotkeyManager);
+            _sceneManager = new(GetNode<Control>(NodePathScenes), new GodotFileManager(), hotkeyManager);
 
             // Pre Initialization
             _sceneManager.PreInit[Scene.Menu] = (scene) =>
