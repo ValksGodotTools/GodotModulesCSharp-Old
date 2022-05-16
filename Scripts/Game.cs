@@ -22,8 +22,10 @@ namespace GodotModules
         [Export] public readonly NodePath NodePathConsole;
         [Export] public readonly NodePath NodePathErrorNotifierManager;
         [Export] public readonly NodePath NodePathPopupManager;
+        [Export] public readonly NodePath NodePathMenuParticles;
 
         private Managers _managers;
+        private Particles2D _particles2D;
 
         public override async void _Ready()
         {
@@ -31,7 +33,9 @@ namespace GodotModules
                 GetNode<ErrorNotifierManager>(NodePathErrorNotifierManager), GetNode<PopupManager>(NodePathPopupManager),
                 GetNode<ConsoleManager>(NodePathConsole));
             await _managers.InitSceneManager(GetNode<Control>(NodePathScenes), _managers.Hotkey);
-            
+
+            _particles2D = GetNode<Particles2D>(NodePathMenuParticles);
+                        
             // how else would you pass this information to Logger?
             Logger.UIConsole = _managers.Console;
             Logger.ErrorNotifierManager = _managers.ErrorNotifier;
@@ -72,6 +76,17 @@ namespace GodotModules
                 GetTree().SetAutoAcceptQuit(false);
                 await Cleanup();
             }
+        }
+
+        private void _on_Window_resized() 
+        {
+            UpdateParticleSystem();
+        }
+
+        private void UpdateParticleSystem()
+        {
+            _particles2D.Position = new Vector2(OS.WindowSize.x / 2, OS.WindowSize.y);
+            _particles2D.ProcessMaterial.SetIndexed("emission_box_extents:x", OS.WindowSize.x / 2);
         }
 
         private async Task Cleanup()

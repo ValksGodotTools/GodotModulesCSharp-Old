@@ -67,10 +67,11 @@ environment = SubResource( 14 )
 script = ExtResource( 1 )
 NodePathAudioStreamPlayer = NodePath("../AudioStreamPlayer")
 NodePathWebRequestList = NodePath("../WebRequests")
-NodePathScenes = NodePath("../Persistent GUI/Control/Scenes")
-NodePathConsole = NodePath("../Persistent GUI/Control/Console")
-NodePathErrorNotifierManager = NodePath("../Persistent GUI/Control/ErrorNotifier")
-NodePathPopupManager = NodePath("../Persistent GUI/Control/PopupManager")
+NodePathScenes = NodePath("../Persistent GUI/Window/Scenes")
+NodePathConsole = NodePath("../Persistent GUI/Window/Console")
+NodePathErrorNotifierManager = NodePath("../Persistent GUI/Window/ErrorNotifier")
+NodePathPopupManager = NodePath("../Persistent GUI/Window/PopupManager")
+NodePathMenuParticles = NodePath("../Persistent GUI/Window/Menu Particles")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 
@@ -78,25 +79,25 @@ NodePathPopupManager = NodePath("../Persistent GUI/Control/PopupManager")
 
 [node name="Persistent GUI" type="CanvasLayer" parent="."]
 
-[node name="Control" type="Control" parent="Persistent GUI"]
+[node name="Window" type="Control" parent="Persistent GUI"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 
-[node name="Scenes" type="PanelContainer" parent="Persistent GUI/Control"]
+[node name="Scenes" type="PanelContainer" parent="Persistent GUI/Window"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 custom_styles/panel = SubResource( 15 )
 
-[node name="Particles2D" type="Particles2D" parent="Persistent GUI/Control"]
+[node name="Menu Particles" type="Particles2D" parent="Persistent GUI/Window"]
 position = Vector2( 512, 600 )
 amount = 200
 lifetime = 30.0
 preprocess = 30.0
 process_material = SubResource( 11 )
 
-[node name="Console" type="VBoxContainer" parent="Persistent GUI/Control"]
+[node name="Console" type="VBoxContainer" parent="Persistent GUI/Window"]
 visible = false
 margin_right = 1024.0
 margin_bottom = 600.0
@@ -105,7 +106,7 @@ script = ExtResource( 3 )
 NodePathConsoleLogs = NodePath("Console Logs")
 NodePathConsoleInput = NodePath("Console Input")
 
-[node name="Console Logs" type="TextEdit" parent="Persistent GUI/Control/Console"]
+[node name="Console Logs" type="TextEdit" parent="Persistent GUI/Window/Console"]
 margin_right = 1024.0
 margin_bottom = 580.0
 size_flags_horizontal = 3
@@ -120,23 +121,24 @@ show_line_numbers = true
 highlight_all_occurrences = true
 wrap_enabled = true
 
-[node name="Console Input" type="LineEdit" parent="Persistent GUI/Control/Console"]
+[node name="Console Input" type="LineEdit" parent="Persistent GUI/Window/Console"]
 margin_top = 584.0
 margin_right = 1024.0
 margin_bottom = 600.0
 caret_blink = true
 caret_blink_speed = 0.5
 
-[node name="ErrorNotifier" type="Control" parent="Persistent GUI/Control"]
+[node name="ErrorNotifier" type="Control" parent="Persistent GUI/Window"]
 margin_right = 1024.0
 margin_bottom = 600.0
 mouse_filter = 2
 script = ExtResource( 4 )
 
-[node name="PopupManager" type="Control" parent="Persistent GUI/Control"]
+[node name="PopupManager" type="Control" parent="Persistent GUI/Window"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 script = ExtResource( 5 )
 
-[connection signal="text_entered" from="Persistent GUI/Control/Console/Console Input" to="Persistent GUI/Control/Console" method="_on_Console_Input_text_entered"]
+[connection signal="resized" from="Persistent GUI/Window" to="Game" method="_on_Window_resized"]
+[connection signal="text_entered" from="Persistent GUI/Window/Console/Console Input" to="Persistent GUI/Window/Console" method="_on_Console_Input_text_entered"]
