@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Scripts/Game.cs" type="Script" id=1]
 [ext_resource path="res://Themes/Main.tres" type="Theme" id=2]
@@ -14,6 +14,8 @@ glow_bloom = 1.0
 glow_blend_mode = 0
 glow_bicubic_upscale = true
 glow_high_quality = true
+
+[sub_resource type="StyleBoxEmpty" id=15]
 
 [sub_resource type="Gradient" id=7]
 colors = PoolColorArray( 1, 1, 1, 1, 0, 0, 0, 1 )
@@ -56,7 +58,7 @@ bg_color = Color( 0, 0, 0, 0.352941 )
 
 [sub_resource type="StyleBoxEmpty" id=4]
 
-[node name="Main" type="Control"]
+[node name="Main" type="Node2D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( 14 )
@@ -65,22 +67,10 @@ environment = SubResource( 14 )
 script = ExtResource( 1 )
 NodePathAudioStreamPlayer = NodePath("../AudioStreamPlayer")
 NodePathWebRequestList = NodePath("../WebRequests")
-NodePathScenes = NodePath("../Scenes")
+NodePathScenes = NodePath("../Persistent GUI/Control/Scenes")
 NodePathConsole = NodePath("../Persistent GUI/Control/Console")
 NodePathErrorNotifierManager = NodePath("../Persistent GUI/Control/ErrorNotifier")
 NodePathPopupManager = NodePath("../Persistent GUI/Control/PopupManager")
-
-[node name="Scenes" type="Control" parent="."]
-margin_right = 1024.0
-margin_bottom = 600.0
-mouse_filter = 2
-
-[node name="Particles2D" type="Particles2D" parent="."]
-position = Vector2( 512, 600 )
-amount = 200
-lifetime = 30.0
-preprocess = 30.0
-process_material = SubResource( 11 )
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 
@@ -92,6 +82,19 @@ process_material = SubResource( 11 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
+
+[node name="Scenes" type="PanelContainer" parent="Persistent GUI/Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 15 )
+
+[node name="Particles2D" type="Particles2D" parent="Persistent GUI/Control"]
+position = Vector2( 512, 600 )
+amount = 200
+lifetime = 30.0
+preprocess = 30.0
+process_material = SubResource( 11 )
 
 [node name="Console" type="VBoxContainer" parent="Persistent GUI/Control"]
 visible = false
