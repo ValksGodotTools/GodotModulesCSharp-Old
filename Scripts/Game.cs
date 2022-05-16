@@ -86,15 +86,15 @@ namespace GodotModules
     public class Managers 
     {
         public OptionsManager Options { get; private set; }
-        public TokenManager Token;
-        public NetworkManager Network;
-        public SceneManager Scene;
-        public WebManager Web;
-        public MusicManager Music;
-        public ErrorNotifierManager ErrorNotifier;
-        public PopupManager Popup;
-        public HotkeyManager Hotkey;
-        public ConsoleManager Console;
+        public TokenManager Token { get; private set; }
+        public NetworkManager Network { get; private set; }
+        public SceneManager Scene { get; private set; }
+        public WebManager Web { get; private set; }
+        public MusicManager Music { get; private set; }
+        public ErrorNotifierManager ErrorNotifier { get; private set; }
+        public PopupManager Popup { get; private set; }
+        public HotkeyManager Hotkey { get; private set; }
+        public ConsoleManager Console { get; private set; }
 
         public Managers(Node webRequestList, AudioStreamPlayer audioStreamPlayer, ErrorNotifierManager errorNotifierManager, PopupManager popupManager, ConsoleManager consoleManager)
         {
