@@ -9,8 +9,12 @@ namespace GodotModules
         [Export] public readonly NodePath NodePathCreditsContent;
         private Tween Tween { get; set; }
         private Control CreditsContent { get; set; }
-        
-        [Inject] private SceneManager _sceneManager;
+        private SceneManager _sceneManager;
+
+        public void PreInit(SceneManager sceneManager) 
+        {
+            _sceneManager = sceneManager;
+        }
 
         public override void _Ready()
         {

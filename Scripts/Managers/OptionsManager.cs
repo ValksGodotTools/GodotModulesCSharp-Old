@@ -5,9 +5,15 @@ namespace GodotModules
     public class OptionsManager 
     {
         public OptionsData Options;
-        
-        [Inject] private SystemFileManager _systemFileManager;
-        [Inject] private HotkeyManager _hotkeyManager;
+        private readonly SystemFileManager _systemFileManager;
+        private readonly HotkeyManager _hotkeyManager;
+
+        public OptionsManager(SystemFileManager systemFileManager, HotkeyManager hotkeyManager)
+        {
+            _systemFileManager = systemFileManager;
+            _hotkeyManager = hotkeyManager;
+            LoadOptions();
+        }
 
         public void SetVSync(bool v)
         {
@@ -53,7 +59,6 @@ namespace GodotModules
 
         public void CenterWindow() => OS.WindowPosition = OS.GetScreenSize() / 2 - OS.WindowSize / 2;
 
-        [AfterInject]
         private void LoadOptions()
         {
             if (_systemFileManager.ConfigExists("options"))

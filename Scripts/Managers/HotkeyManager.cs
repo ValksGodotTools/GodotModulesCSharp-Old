@@ -10,18 +10,14 @@ namespace GodotModules
         private HotkeyMap _defaultHotkeys = new();
         private HotkeyMap _hotkeys = new();
         public HotkeyMap Hotkeys => _hotkeys;
+        private readonly SystemFileManager _systemFileManager;
         private List<string> _categories;
 
-        [Inject] private SystemFileManager _systemFileManager;
-
-        public HotkeyManager(List<string> categories)
+        public HotkeyManager(SystemFileManager systemFileManager, List<string> categories)
         {
+            _systemFileManager = systemFileManager;
             _categories = categories;
-        }
 
-        [AfterInject]
-        private void Init()
-        {
             LoadDefaultHotkeys();
 
             if (_systemFileManager.ConfigExists("controls"))

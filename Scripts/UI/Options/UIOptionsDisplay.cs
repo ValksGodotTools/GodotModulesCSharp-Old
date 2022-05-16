@@ -12,7 +12,12 @@ namespace GodotModules
         private LineEdit _windowSizeHeight;
         private Vector2 _windowSize;
 
-        [Inject] private OptionsManager _optionsManager;
+        private OptionsManager _optionsManager;
+
+        public void PreInit(OptionsManager optionsManager)
+        {
+            _optionsManager = optionsManager;
+        }
 
         public override void _Ready()
         {

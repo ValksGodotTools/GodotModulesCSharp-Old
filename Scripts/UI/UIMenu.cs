@@ -6,9 +6,16 @@ namespace GodotModules
     {
         [Export] public readonly NodePath NodePathBtnPlay;
 
-        [Inject] private SceneManager _sceneManager;
-        [Inject] private NetworkManager _networkManager;
-        [Inject] private PopupManager _popupManager;
+        private SceneManager _sceneManager;
+        private NetworkManager _networkManager;
+        private PopupManager _popupManager;
+
+        public void PreInit(SceneManager sceneManager, NetworkManager networkManager, PopupManager popupManager) 
+        {
+            _sceneManager = sceneManager;
+            _networkManager = networkManager;
+            _popupManager = popupManager;
+        }
 
         public override void _Ready() => GetNode<Button>(NodePathBtnPlay).GrabFocus();
 

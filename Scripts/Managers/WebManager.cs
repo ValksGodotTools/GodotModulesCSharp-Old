@@ -10,11 +10,11 @@ namespace GodotModules
         private string _externalIp;
 
         private readonly WebRequests _webRequests;
+        private readonly TokenManager _tokenManager;
 
-        [Inject] private readonly TokenManager _tokenManager;
-
-        public WebManager(WebRequests webRequests, string ip)
+        public WebManager(WebRequests webRequests, TokenManager tokenManager, string ip)
         {
+            _tokenManager = tokenManager;
             _webRequests = webRequests;
             Ip = ip.IsAddress() ? ip : "localhost:4000";
         }
