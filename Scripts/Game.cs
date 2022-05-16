@@ -36,11 +36,7 @@ namespace GodotModules
         {
             await InitManagers();
             _console = GetNode<UIConsole>(NodePathConsole);
-
-            // these are sort of special case managers, they extend from Node (that is why they are not grouped with the other managers in InitManagers())
-            _errorNotifierManager = GetNode<ErrorNotifierManager>(NodePathErrorNotifierManager);
-            _popupManager = GetNode<PopupManager>(NodePathPopupManager);
-
+            
             // how else would you pass this information to Logger?
             Logger.UIConsole = _console;
             Logger.ErrorNotifierManager = _errorNotifierManager;
@@ -100,7 +96,9 @@ namespace GodotModules
             _webManager = new(new WebRequests(GetNode<Node>(NodePathWebRequestList)), _tokenManager, _optionsManager.Options.WebServerAddress);
             _musicManager = new(GetNode<AudioStreamPlayer>(NodePathAudioStreamPlayer), _optionsManager);
             
-            _networkManager = new();
+            _errorNotifierManager = GetNode<ErrorNotifierManager>(NodePathErrorNotifierManager);
+            _popupManager = GetNode<PopupManager>(NodePathPopupManager);
+            _networkManager = new(_popupManager);
             await InitSceneManager(hotkeyManager);
         }
 
@@ -112,7 +110,7 @@ namespace GodotModules
             _sceneManager.PreInit[Scene.Menu] = (scene) =>
             {
                 var menu = (UIMenu)scene;
-                menu.PreInit(_sceneManager, _networkManager);
+                menu.PreInit(_sceneManager, _networkManager, _popupManager);
             };
             _sceneManager.PreInit[Scene.Options] = (scene) =>
             {
