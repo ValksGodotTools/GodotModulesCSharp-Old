@@ -16,8 +16,6 @@ glow_blend_mode = 0
 glow_bicubic_upscale = true
 glow_high_quality = true
 
-[sub_resource type="StyleBoxEmpty" id=15]
-
 [sub_resource type="Gradient" id=7]
 colors = PoolColorArray( 1, 1, 1, 1, 0, 0, 0, 1 )
 
@@ -49,6 +47,8 @@ scale_random = 0.5
 scale_curve = SubResource( 13 )
 color = Color( 2, 1, 3, 1 )
 color_ramp = SubResource( 12 )
+
+[sub_resource type="StyleBoxEmpty" id=15]
 
 [sub_resource type="StyleBoxEmpty" id=2]
 
@@ -85,12 +85,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 
-[node name="Scenes" type="PanelContainer" parent="Persistent GUI/Window"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-custom_styles/panel = SubResource( 15 )
-
 [node name="Menu Particles" type="Particles2D" parent="Persistent GUI/Window"]
 position = Vector2( 512, 600 )
 emitting = false
@@ -98,6 +92,12 @@ amount = 200
 lifetime = 30.0
 preprocess = 30.0
 process_material = SubResource( 11 )
+
+[node name="Scenes" type="PanelContainer" parent="Persistent GUI/Window"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 15 )
 
 [node name="Console" type="VBoxContainer" parent="Persistent GUI/Window"]
 visible = false
