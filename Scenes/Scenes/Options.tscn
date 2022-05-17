@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Themes/PanelNoBorder.tres" type="Theme" id=1]
 [ext_resource path="res://Themes/Main.tres" type="Theme" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://Scripts/UI/Options/UIOptionsAudio.cs" type="Script" id=7]
 [ext_resource path="res://Scripts/UI/Options/UIOptionsMultiplayer.cs" type="Script" id=8]
 [ext_resource path="res://Scripts/UI/Options/UIOptionsDisplay.cs" type="Script" id=9]
+[ext_resource path="res://Themes/Button New/Large.tres" type="Theme" id=10]
 
 [node name="UIOptions" type="Control"]
 anchor_right = 1.0
@@ -48,54 +49,55 @@ margin_right = 974.0
 margin_bottom = 550.0
 
 [node name="Nav" type="VBoxContainer" parent="Padding/HBox"]
-margin_right = 75.0
+margin_right = 149.0
 margin_bottom = 500.0
+theme = ExtResource( 10 )
 alignment = 1
 
 [node name="Game" type="Button" parent="Padding/HBox/Nav"]
-margin_top = 171.0
-margin_right = 75.0
-margin_bottom = 194.0
+margin_top = 84.0
+margin_right = 149.0
+margin_bottom = 136.0
 text = "Game"
 
 [node name="Video" type="Button" parent="Padding/HBox/Nav"]
-margin_top = 198.0
-margin_right = 75.0
-margin_bottom = 221.0
+margin_top = 140.0
+margin_right = 149.0
+margin_bottom = 192.0
 text = "Video"
 
 [node name="Display" type="Button" parent="Padding/HBox/Nav"]
-margin_top = 225.0
-margin_right = 75.0
+margin_top = 196.0
+margin_right = 149.0
 margin_bottom = 248.0
 text = "Display"
 
 [node name="Audio" type="Button" parent="Padding/HBox/Nav"]
 margin_top = 252.0
-margin_right = 75.0
-margin_bottom = 275.0
+margin_right = 149.0
+margin_bottom = 304.0
 text = "Audio"
 
 [node name="Controls" type="Button" parent="Padding/HBox/Nav"]
-margin_top = 279.0
-margin_right = 75.0
-margin_bottom = 302.0
+margin_top = 308.0
+margin_right = 149.0
+margin_bottom = 360.0
 text = "Controls"
 
 [node name="Multiplayer" type="Button" parent="Padding/HBox/Nav"]
-margin_top = 306.0
-margin_right = 75.0
-margin_bottom = 329.0
+margin_top = 364.0
+margin_right = 149.0
+margin_bottom = 416.0
 text = "Multiplayer"
 
 [node name="Padding" type="Control" parent="Padding/HBox"]
-margin_left = 79.0
-margin_right = 179.0
+margin_left = 153.0
+margin_right = 253.0
 margin_bottom = 500.0
 rect_min_size = Vector2( 100, 0 )
 
 [node name="Sections" type="Control" parent="Padding/HBox"]
-margin_left = 183.0
+margin_left = 257.0
 margin_right = 924.0
 margin_bottom = 500.0
 size_flags_horizontal = 3
@@ -311,13 +313,13 @@ script = ExtResource( 4 )
 NodePathTabContainer = NodePath("VBox/TabContainer")
 
 [node name="VBox" type="VBoxContainer" parent="Padding/HBox/Sections/Controls"]
-margin_right = 741.0
+margin_right = 667.0
 margin_bottom = 500.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="TabContainer" type="TabContainer" parent="Padding/HBox/Sections/Controls/VBox"]
-margin_right = 741.0
+margin_right = 667.0
 margin_bottom = 473.0
 size_flags_vertical = 3
 
