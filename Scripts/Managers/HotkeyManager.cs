@@ -69,7 +69,13 @@ namespace GodotModules
                 if (actionList.Count == 0)
                     continue;
 
-                _defaultHotkeys[GetHotkeyCategory(action)][action] = (InputEventKey)actionList[0];
+                var t = actionList[0];
+
+                if (t is InputEventKey inputEventKey)
+                    _defaultHotkeys[GetHotkeyCategory(action)][action] = inputEventKey;
+
+                if (t is InputEventMouseButton inputEventMouseButton)
+                    Logger.LogTodo("Mouse event not implemented yet");
             }
 
             _hotkeys = Clone(_defaultHotkeys);
