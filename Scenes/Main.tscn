@@ -93,6 +93,7 @@ custom_styles/panel = SubResource( 15 )
 
 [node name="Menu Particles" type="Particles2D" parent="Persistent GUI/Window"]
 position = Vector2( 512, 600 )
+emitting = false
 amount = 200
 lifetime = 30.0
 preprocess = 30.0

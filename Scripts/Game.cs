@@ -35,6 +35,7 @@ namespace GodotModules
             await _managers.InitSceneManager(GetNode<Control>(NodePathScenes), _managers.Hotkey);
 
             _particles2D = GetNode<Particles2D>(NodePathMenuParticles);
+            _particles2D.Emitting = true;
                         
             // how else would you pass this information to Logger?
             Logger.UIConsole = _managers.Console;
