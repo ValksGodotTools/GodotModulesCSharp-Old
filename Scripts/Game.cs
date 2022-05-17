@@ -79,7 +79,7 @@ namespace GodotModules
             }
         }
 
-        private void _on_Window_resized() 
+        private void _on_Scenes_resized() 
         {
             UpdateParticleSystem();
         }
