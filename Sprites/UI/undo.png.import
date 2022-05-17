@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/dungeon.png-947cea385f16acc9d54a38a8e4579688.stex"
+path="res://.import/undo.png-6858d5e980c95d501264c01930735480.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Tilesets/dungeon.png"
-dest_files=[ "res://.import/dungeon.png-947cea385f16acc9d54a38a8e4579688.stex" ]
+source_file="res://Sprites/UI/undo.png"
+dest_files=[ "res://.import/undo.png-6858d5e980c95d501264c01930735480.stex" ]
 
 [params]
 
@@ -20,7 +20,7 @@ compress/hdr_mode=0
 compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
-flags/filter=true
+flags/filter=false
 flags/mipmaps=false
 flags/anisotropic=false
 flags/srgb=2

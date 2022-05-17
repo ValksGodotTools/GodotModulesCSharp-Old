@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/undo.png-9214b26c1a29f3691005e633342c582a.stex"
+path="res://.import/Enemy.png-a85f83c41f240c4440e747880fbadbea.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/undo.png"
-dest_files=[ "res://.import/undo.png-9214b26c1a29f3691005e633342c582a.stex" ]
+source_file="res://Sprites/Game/Enemy.png"
+dest_files=[ "res://.import/Enemy.png-a85f83c41f240c4440e747880fbadbea.stex" ]
 
 [params]
 
@@ -20,7 +20,7 @@ compress/hdr_mode=0
 compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
-flags/filter=false
+flags/filter=true
 flags/mipmaps=false
 flags/anisotropic=false
 flags/srgb=2

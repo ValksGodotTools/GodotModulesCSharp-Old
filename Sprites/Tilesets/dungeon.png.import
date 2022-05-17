@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Black.png-f78497d629ac595bb3d813851b9851d4.stex"
+path="res://.import/dungeon.png-90174b2c4dcdc8aeb9b4bd96ac2efea6.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Black.png"
-dest_files=[ "res://.import/Black.png-f78497d629ac595bb3d813851b9851d4.stex" ]
+source_file="res://Sprites/Tilesets/dungeon.png"
+dest_files=[ "res://.import/dungeon.png-90174b2c4dcdc8aeb9b4bd96ac2efea6.stex" ]
 
 [params]
 

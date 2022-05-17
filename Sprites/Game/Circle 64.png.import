@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Circle 64.png-371e3a7704b00e20152edf2f6645bc71.stex"
+path="res://.import/Circle 64.png-8dd27c4ac8ad054411a5670b8523e839.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Circle 64.png"
-dest_files=[ "res://.import/Circle 64.png-371e3a7704b00e20152edf2f6645bc71.stex" ]
+source_file="res://Sprites/Game/Circle 64.png"
+dest_files=[ "res://.import/Circle 64.png-8dd27c4ac8ad054411a5670b8523e839.stex" ]
 
 [params]
 

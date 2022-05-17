@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Circle 32.png-6d56e61271352838b0fd139667691cd2.stex"
+path="res://.import/Black.png-82da443f23ab0bebd5335ab53a88d993.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Circle 32.png"
-dest_files=[ "res://.import/Circle 32.png-6d56e61271352838b0fd139667691cd2.stex" ]
+source_file="res://Sprites/Msc/Black.png"
+dest_files=[ "res://.import/Black.png-82da443f23ab0bebd5335ab53a88d993.stex" ]
 
 [params]
 

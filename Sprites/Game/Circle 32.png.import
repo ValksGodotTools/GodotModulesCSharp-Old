@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Circle 32 - Marked.png-10c43ee6f2e5c61ef1249795f76011e6.stex"
+path="res://.import/Circle 32.png-5628bd7de14c4a1b73ab1c4a4ba531e1.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Circle 32 - Marked.png"
-dest_files=[ "res://.import/Circle 32 - Marked.png-10c43ee6f2e5c61ef1249795f76011e6.stex" ]
+source_file="res://Sprites/Game/Circle 32.png"
+dest_files=[ "res://.import/Circle 32.png-5628bd7de14c4a1b73ab1c4a4ba531e1.stex" ]
 
 [params]
 
