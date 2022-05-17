@@ -16,6 +16,8 @@ glow_blend_mode = 0
 glow_bicubic_upscale = true
 glow_high_quality = true
 
+[sub_resource type="StyleBoxEmpty" id=15]
+
 [sub_resource type="Gradient" id=7]
 colors = PoolColorArray( 1, 1, 1, 1, 0, 0, 0, 1 )
 
@@ -48,8 +50,6 @@ scale_curve = SubResource( 13 )
 color = Color( 2, 1, 3, 1 )
 color_ramp = SubResource( 12 )
 
-[sub_resource type="StyleBoxEmpty" id=15]
-
 [sub_resource type="StyleBoxEmpty" id=17]
 
 [sub_resource type="StyleBoxEmpty" id=18]
@@ -59,7 +59,7 @@ bg_color = Color( 0, 0, 0, 0.352941 )
 
 [sub_resource type="StyleBoxEmpty" id=4]
 
-[node name="Main" type="Node2D"]
+[node name="Main" type="Node"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( 14 )
@@ -68,11 +68,17 @@ environment = SubResource( 14 )
 script = ExtResource( 1 )
 NodePathAudioStreamPlayer = NodePath("../AudioStreamPlayer")
 NodePathWebRequestList = NodePath("../WebRequests")
-NodePathScenes = NodePath("../Persistent GUI/Window/Scenes")
+NodePathScenes = NodePath("../Scenes")
 NodePathConsole = NodePath("../Persistent GUI/Window/Console")
 NodePathErrorNotifierManager = NodePath("../Persistent GUI/Window/ErrorNotifier")
 NodePathPopupManager = NodePath("../Persistent GUI/Window/PopupManager")
 NodePathMenuParticles = NodePath("../Persistent GUI/Window/Menu Particles")
+
+[node name="Scenes" type="PanelContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 15 )
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 
@@ -92,12 +98,6 @@ amount = 200
 lifetime = 30.0
 preprocess = 30.0
 process_material = SubResource( 11 )
-
-[node name="Scenes" type="PanelContainer" parent="Persistent GUI/Window"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-custom_styles/panel = SubResource( 15 )
 
 [node name="Console" type="VBoxContainer" parent="Persistent GUI/Window"]
 visible = false
@@ -130,17 +130,11 @@ margin_bottom = 600.0
 caret_blink = true
 caret_blink_speed = 0.5
 
-[node name="ErrorNotifier" type="Control" parent="Persistent GUI/Window"]
-margin_right = 1024.0
-margin_bottom = 600.0
-mouse_filter = 2
+[node name="ErrorNotifier" type="Node" parent="Persistent GUI/Window"]
 script = ExtResource( 4 )
 
-[node name="PopupManager" type="Control" parent="Persistent GUI/Window"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
+[node name="PopupManager" type="Node" parent="Persistent GUI/Window"]
 script = ExtResource( 5 )
 
-[connection signal="resized" from="Persistent GUI/Window" to="Game" method="_on_Window_resized"]
+[connection signal="resized" from="Scenes" to="Game" method="_on_Scenes_resized"]
 [connection signal="text_entered" from="Persistent GUI/Window/Console/Console Input" to="Persistent GUI/Window/Console" method="_on_Console_Input_text_entered"]
