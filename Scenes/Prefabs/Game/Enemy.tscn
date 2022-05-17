@@ -4,7 +4,7 @@
 [ext_resource path="res://Scripts/Game/Enemy.cs" type="Script" id=2]
 
 [sub_resource type="CircleShape2D" id=35]
-radius = 16.0312
+radius = 17.0294
 
 [sub_resource type="CircleShape2D" id=36]
 radius = 17.0
