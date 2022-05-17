@@ -2,7 +2,7 @@ using Godot;
 
 namespace GodotModules
 {
-    public class PopupManager : Control
+    public class PopupManager : Node
     {
         private Queue<WindowDialog> _popups = new();
 
