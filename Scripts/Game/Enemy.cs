@@ -4,12 +4,18 @@ public class Enemy : KinematicBody2D
 {
     [Export] public readonly NodePath NodePathSprite;
     private Sprite Sprite { get; set; }
+    private Line2D _line2D;
 
     private List<OtherPlayer> _players;
+    private Navigation2D _nav;
+    private Vector2[] _path;
+    private Vector2 _velocity;
 
-    public void Init(List<OtherPlayer> players)
+    public void Init(List<OtherPlayer> players, Navigation2D nav, Line2D line2D)
     {
         _players = players;
+        _nav = nav;
+        _line2D = line2D;
     }
 
     public override void _Ready()
@@ -23,11 +29,24 @@ public class Enemy : KinematicBody2D
 
         if (target != null) 
         {
-            Sprite.LookAt(target.Position);
+            //Sprite.LookAt(target.Position);
+
+            _path = _nav.GetSimplePath(GlobalPosition, target.GlobalPosition, false);
+            _line2D.Points = _path;
+            Navigate(delta);
 
             var dir = (target.Position - Position).Normalized();
-            var speed = 250f;
-            MoveAndSlide(dir * speed * delta * 50);
+            MoveAndSlide(_velocity);
+        }
+    }
+
+    private void Navigate(float delta)
+    {
+        if (_path.Length > 0) 
+        {
+            var speed = 250f * 50;
+            Sprite.LookAt(_path[1]);
+            _velocity = GlobalPosition.DirectionTo(_path[1]) * delta * speed;
         }
     }
 }
