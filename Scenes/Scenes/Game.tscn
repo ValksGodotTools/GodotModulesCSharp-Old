@@ -321,7 +321,7 @@ tile_data = PoolIntArray( -262149, 6, 0, -262148, 6, 0, -262147, 6, 0, -262146, 
 
 [node name="Line2D" type="Line2D" parent="."]
 width = 2.0
-default_color = Color( 1, 1, 1, 1 )
+default_color = Color( 1, 1, 1, 0.117647 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

@@ -5,7 +5,8 @@ public class Player : OtherPlayer
 {
     public override void _PhysicsProcess(float delta)
     {
-        _sprite.LookAt(GetGlobalMousePosition());
+        //_sprite.LookAt(GetGlobalMousePosition());
+        _sprite.LerpRotationToTarget(GetGlobalMousePosition());
         HandleMovement(delta);
     }
 
