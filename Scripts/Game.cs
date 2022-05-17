@@ -26,6 +26,7 @@ namespace GodotModules
 
         private Managers _managers;
         private Particles2D _particles2D;
+        private bool _ready;
 
         public override async void _Ready()
         {
@@ -46,6 +47,10 @@ namespace GodotModules
 
             _managers.Network.StartServer(25565, 100);
             _managers.Network.StartClient("127.0.0.1", 25565);
+
+            await Task.Delay(10);
+            UpdateParticleSystem();
+            _ready = true;
 
             await _managers.Web.CheckConnectionAsync();
             if (_managers.Web.ConnectionAlive)
@@ -81,7 +86,8 @@ namespace GodotModules
 
         private void _on_Scenes_resized() 
         {
-            UpdateParticleSystem();
+            if (_ready)
+                UpdateParticleSystem();
         }
 
         private void UpdateParticleSystem()
@@ -115,7 +121,7 @@ namespace GodotModules
         public Managers(Node webRequestList, AudioStreamPlayer audioStreamPlayer, ErrorNotifierManager errorNotifierManager, PopupManager popupManager, ConsoleManager consoleManager)
         {
             var systemFileManager = new SystemFileManager();
-            Hotkey = new HotkeyManager(systemFileManager, new List<string>() {"UI", "Player"});
+            Hotkey = new HotkeyManager(systemFileManager, new List<string>() {"UI", "Player", "Camera"});
             Options = new(systemFileManager, Hotkey);
             Token = new();
             Web = new(new WebRequests(webRequestList), Token, Options.Options.WebServerAddress);
