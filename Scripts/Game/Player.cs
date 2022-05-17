@@ -3,6 +3,19 @@ using System;
 
 public class Player : OtherPlayer
 {
+    [Export] public readonly NodePath NodePathCamera;
+    private Camera2D _camera;
+
+    public override void _Ready()
+    {
+        _camera = GetNode<Camera2D>(NodePathCamera);
+    }
+
+    public override void _Input(InputEvent @event)
+    {
+        
+    }
+
     public override void _PhysicsProcess(float delta)
     {
         _sprite.LerpRotationToTarget(GetGlobalMousePosition());
