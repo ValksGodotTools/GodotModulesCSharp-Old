@@ -38,6 +38,7 @@ theme = ExtResource( 4 )
 [node name="Play" type="Button" parent="Left Sidebar/VBoxContainer"]
 margin_right = 149.0
 margin_bottom = 52.0
+focus_neighbour_right = NodePath("../../../Right Sidebar/VBoxContainer/Options")
 text = "Play"
 
 [node name="Multiplayer" type="Button" parent="Left Sidebar/VBoxContainer"]
@@ -87,6 +88,7 @@ text = "Credits"
 margin_top = 156.0
 margin_right = 121.0
 margin_bottom = 204.0
+focus_neighbour_left = NodePath("../../../Left Sidebar/VBoxContainer/Play")
 text = "Quit"
 
 [node name="Social Links" type="MarginContainer" parent="."]
