@@ -23,5 +23,11 @@
 			"[Export] public readonly NodePath NodePath"
 		],
 		"description": "A public export set via the in-game editor"
+	},
+	"PackedScene" : {
+		"scope": "csharp",
+		"prefix": "packedscene",
+		"body": "public readonly static PackedScene ",
+		"description": "A PackedScene prefab"
 	}
 }
