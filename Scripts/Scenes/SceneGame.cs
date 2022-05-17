@@ -5,9 +5,7 @@ namespace GodotModules
     public class SceneGame : AScene
     {
         [Export] public readonly NodePath NodePathNavigation2D;
-        [Export] public readonly NodePath NodePathLine2D;
         public Navigation2D Navigation2D { get; set; }
-        public Line2D Line2D { get; set; }
 
         private GameManager _gameData;
 
@@ -19,7 +17,6 @@ namespace GodotModules
         public override void _Ready()
         {
             Navigation2D = GetNode<Navigation2D>(NodePathNavigation2D);
-            Line2D = GetNode<Line2D>(NodePathLine2D);
             _gameData = new GameManager(this);
             _gameData.CreateMainPlayer();
             _gameData.CreateEnemy(new Vector2(200, 200));
@@ -61,7 +58,7 @@ namespace GodotModules
         public void CreateEnemy(Vector2 pos = default(Vector2))
         {
             var enemy = Prefabs.Enemy.Instance<Enemy>();
-            enemy.Init(Players, _sceneGame.Navigation2D, _sceneGame.Line2D);
+            enemy.Init(Players, _sceneGame.Navigation2D);
             enemy.Position = pos;
             _sceneGame.AddChild(enemy);
             Enemies.Add(enemy);
