@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Sprites/Game/Circle 32 - Marked.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Game/Player.cs" type="Script" id=2]
+[ext_resource path="res://Scripts/Game/light.png" type="Texture" id=3]
 
 [sub_resource type="CircleShape2D" id=34]
 radius = 16.0
@@ -15,6 +16,10 @@ NodePathSprite = NodePath("Sprite")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
+
+[node name="Light2D" type="Light2D" parent="."]
+texture = ExtResource( 3 )
+energy = 0.6
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )
