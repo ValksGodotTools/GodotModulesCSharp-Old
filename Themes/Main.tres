@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=17 format=2]
+[gd_resource type="Theme" load_steps=19 format=2]
 
 [ext_resource path="res://Themes/Fonts/Roboto.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Themes/Button Old/Btn_Hover.tres" type="StyleBox" id=2]
@@ -39,6 +39,23 @@ border_color = Color( 0.188235, 0.188235, 0.188235, 1 )
 shadow_color = Color( 0.184314, 0.184314, 0.184314, 0.486275 )
 shadow_size = 3
 
+[sub_resource type="StyleBoxFlat" id=10]
+bg_color = Color( 0.141176, 0.141176, 0.141176, 1 )
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color( 0.8, 0.8, 0.8, 0 )
+
+[sub_resource type="StyleBoxFlat" id=11]
+bg_color = Color( 0.992157, 0.709804, 1, 1 )
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color( 0.8, 0.8, 0.8, 0 )
+corner_radius_bottom_left = 5
+
 [sub_resource type="StyleBoxFlat" id=7]
 bg_color = Color( 0.0862745, 0.0862745, 0.0862745, 1 )
 
@@ -78,6 +95,8 @@ Label/fonts/font = ExtResource( 1 )
 LineEdit/styles/focus = SubResource( 6 )
 LineEdit/styles/normal = ExtResource( 9 )
 PanelContainer/styles/panel = SubResource( 1 )
+ProgressBar/styles/bg = SubResource( 10 )
+ProgressBar/styles/fg = SubResource( 11 )
 RichTextLabel/constants/line_separation = 4
 TabContainer/styles/panel = SubResource( 7 )
 TabContainer/styles/tab_bg = SubResource( 8 )
