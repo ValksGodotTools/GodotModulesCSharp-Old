@@ -64,7 +64,7 @@ namespace GodotModules
         private void _on_Set_Window_Size_pressed()
         {
             if (_optionsManager.Options.FullscreenMode != FullscreenMode.Windowed)
-                return;
+                _optionsManager.SetFullscreenMode(FullscreenMode.Windowed);
             
             OS.WindowSize = _windowSize;
             _optionsManager.CenterWindow();
