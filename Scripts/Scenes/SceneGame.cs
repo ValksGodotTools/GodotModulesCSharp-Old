@@ -18,7 +18,7 @@ namespace GodotModules
         {
             Navigation2D = GetNode<Navigation2D>(NodePathNavigation2D);
             _gameData = new GameManager(this);
-            _gameData.CreateMainPlayer();
+            _gameData.CreateMainPlayer(new Vector2(300, 200));
             for (int i = 0; i < 5; i++)
                 _gameData.CreateEnemy(new Vector2(200, 200));
         }
