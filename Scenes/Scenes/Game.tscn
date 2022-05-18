@@ -378,6 +378,9 @@ NodePathNavigation2D = NodePath("Navigation2D")
 position = Vector2( 606, 609 )
 texture = ExtResource( 2 )
 texture_scale = 6.0
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="Props" type="Node" parent="."]
 
