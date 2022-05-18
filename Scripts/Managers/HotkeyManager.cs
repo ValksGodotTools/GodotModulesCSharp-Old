@@ -1,7 +1,5 @@
 using Godot;
 
-using HotkeyMap = System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, Godot.InputEventKey>>;
-
 namespace GodotModules
 {
     public struct HotkeyInfo
