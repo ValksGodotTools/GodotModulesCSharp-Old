@@ -21,7 +21,6 @@ namespace GodotModules
         [Export] public readonly NodePath NodePathScenes;
         [Export] public readonly NodePath NodePathConsole;
         [Export] public readonly NodePath NodePathErrorNotifierManager;
-        [Export] public readonly NodePath NodePathPopupManager;
         [Export] public readonly NodePath NodePathMenuParticles;
         [Export] public readonly NodePath NodePathPopups;
 
