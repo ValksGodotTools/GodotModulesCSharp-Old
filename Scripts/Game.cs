@@ -154,7 +154,6 @@ namespace GodotModules
 
             // Custom Pre Init
             Scene.PreInit[GameScene.Menu] = (node) => {
-                Logger.Log("PREINIT: " + _menuParticles);
                 ((SceneMenu)node).PreInit(_menuParticles);
             };
 
