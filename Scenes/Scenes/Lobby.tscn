@@ -120,5 +120,6 @@ text = "Some text here"
 margin_top = 224.0
 margin_right = 500.0
 margin_bottom = 240.0
+max_length = 150
 
 [connection signal="text_entered" from="Margin Chat/VBox/Chat Input" to="." method="_on_Chat_Input_text_entered"]
