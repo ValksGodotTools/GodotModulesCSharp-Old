@@ -37,7 +37,11 @@ namespace GodotModules
 
             if (@event is InputEventMouseButton mouseEvent)
             {
-                if (mouseEvent.Pressed && !GetGlobalRect().HasPoint(mouseEvent.Position))
+                if (
+                    mouseEvent.Pressed && 
+                    mouseEvent.ButtonMask == (int)ButtonList.Left && 
+                    !GetGlobalRect().HasPoint(mouseEvent.Position)
+                )
                 {
                     LostFocus();
                     return;
