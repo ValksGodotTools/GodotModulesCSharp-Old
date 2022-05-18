@@ -123,16 +123,6 @@ namespace GodotModules
             return _categories[0];
         }
 
-        private HotkeyMap Clone(HotkeyMap dict)
-        {
-            HotkeyMap clone = new();
-
-            foreach (var pair in dict)
-                clone.Add(pair.Key, new(pair.Value));
-
-            return clone;
-        }
-
         private JsonInputKey ConvertToJson(HotkeyInfo info) => new JsonInputKey
         {
             Action = info.Action,
