@@ -8,6 +8,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 2 )
 script = ExtResource( 1 )
+NodePathLobbyName = NodePath("Margin Info/VBox/Lobby Name")
+NodePathLobbyPlayerCount = NodePath("Margin Info/VBox/Player Count")
+NodePathPlayerList = NodePath("Margin Players/Player List")
+NodePathChatLogs = NodePath("Margin Chat/VBox/Margin/Chat Logs")
 
 [node name="Margin Info" type="MarginContainer" parent="."]
 anchor_left = 1.0
@@ -57,23 +61,23 @@ custom_constants/margin_top = 20
 custom_constants/margin_left = 20
 custom_constants/margin_bottom = 20
 
-[node name="VBox" type="VBoxContainer" parent="Margin Players"]
+[node name="Player List" type="VBoxContainer" parent="Margin Players"]
 margin_left = 20.0
 margin_top = 20.0
 margin_right = 103.0
 margin_bottom = 43.0
 
-[node name="HBox" type="HBoxContainer" parent="Margin Players/VBox"]
+[node name="HBox" type="HBoxContainer" parent="Margin Players/Player List"]
 margin_right = 83.0
 margin_bottom = 23.0
 
-[node name="Player Name" type="Label" parent="Margin Players/VBox/HBox"]
+[node name="Player Name" type="Label" parent="Margin Players/Player List/HBox"]
 margin_top = 3.0
 margin_right = 47.0
 margin_bottom = 20.0
 text = "Player1"
 
-[node name="Kick" type="Button" parent="Margin Players/VBox/HBox"]
+[node name="Kick" type="Button" parent="Margin Players/Player List/HBox"]
 margin_left = 51.0
 margin_right = 83.0
 margin_bottom = 23.0
@@ -116,3 +120,5 @@ text = "Some text here"
 margin_top = 224.0
 margin_right = 500.0
 margin_bottom = 240.0
+
+[connection signal="text_entered" from="Margin Chat/VBox/Chat Input" to="." method="_on_Chat_Input_text_entered"]

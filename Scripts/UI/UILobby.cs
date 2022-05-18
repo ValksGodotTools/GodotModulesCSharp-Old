@@ -21,5 +21,10 @@ namespace GodotModules
             _playerList = GetNode<Control>(NodePathPlayerList);
             _chatLogs = GetNode<RichTextLabel>(NodePathChatLogs);
         }
+
+        private void _on_Chat_Input_text_entered(string text)
+        {
+
+        }
     }
 }
