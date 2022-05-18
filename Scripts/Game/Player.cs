@@ -1,55 +1,58 @@
 using Godot;
 
-public class Player : OtherPlayer
+namespace GodotModules
 {
-    [Export] public readonly NodePath NodePathCamera;
-    private Camera2D _camera;
-
-    public override void _Ready()
+    public class Player : OtherPlayer
     {
-        _camera = GetNode<Camera2D>(NodePathCamera);
-        _sprite = GetNode<Sprite>(NodePathSprite);
-    }
+        [Export] public readonly NodePath NodePathCamera;
+        private Camera2D _camera;
 
-    public override void _PhysicsProcess(float delta)
-    {
-        _sprite.LerpRotationToTarget(GetGlobalMousePosition());
-        HandleMovement(delta);
-        HandleShoot();
-    }
-
-    private void _on_Area2D_area_entered(Area2D area)
-    {
-        if (area.IsInGroup("Chest"))
+        public override void _Ready()
         {
-            var chest = (Chest)area.GetParent();
-            chest.Open();
+            _camera = GetNode<Camera2D>(NodePathCamera);
+            _sprite = GetNode<Sprite>(NodePathSprite);
         }
-    }
 
-    private void HandleShoot()
-    {
-        if (Input.IsActionPressed("player_shoot")) 
+        public override void _PhysicsProcess(float delta)
         {
-            var shake = (ScreenShake)_camera.GetChild(0);
-            shake.Start();
+            _sprite.LerpRotationToTarget(GetGlobalMousePosition());
+            HandleMovement(delta);
+            HandleShoot();
         }
-    }
 
-    private void HandleMovement(float delta)
-    {
-        var dir = new Vector2();
+        private void _on_Area2D_area_entered(Area2D area)
+        {
+            if (area.IsInGroup("Chest"))
+            {
+                var chest = (Chest)area.GetParent();
+                chest.Open();
+            }
+        }
 
-        if (Input.IsActionPressed("player_move_up"))
-            dir.y -= 1;
-        if (Input.IsActionPressed("player_move_down"))
-            dir.y += 1;
-        if (Input.IsActionPressed("player_move_left"))
-            dir.x -= 1;
-        if (Input.IsActionPressed("player_move_right"))
-            dir.x += 1;
+        private void HandleShoot()
+        {
+            if (Input.IsActionPressed("player_shoot"))
+            {
+                var shake = (ScreenShake)_camera.GetChild(0);
+                shake.Start();
+            }
+        }
 
-        var Speed = 250f;
-        MoveAndSlide(dir * Speed * delta * 50);
+        private void HandleMovement(float delta)
+        {
+            var dir = new Vector2();
+
+            if (Input.IsActionPressed("player_move_up"))
+                dir.y -= 1;
+            if (Input.IsActionPressed("player_move_down"))
+                dir.y += 1;
+            if (Input.IsActionPressed("player_move_left"))
+                dir.x -= 1;
+            if (Input.IsActionPressed("player_move_right"))
+                dir.x += 1;
+
+            var Speed = 250f;
+            MoveAndSlide(dir * Speed * delta * 50);
+        }
     }
 }
