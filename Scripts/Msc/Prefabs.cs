@@ -9,13 +9,16 @@ namespace GodotModules
         public readonly static PackedScene UIErrorNotifier = LoadUI("UIErrorNotifier");
 
         // Popups
-        public readonly static PackedScene UIPopupMessage = LoadPopup("UIPopupMessage");
-        public readonly static PackedScene UIPopupError = LoadPopup("UIPopupError");
+        public readonly static PackedScene PopupMessage = LoadPopup("PopupMessage");
+        public readonly static PackedScene PopupError = LoadPopup("PopupError");
+        public readonly static PackedScene PopupLineEdit = LoadPopup("PopupLineEdit");
+        public readonly static PackedScene PopupCreateLobby = LoadPopup("PopupCreateLobby");
 
         // Game
         public readonly static PackedScene Player = LoadGame("Player");
         public readonly static PackedScene OtherPlayer = LoadGame("OtherPlayer");
         public readonly static PackedScene Enemy = LoadGame("Enemy");
+        public readonly static PackedScene Orb = LoadGame("Orb");
 
         private static PackedScene LoadGame(string game) => Load($"Game/{game}");
         private static PackedScene LoadPopup(string popup) => LoadUI($"Popups/{popup}");

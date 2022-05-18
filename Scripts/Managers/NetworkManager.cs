@@ -30,7 +30,7 @@ namespace GodotModules.Netcode
             {
                 var message = "ENet failed to initialize because enet.dll was not found. Please restart the game and make sure enet.dll is right next to the games executable. Because ENet failed to initialize multiplayer has been disabled.";
                 Logger.LogWarning(message);
-                popupManager.SpawnPopupMessage(message);
+                popupManager.SpawnMessage(message);
                 return;
             }
 

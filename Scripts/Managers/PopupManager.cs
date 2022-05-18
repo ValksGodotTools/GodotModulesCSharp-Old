@@ -2,43 +2,65 @@ using Godot;
 
 namespace GodotModules
 {
-    public class PopupManager : Node
+    public class PopupManager
     {
-        private Queue<WindowDialog> _popups = new();
+        private Queue<WindowDialog> _queue = new();
+        private Node _popups;
 
-        public void SpawnPopupMessage(string message, string title = "")
+        public PopupManager(Node popups)
         {
-            var popupMessage = Prefabs.UIPopupMessage.Instance<UIPopupMessage>();
-
-            popupMessage.PreInit(this, message, title);
-            AddChild(popupMessage);
-
-            if (_popups.Count == 0)
-                popupMessage.PopupCentered();
-
-            _popups.Enqueue(popupMessage);
+            _popups = popups;
         }
 
-        public void SpawnPopupError(Exception exception, string title = "")
+        public void SpawnMessage(string message, string title = "")
         {
-            var popupError = Prefabs.UIPopupError.Instance<UIPopupError>();
-
-            popupError.PreInit(this, exception, title);
-            AddChild(popupError);
-
-            if (_popups.Count == 0)
-                popupError.PopupCentered();
-                
-            _popups.Enqueue(popupError);
+            var popup = Prefabs.PopupMessage.Instance<PopupMessage>();
+            popup.PreInit(this, message, title);
+            
+            Spawn(popup);
         }
 
-        public void SpawnNextPopup() 
+        public void SpawnError(Exception exception, string title = "")
         {
-            _popups.Dequeue();
-            if (_popups.Count == 0) 
+            var popup = Prefabs.PopupError.Instance<PopupError>();
+            popup.PreInit(this, exception, title);
+            
+            Spawn(popup);
+        }
+
+        public void SpawnLineEdit(Action<LineEdit> onTextChanged, Action<string> onHide, int maxLength = 50, string title = "") 
+        {
+            var popup = Prefabs.PopupLineEdit.Instance<PopupLineEdit>();
+            popup.PreInit(this, onTextChanged, onHide, maxLength, title);
+
+            Spawn(popup);
+        }
+
+        public void SpawnCreateLobby()
+        {
+            var popup = Prefabs.PopupCreateLobby.Instance<PopupCreateLobby>();
+            popup.PreInit(this);
+
+            Spawn(popup);
+        }
+
+        public void Next() 
+        {
+            _queue.Dequeue();
+            if (_queue.Count == 0) 
                 return;
-            var popup = _popups.Peek();
+            var popup = _queue.Peek();
             popup.PopupCentered();
+        }
+
+        private void Spawn(WindowDialog popup)
+        {
+            _popups.AddChild(popup);
+
+            if (_queue.Count == 0)
+                popup.PopupCentered(popup.RectMinSize);
+
+            _queue.Enqueue(popup);
         }
     }
 }

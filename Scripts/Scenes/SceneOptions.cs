@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 namespace GodotModules
 {
@@ -29,7 +28,7 @@ namespace GodotModules
         private Button _btnMultiplayer;
         private Dictionary<OptionSection, Control> _optionSections;
 
-        public override void PreInit(Managers managers)
+        public override void PreInitManagers(Managers managers)
         {
             _optionSections = new();
             _optionSections[OptionSection.Game] = GetNode<UIOptionsGame>(NodePathOptionsGame);

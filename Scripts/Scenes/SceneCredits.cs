@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 namespace GodotModules
 {
@@ -11,7 +10,7 @@ namespace GodotModules
         private Control CreditsContent { get; set; }
         private SceneManager _sceneManager;
 
-        public override void PreInit(Managers managers) => 
+        public override void PreInitManagers(Managers managers) => 
             _sceneManager = managers.Scene;
 
         public override void _Ready()

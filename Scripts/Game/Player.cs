@@ -1,55 +1,108 @@
 using Godot;
 
-public class Player : OtherPlayer
+namespace GodotModules
 {
-    [Export] public readonly NodePath NodePathCamera;
-    private Camera2D _camera;
-
-    public override void _Ready()
+    public class Player : OtherPlayer
     {
-        _camera = GetNode<Camera2D>(NodePathCamera);
-        _sprite = GetNode<Sprite>(NodePathSprite);
-    }
+        [Export] public readonly NodePath NodePathCamera;
+        [Export] public readonly NodePath NodePathAnimatedSprite;
+        private Camera2D _camera;
+        private AnimatedSprite _animatedSprite;
 
-    public override void _PhysicsProcess(float delta)
-    {
-        _sprite.LerpRotationToTarget(GetGlobalMousePosition());
-        HandleMovement(delta);
-        HandleShoot();
-    }
+        private bool _movingDown, _movingUp, _movingLeft, _movingRight, _running, _attack;
 
-    private void _on_Area2D_area_entered(Area2D area)
-    {
-        if (area.IsInGroup("Chest"))
+        public override void _Ready()
         {
-            var chest = (Chest)area.GetParent();
-            chest.Open();
+            _camera = GetNode<Camera2D>(NodePathCamera);
+            _animatedSprite = GetNode<AnimatedSprite>(NodePathAnimatedSprite);
+            //_sprite = GetNode<Sprite>(NodePathSprite);
         }
-    }
 
-    private void HandleShoot()
-    {
-        if (Input.IsActionPressed("player_shoot")) 
+        public override void _PhysicsProcess(float delta)
         {
-            var shake = (ScreenShake)_camera.GetChild(0);
-            shake.Start();
+            //_sprite.LerpRotationToTarget(GetGlobalMousePosition());
+            HandleMovement(delta);
+            HandleShoot();
         }
-    }
 
-    private void HandleMovement(float delta)
-    {
-        var dir = new Vector2();
+        private void _on_Area2D_area_entered(Area2D area)
+        {
+            if (area.IsInGroup("Chest"))
+            {
+                var chest = (Chest)area.GetParent();
+                chest.Open();
+            }
+        }
 
-        if (Input.IsActionPressed("player_move_up"))
-            dir.y -= 1;
-        if (Input.IsActionPressed("player_move_down"))
-            dir.y += 1;
-        if (Input.IsActionPressed("player_move_left"))
-            dir.x -= 1;
-        if (Input.IsActionPressed("player_move_right"))
-            dir.x += 1;
+        private void HandleShoot()
+        {
+            var shooting = Input.IsActionPressed("player_shoot");
 
-        var Speed = 250f;
-        MoveAndSlide(dir * Speed * delta * 50);
+            _attack = Input.IsActionJustPressed("player_shoot");
+
+            if (shooting)
+            {
+                var shake = (ScreenShake)_camera.GetChild(0);
+                shake.Start();
+            }
+        }
+
+        private void HandleMovement(float delta)
+        {
+            var dir = new Vector2();
+
+            _movingUp = Input.IsActionPressed("player_move_up");
+            _movingDown = Input.IsActionPressed("player_move_down");
+            _movingLeft = Input.IsActionPressed("player_move_left");
+            _movingRight = Input.IsActionPressed("player_move_right");
+            _running = Input.IsActionPressed("player_sprint");
+
+            if (_movingUp) dir.y -= 1;
+            if (_movingDown) dir.y += 1;
+            if (_movingLeft) dir.x -= 1;
+            if (_movingRight) dir.x += 1;
+
+            HandleAnimation();
+
+            var speed = 250f * (_running ? 2 : 1);
+
+            MoveAndSlide(dir.Normalized() * speed * delta * 50);
+        }
+
+        private void HandleAnimation()
+        {
+            if (!_running)
+            {
+                if (_movingUp)
+                    _animatedSprite.Play("walk_up");
+                else if (_movingDown)
+                    _animatedSprite.Play("walk_down");
+                else if (_movingLeft)
+                    _animatedSprite.Play("walk_left");
+                else if (_movingRight)
+                    _animatedSprite.Play("walk_right");
+            }
+
+            if (_running)
+            {
+                if (_movingUp)
+                    _animatedSprite.Play("run_up");
+                else if (_movingDown)
+                    _animatedSprite.Play("run_down");
+                else if (_movingLeft)
+                    _animatedSprite.Play("run_left");
+                else if (_movingRight)
+                    _animatedSprite.Play("run_right");
+            }
+
+            if (!_movingUp && !_movingDown && !_movingLeft && !_movingRight)
+                _animatedSprite.Play("idle");
+
+            if (_attack) 
+            {
+                _attack = false;
+                _animatedSprite.Play("attack");
+            }
+        }
     }
 }

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/dungeon.png-90174b2c4dcdc8aeb9b4bd96ac2efea6.stex"
+path="res://.import/Fumiko.png-43f62f9ab09b343d5fa229bc25cc8cbb.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Tilesets/dungeon.png"
-dest_files=[ "res://.import/dungeon.png-90174b2c4dcdc8aeb9b4bd96ac2efea6.stex" ]
+source_file="res://Sprites/Game/Fumiko.png"
+dest_files=[ "res://.import/Fumiko.png-43f62f9ab09b343d5fa229bc25cc8cbb.stex" ]
 
 [params]
 

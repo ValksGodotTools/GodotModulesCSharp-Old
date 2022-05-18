@@ -37,12 +37,12 @@ namespace GodotModules
                         packetReader.Dispose();
                         break;
                     case GodotOpcode.SpawnPopupMessage:
-                        var dataMessage = (PopupMessage)cmd.Data;
-                        _popupManager.SpawnPopupMessage(dataMessage.Message, dataMessage.Title);
+                        var dataMessage = (GodotCmdPopupMessage)cmd.Data;
+                        _popupManager.SpawnMessage(dataMessage.Message, dataMessage.Title);
                         break;
                     case GodotOpcode.SpawnPopupError:
-                        var dataError = (PopupError)cmd.Data;
-                        _popupManager.SpawnPopupError(dataError.Exception, dataError.Title);
+                        var dataError = (GodotCmdPopupError)cmd.Data;
+                        _popupManager.SpawnError(dataError.Exception, dataError.Title);
                         break;
                 }
             }
@@ -70,13 +70,13 @@ namespace GodotModules
         Disconnect
     }
 
-    public class PopupMessage
+    public class GodotCmdPopupMessage
     {
         public string Title { get; set; }
         public string Message { get; set; }
     }
 
-    public class PopupError
+    public class GodotCmdPopupError
     {
         public string Title { get; set; }
         public Exception Exception { get; set; }

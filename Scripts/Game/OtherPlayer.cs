@@ -1,13 +1,15 @@
 using Godot;
-using System;
 
-public class OtherPlayer : KinematicBody2D
+namespace GodotModules
 {
-    [Export] public readonly NodePath NodePathSprite;
-    protected Sprite _sprite;
-
-    public override void _Ready()
+    public class OtherPlayer : KinematicBody2D
     {
-        _sprite = GetNode<Sprite>(NodePathSprite);
+        [Export] public readonly NodePath NodePathSprite;
+        protected Sprite _sprite;
+
+        public override void _Ready()
+        {
+            _sprite = GetNode<Sprite>(NodePathSprite);
+        }
     }
 }

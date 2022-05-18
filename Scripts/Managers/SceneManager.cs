@@ -1,10 +1,10 @@
 using Godot;
-using System;
 
 namespace GodotModules
 {
     public class SceneManager
     {
+        public readonly Dictionary<GameScene, Action<Node>> PreInit = new();
         public readonly Dictionary<GameScene, Action> EscPressed = new Dictionary<GameScene, Action>();
 
         public GameScene CurScene { get; set; }
@@ -52,19 +52,33 @@ namespace GodotModules
                 await Task.Delay(1);
 
             _activeScene = _scenes[scene].Instance();
+
+            if (PreInit.ContainsKey(scene))
+                PreInit[scene](_activeScene);
+
             if (_activeScene is AScene ascene)
-                ascene.PreInit(_managers);
+                ascene.PreInitManagers(_managers);
 
             _sceneList.AddChild(_activeScene);
         }
 
-        private void LoadScene(string scene) => 
-            _scenes[(GameScene)Enum.Parse(typeof(GameScene), scene)] = ResourceLoader.Load<PackedScene>($"res://Scenes/Scenes/{scene}.tscn");
+        private void LoadScene(string scene) 
+        {
+            try 
+            {
+                _scenes[(GameScene)Enum.Parse(typeof(GameScene), scene)] = ResourceLoader.Load<PackedScene>($"res://Scenes/Scenes/{scene}.tscn");
+            }
+            catch (ArgumentException) 
+            {
+                Logger.LogWarning($"Enum for {scene} needs to be defined since the scene is in the Scenes directory");
+            }
+        }
     }
 
     public enum GameScene
     {
         Game,
+        Game3D,
         GameServers,
         Lobby,
         Menu,

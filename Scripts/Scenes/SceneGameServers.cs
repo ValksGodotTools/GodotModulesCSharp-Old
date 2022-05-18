@@ -4,7 +4,7 @@ namespace GodotModules
 {
     public class SceneGameServers : AScene
     {
-        public override void PreInit(Managers managers)
+        public override void PreInitManagers(Managers managers)
         {
             
         }

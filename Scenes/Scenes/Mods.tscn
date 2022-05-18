@@ -21,6 +21,12 @@ anchor_bottom = 1.0
 theme = ExtResource( 2 )
 custom_styles/panel = SubResource( 1 )
 script = ExtResource( 3 )
+NodePathModList = NodePath("VBox/Top Content/Margin/VBox/Scroll/Mod List")
+NodePathModName = NodePath("VBox/Top Content/Margin2/Info/Name")
+NodePathModGameVersions = NodePath("VBox/Top Content/Margin2/Info/GameVersions")
+NodePathModDependencies = NodePath("VBox/Top Content/Margin2/Info/Margin/Dependency List")
+NodePathModDescription = NodePath("VBox/Top Content/Margin2/Info/Description")
+NodePathModLoaderLogs = NodePath("VBox/Bottom Content/Logs")
 
 [node name="VBox" type="VBoxContainer" parent="."]
 margin_right = 1024.0
@@ -182,3 +188,7 @@ margin_bottom = 140.0
 text = "Loaded some mod
 Loaded some mod
 Successfully loaded 2 mods"
+
+[connection signal="pressed" from="VBox/Top Content/Margin/VBox/Nav/Refresh" to="." method="_on_Refresh_pressed"]
+[connection signal="pressed" from="VBox/Top Content/Margin/VBox/Nav/Load Mods" to="." method="_on_Load_Mods_pressed"]
+[connection signal="pressed" from="VBox/Top Content/Margin/VBox/Nav/Open Mods Folder" to="." method="_on_Open_Mods_Folder_pressed"]
