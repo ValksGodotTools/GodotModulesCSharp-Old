@@ -20,8 +20,6 @@ namespace GodotModules
 
         private static string Display(InputEventMouseButton m)
         {
-            Logger.LogDebug(m.ButtonIndex);
-
             switch (m.ButtonIndex)
             {
                 case (int)ButtonList.Left:
