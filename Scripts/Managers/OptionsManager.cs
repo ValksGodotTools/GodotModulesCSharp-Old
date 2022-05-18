@@ -21,6 +21,18 @@ namespace GodotModules
             Options.VSync = v;
         }
 
+        public void ToggleFullscreen()
+        {
+            if (OS.WindowBorderless)
+            {
+                SetFullscreenMode(FullscreenMode.Windowed);
+            }
+            else
+            {
+                SetFullscreenMode(FullscreenMode.Borderless);
+            }
+        }
+
         public void SetFullscreenMode(FullscreenMode mode)
         {
             switch (mode)
