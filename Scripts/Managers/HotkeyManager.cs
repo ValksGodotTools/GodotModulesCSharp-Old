@@ -8,13 +8,13 @@ namespace GodotModules
     {
         public string Action { get; }
         public string Category { get; }
-        public InputEventKey Key { get; }
+        public InputEvent Event { get; }
 
-        public HotkeyInfo(string action, string category, InputEventKey key)
+        public HotkeyInfo(string action, string category, InputEvent e)
         {
             Action = action;
             Category = category;
-            Key = key;
+            Event = e;
         }
     }
 
@@ -51,25 +51,25 @@ namespace GodotModules
             var data = _systemFileManager.ReadConfig<List<JsonInputKey>>("controls");
             _hotkeys = new();
 
-            foreach (var key in data)
-                _hotkeys[key.Action] = new(key.Action, key.Category, ConvertToInputKey(key));
+            foreach (var e in data)
+                _hotkeys[e.Action] = new(e.Action, e.Category, ConvertToInput(e));
 
-            foreach (var hotkey in _hotkeys)
-                SetHotkeyEvent(hotkey.Key, hotkey.Value.Key);
+            foreach (var hotkey in Hotkeys)
+                SetHotkeyEvent(hotkey.Action, hotkey.Event);
         }
 
         public void ResetHotkey(string key)
         {
             _hotkeys[key] = _defaultHotkeys[key];
-            SetHotkeyEvent(key, _hotkeys[key].Key);
+            SetHotkeyEvent(key, _hotkeys[key].Event);
         }
 
         public void ResetToDefaultHotkeys()
         {
             _hotkeys = new(_defaultHotkeys);
 
-            foreach (var hotkey in _hotkeys)
-                SetHotkeyEvent(hotkey.Key, hotkey.Value.Key);
+            foreach (var hotkey in Hotkeys)
+                SetHotkeyEvent(hotkey.Action, hotkey.Event);
         }
 
         private void LoadDefaultHotkeys()
@@ -81,13 +81,17 @@ namespace GodotModules
                 if (actionList.Count == 0)
                     continue;
 
-                var t = actionList[0];
-
-                if (t is InputEventKey inputEventKey)
-                    _defaultHotkeys[action] = new(action, GetHotkeyCategory(action), inputEventKey);
-
-                if (t is InputEventMouseButton inputEventMouseButton)
-                    Logger.LogTodo("Mouse event not implemented yet");
+                if
+                (
+                    actionList[0] is InputEvent e && 
+                    (
+                        e is InputEventKey || 
+                        e is InputEventMouseButton || 
+                        e is InputEventJoypadButton
+                    )
+                ) {
+                    _defaultHotkeys[action] = new(action, GetHotkeyCategory(action), e);
+                }
             }
 
             _hotkeys = new(_defaultHotkeys);
@@ -98,16 +102,16 @@ namespace GodotModules
             _systemFileManager.WriteConfig("controls", _hotkeys.Values.Select(ConvertToJson).ToList());
         }
 
-        public void SetHotkey(string action, InputEventKey inputEventKey)
+        public void SetHotkey(string action, InputEvent e)
         {
-            _hotkeys[action] = new HotkeyInfo(action, GetHotkeyCategory(action), inputEventKey);
-            SetHotkeyEvent(action, inputEventKey);
+            _hotkeys[action] = new HotkeyInfo(action, GetHotkeyCategory(action), e);
+            SetHotkeyEvent(action, e);
         }
 
-        private void SetHotkeyEvent(string action, InputEventKey inputEventKey)
+        private void SetHotkeyEvent(string action, InputEvent e)
         {
             InputMap.ActionEraseEvents(action);
-            InputMap.ActionAddEvent(action, inputEventKey);
+            InputMap.ActionAddEvent(action, e);
         }
 
         public string GetHotkeyCategory(string action)
@@ -135,43 +139,17 @@ namespace GodotModules
         {
             Action = info.Action,
             Category = info.Category,
-            Scancode = info.Key.Scancode,
-            PhysicalScancode = info.Key.PhysicalScancode,
-            Unicode = info.Key.Unicode,
-            Alt = info.Key.Alt,
-            Shift = info.Key.Shift,
-            Control = info.Key.Control,
-            Meta = info.Key.Meta,
-            Command = info.Key.Command,
-            Device = info.Key.Device
+            Info = InputEventInfo.TryFrom(info.Event) ?? throw new Exception("Invalid input event"),
         };
 
-        private InputEventKey ConvertToInputKey(JsonInputKey inputEvent) => new InputEventKey()
-        {
-            Scancode = inputEvent.Scancode,
-            PhysicalScancode = inputEvent.PhysicalScancode,
-            Unicode = inputEvent.Unicode,
-            Alt = inputEvent.Alt,
-            Shift = inputEvent.Shift,
-            Control = inputEvent.Control,
-            Meta = inputEvent.Meta,
-            Command = inputEvent.Command,
-            Device = inputEvent.Device
-        };
+        private InputEvent ConvertToInput(JsonInputKey inputEvent) => 
+            inputEvent.Info.ToEvent();
     }
 
     public struct JsonInputKey
     {
         public string Action { get; set; }
-        public string Category { get; set;}
-        public uint Scancode { get; set; }
-        public uint PhysicalScancode { get; set; }
-        public uint Unicode { get; set; }
-        public bool Alt { get; set; }
-        public bool Shift { get; set; }
-        public bool Control { get; set; }
-        public bool Meta { get; set; }
-        public bool Command { get; set; }
-        public int Device { get; set; }
+        public string Category { get; set; }
+        public InputEventInfo Info { get; set; }
     }
 }

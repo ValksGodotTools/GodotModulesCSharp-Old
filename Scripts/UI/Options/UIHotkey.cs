@@ -34,8 +34,8 @@ namespace GodotModules
         {
             _hotkeyManager.ResetHotkey(_action);
 
-            Logger.LogDebug(_hotkeyManager.HotkeysByAction[_action].Key.AsText());
-            SetHotkeyText(_hotkeyManager.HotkeysByAction[_action].Key.AsText());
+            Logger.LogDebug(_hotkeyManager.HotkeysByAction[_action].Event.AsText());
+            SetHotkeyText(_hotkeyManager.HotkeysByAction[_action].Event.AsText());
         }
     }
 }
