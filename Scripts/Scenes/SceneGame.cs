@@ -19,7 +19,8 @@ namespace GodotModules
             Navigation2D = GetNode<Navigation2D>(NodePathNavigation2D);
             _gameData = new GameManager(this);
             _gameData.CreateMainPlayer();
-            _gameData.CreateEnemy(new Vector2(200, 200));
+            for (int i = 0; i < 5; i++)
+                _gameData.CreateEnemy(new Vector2(200, 200));
         }
     }
 
@@ -59,7 +60,7 @@ namespace GodotModules
         {
             var enemy = Prefabs.Enemy.Instance<Enemy>();
             enemy.Init(Players, _sceneGame.Navigation2D);
-            enemy.Position = pos;
+            enemy.Position = pos + Utils.RandomDir() * 10;
             _sceneGame.AddChild(enemy);
             Enemies.Add(enemy);
         }
