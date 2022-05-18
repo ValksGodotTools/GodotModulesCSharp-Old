@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://Scripts/Game.cs" type="Script" id=1]
 [ext_resource path="res://Themes/Main.tres" type="Theme" id=2]
@@ -17,6 +17,8 @@ glow_bicubic_upscale = true
 glow_high_quality = true
 
 [sub_resource type="StyleBoxEmpty" id=15]
+
+[sub_resource type="StyleBoxEmpty" id=20]
 
 [sub_resource type="Gradient" id=7]
 colors = PoolColorArray( 1, 1, 1, 1, 0, 0, 0, 1 )
@@ -86,17 +88,17 @@ custom_styles/panel = SubResource( 15 )
 
 [node name="Persistent GUI" type="CanvasLayer" parent="."]
 
-[node name="Window" type="Control" parent="Persistent GUI"]
+[node name="Window" type="PanelContainer" parent="Persistent GUI"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
+custom_styles/panel = SubResource( 20 )
 
 [node name="Menu Particles" type="Particles2D" parent="Persistent GUI/Window"]
 position = Vector2( 512, 600 )
 emitting = false
 amount = 200
 lifetime = 30.0
-preprocess = 30.0
 process_material = SubResource( 11 )
 
 [node name="Console" type="VBoxContainer" parent="Persistent GUI/Window"]

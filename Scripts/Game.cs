@@ -78,6 +78,9 @@ namespace GodotModules
                 else if (_managers.Scene.EscPressed.ContainsKey(_managers.Scene.CurScene))
                     _managers.Scene.EscPressed[_managers.Scene.CurScene]();
 
+            if (Input.IsActionJustPressed("ui_fullscreen"))
+                _managers.Options.ToggleFullscreen();
+
             if (Input.IsActionJustPressed("ui_console"))
                 _managers.Console.ToggleVisibility();
         }

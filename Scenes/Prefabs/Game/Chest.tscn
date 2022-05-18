@@ -1,0 +1,77 @@
+[gd_scene load_steps=14 format=2]
+
+[ext_resource path="res://Sprites/Game/chest-sheet.png" type="Texture" id=1]
+[ext_resource path="res://Scripts/Game/Chest.cs" type="Script" id=2]
+
+[sub_resource type="AtlasTexture" id=65]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 0, 0, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=66]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 48, 0, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=67]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 96, 0, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=68]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 144, 0, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=69]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 192, 0, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=70]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 288, 0, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=71]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 240, 0, 48, 48 )
+
+[sub_resource type="AtlasTexture" id=72]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 336, 0, 48, 48 )
+
+[sub_resource type="SpriteFrames" id=64]
+animations = [ {
+"frames": [ SubResource( 65 ), SubResource( 66 ), SubResource( 67 ), SubResource( 68 ), SubResource( 69 ), SubResource( 70 ), SubResource( 71 ), SubResource( 72 ) ],
+"loop": false,
+"name": "default",
+"speed": 20.0
+} ]
+
+[sub_resource type="CircleShape2D" id=73]
+radius = 18.0278
+
+[sub_resource type="RectangleShape2D" id=74]
+extents = Vector2( 15, 10 )
+
+[node name="Chest" type="StaticBody2D"]
+script = ExtResource( 2 )
+NodePathAnimatedSprite = NodePath("AnimatedSprite")
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+scale = Vector2( 1.5, 1.5 )
+frames = SubResource( 64 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 8 )
+shape = SubResource( 73 )
+
+[node name="Open" type="Area2D" parent="." groups=["Chest"]]
+position = Vector2( 0, 42 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Open"]
+position = Vector2( 0, -8 )
+shape = SubResource( 74 )
