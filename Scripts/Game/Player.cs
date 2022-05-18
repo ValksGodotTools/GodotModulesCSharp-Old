@@ -80,7 +80,7 @@ namespace GodotModules
             }
 
             var Speed = 250f;
-            MoveAndSlide(dir * Speed * delta * 50);
+            MoveAndSlide(dir.Normalized() * Speed * delta * 50);
         }
     }
 }
