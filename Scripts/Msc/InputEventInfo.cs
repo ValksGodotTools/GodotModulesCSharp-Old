@@ -1,4 +1,5 @@
 using Godot;
+using Newtonsoft.Json;
 
 namespace GodotModules
 {
@@ -35,9 +36,9 @@ namespace GodotModules
         // InputEventJoypadButton
         public int ButtonIndex { get; private set; }
 
-        public bool IsEventKey => Type == InputEventType.Key;
-        public bool IsEventMouseButton => Type == InputEventType.MouseButton;
-        public bool IsEventJoypadButton => Type == InputEventType.JoypadButton;
+        [JsonIgnore] public bool IsEventKey => Type == InputEventType.Key;
+        [JsonIgnore] public bool IsEventMouseButton => Type == InputEventType.MouseButton;
+        [JsonIgnore] public bool IsEventJoypadButton => Type == InputEventType.JoypadButton;
 
         public InputEventKey ToEventKey()
         {
