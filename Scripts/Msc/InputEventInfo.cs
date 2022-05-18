@@ -133,5 +133,19 @@ namespace GodotModules
             Device = j.Device,
             ButtonIndex = j.ButtonIndex,
         };
+
+        public static InputEventInfo? TryFrom(InputEvent e)
+        {
+            if (e is InputEventKey k)
+                return From(k);
+            
+            if (e is InputEventMouseButton m)
+                return From(m);
+            
+            if (e is InputEventJoypadButton j)
+                return From(j);
+            
+            return null;
+        }
     }
 } 
