@@ -12,6 +12,7 @@ namespace GodotModules
         public readonly static PackedScene PopupMessage = LoadPopup("PopupMessage");
         public readonly static PackedScene PopupError = LoadPopup("PopupError");
         public readonly static PackedScene PopupLineEdit = LoadPopup("PopupLineEdit");
+        public readonly static PackedScene PopupCreateLobby = LoadPopup("PopupCreateLobby");
 
         // Game
         public readonly static PackedScene Player = LoadGame("Player");

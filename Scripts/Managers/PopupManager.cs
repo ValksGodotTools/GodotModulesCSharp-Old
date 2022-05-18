@@ -36,6 +36,14 @@ namespace GodotModules
             Spawn(popup);
         }
 
+        public void SpawnCreateLobby()
+        {
+            var popup = Prefabs.PopupCreateLobby.Instance<PopupCreateLobby>();
+            popup.PreInit(this);
+
+            Spawn(popup);
+        }
+
         public void Next() 
         {
             _queue.Dequeue();
