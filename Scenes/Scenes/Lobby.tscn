@@ -114,7 +114,6 @@ margin_top = 10.0
 margin_right = 490.0
 margin_bottom = 210.0
 rect_min_size = Vector2( 0, 200 )
-text = "Some text here"
 
 [node name="Chat Input" type="LineEdit" parent="Margin Chat/VBox"]
 margin_top = 224.0
