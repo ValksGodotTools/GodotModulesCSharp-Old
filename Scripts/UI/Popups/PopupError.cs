@@ -1,7 +1,6 @@
 using Godot;
-using System;
 
-public class UIPopupError : WindowDialog
+public class PopupError : WindowDialog
 {
     [Export] public readonly NodePath NodePathError;
 

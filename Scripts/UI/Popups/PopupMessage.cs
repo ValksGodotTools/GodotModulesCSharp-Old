@@ -1,7 +1,6 @@
 using Godot;
-using System;
 
-public class UIPopupMessage : WindowDialog
+public class PopupMessage : WindowDialog
 {
     [Export] public readonly NodePath NodePathMessage;
 
