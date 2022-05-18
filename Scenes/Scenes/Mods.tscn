@@ -188,3 +188,7 @@ margin_bottom = 140.0
 text = "Loaded some mod
 Loaded some mod
 Successfully loaded 2 mods"
+
+[connection signal="pressed" from="VBox/Top Content/Margin/VBox/Nav/Refresh" to="." method="_on_Refresh_pressed"]
+[connection signal="pressed" from="VBox/Top Content/Margin/VBox/Nav/Load Mods" to="." method="_on_Load_Mods_pressed"]
+[connection signal="pressed" from="VBox/Top Content/Margin/VBox/Nav/Open Mods Folder" to="." method="_on_Open_Mods_Folder_pressed"]
