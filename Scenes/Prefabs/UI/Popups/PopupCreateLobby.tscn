@@ -1,8 +1,9 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Themes/Main.tres" type="Theme" id=1]
+[ext_resource path="res://Scripts/UI/Popups/PopupCreateLobby.cs" type="Script" id=2]
 
-[node name="Control" type="WindowDialog"]
+[node name="PopupCreateLobby" type="WindowDialog"]
 visible = true
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -13,6 +14,7 @@ size_flags_horizontal = 0
 size_flags_vertical = 0
 theme = ExtResource( 1 )
 window_title = "Create Lobby"
+script = ExtResource( 2 )
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 anchor_right = 1.0
@@ -50,6 +52,7 @@ margin_left = 94.0
 margin_right = 194.0
 margin_bottom = 17.0
 rect_min_size = Vector2( 100, 0 )
+max_length = 30
 
 [node name="VBox" type="VBoxContainer" parent="PanelContainer/Margin/VBox"]
 margin_top = 27.0
@@ -68,10 +71,29 @@ margin_bottom = 71.0
 rect_min_size = Vector2( 0, 50 )
 size_flags_horizontal = 3
 
-[node name="HBox2" type="HBoxContainer" parent="PanelContainer/Margin/VBox"]
+[node name="HBox4" type="HBoxContainer" parent="PanelContainer/Margin/VBox"]
 margin_top = 108.0
 margin_right = 458.0
 margin_bottom = 125.0
+
+[node name="Label" type="Label" parent="PanelContainer/Margin/VBox/HBox4"]
+margin_right = 90.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 90, 0 )
+text = "Password"
+
+[node name="Password" type="LineEdit" parent="PanelContainer/Margin/VBox/HBox4"]
+margin_left = 94.0
+margin_right = 219.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 125, 0 )
+max_length = 30
+secret = true
+
+[node name="HBox2" type="HBoxContainer" parent="PanelContainer/Margin/VBox"]
+margin_top = 135.0
+margin_right = 458.0
+margin_bottom = 152.0
 
 [node name="Label" type="Label" parent="PanelContainer/Margin/VBox/HBox2"]
 margin_right = 90.0
@@ -86,9 +108,9 @@ margin_bottom = 17.0
 rect_min_size = Vector2( 70, 0 )
 
 [node name="HBox3" type="HBoxContainer" parent="PanelContainer/Margin/VBox"]
-margin_top = 135.0
+margin_top = 162.0
 margin_right = 458.0
-margin_bottom = 152.0
+margin_bottom = 179.0
 
 [node name="Label" type="Label" parent="PanelContainer/Margin/VBox/HBox3"]
 margin_right = 90.0
@@ -102,24 +124,7 @@ margin_right = 144.0
 margin_bottom = 17.0
 rect_min_size = Vector2( 50, 0 )
 
-[node name="HBox4" type="HBoxContainer" parent="PanelContainer/Margin/VBox"]
-margin_top = 162.0
-margin_right = 458.0
-margin_bottom = 179.0
-
-[node name="Label" type="Label" parent="PanelContainer/Margin/VBox/HBox4"]
-margin_right = 90.0
-margin_bottom = 17.0
-rect_min_size = Vector2( 90, 0 )
-text = "Password"
-
-[node name="Password" type="LineEdit" parent="PanelContainer/Margin/VBox/HBox4"]
-margin_left = 94.0
-margin_right = 219.0
-margin_bottom = 17.0
-rect_min_size = Vector2( 125, 0 )
-
-[node name="Create Margin" type="MarginContainer" parent="PanelContainer"]
+[node name="Margin Btn" type="MarginContainer" parent="PanelContainer"]
 margin_left = 226.0
 margin_top = 266.0
 margin_right = 273.0
@@ -128,7 +133,13 @@ size_flags_horizontal = 4
 size_flags_vertical = 8
 custom_constants/margin_bottom = 10
 
-[node name="Button" type="Button" parent="PanelContainer/Create Margin"]
+[node name="Create" type="Button" parent="PanelContainer/Margin Btn"]
 margin_right = 47.0
 margin_bottom = 23.0
 text = "Create"
+
+[connection signal="popup_hide" from="." to="." method="_on_PopupCreateLobby_popup_hide"]
+[connection signal="text_changed" from="PanelContainer/Margin/VBox/HBox1/Name" to="." method="_on_Name_text_changed"]
+[connection signal="text_changed" from="PanelContainer/Margin/VBox/VBox/Description" to="." method="_on_Description_text_changed"]
+[connection signal="text_changed" from="PanelContainer/Margin/VBox/HBox4/Password" to="." method="_on_Password_text_changed"]
+[connection signal="pressed" from="PanelContainer/Margin Btn/Create" to="." method="_on_Create_pressed"]
