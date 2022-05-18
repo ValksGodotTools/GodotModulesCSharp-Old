@@ -1,0 +1,134 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Themes/Main.tres" type="Theme" id=1]
+
+[node name="Control" type="WindowDialog"]
+visible = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -524.0
+margin_bottom = -300.0
+rect_min_size = Vector2( 500, 300 )
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme = ExtResource( 1 )
+window_title = "Create Lobby"
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Margin" type="MarginContainer" parent="PanelContainer"]
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 499.0
+margin_bottom = 299.0
+custom_constants/margin_right = 20
+custom_constants/margin_top = 20
+custom_constants/margin_left = 20
+custom_constants/margin_bottom = 10
+
+[node name="VBox" type="VBoxContainer" parent="PanelContainer/Margin"]
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 478.0
+margin_bottom = 288.0
+custom_constants/separation = 10
+
+[node name="HBox1" type="HBoxContainer" parent="PanelContainer/Margin/VBox"]
+margin_right = 458.0
+margin_bottom = 17.0
+
+[node name="Label" type="Label" parent="PanelContainer/Margin/VBox/HBox1"]
+margin_right = 90.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 90, 0 )
+text = "Name"
+
+[node name="Name" type="LineEdit" parent="PanelContainer/Margin/VBox/HBox1"]
+margin_left = 94.0
+margin_right = 194.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 100, 0 )
+
+[node name="VBox" type="VBoxContainer" parent="PanelContainer/Margin/VBox"]
+margin_top = 27.0
+margin_right = 458.0
+margin_bottom = 98.0
+
+[node name="Label" type="Label" parent="PanelContainer/Margin/VBox/VBox"]
+margin_right = 458.0
+margin_bottom = 17.0
+text = "Description"
+
+[node name="Description" type="TextEdit" parent="PanelContainer/Margin/VBox/VBox"]
+margin_top = 21.0
+margin_right = 458.0
+margin_bottom = 71.0
+rect_min_size = Vector2( 0, 50 )
+size_flags_horizontal = 3
+
+[node name="HBox2" type="HBoxContainer" parent="PanelContainer/Margin/VBox"]
+margin_top = 108.0
+margin_right = 458.0
+margin_bottom = 125.0
+
+[node name="Label" type="Label" parent="PanelContainer/Margin/VBox/HBox2"]
+margin_right = 90.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 90, 0 )
+text = "Port"
+
+[node name="Port" type="LineEdit" parent="PanelContainer/Margin/VBox/HBox2"]
+margin_left = 94.0
+margin_right = 164.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 70, 0 )
+
+[node name="HBox3" type="HBoxContainer" parent="PanelContainer/Margin/VBox"]
+margin_top = 135.0
+margin_right = 458.0
+margin_bottom = 152.0
+
+[node name="Label" type="Label" parent="PanelContainer/Margin/VBox/HBox3"]
+margin_right = 90.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 90, 0 )
+text = "Max Players"
+
+[node name="Max Players" type="LineEdit" parent="PanelContainer/Margin/VBox/HBox3"]
+margin_left = 94.0
+margin_right = 144.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 50, 0 )
+
+[node name="HBox4" type="HBoxContainer" parent="PanelContainer/Margin/VBox"]
+margin_top = 162.0
+margin_right = 458.0
+margin_bottom = 179.0
+
+[node name="Label" type="Label" parent="PanelContainer/Margin/VBox/HBox4"]
+margin_right = 90.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 90, 0 )
+text = "Password"
+
+[node name="Password" type="LineEdit" parent="PanelContainer/Margin/VBox/HBox4"]
+margin_left = 94.0
+margin_right = 219.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 125, 0 )
+
+[node name="Create Margin" type="MarginContainer" parent="PanelContainer"]
+margin_left = 226.0
+margin_top = 266.0
+margin_right = 273.0
+margin_bottom = 299.0
+size_flags_horizontal = 4
+size_flags_vertical = 8
+custom_constants/margin_bottom = 10
+
+[node name="Button" type="Button" parent="PanelContainer/Create Margin"]
+margin_right = 47.0
+margin_bottom = 23.0
+text = "Create"
