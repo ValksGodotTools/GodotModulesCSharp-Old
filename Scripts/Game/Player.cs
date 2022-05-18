@@ -18,6 +18,15 @@ public class Player : OtherPlayer
         HandleShoot();
     }
 
+    private void _on_Area2D_area_entered(Area2D area)
+    {
+        if (area.IsInGroup("Chest"))
+        {
+            var chest = (Chest)area.GetParent();
+            chest.Open();
+        }
+    }
+
     private void HandleShoot()
     {
         if (Input.IsActionPressed("player_shoot")) 

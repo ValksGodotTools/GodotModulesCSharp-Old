@@ -1,10 +1,11 @@
-[gd_scene load_steps=57 format=2]
+[gd_scene load_steps=58 format=2]
 
 [ext_resource path="res://Themes/Main.tres" type="Theme" id=1]
 [ext_resource path="res://Sprites/Game/light.png" type="Texture" id=2]
 [ext_resource path="res://Scripts/Scenes/SceneGame.cs" type="Script" id=3]
 [ext_resource path="res://Fonts/Roboto/Roboto-Bold.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://Sprites/Tilesets/dungeon.png" type="Texture" id=5]
+[ext_resource path="res://Scenes/Prefabs/Game/Chest.tscn" type="PackedScene" id=6]
 
 [sub_resource type="NavigationPolygon" id=3]
 vertices = PoolVector2Array( 40, 24, 0, 24, 0, 64, 40, 64 )
@@ -374,35 +375,29 @@ NodePathNavigation2D = NodePath("Navigation2D")
 [node name="Lights" type="Node" parent="."]
 
 [node name="Light2D" type="Light2D" parent="Lights"]
-position = Vector2( 325, 307 )
+position = Vector2( 606, 609 )
 texture = ExtResource( 2 )
-texture_scale = 4.0
-color = Color( 0, 1, 0.0862745, 1 )
-shadow_enabled = true
+texture_scale = 6.0
 
-[node name="Light2D2" type="Light2D" parent="Lights"]
-position = Vector2( 895, 274 )
-texture = ExtResource( 2 )
-texture_scale = 4.0
-color = Color( 0, 1, 1, 1 )
-shadow_enabled = true
+[node name="Props" type="Node" parent="."]
 
-[node name="Light2D3" type="Light2D" parent="Lights"]
-position = Vector2( 935, 880 )
-texture = ExtResource( 2 )
-texture_scale = 4.0
-color = Color( 1, 0, 0.937255, 1 )
-shadow_enabled = true
+[node name="Chest" parent="Props" instance=ExtResource( 6 )]
+position = Vector2( 610, 874 )
 
-[node name="Light2D4" type="Light2D" parent="Lights"]
-position = Vector2( 300, 882 )
-texture = ExtResource( 2 )
-texture_scale = 4.0
-color = Color( 1, 0.984314, 0, 1 )
-shadow_enabled = true
+[node name="Chest2" parent="Props" instance=ExtResource( 6 )]
+position = Vector2( 570, 874 )
+
+[node name="Chest3" parent="Props" instance=ExtResource( 6 )]
+position = Vector2( 650, 875 )
+
+[node name="Chest4" parent="Props" instance=ExtResource( 6 )]
+position = Vector2( 530, 808 )
+
+[node name="Chest5" parent="Props" instance=ExtResource( 6 )]
+position = Vector2( 688, 810 )
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
-color = Color( 0.423529, 0.423529, 0.423529, 1 )
+color = Color( 0, 0, 0, 1 )
 
 [node name="Navigation2D" type="Navigation2D" parent="."]
 

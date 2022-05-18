@@ -25,8 +25,8 @@ namespace GodotModules
             PositionEnemySpawn = GetNode<Position2D>(NodePathPositionEnemySpawn);
             _gameManager = new GameManager(this);
             _gameManager.CreateMainPlayer(PositionPlayerSpawn.Position);
-            for (int i = 0; i < 5; i++)
-                _gameManager.CreateEnemy(PositionEnemySpawn.Position);
+            //for (int i = 0; i < 5; i++)
+                //_gameManager.CreateEnemy(PositionEnemySpawn.Position);
         }
     }
 
