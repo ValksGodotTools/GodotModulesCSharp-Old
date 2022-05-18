@@ -21,10 +21,10 @@ namespace GodotModules
 
             var vboxs = new Dictionary<string, VBoxContainer>();
 
-            foreach (var pair1 in _hotkeyManager.Hotkeys)
+            foreach (var category in _hotkeyManager.Categories)
             {
                 var panelContainer = new PanelContainer();
-                panelContainer.Name = "" + pair1.Key;
+                panelContainer.Name = "" + category;
 
                 var scrollContainer = new ScrollContainer();
                 panelContainer.AddChild(scrollContainer);
@@ -34,19 +34,16 @@ namespace GodotModules
                 vboxContainer.SizeFlagsVertical = (int)SizeFlags.ExpandFill;
                 scrollContainer.AddChild(vboxContainer);
 
-                vboxs[pair1.Key] = vboxContainer;
+                vboxs.Add(category, vboxContainer);
                 _tabContainer.AddChild(panelContainer);
             }
 
-            foreach (var pair1 in _hotkeyManager.Hotkeys)
+            foreach (var hotkey in _hotkeyManager.Hotkeys)
             {
-                foreach (var pair2 in pair1.Value)
-                {
-                    var hotkeyInstance = Prefabs.UIHotkey.Instance<UIHotkey>();
-                    hotkeyInstance.Init(_hotkeyManager, pair2.Key);
-                    vboxs[pair1.Key].AddChild(hotkeyInstance);
-                    _uiHotkeys[pair2.Key] = hotkeyInstance;
-                }
+                var hotkeyInstance = Prefabs.UIHotkey.Instance<UIHotkey>();
+                hotkeyInstance.Init(_hotkeyManager, hotkey.Action);
+                vboxs[hotkey.Category].AddChild(hotkeyInstance);
+                _uiHotkeys[hotkey.Action] = hotkeyInstance;
             }
         }
 
@@ -54,9 +51,8 @@ namespace GodotModules
         {
             _hotkeyManager.ResetToDefaultHotkeys();
 
-            foreach (var pair1 in _hotkeyManager.Hotkeys)
-                foreach (var pair2 in pair1.Value)
-                    _uiHotkeys[pair2.Key].SetHotkeyText(pair2.Value.AsText()); 
+            foreach (var hotkey in _hotkeyManager.Hotkeys)
+                _uiHotkeys[hotkey.Action].SetHotkeyText(hotkey.Event.Display()); 
         }
     }
 }

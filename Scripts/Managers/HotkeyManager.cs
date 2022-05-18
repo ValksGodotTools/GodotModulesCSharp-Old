@@ -1,17 +1,31 @@
 using Godot;
 
-using HotkeyMap = System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, Godot.InputEventKey>>;
-
 namespace GodotModules
 {
+    public struct HotkeyInfo
+    {
+        public string Action { get; }
+        public string Category { get; }
+        public InputEvent Event { get; }
+
+        public HotkeyInfo(string action, string category, InputEvent e)
+        {
+            Action = action;
+            Category = category;
+            Event = e;
+        }
+    }
+
     public class HotkeyManager
     {
         // Data is stored like this -> Dictionary<Category, Dictioanry<Action, InputEventKey>>
-        private HotkeyMap _defaultHotkeys = new();
-        private HotkeyMap _hotkeys = new();
-        public HotkeyMap Hotkeys => _hotkeys;
+        private Dictionary<string, HotkeyInfo> _defaultHotkeys = new();
+        private Dictionary<string, HotkeyInfo> _hotkeys = new();
+        public IEnumerable<HotkeyInfo> Hotkeys => _hotkeys.Values;
+        public IDictionary<String, HotkeyInfo> HotkeysByAction => _hotkeys;
         private readonly SystemFileManager _systemFileManager;
         private List<string> _categories;
+        public IEnumerable<string> Categories => _categories;
 
         public HotkeyManager(SystemFileManager systemFileManager, List<string> categories)
         {
@@ -24,44 +38,40 @@ namespace GodotModules
                 LoadPersistentHotkeys();
         }
 
+        public IEnumerable<HotkeyInfo> GetHotkeysForCategory(string category) =>
+            _hotkeys.Where(x => x.Value.Category == category).Select(x => x.Value);
+
+        public IEnumerable<string> GetUsedCategories() =>
+            _hotkeys.Select(x => x.Value.Category).Distinct();
+
         public void LoadPersistentHotkeys()
         {
-            var jsonData = _systemFileManager.ReadConfig<Dictionary<string, List<JsonInputKey>>>("controls");
-            _hotkeys = new HotkeyMap();
+            var data = _systemFileManager.ReadConfig<List<JsonInputKey>>("controls");
+            _hotkeys = new();
 
-            foreach (var category in _categories)
-                _hotkeys.Add(category, new());
+            foreach (var e in data)
+                _hotkeys[e.Action] = new(e.Action, e.Category, ConvertToInput(e));
 
-            foreach (var pair1 in jsonData)
-                foreach (var pair2 in pair1.Value)
-                    _hotkeys[pair1.Key][pair2.Action] = ConvertToInputKey(pair2);
-
-            foreach (var pair1 in _hotkeys)
-                foreach (var pair2 in pair1.Value)
-                    SetHotkeyEvent(pair2.Key, pair2.Value);
+            foreach (var hotkey in Hotkeys)
+                SetHotkeyEvent(hotkey.Action, hotkey.Event);
         }
 
         public void ResetHotkey(string key)
         {
-            var category = GetHotkeyCategory(key);
-            _hotkeys[category][key] = _defaultHotkeys[category][key];
-            SetHotkeyEvent(key, _hotkeys[category][key]);
+            _hotkeys[key] = _defaultHotkeys[key];
+            SetHotkeyEvent(key, _hotkeys[key].Event);
         }
 
         public void ResetToDefaultHotkeys()
         {
-            _hotkeys = Clone(_defaultHotkeys);
+            _hotkeys = new(_defaultHotkeys);
 
-            foreach (var pair1 in _defaultHotkeys)
-                foreach (var pair2 in pair1.Value)
-                    SetHotkeyEvent(pair2.Key, pair2.Value);
+            foreach (var hotkey in Hotkeys)
+                SetHotkeyEvent(hotkey.Action, hotkey.Event);
         }
 
         private void LoadDefaultHotkeys()
         {
-            foreach (var category in _categories)
-                _defaultHotkeys.Add(category, new());
-
             foreach (string action in InputMap.GetActions())
             {
                 var actionList = InputMap.GetActionList(action);
@@ -69,42 +79,37 @@ namespace GodotModules
                 if (actionList.Count == 0)
                     continue;
 
-                var t = actionList[0];
-
-                if (t is InputEventKey inputEventKey)
-                    _defaultHotkeys[GetHotkeyCategory(action)][action] = inputEventKey;
-
-                if (t is InputEventMouseButton inputEventMouseButton)
-                    Logger.LogTodo("Mouse event not implemented yet");
+                if
+                (
+                    actionList[0] is InputEvent e && 
+                    (
+                        e is InputEventKey || 
+                        e is InputEventMouseButton || 
+                        e is InputEventJoypadButton
+                    )
+                ) {
+                    _defaultHotkeys[action] = new(action, GetHotkeyCategory(action), e);
+                }
             }
 
-            _hotkeys = Clone(_defaultHotkeys);
+            _hotkeys = new(_defaultHotkeys);
         }
 
         public void SaveHotkeys()
         {
-            var json = new Dictionary<string, List<JsonInputKey>>();
-
-            foreach (var category in _categories)
-                json.Add(category, new());
-
-            foreach (var pair1 in _hotkeys)
-                foreach (var pair2 in pair1.Value)
-                    json[pair1.Key].Add(ConvertToJson(pair2.Key, pair2.Value));
-
-            _systemFileManager.WriteConfig("controls", json);
+            _systemFileManager.WriteConfig("controls", _hotkeys.Values.Select(ConvertToJson).ToList());
         }
 
-        public void SetHotkey(string action, InputEventKey inputEventKey)
+        public void SetHotkey(string action, InputEvent e)
         {
-            _hotkeys[GetHotkeyCategory(action)][action] = inputEventKey;
-            SetHotkeyEvent(action, inputEventKey);
+            _hotkeys[action] = new HotkeyInfo(action, GetHotkeyCategory(action), e);
+            SetHotkeyEvent(action, e);
         }
 
-        private void SetHotkeyEvent(string action, InputEventKey inputEventKey)
+        private void SetHotkeyEvent(string action, InputEvent e)
         {
             InputMap.ActionEraseEvents(action);
-            InputMap.ActionAddEvent(action, inputEventKey);
+            InputMap.ActionAddEvent(action, e);
         }
 
         public string GetHotkeyCategory(string action)
@@ -118,55 +123,21 @@ namespace GodotModules
             return _categories[0];
         }
 
-        private HotkeyMap Clone(HotkeyMap dict)
+        private JsonInputKey ConvertToJson(HotkeyInfo info) => new JsonInputKey
         {
-            HotkeyMap clone = new();
-
-            foreach (var pair in dict)
-                clone.Add(pair.Key, new(pair.Value));
-
-            return clone;
-        }
-
-        private JsonInputKey ConvertToJson(string action, InputEventKey inputEventKey) => new JsonInputKey
-        {
-            Action = action,
-            Scancode = inputEventKey.Scancode,
-            PhysicalScancode = inputEventKey.PhysicalScancode,
-            Unicode = inputEventKey.Unicode,
-            Alt = inputEventKey.Alt,
-            Shift = inputEventKey.Shift,
-            Control = inputEventKey.Control,
-            Meta = inputEventKey.Meta,
-            Command = inputEventKey.Command,
-            Device = inputEventKey.Device
+            Action = info.Action,
+            Category = info.Category,
+            Info = InputEventInfo.TryFrom(info.Event) ?? throw new Exception("Invalid input event"),
         };
 
-        private InputEventKey ConvertToInputKey(JsonInputKey inputEvent) => new InputEventKey()
-        {
-            Scancode = inputEvent.Scancode,
-            PhysicalScancode = inputEvent.PhysicalScancode,
-            Unicode = inputEvent.Unicode,
-            Alt = inputEvent.Alt,
-            Shift = inputEvent.Shift,
-            Control = inputEvent.Control,
-            Meta = inputEvent.Meta,
-            Command = inputEvent.Command,
-            Device = inputEvent.Device
-        };
+        private InputEvent ConvertToInput(JsonInputKey inputEvent) => 
+            inputEvent.Info.ToEvent();
     }
 
     public struct JsonInputKey
     {
         public string Action { get; set; }
-        public uint Scancode { get; set; }
-        public uint PhysicalScancode { get; set; }
-        public uint Unicode { get; set; }
-        public bool Alt { get; set; }
-        public bool Shift { get; set; }
-        public bool Control { get; set; }
-        public bool Meta { get; set; }
-        public bool Command { get; set; }
-        public int Device { get; set; }
+        public string Category { get; set; }
+        public InputEventInfo Info { get; set; }
     }
 }
