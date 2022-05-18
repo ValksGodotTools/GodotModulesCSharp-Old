@@ -30,8 +30,12 @@ namespace GodotModules
 
         public override async void _Ready()
         {
+            _particles2D = GetNode<Particles2D>(NodePathMenuParticles);
+            _particles2D.Emitting = true;
+
             _managers = new
             (
+                _particles2D,
                 GetNode<Node>(NodePathWebRequestList),
                 GetNode<AudioStreamPlayer>(NodePathAudioStreamPlayer), 
                 GetNode<ErrorNotifierManager>(NodePathErrorNotifierManager),
@@ -40,9 +44,6 @@ namespace GodotModules
             );
 
             await _managers.InitSceneManager(GetNode<Control>(NodePathScenes), _managers.Hotkey);
-
-            _particles2D = GetNode<Particles2D>(NodePathMenuParticles);
-            _particles2D.Emitting = true;
                         
             // how else would you pass this information to Logger?
             Logger.UIConsole = _managers.Console;
@@ -128,8 +129,12 @@ namespace GodotModules
         public HotkeyManager Hotkey { get; private set; }
         public ConsoleManager Console { get; private set; }
 
-        public Managers(Node webRequestList, AudioStreamPlayer audioStreamPlayer, ErrorNotifierManager errorNotifierManager, Node popups, ConsoleManager consoleManager)
+        private Particles2D _menuParticles;
+
+        public Managers(Particles2D menuParticles, Node webRequestList, AudioStreamPlayer audioStreamPlayer, ErrorNotifierManager errorNotifierManager, Node popups, ConsoleManager consoleManager)
         {
+            _menuParticles = menuParticles;
+
             var systemFileManager = new SystemFileManager();
             Hotkey = new(systemFileManager, new List<string>() {"UI", "Player", "Camera"});
             Options = new(systemFileManager, Hotkey);
@@ -147,6 +152,12 @@ namespace GodotModules
         {
             Scene = new(sceneList, new GodotFileManager(), hotkeyManager, this);
 
+            // Custom Pre Init
+            Scene.PreInit[GameScene.Menu] = (node) => {
+                Logger.Log("PREINIT: " + _menuParticles);
+                ((SceneMenu)node).PreInit(_menuParticles);
+            };
+
             // Esc Pressed
             Scene.EscPressed[GameScene.Credits] = async () => await Scene.ChangeScene(GameScene.Menu);
             Scene.EscPressed[GameScene.GameServers] = async () => await Scene.ChangeScene(GameScene.Menu);
@@ -157,7 +168,11 @@ namespace GodotModules
                 await Scene.ChangeScene(GameScene.Menu);
             };
             Scene.EscPressed[GameScene.Lobby] = async () => await Scene.ChangeScene(GameScene.GameServers);
-            Scene.EscPressed[GameScene.Game] = async () => await Scene.ChangeScene(GameScene.Menu);
+            Scene.EscPressed[GameScene.Game] = async () => {
+                await Scene.ChangeScene(GameScene.Menu);
+                _menuParticles.Emitting = true;
+                _menuParticles.Visible = true;
+            };
 
             await Scene.InitAsync();
         }

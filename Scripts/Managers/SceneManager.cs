@@ -4,6 +4,7 @@ namespace GodotModules
 {
     public class SceneManager
     {
+        public readonly Dictionary<GameScene, Action<Node>> PreInit = new();
         public readonly Dictionary<GameScene, Action> EscPressed = new Dictionary<GameScene, Action>();
 
         public GameScene CurScene { get; set; }
@@ -51,8 +52,12 @@ namespace GodotModules
                 await Task.Delay(1);
 
             _activeScene = _scenes[scene].Instance();
+
+            if (PreInit.ContainsKey(scene))
+                PreInit[scene](_activeScene);
+
             if (_activeScene is AScene ascene)
-                ascene.PreInit(_managers);
+                ascene.PreInitManagers(_managers);
 
             _sceneList.AddChild(_activeScene);
         }
