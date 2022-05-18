@@ -84,11 +84,13 @@ animations = [ {
 "speed": 6.0
 } ]
 
-[sub_resource type="CircleShape2D" id=34]
-radius = 16.0
+[sub_resource type="CapsuleShape2D" id=50]
+radius = 13.0
+height = 35.0
 
-[sub_resource type="CircleShape2D" id=35]
-radius = 17.0294
+[sub_resource type="CapsuleShape2D" id=51]
+radius = 15.0
+height = 35.0
 
 [node name="Player" type="KinematicBody2D"]
 z_index = 1
@@ -109,13 +111,11 @@ frames = SubResource( 39 )
 animation = "walk_down"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
-shape = SubResource( 34 )
+shape = SubResource( 50 )
 
 [node name="Area2D" type="Area2D" parent="."]
-visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-shape = SubResource( 35 )
+shape = SubResource( 51 )
 
 [connection signal="area_entered" from="Area2D" to="." method="_on_Area2D_area_entered"]
