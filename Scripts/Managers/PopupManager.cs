@@ -28,9 +28,12 @@ namespace GodotModules
             Spawn(popup);
         }
 
-        public void SpawnLineEdit(Action code, string title = "") 
+        public void SpawnLineEdit(Action<LineEdit> onTextChanged, Action<string> onHide, int maxLength = 50, string title = "") 
         {
-            
+            var popup = Prefabs.PopupLineEdit.Instance<PopupLineEdit>();
+            popup.PreInit(this, onTextChanged, onHide, maxLength, title);
+
+            Spawn(popup);
         }
 
         public void Next() 
