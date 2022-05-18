@@ -68,7 +68,6 @@ namespace GodotModules
             
             OS.WindowSize = _windowSize;
             _optionsManager.CenterWindow();
-            _optionsManager.Options.WindowSize = _windowSize;
         }
     }
 }
