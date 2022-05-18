@@ -74,9 +74,6 @@ namespace GodotModules
 
         private void LoadDefaultHotkeys()
         {
-            foreach (var category in _categories)
-                _defaultHotkeys.Add(category, new());
-
             foreach (string action in InputMap.GetActions())
             {
                 var actionList = InputMap.GetActionList(action);
