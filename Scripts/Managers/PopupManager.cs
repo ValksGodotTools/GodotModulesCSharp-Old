@@ -50,7 +50,7 @@ namespace GodotModules
             _popups.AddChild(popup);
 
             if (_queue.Count == 0)
-                popup.PopupCentered();
+                popup.PopupCentered(popup.RectMinSize);
 
             _queue.Enqueue(popup);
         }
