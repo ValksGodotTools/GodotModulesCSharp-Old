@@ -23,19 +23,31 @@ namespace GodotModules
             switch (m.ButtonIndex)
             {
                 case (int)ButtonList.Left:
-                    return "Left Mouse";
+                    return "Left Click";
 
                 case (int)ButtonList.Right:
-                    return "Right Mouse";
+                    return "Right Click";
 
                 case (int)ButtonList.Middle:
-                    return "Middle Mouse";
+                    return "Middle Click";
 
                 case (int)ButtonList.Xbutton1:
                     return "Mouse XBtn 1";
 
                 case (int)ButtonList.Xbutton2:
                     return "Mouse XBtn 2";
+
+                case (int)ButtonList.WheelDown:
+                    return "Wheel Down";
+
+                case (int)ButtonList.WheelUp:
+                    return "Wheel Up";
+
+                case (int)ButtonList.WheelLeft:
+                    return "Wheen Left";
+
+                case (int)ButtonList.WheelRight:
+                    return "Wheel Right";
             }
 
             return m.AsText();
