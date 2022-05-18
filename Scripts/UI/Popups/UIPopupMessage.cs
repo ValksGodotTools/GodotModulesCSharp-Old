@@ -13,10 +13,8 @@ public class UIPopupMessage : WindowDialog
     {
         _popupManager = popupManager;
         _message = message;
-        if (!string.IsNullOrWhiteSpace(title))
-            _title = title;
-        else
-            _title = "";
+        
+        _title = !string.IsNullOrWhiteSpace(title) ? title : "";
     }
 
     public override void _Ready()

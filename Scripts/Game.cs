@@ -30,9 +30,15 @@ namespace GodotModules
 
         public override async void _Ready()
         {
-            _managers = new(GetNode<Node>(NodePathWebRequestList), GetNode<AudioStreamPlayer>(NodePathAudioStreamPlayer), 
-                GetNode<ErrorNotifierManager>(NodePathErrorNotifierManager), GetNode<PopupManager>(NodePathPopupManager),
-                GetNode<ConsoleManager>(NodePathConsole));
+            _managers = new
+            (
+                GetNode<Node>(NodePathWebRequestList),
+                GetNode<AudioStreamPlayer>(NodePathAudioStreamPlayer), 
+                GetNode<ErrorNotifierManager>(NodePathErrorNotifierManager),
+                GetNode<PopupManager>(NodePathPopupManager),
+                GetNode<ConsoleManager>(NodePathConsole)
+            );
+
             await _managers.InitSceneManager(GetNode<Control>(NodePathScenes), _managers.Hotkey);
 
             _particles2D = GetNode<Particles2D>(NodePathMenuParticles);
@@ -53,6 +59,7 @@ namespace GodotModules
             _ready = true;
 
             await _managers.Web.CheckConnectionAsync();
+
             if (_managers.Web.ConnectionAlive)
                 await _managers.Web.GetExternalIpAsync();
         }
@@ -121,7 +128,7 @@ namespace GodotModules
         public Managers(Node webRequestList, AudioStreamPlayer audioStreamPlayer, ErrorNotifierManager errorNotifierManager, PopupManager popupManager, ConsoleManager consoleManager)
         {
             var systemFileManager = new SystemFileManager();
-            Hotkey = new HotkeyManager(systemFileManager, new List<string>() {"UI", "Player", "Camera"});
+            Hotkey = new(systemFileManager, new List<string>() {"UI", "Player", "Camera"});
             Options = new(systemFileManager, Hotkey);
             Token = new();
             Web = new(new WebRequests(webRequestList), Token, Options.Options.WebServerAddress);
@@ -141,7 +148,8 @@ namespace GodotModules
             Scene.EscPressed[GameScene.Credits] = async () => await Scene.ChangeScene(GameScene.Menu);
             Scene.EscPressed[GameScene.GameServers] = async () => await Scene.ChangeScene(GameScene.Menu);
             Scene.EscPressed[GameScene.Mods] = async () => await Scene.ChangeScene(GameScene.Menu);
-            Scene.EscPressed[GameScene.Options] = async () => {
+            Scene.EscPressed[GameScene.Options] = async () =>
+            {
                 Token.Cancel("check_connection");
                 await Scene.ChangeScene(GameScene.Menu);
             };

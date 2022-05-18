@@ -58,7 +58,8 @@ namespace GodotModules
             _sceneList.AddChild(_activeScene);
         }
 
-        private void LoadScene(string scene) => _scenes[(GameScene)Enum.Parse(typeof(GameScene), scene)] = ResourceLoader.Load<PackedScene>($"res://Scenes/Scenes/{scene}.tscn");
+        private void LoadScene(string scene) => 
+            _scenes[(GameScene)Enum.Parse(typeof(GameScene), scene)] = ResourceLoader.Load<PackedScene>($"res://Scenes/Scenes/{scene}.tscn");
     }
 
     public enum GameScene

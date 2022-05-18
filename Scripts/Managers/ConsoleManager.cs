@@ -15,7 +15,8 @@ namespace GodotModules
             ConsoleInput = GetNode<LineEdit>(NodePathConsoleInput);
         }
 
-        public void AddException(Exception e) => AddMessage($"{e.Message}\n{e.StackTrace}");
+        public void AddException(Exception e) => 
+            AddMessage($"{e.Message}\n{e.StackTrace}");
 
         public void AddMessage(string message)
         {
@@ -30,7 +31,8 @@ namespace GodotModules
             ScrollToBottom();
         }
 
-        private void ScrollToBottom() => ConsoleLogs.ScrollVertical = Mathf.Inf;
+        private void ScrollToBottom() => 
+            ConsoleLogs.ScrollVertical = Mathf.Inf;
 
         private void _on_Console_Input_text_entered(string text)
         {

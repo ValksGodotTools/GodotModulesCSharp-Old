@@ -7,11 +7,11 @@ namespace GodotModules
         public CancellationTokenSource Create(string name)
         {
             Cancel(name);
-            _cts[name] = new();
-            return _cts[name];
+            return _cts[name] = new();
         }
 
-        public bool Cancelled(string name) => _cts.ContainsKey(name) && _cts[name].IsCancellationRequested;
+        public bool Cancelled(string name) => 
+            _cts.ContainsKey(name) && _cts[name].IsCancellationRequested;
 
         public void Cancel(string name) 
         {
@@ -19,12 +19,10 @@ namespace GodotModules
                 _cts[name].Cancel();
         }
 
-        public void Cleanup()
+        public void Cleanup() => _cts.Values.ForEach(x =>
         {
-            _cts.Values.ForEach(x => {
-                x.Cancel();
-                x.Dispose();
-            });
-        }
+            x.Cancel();
+            x.Dispose();
+        });
     }
 }
