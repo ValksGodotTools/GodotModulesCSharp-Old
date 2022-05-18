@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Sprites/Game/Circle 32 - Marked.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Game/Player.cs" type="Script" id=2]
+[ext_resource path="res://Scenes/Modules/ScreenShake.tscn" type="PackedScene" id=3]
 
 [sub_resource type="StreamTexture" id=65]
 flags = 4
@@ -20,6 +21,8 @@ NodePathCamera = NodePath("Camera2D")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
+
+[node name="ScreenShake" parent="Camera2D" instance=ExtResource( 3 )]
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )

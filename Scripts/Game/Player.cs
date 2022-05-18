@@ -22,7 +22,8 @@ public class Player : OtherPlayer
     {
         if (Input.IsActionPressed("player_shoot")) 
         {
-            
+            var shake = (ScreenShake)_camera.GetChild(0);
+            shake.Start();
         }
     }
 
