@@ -62,13 +62,23 @@ namespace GodotModules
             _sceneList.AddChild(_activeScene);
         }
 
-        private void LoadScene(string scene) => 
-            _scenes[(GameScene)Enum.Parse(typeof(GameScene), scene)] = ResourceLoader.Load<PackedScene>($"res://Scenes/Scenes/{scene}.tscn");
+        private void LoadScene(string scene) 
+        {
+            try 
+            {
+                _scenes[(GameScene)Enum.Parse(typeof(GameScene), scene)] = ResourceLoader.Load<PackedScene>($"res://Scenes/Scenes/{scene}.tscn");
+            }
+            catch (ArgumentException) 
+            {
+                Logger.LogWarning($"Enum for {scene} needs to be defined since the scene is in the Scenes directory");
+            }
+        }
     }
 
     public enum GameScene
     {
         Game,
+        Game3D,
         GameServers,
         Lobby,
         Menu,
