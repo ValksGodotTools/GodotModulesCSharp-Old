@@ -4,10 +4,14 @@ namespace GodotModules
 {
     public class SceneGame : AScene
     {
+        [Export] public readonly NodePath NodePathPositionPlayerSpawn;
+        [Export] public readonly NodePath NodePathPositionEnemySpawn;
         [Export] public readonly NodePath NodePathNavigation2D;
         public Navigation2D Navigation2D { get; set; }
+        public Position2D PositionPlayerSpawn { get; set; }
+        public Position2D PositionEnemySpawn { get; set; }
 
-        private GameManager _gameData;
+        private GameManager _gameManager;
 
         public override void PreInit(Managers managers)
         {
@@ -17,10 +21,12 @@ namespace GodotModules
         public override void _Ready()
         {
             Navigation2D = GetNode<Navigation2D>(NodePathNavigation2D);
-            _gameData = new GameManager(this);
-            _gameData.CreateMainPlayer(new Vector2(300, 200));
+            PositionPlayerSpawn = GetNode<Position2D>(NodePathPositionPlayerSpawn);
+            PositionEnemySpawn = GetNode<Position2D>(NodePathPositionEnemySpawn);
+            _gameManager = new GameManager(this);
+            _gameManager.CreateMainPlayer(PositionPlayerSpawn.Position);
             for (int i = 0; i < 5; i++)
-                _gameData.CreateEnemy(new Vector2(200, 200));
+                _gameManager.CreateEnemy(PositionEnemySpawn.Position);
         }
     }
 
