@@ -87,6 +87,20 @@ namespace GodotModules
             };
         }
 
+        public InputEvent ToEvent()
+        {
+            if (Type == InputEventType.Key)
+                return ToEventKey();
+            
+            if (Type == InputEventType.MouseButton)
+                return ToEventMouseButton();
+            
+            if (Type == InputEventType.JoypadButton)
+                return ToEventJoypadButton();
+            
+            throw new InvalidOperationException("This InputEventInfo is not a Key, MouseButton or JoypadButton event.");
+        }
+
         public static InputEventInfo From(InputEventKey k) => new InputEventInfo
         {
             Type = InputEventType.Key,
