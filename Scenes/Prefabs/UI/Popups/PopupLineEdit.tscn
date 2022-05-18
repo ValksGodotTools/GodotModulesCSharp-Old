@@ -1,9 +1,9 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Themes/Main.tres" type="Theme" id=1]
+[ext_resource path="res://Scripts/UI/Popups/PopupLineEdit.cs" type="Script" id=2]
 
-[node name="Control" type="WindowDialog"]
-visible = true
+[node name="PopupLineEdit" type="WindowDialog"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_right = -976.0
@@ -12,6 +12,7 @@ rect_min_size = Vector2( 400, 150 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme = ExtResource( 1 )
+script = ExtResource( 2 )
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 anchor_right = 1.0
@@ -39,3 +40,7 @@ margin_bottom = 83.0
 rect_min_size = Vector2( 200, 0 )
 size_flags_horizontal = 4
 size_flags_vertical = 4
+
+[connection signal="popup_hide" from="." to="." method="_on_PopupLineEdit_popup_hide"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/Ok" to="." method="_on_Ok_pressed"]
+[connection signal="text_changed" from="PanelContainer/LineEdit" to="." method="_on_LineEdit_text_changed"]
