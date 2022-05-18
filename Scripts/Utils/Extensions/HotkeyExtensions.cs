@@ -20,16 +20,24 @@ namespace GodotModules
 
         private static string Display(InputEventMouseButton m)
         {
+            Logger.LogDebug(m.ButtonIndex);
+
             switch (m.ButtonIndex)
             {
                 case (int)ButtonList.Left:
                     return "Left Mouse";
 
-                case (int)ButtonList.Middle:
-                    return "Button 3";
-
                 case (int)ButtonList.Right:
                     return "Right Mouse";
+
+                case (int)ButtonList.Middle:
+                    return "Mouse 3";
+
+                case (int)ButtonList.Xbutton1:
+                    return "Mouse 4";
+
+                case (int)ButtonList.Xbutton2:
+                    return "Mouse 5";
             }
 
             return m.AsText();
