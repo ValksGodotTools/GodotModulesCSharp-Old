@@ -6,12 +6,11 @@ namespace GodotModules
     {
         private int _errorCount;
 
-        public override void _Ready()
-        {
+        public override void _Ready() =>
             new GTimer(this, nameof(SpawnErrorNotification), 1500);
-        }
 
-        public void IncrementErrorCount() => _errorCount++;
+        public void IncrementErrorCount() => 
+            _errorCount++;
 
         public void SpawnErrorNotification()
         {

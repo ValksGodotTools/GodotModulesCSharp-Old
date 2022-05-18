@@ -11,7 +11,8 @@ namespace GodotModules
         private Control CreditsContent { get; set; }
         private SceneManager _sceneManager;
 
-        public override void PreInit(Managers managers) => _sceneManager = managers.Scene;
+        public override void PreInit(Managers managers) => 
+            _sceneManager = managers.Scene;
 
         public override void _Ready()
         {
@@ -24,7 +25,8 @@ namespace GodotModules
             Tween.Start();
         }
 
-        private async void _on_Tween_tween_completed(object obj, NodePath key) => await _sceneManager.ChangeScene(GameScene.Menu);
+        private async void _on_Tween_tween_completed(object obj, NodePath key) => 
+            await _sceneManager.ChangeScene(GameScene.Menu);
     }
 }
 

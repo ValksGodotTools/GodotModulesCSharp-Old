@@ -5,9 +5,14 @@ namespace GodotModules
 {
     public class SystemFileManager
     {
-        private readonly string _gameDataPath = System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "Godot Modules");
+        private readonly string _gameDataPath = System.IO.Path.Combine
+        (
+            System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), 
+            "Godot Modules"
+        );
 
-        public T WriteConfig<T>(string pathToFile) where T : new() => WriteConfig<T>(pathToFile, new T());
+        public T WriteConfig<T>(string pathToFile) where T : new() => 
+            WriteConfig<T>(pathToFile, new T());
 
         public T WriteConfig<T>(string pathToFile, T data)
         {
@@ -21,15 +26,13 @@ namespace GodotModules
         public T ReadConfig<T>(string pathToFile)
         {
             var path = GetConfigPath(pathToFile);
-
-            if (!File.Exists(path))
-                return default(T);
-
-            string contents = File.ReadAllText(path);
-            return JsonConvert.DeserializeObject<T>(contents);
+            return File.Exists(path) ? JsonConvert.DeserializeObject<T>(File.ReadAllText(path)) : default(T);
         }
 
-        public bool ConfigExists(string pathToFile) => File.Exists(GetConfigPath(pathToFile));
-        private string GetConfigPath(string pathToFile) => $"{_gameDataPath}{Path.DirectorySeparatorChar}{pathToFile}.json";
+        public bool ConfigExists(string pathToFile) => 
+            File.Exists(GetConfigPath(pathToFile));
+
+        private string GetConfigPath(string pathToFile) => 
+            $"{_gameDataPath}{Path.DirectorySeparatorChar}{pathToFile}.json";
     }
 }

@@ -128,34 +128,32 @@ namespace GodotModules
             return clone;
         }
 
-        private JsonInputKey ConvertToJson(string action, InputEventKey inputEventKey) =>
-            new JsonInputKey
-            {
-                Action = action,
-                Scancode = inputEventKey.Scancode,
-                PhysicalScancode = inputEventKey.PhysicalScancode,
-                Unicode = inputEventKey.Unicode,
-                Alt = inputEventKey.Alt,
-                Shift = inputEventKey.Shift,
-                Control = inputEventKey.Control,
-                Meta = inputEventKey.Meta,
-                Command = inputEventKey.Command,
-                Device = inputEventKey.Device
-            };
+        private JsonInputKey ConvertToJson(string action, InputEventKey inputEventKey) => new JsonInputKey
+        {
+            Action = action,
+            Scancode = inputEventKey.Scancode,
+            PhysicalScancode = inputEventKey.PhysicalScancode,
+            Unicode = inputEventKey.Unicode,
+            Alt = inputEventKey.Alt,
+            Shift = inputEventKey.Shift,
+            Control = inputEventKey.Control,
+            Meta = inputEventKey.Meta,
+            Command = inputEventKey.Command,
+            Device = inputEventKey.Device
+        };
 
-        private InputEventKey ConvertToInputKey(JsonInputKey inputEvent) =>
-            new InputEventKey()
-            {
-                Scancode = inputEvent.Scancode,
-                PhysicalScancode = inputEvent.PhysicalScancode,
-                Unicode = inputEvent.Unicode,
-                Alt = inputEvent.Alt,
-                Shift = inputEvent.Shift,
-                Control = inputEvent.Control,
-                Meta = inputEvent.Meta,
-                Command = inputEvent.Command,
-                Device = inputEvent.Device
-            };
+        private InputEventKey ConvertToInputKey(JsonInputKey inputEvent) => new InputEventKey()
+        {
+            Scancode = inputEvent.Scancode,
+            PhysicalScancode = inputEvent.PhysicalScancode,
+            Unicode = inputEvent.Unicode,
+            Alt = inputEvent.Alt,
+            Shift = inputEvent.Shift,
+            Control = inputEvent.Control,
+            Meta = inputEvent.Meta,
+            Command = inputEvent.Command,
+            Device = inputEvent.Device
+        };
     }
 
     public struct JsonInputKey

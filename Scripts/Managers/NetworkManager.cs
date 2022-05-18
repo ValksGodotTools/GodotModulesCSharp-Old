@@ -69,7 +69,8 @@ namespace GodotModules.Netcode
             await Server.StartAsync(port, maxPlayers);
         }
 
-        public bool IsMultiplayer() => Client.IsRunning || Server.IsRunning;
+        public bool IsMultiplayer() => 
+            Client.IsRunning || Server.IsRunning;
 
         public async Task Cleanup()
         {

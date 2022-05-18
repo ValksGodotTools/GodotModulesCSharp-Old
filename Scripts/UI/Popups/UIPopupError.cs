@@ -13,10 +13,8 @@ public class UIPopupError : WindowDialog
     {
         _popupManager = popupManager;
         _message = exception.StackTrace;
-        if (!string.IsNullOrWhiteSpace(title))
-            _title = title;
-        else
-            _title = exception.Message;
+        
+        _title = !string.IsNullOrWhiteSpace(title) ? title : exception.Message;
     }
 
     public override void _Ready()

@@ -57,15 +57,15 @@ namespace GodotModules
             OS.WindowSize = OS.GetScreenSize() + new Vector2(1, 1); // need to add (1, 1) otherwise will act like fullscreen mode (seems like a Godot bug)
         }
 
-        public void CenterWindow() => OS.WindowPosition = OS.GetScreenSize() / 2 - OS.WindowSize / 2;
+        public void CenterWindow() => 
+            OS.WindowPosition = OS.GetScreenSize() / 2 - OS.WindowSize / 2;
 
         private void LoadOptions()
         {
-            if (_systemFileManager.ConfigExists("options"))
-                Options = _systemFileManager.ReadConfig<OptionsData>("options");
-            else 
-            {
-                var defaultOptions = new OptionsData {
+            Options = _systemFileManager.ConfigExists("options")
+                ? _systemFileManager.ReadConfig<OptionsData>("options")
+                : new OptionsData
+                {
                     VSync = true,
                     FullscreenMode = FullscreenMode.Borderless,
                     MusicVolume = -20,
@@ -78,9 +78,6 @@ namespace GodotModules
                         ChatText = "a0a0a0"
                     }
                 };
-
-                Options = defaultOptions;
-            }
 
             SetVSync(Options.VSync);
             SetFullscreenMode(Options.FullscreenMode);
