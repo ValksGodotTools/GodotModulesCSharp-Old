@@ -14,7 +14,7 @@ namespace GodotModules
 
         public void SpawnMessage(string message, string title = "")
         {
-            var popup = Prefabs.UIPopupMessage.Instance<PopupMessage>();
+            var popup = Prefabs.PopupMessage.Instance<PopupMessage>();
             popup.PreInit(this, message, title);
             
             Spawn(popup);
@@ -22,7 +22,7 @@ namespace GodotModules
 
         public void SpawnError(Exception exception, string title = "")
         {
-            var popup = Prefabs.UIPopupError.Instance<PopupError>();
+            var popup = Prefabs.PopupError.Instance<PopupError>();
             popup.PreInit(this, exception, title);
             
             Spawn(popup);
