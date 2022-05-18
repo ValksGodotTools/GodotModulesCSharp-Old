@@ -142,4 +142,6 @@ text = "Create"
 [connection signal="text_changed" from="PanelContainer/Margin/VBox/HBox1/Name" to="." method="_on_Name_text_changed"]
 [connection signal="text_changed" from="PanelContainer/Margin/VBox/VBox/Description" to="." method="_on_Description_text_changed"]
 [connection signal="text_changed" from="PanelContainer/Margin/VBox/HBox4/Password" to="." method="_on_Password_text_changed"]
+[connection signal="text_changed" from="PanelContainer/Margin/VBox/HBox2/Port" to="." method="_on_Port_text_changed"]
+[connection signal="text_changed" from="PanelContainer/Margin/VBox/HBox3/Max Players" to="." method="_on_Max_Players_text_changed"]
 [connection signal="pressed" from="PanelContainer/Margin Btn/Create" to="." method="_on_Create_pressed"]
