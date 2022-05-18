@@ -96,7 +96,6 @@ position = Vector2( 512, 600 )
 emitting = false
 amount = 200
 lifetime = 30.0
-preprocess = 30.0
 process_material = SubResource( 11 )
 
 [node name="Console" type="VBoxContainer" parent="Persistent GUI/Window"]
