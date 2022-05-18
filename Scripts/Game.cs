@@ -56,7 +56,6 @@ namespace GodotModules
             _managers.Network.StartClient("127.0.0.1", 25565);
 
             await Task.Delay(10);
-            _managers.Popup.SpawnPopupMessage("FOO");
             UpdateParticleSystem();
             _ready = true;
 
