@@ -26,7 +26,7 @@ namespace GodotModules
 
         private void _on_UIPopupMessage_popup_hide()
         {
-            _popupManager.SpawnNextPopup();
+            _popupManager.Next();
             QueueFree();
         }
 

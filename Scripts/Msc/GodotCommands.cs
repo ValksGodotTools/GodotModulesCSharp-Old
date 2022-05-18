@@ -38,11 +38,11 @@ namespace GodotModules
                         break;
                     case GodotOpcode.SpawnPopupMessage:
                         var dataMessage = (GodotCmdPopupMessage)cmd.Data;
-                        _popupManager.SpawnPopupMessage(dataMessage.Message, dataMessage.Title);
+                        _popupManager.SpawnMessage(dataMessage.Message, dataMessage.Title);
                         break;
                     case GodotOpcode.SpawnPopupError:
                         var dataError = (GodotCmdPopupError)cmd.Data;
-                        _popupManager.SpawnPopupError(dataError.Exception, dataError.Title);
+                        _popupManager.SpawnError(dataError.Exception, dataError.Title);
                         break;
                 }
             }

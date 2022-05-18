@@ -12,7 +12,7 @@ namespace GodotModules
             _popups = popups;
         }
 
-        public void SpawnPopupMessage(string message, string title = "")
+        public void SpawnMessage(string message, string title = "")
         {
             var popupMessage = Prefabs.UIPopupMessage.Instance<PopupMessage>();
             popupMessage.PreInit(this, message, title);
@@ -20,7 +20,7 @@ namespace GodotModules
             Spawn(popupMessage);
         }
 
-        public void SpawnPopupError(Exception exception, string title = "")
+        public void SpawnError(Exception exception, string title = "")
         {
             var popupError = Prefabs.UIPopupError.Instance<PopupError>();
             popupError.PreInit(this, exception, title);
@@ -28,7 +28,7 @@ namespace GodotModules
             Spawn(popupError);
         }
 
-        public void SpawnNextPopup() 
+        public void Next() 
         {
             _queue.Dequeue();
             if (_queue.Count == 0) 

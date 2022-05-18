@@ -19,7 +19,7 @@ namespace GodotModules
             {
                 var message = "Multiplayer is disabled because ENet failed to initialize";
                 Logger.LogWarning(message);
-                _managers.Popup.SpawnPopupMessage(message);
+                _managers.Popup.SpawnMessage(message);
                 return;
             }
 
