@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=2]
+[gd_scene load_steps=39 format=2]
 
 [ext_resource path="res://Sprites/Game/Fumiko.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Game/Player.cs" type="Script" id=2]
@@ -43,6 +43,34 @@ region = Rect2( 24, 32, 24, 32 )
 [sub_resource type="AtlasTexture" id=38]
 atlas = ExtResource( 1 )
 region = Rect2( 48, 32, 24, 32 )
+
+[sub_resource type="AtlasTexture" id=64]
+atlas = ExtResource( 1 )
+region = Rect2( 0, 224, 24, 32 )
+
+[sub_resource type="AtlasTexture" id=65]
+atlas = ExtResource( 1 )
+region = Rect2( 24, 224, 24, 32 )
+
+[sub_resource type="AtlasTexture" id=66]
+atlas = ExtResource( 1 )
+region = Rect2( 48, 224, 24, 32 )
+
+[sub_resource type="AtlasTexture" id=67]
+atlas = ExtResource( 1 )
+region = Rect2( 72, 224, 24, 32 )
+
+[sub_resource type="AtlasTexture" id=68]
+atlas = ExtResource( 1 )
+region = Rect2( 96, 224, 24, 32 )
+
+[sub_resource type="AtlasTexture" id=69]
+atlas = ExtResource( 1 )
+region = Rect2( 120, 224, 24, 32 )
+
+[sub_resource type="AtlasTexture" id=70]
+atlas = ExtResource( 1 )
+region = Rect2( 144, 224, 24, 32 )
 
 [sub_resource type="AtlasTexture" id=58]
 atlas = ExtResource( 1 )
@@ -126,6 +154,11 @@ animations = [ {
 "name": "walk_right",
 "speed": 6.0
 }, {
+"frames": [ SubResource( 64 ), SubResource( 65 ), SubResource( 66 ), SubResource( 67 ), SubResource( 68 ), SubResource( 69 ), SubResource( 69 ), SubResource( 70 ), SubResource( 70 ), SubResource( 70 ) ],
+"loop": false,
+"name": "attack",
+"speed": 15.0
+}, {
 "frames": [ SubResource( 58 ), SubResource( 59 ), SubResource( 60 ) ],
 "loop": true,
 "name": "run_right",
@@ -176,12 +209,16 @@ zoom = Vector2( 0.5, 0.5 )
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 2, 2 )
 frames = SubResource( 39 )
-animation = "run_right"
+animation = "attack"
+frame = 9
+playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource( 50 )
 
 [node name="Area2D" type="Area2D" parent="."]
+visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource( 51 )

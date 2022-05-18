@@ -9,6 +9,8 @@ namespace GodotModules
         private Camera2D _camera;
         private AnimatedSprite _animatedSprite;
 
+        private bool _movingDown, _movingUp, _movingLeft, _movingRight, _running, _attack;
+
         public override void _Ready()
         {
             _camera = GetNode<Camera2D>(NodePathCamera);
@@ -34,7 +36,11 @@ namespace GodotModules
 
         private void HandleShoot()
         {
-            if (Input.IsActionPressed("player_shoot"))
+            var shooting = Input.IsActionPressed("player_shoot");
+
+            _attack = Input.IsActionJustPressed("player_shoot");
+
+            if (shooting)
             {
                 var shake = (ScreenShake)_camera.GetChild(0);
                 shake.Start();
@@ -45,52 +51,58 @@ namespace GodotModules
         {
             var dir = new Vector2();
 
-            var movingUp = Input.IsActionPressed("player_move_up");
-            var movingDown = Input.IsActionPressed("player_move_down");
-            var movingLeft = Input.IsActionPressed("player_move_left");
-            var movingRight = Input.IsActionPressed("player_move_right");
-            var running = Input.IsActionPressed("player_sprint");
+            _movingUp = Input.IsActionPressed("player_move_up");
+            _movingDown = Input.IsActionPressed("player_move_down");
+            _movingLeft = Input.IsActionPressed("player_move_left");
+            _movingRight = Input.IsActionPressed("player_move_right");
+            _running = Input.IsActionPressed("player_sprint");
 
-            if (movingUp) dir.y -= 1;
-            if (movingDown) dir.y += 1;
-            if (movingLeft) dir.x -= 1;
-            if (movingRight) dir.x += 1;
+            if (_movingUp) dir.y -= 1;
+            if (_movingDown) dir.y += 1;
+            if (_movingLeft) dir.x -= 1;
+            if (_movingRight) dir.x += 1;
 
-            HandleAnimation(movingUp, movingDown, movingLeft, movingRight, running);
+            HandleAnimation();
 
-            var speed = 250f * (running ? 2 : 1);
+            var speed = 250f * (_running ? 2 : 1);
 
             MoveAndSlide(dir.Normalized() * speed * delta * 50);
         }
 
-        private void HandleAnimation(bool movingUp, bool movingDown, bool movingLeft, bool movingRight, bool running)
+        private void HandleAnimation()
         {
-            if (!running)
+            if (!_running)
             {
-                if (movingUp)
+                if (_movingUp)
                     _animatedSprite.Play("walk_up");
-                else if (movingDown)
+                else if (_movingDown)
                     _animatedSprite.Play("walk_down");
-                else if (movingLeft)
+                else if (_movingLeft)
                     _animatedSprite.Play("walk_left");
-                else if (movingRight)
+                else if (_movingRight)
                     _animatedSprite.Play("walk_right");
             }
 
-            if (running)
+            if (_running)
             {
-                if (movingUp)
+                if (_movingUp)
                     _animatedSprite.Play("run_up");
-                else if (movingDown)
+                else if (_movingDown)
                     _animatedSprite.Play("run_down");
-                else if (movingLeft)
+                else if (_movingLeft)
                     _animatedSprite.Play("run_left");
-                else if (movingRight)
+                else if (_movingRight)
                     _animatedSprite.Play("run_right");
             }
 
-            if (!movingUp && !movingDown && !movingLeft && !movingRight)
+            if (!_movingUp && !_movingDown && !_movingLeft && !_movingRight)
                 _animatedSprite.Play("idle");
+
+            if (_attack) 
+            {
+                _attack = false;
+                _animatedSprite.Play("attack");
+            }
         }
     }
 }
