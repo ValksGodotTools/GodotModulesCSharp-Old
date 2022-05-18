@@ -16,6 +16,7 @@ namespace GodotModules
         public readonly static PackedScene Player = LoadGame("Player");
         public readonly static PackedScene OtherPlayer = LoadGame("OtherPlayer");
         public readonly static PackedScene Enemy = LoadGame("Enemy");
+        public readonly static PackedScene Orb = LoadGame("Orb");
 
         private static PackedScene LoadGame(string game) => Load($"Game/{game}");
         private static PackedScene LoadPopup(string popup) => LoadUI($"Popups/{popup}");

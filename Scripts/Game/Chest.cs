@@ -1,6 +1,6 @@
 using Godot;
 
-public class Chest : Node
+public class Chest : Node2D
 {
     [Export] public readonly NodePath NodePathAnimatedSprite;
 
@@ -19,5 +19,12 @@ public class Chest : Node
 
         _opened = true;
         _animatedSprite.Play();
+    }
+
+    private void _on_AnimatedSprite_animation_finished()
+    {
+        //var orb = Prefabs.Orb.Instance<RigidBody2D>();
+        //orb.Position = Position + new Vector2(0, 100);
+        Logger.Log(GetTree().Root.Name);
     }
 }

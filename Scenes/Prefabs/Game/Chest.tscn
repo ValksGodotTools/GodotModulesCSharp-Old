@@ -75,3 +75,5 @@ position = Vector2( 0, 42 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Open"]
 position = Vector2( 0, -8 )
 shape = SubResource( 74 )
+
+[connection signal="animation_finished" from="AnimatedSprite" to="." method="_on_AnimatedSprite_animation_finished"]
