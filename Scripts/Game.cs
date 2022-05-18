@@ -23,6 +23,7 @@ namespace GodotModules
         [Export] public readonly NodePath NodePathErrorNotifierManager;
         [Export] public readonly NodePath NodePathPopupManager;
         [Export] public readonly NodePath NodePathMenuParticles;
+        [Export] public readonly NodePath NodePathPopups;
 
         private Managers _managers;
         private Particles2D _particles2D;
@@ -35,7 +36,7 @@ namespace GodotModules
                 GetNode<Node>(NodePathWebRequestList),
                 GetNode<AudioStreamPlayer>(NodePathAudioStreamPlayer), 
                 GetNode<ErrorNotifierManager>(NodePathErrorNotifierManager),
-                GetNode<PopupManager>(NodePathPopupManager),
+                GetNode<Node>(NodePathPopups),
                 GetNode<ConsoleManager>(NodePathConsole)
             );
 
@@ -55,6 +56,7 @@ namespace GodotModules
             _managers.Network.StartClient("127.0.0.1", 25565);
 
             await Task.Delay(10);
+            _managers.Popup.SpawnPopupMessage("FOO");
             UpdateParticleSystem();
             _ready = true;
 
@@ -128,7 +130,7 @@ namespace GodotModules
         public HotkeyManager Hotkey { get; private set; }
         public ConsoleManager Console { get; private set; }
 
-        public Managers(Node webRequestList, AudioStreamPlayer audioStreamPlayer, ErrorNotifierManager errorNotifierManager, PopupManager popupManager, ConsoleManager consoleManager)
+        public Managers(Node webRequestList, AudioStreamPlayer audioStreamPlayer, ErrorNotifierManager errorNotifierManager, Node popups, ConsoleManager consoleManager)
         {
             var systemFileManager = new SystemFileManager();
             Hotkey = new(systemFileManager, new List<string>() {"UI", "Player", "Camera"});
@@ -138,7 +140,7 @@ namespace GodotModules
             Music = new(audioStreamPlayer, Options);
             
             ErrorNotifier = errorNotifierManager;
-            Popup = popupManager;
+            Popup = new(popups);
             Network = new(Popup);
             Console = consoleManager;
         }

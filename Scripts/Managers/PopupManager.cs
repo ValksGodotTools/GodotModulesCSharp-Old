@@ -2,9 +2,15 @@ using Godot;
 
 namespace GodotModules
 {
-    public class PopupManager : Node
+    public class PopupManager
     {
-        private Queue<WindowDialog> _popups = new();
+        private Queue<WindowDialog> _queue = new();
+        private Node _popups;
+
+        public PopupManager(Node popups)
+        {
+            _popups = popups;
+        }
 
         public void SpawnPopupMessage(string message, string title = "")
         {
@@ -24,21 +30,21 @@ namespace GodotModules
 
         public void SpawnNextPopup() 
         {
-            _popups.Dequeue();
-            if (_popups.Count == 0) 
+            _queue.Dequeue();
+            if (_queue.Count == 0) 
                 return;
-            var popup = _popups.Peek();
+            var popup = _queue.Peek();
             popup.PopupCentered();
         }
 
         private void Spawn(WindowDialog popup)
         {
-            AddChild(popup);
+            _popups.AddChild(popup);
 
-            if (_popups.Count == 0)
+            if (_queue.Count == 0)
                 popup.PopupCentered();
 
-            _popups.Enqueue(popup);
+            _queue.Enqueue(popup);
         }
     }
 }
