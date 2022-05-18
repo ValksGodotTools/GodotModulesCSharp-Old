@@ -91,6 +91,7 @@ radius = 16.0
 radius = 17.0294
 
 [node name="Player" type="KinematicBody2D"]
+z_index = 1
 script = ExtResource( 2 )
 NodePathSprite = NodePath("AnimatedSprite")
 NodePathCamera = NodePath("Camera2D")
