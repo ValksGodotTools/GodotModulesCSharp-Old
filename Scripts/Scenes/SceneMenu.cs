@@ -23,6 +23,15 @@ namespace GodotModules
                 return;
             }
 
+            if (string.IsNullOrWhiteSpace(_managers.Options.Options.OnlineUsername))
+            {
+                _managers.Popup.SpawnLineEdit(
+                    (lineEdit) => lineEdit.Filter((text) => Regex.IsMatch(text, "^[a-z]+$")), 
+                    (result) => _managers.Options.Options.OnlineUsername = result, 
+                    20, "Set Online Username");
+                return;
+            }
+
             await _managers.Scene.ChangeScene(GameScene.GameServers);
         }
         private async void _on_Options_pressed() => await _managers.Scene.ChangeScene(GameScene.Options);

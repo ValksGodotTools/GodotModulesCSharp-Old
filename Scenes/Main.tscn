@@ -72,7 +72,6 @@ NodePathWebRequestList = NodePath("../WebRequests")
 NodePathScenes = NodePath("../Scenes")
 NodePathConsole = NodePath("../Persistent GUI/Window/Console")
 NodePathErrorNotifierManager = NodePath("../Persistent GUI/Window/ErrorNotifier")
-NodePathPopupManager = NodePath("")
 NodePathMenuParticles = NodePath("../Persistent GUI/Window/Menu Particles")
 NodePathPopups = NodePath("../Persistent GUI/Window/Popups")
 
