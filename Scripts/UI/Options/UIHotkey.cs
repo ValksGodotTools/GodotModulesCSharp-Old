@@ -17,7 +17,10 @@ namespace GodotModules
         {
             _label = GetNode<Label>(NodePathLabel);
             _btnHotkey = GetNode<UIBtnHotkey>(NodePathBtnHotkey);
-            _label.Text = _action.Replace("_", " ").ToTitleCase().SmallWordsToUpper(2, (word) => word != "Up");
+            _label.Text = _action.Replace("_", " ").ToTitleCase().SmallWordsToUpper(2, (word) => {
+                var words = new string[] {"Up", "In"};
+                return !words.Contains(word);
+            });
             _btnHotkey.PreInit(_hotkeyManager, _action);
         }
 
