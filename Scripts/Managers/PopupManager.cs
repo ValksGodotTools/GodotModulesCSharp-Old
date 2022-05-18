@@ -14,18 +14,23 @@ namespace GodotModules
 
         public void SpawnMessage(string message, string title = "")
         {
-            var popupMessage = Prefabs.UIPopupMessage.Instance<PopupMessage>();
-            popupMessage.PreInit(this, message, title);
+            var popup = Prefabs.UIPopupMessage.Instance<PopupMessage>();
+            popup.PreInit(this, message, title);
             
-            Spawn(popupMessage);
+            Spawn(popup);
         }
 
         public void SpawnError(Exception exception, string title = "")
         {
-            var popupError = Prefabs.UIPopupError.Instance<PopupError>();
-            popupError.PreInit(this, exception, title);
+            var popup = Prefabs.UIPopupError.Instance<PopupError>();
+            popup.PreInit(this, exception, title);
             
-            Spawn(popupError);
+            Spawn(popup);
+        }
+
+        public void SpawnLineEdit(Action code, string title = "") 
+        {
+            
         }
 
         public void Next() 
