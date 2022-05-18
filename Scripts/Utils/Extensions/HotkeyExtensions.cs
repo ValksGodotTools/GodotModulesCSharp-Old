@@ -29,7 +29,7 @@ namespace GodotModules
                     return "Right Mouse";
 
                 case (int)ButtonList.Middle:
-                    return "Mouse 3";
+                    return "Middle Mouse";
 
                 case (int)ButtonList.Xbutton1:
                     return "Mouse 4";
