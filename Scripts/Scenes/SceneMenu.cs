@@ -7,12 +7,24 @@ namespace GodotModules
         [Export] public readonly NodePath NodePathBtnPlay;
 
         private Managers _managers;
+        private Particles2D _menuParticles;
+
+        public void PreInit(Particles2D menuParticles) 
+        {
+            _menuParticles = menuParticles;
+        }
         
-        public override void PreInit(Managers managers) => _managers = managers;
+        public override void PreInitManagers(Managers managers) => _managers = managers;
 
         public override void _Ready() => GetNode<Button>(NodePathBtnPlay).GrabFocus();
 
-        private async void _on_Play_pressed() => await _managers.Scene.ChangeScene(GameScene.Game);
+        private async void _on_Play_pressed() 
+        {
+            _menuParticles.Emitting = false;
+            _menuParticles.Visible = false;
+            await _managers.Scene.ChangeScene(GameScene.Game);
+        }
+
         private async void _on_Multiplayer_pressed() 
         {
             if (!_managers.Network.EnetInitialized) 
