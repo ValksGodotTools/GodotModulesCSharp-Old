@@ -50,37 +50,30 @@ namespace GodotModules
             var movingLeft = Input.IsActionPressed("player_move_left");
             var movingRight = Input.IsActionPressed("player_move_right");
 
-            if (movingUp) 
-            {
-                dir.y -= 1;
-                _animatedSprite.Play("walk_up");
-            }
+            if (movingUp) dir.y -= 1;
+            if (movingDown) dir.y += 1;
+            if (movingLeft) dir.x -= 1;
+            if (movingRight) dir.x += 1;
 
-            if (movingDown) 
-            {
-                dir.y += 1;
-                _animatedSprite.Play("walk_down");
-            }
-
-            if (movingLeft) 
-            {
-                dir.x -= 1;
-                _animatedSprite.Play("walk_left");
-            }
-
-            if (movingRight) 
-            {
-                dir.x += 1;
-                _animatedSprite.Play("walk_right");
-            }
-
-            if (!movingUp && !movingDown && !movingLeft && !movingRight)
-            {
-                _animatedSprite.Play("idle");
-            }
+            HandleAnimation(movingUp, movingDown, movingLeft, movingRight);
 
             var Speed = 250f;
             MoveAndSlide(dir.Normalized() * Speed * delta * 50);
+        }
+
+        private void HandleAnimation(bool movingUp, bool movingDown, bool movingLeft, bool movingRight)
+        {
+            if (movingUp)
+                _animatedSprite.Play("walk_up");
+            else if (movingDown)
+                _animatedSprite.Play("walk_down");
+            else if (movingLeft)
+                _animatedSprite.Play("walk_left");
+            else if (movingRight)
+                _animatedSprite.Play("walk_right");
+
+            if (!movingUp && !movingDown && !movingLeft && !movingRight)
+                _animatedSprite.Play("idle");
         }
     }
 }
