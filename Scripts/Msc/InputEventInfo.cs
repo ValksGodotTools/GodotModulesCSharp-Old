@@ -13,28 +13,28 @@ namespace GodotModules
     public record struct InputEventInfo 
     {
         // Type
-        public InputEventType Type { get; private set; }
+        public InputEventType Type { get; set; }
 
         // InputEvent
-        public int Device { get; private set;  }
+        public int Device { get; set;  }
 
         // InputEventWithModifiers
-        public bool Alt { get; private set;  }
-        public bool Command { get; private set;  }
-        public bool Control { get; private set;  }
-        public bool Meta { get; private set;  }
-        public bool Shift { get; private set;  }
+        public bool Alt { get; set;  }
+        public bool Command { get; set;  }
+        public bool Control { get; set;  }
+        public bool Meta { get; set;  }
+        public bool Shift { get; set;  }
 
         // InputEventKey
-        public uint Scancode { get; private set;  }
-        public uint PhysicalScancode { get; private set;  }
-        public uint Unicode { get; private set;  }
+        public uint Scancode { get; set;  }
+        public uint PhysicalScancode { get; set;  }
+        public uint Unicode { get; set;  }
 
         // InputEventMouseButton
-        public int ButtonMask { get; private set; }
+        public int ButtonMask { get; set; }
 
         // InputEventJoypadButton
-        public int ButtonIndex { get; private set; }
+        public int ButtonIndex { get; set; }
 
         [JsonIgnore] public bool IsEventKey => Type == InputEventType.Key;
         [JsonIgnore] public bool IsEventMouseButton => Type == InputEventType.MouseButton;
