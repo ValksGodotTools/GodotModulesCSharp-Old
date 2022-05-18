@@ -30,10 +30,7 @@ namespace GodotModules
         public uint PhysicalScancode { get; set;  }
         public uint Unicode { get; set;  }
 
-        // InputEventMouseButton
-        public int ButtonMask { get; set; }
-
-        // InputEventJoypadButton
+        // InputEventMouseButton, InputEventJoypadButton
         public int ButtonIndex { get; set; }
 
         [JsonIgnore] public bool IsEventKey => Type == InputEventType.Key;
@@ -66,7 +63,7 @@ namespace GodotModules
             
             return new InputEventMouseButton
             {
-                ButtonMask = ButtonMask,
+                ButtonIndex = ButtonIndex,
                 Alt = Alt,
                 Shift = Shift,
                 Control = Control,
@@ -125,7 +122,7 @@ namespace GodotModules
             Control = m.Control,
             Meta = m.Meta,
             Shift = m.Shift,
-            ButtonMask = m.ButtonMask,
+            ButtonIndex = m.ButtonIndex,
         };
 
         public static InputEventInfo From(InputEventJoypadButton j) => new InputEventInfo
