@@ -38,7 +38,12 @@ namespace GodotModules
 
         public void SetInfo()
         {
-            var info = ModLoader.Mods[_modName].ModInfo;
+            var mods = ModLoader.Mods;
+
+            if (!mods.ContainsKey(_modName))
+                return;
+
+            var info = mods[_modName].ModInfo;
             _sceneMods.ModName.Text = _modName;
             _sceneMods.GameVersions.Text = info.GameVersions.Print();
             
@@ -55,9 +60,9 @@ namespace GodotModules
                 _sceneMods.ModBtnsRight.Add(dependency, modBtn);
                 modBtn.SetModName(dependency);
 
-                if (ModLoader.Mods.ContainsKey(dependency))
+                if (mods.ContainsKey(dependency))
                 {
-                    var modEnabled = ModLoader.Mods[dependency].ModInfo.Enabled;
+                    var modEnabled = mods[dependency].ModInfo.Enabled;
                     modBtn.SetEnabled(modEnabled);
                 }
                 else
