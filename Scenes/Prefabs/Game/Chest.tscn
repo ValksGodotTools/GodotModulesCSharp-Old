@@ -1,45 +1,44 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Sprites/Game/chest-sheet.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Game/Chest.cs" type="Script" id=2]
+[ext_resource path="res://Shaders/Canvas/Shadow.shader" type="Shader" id=3]
+
+[sub_resource type="ShaderMaterial" id=75]
+shader = ExtResource( 3 )
+shader_param/deform = Vector2( 0.04, 0.04 )
+shader_param/offset = Vector2( 0, 0 )
+shader_param/modulate = Color( 0, 0, 0, 0.517647 )
 
 [sub_resource type="AtlasTexture" id=65]
-flags = 4
 atlas = ExtResource( 1 )
 region = Rect2( 0, 0, 48, 48 )
 
 [sub_resource type="AtlasTexture" id=66]
-flags = 4
 atlas = ExtResource( 1 )
 region = Rect2( 48, 0, 48, 48 )
 
 [sub_resource type="AtlasTexture" id=67]
-flags = 4
 atlas = ExtResource( 1 )
 region = Rect2( 96, 0, 48, 48 )
 
 [sub_resource type="AtlasTexture" id=68]
-flags = 4
 atlas = ExtResource( 1 )
 region = Rect2( 144, 0, 48, 48 )
 
 [sub_resource type="AtlasTexture" id=69]
-flags = 4
 atlas = ExtResource( 1 )
 region = Rect2( 192, 0, 48, 48 )
 
 [sub_resource type="AtlasTexture" id=70]
-flags = 4
 atlas = ExtResource( 1 )
 region = Rect2( 288, 0, 48, 48 )
 
 [sub_resource type="AtlasTexture" id=71]
-flags = 4
 atlas = ExtResource( 1 )
 region = Rect2( 240, 0, 48, 48 )
 
 [sub_resource type="AtlasTexture" id=72]
-flags = 4
 atlas = ExtResource( 1 )
 region = Rect2( 336, 0, 48, 48 )
 
@@ -62,6 +61,7 @@ script = ExtResource( 2 )
 NodePathAnimatedSprite = NodePath("AnimatedSprite")
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+material = SubResource( 75 )
 scale = Vector2( 1.5, 1.5 )
 frames = SubResource( 64 )
 

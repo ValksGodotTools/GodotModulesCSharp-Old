@@ -362,7 +362,7 @@ points = PoolVector2Array( 64, 64, 0, 64, 0, 0, 64, 0 )
 } ]
 6/z_index = 0
 
-[sub_resource type="ShaderMaterial" id=65]
+[sub_resource type="ShaderMaterial" id=98]
 shader = ExtResource( 8 )
 shader_param/angle = -0.3
 shader_param/position = -0.159
@@ -437,11 +437,14 @@ position = Vector2( -35, -56 )
 z_index = 3
 
 [node name="ColorRect" type="ColorRect" parent="God Rays"]
-material = SubResource( 65 )
+material = SubResource( 98 )
 margin_left = -667.0
 margin_top = -994.0
 margin_right = 1333.0
 margin_bottom = 1006.0
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
