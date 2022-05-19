@@ -12,7 +12,7 @@ global using System.Linq;
 
 using Godot;
 
-namespace GodotModules 
+namespace GodotModules
 {
     public class Managers : Node
     {
@@ -34,17 +34,20 @@ namespace GodotModules
         public PopupManager ManagerPopup { get; private set; }
         public HotkeyManager ManagerHotkey { get; private set; }
         public ConsoleManager ManagerConsole { get; private set; }
+        public SystemFileManager ManagerFileSystem { get; private set; }
+        public GodotFileManager ManagerFileGodot { get; private set; }
 
         private Particles2D _menuParticles;
         private bool _ready;
 
         public override async void _Ready()
         {
-            var systemFileManager = new SystemFileManager();
-            ManagerHotkey = new(systemFileManager, new List<string>() {"UI", "Player", "Camera"});
-            ManagerOptions = new(systemFileManager, ManagerHotkey);
+            ManagerFileGodot = new();
+            ManagerFileSystem = new();
+            ManagerHotkey = new(ManagerFileSystem, new List<string>() { "UI", "Player", "Camera" });
+            ManagerOptions = new(ManagerFileSystem, ManagerHotkey);
             ManagerToken = new();
-            ManagerWeb = new(new WebRequests(GetNode<Node>(NodePathWebRequestList)), ManagerToken, ManagerOptions.Options.WebServerAddress);
+            ManagerWeb = new(new(GetNode<Node>(NodePathWebRequestList)), ManagerToken, ManagerOptions.Options.WebServerAddress);
             ManagerMusic = new(GetNode<AudioStreamPlayer>(NodePathAudioStreamPlayer), ManagerOptions);
             ManagerErrorNotifier = GetNode<ErrorNotifierManager>(NodePathErrorNotifierManager);
             ManagerPopup = new(GetNode<Node>(NodePathPopups));
@@ -55,9 +58,10 @@ namespace GodotModules
             _menuParticles.Emitting = true;
 
             await InitSceneManager(GetNode<Control>(NodePathScenes), ManagerHotkey);
-                        
+
             Logger.UIConsole = ManagerConsole;
             Logger.ErrorNotifierManager = ManagerErrorNotifier;
+            ModLoader.Init(ManagerFileSystem, ManagerFileGodot);
 
             UpdateParticleSystem();
 
@@ -77,24 +81,30 @@ namespace GodotModules
 
         public async Task InitSceneManager(Control sceneList, HotkeyManager hotkeyManager)
         {
-            ManagerScene = new(sceneList, new GodotFileManager(), hotkeyManager, this);
+            ManagerScene = new(sceneList, ManagerFileGodot, hotkeyManager, this);
 
             // Custom Pre Init
-            ManagerScene.PreInit[GameScene.Menu] = (node) => {
+            ManagerScene.PreInit[GameScene.Menu] = (node) =>
+            {
                 ((SceneMenu)node).PreInit(_menuParticles);
             };
 
             // Esc Pressed
             ManagerScene.EscPressed[GameScene.Credits] = async () => await ManagerScene.ChangeScene(GameScene.Menu);
             ManagerScene.EscPressed[GameScene.GameServers] = async () => await ManagerScene.ChangeScene(GameScene.Menu);
-            ManagerScene.EscPressed[GameScene.Mods] = async () => await ManagerScene.ChangeScene(GameScene.Menu);
+            ManagerScene.EscPressed[GameScene.Mods] = async () => 
+            {
+                ModLoader.SceneMods = null;
+                await ManagerScene.ChangeScene(GameScene.Menu);
+            };
             ManagerScene.EscPressed[GameScene.Options] = async () =>
             {
                 ManagerToken.Cancel("check_connection");
                 await ManagerScene.ChangeScene(GameScene.Menu);
             };
             ManagerScene.EscPressed[GameScene.Lobby] = async () => await ManagerScene.ChangeScene(GameScene.GameServers);
-            ManagerScene.EscPressed[GameScene.Game] = async () => {
+            ManagerScene.EscPressed[GameScene.Game] = async () =>
+            {
                 await ManagerScene.ChangeScene(GameScene.Menu);
                 _menuParticles.Emitting = true;
                 _menuParticles.Visible = true;
@@ -133,7 +143,7 @@ namespace GodotModules
             }
         }
 
-        private void _on_Scenes_resized() 
+        private void _on_Scenes_resized()
         {
             if (_ready)
                 UpdateParticleSystem();
@@ -147,6 +157,7 @@ namespace GodotModules
 
         private async Task Cleanup()
         {
+            ModLoader.SaveEnabled();
             ManagerOptions.SaveOptions();
             await ManagerNetwork.Cleanup();
             ManagerToken.Cleanup();
