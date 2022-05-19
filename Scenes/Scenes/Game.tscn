@@ -1,4 +1,4 @@
-[gd_scene load_steps=58 format=2]
+[gd_scene load_steps=60 format=2]
 
 [ext_resource path="res://Themes/Main.tres" type="Theme" id=1]
 [ext_resource path="res://Sprites/Game/light.png" type="Texture" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://Fonts/Roboto/Roboto-Bold.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://Sprites/Tilesets/dungeon.png" type="Texture" id=5]
 [ext_resource path="res://Scenes/Prefabs/Game/Chest.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Shaders/Canvas/GodRays.shader" type="Shader" id=8]
 
 [sub_resource type="NavigationPolygon" id=3]
 vertices = PoolVector2Array( 40, 24, 0, 24, 0, 64, 40, 64 )
@@ -361,6 +362,22 @@ points = PoolVector2Array( 64, 64, 0, 64, 0, 0, 64, 0 )
 } ]
 6/z_index = 0
 
+[sub_resource type="ShaderMaterial" id=65]
+shader = ExtResource( 8 )
+shader_param/angle = -0.3
+shader_param/position = -0.159
+shader_param/spread = 0.5
+shader_param/cutoff = 0.248
+shader_param/falloff = 0.663
+shader_param/edge_fade = 0.15
+shader_param/speed = 1.0
+shader_param/ray1_density = 8.0
+shader_param/ray2_density = 30.0
+shader_param/ray2_intensity = 0.3
+shader_param/color = Color( 1, 0.952941, 0.682353, 0.8 )
+shader_param/hdr = false
+shader_param/seed = 5.0
+
 [sub_resource type="DynamicFont" id=1]
 size = 100
 use_filter = true
@@ -414,6 +431,17 @@ position = Vector2( 615, 1000 )
 
 [node name="Enemy Spawn" type="Position2D" parent="."]
 position = Vector2( 615, 192 )
+
+[node name="God Rays" type="Node2D" parent="."]
+position = Vector2( -35, -56 )
+z_index = 3
+
+[node name="ColorRect" type="ColorRect" parent="God Rays"]
+material = SubResource( 65 )
+margin_left = -667.0
+margin_top = -994.0
+margin_right = 1333.0
+margin_bottom = 1006.0
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

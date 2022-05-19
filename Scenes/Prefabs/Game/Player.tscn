@@ -1,8 +1,10 @@
-[gd_scene load_steps=39 format=2]
+[gd_scene load_steps=40 format=2]
 
 [ext_resource path="res://Sprites/Game/Fumiko.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Game/Player.cs" type="Script" id=2]
 [ext_resource path="res://Scenes/Modules/ScreenShake.tscn" type="PackedScene" id=3]
+
+[sub_resource type="ShaderMaterial" id=72]
 
 [sub_resource type="AtlasTexture" id=43]
 atlas = ExtResource( 1 )
@@ -207,6 +209,7 @@ zoom = Vector2( 0.5, 0.5 )
 [node name="ScreenShake" parent="Camera2D" instance=ExtResource( 3 )]
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+material = SubResource( 72 )
 scale = Vector2( 2, 2 )
 frames = SubResource( 39 )
 animation = "attack"
