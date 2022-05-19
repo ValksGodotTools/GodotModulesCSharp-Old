@@ -1,4 +1,4 @@
-[gd_scene load_steps=60 format=2]
+[gd_scene load_steps=61 format=2]
 
 [ext_resource path="res://Themes/Main.tres" type="Theme" id=1]
 [ext_resource path="res://Sprites/Game/light.png" type="Texture" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://Fonts/Roboto/Roboto-Bold.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://Sprites/Tilesets/dungeon.png" type="Texture" id=5]
 [ext_resource path="res://Scenes/Prefabs/Game/Chest.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Scenes/Prefabs/Game/Coin.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Shaders/Canvas/GodRays.shader" type="Shader" id=8]
 
 [sub_resource type="NavigationPolygon" id=3]
@@ -400,6 +401,15 @@ __meta__ = {
 }
 
 [node name="Props" type="Node" parent="."]
+
+[node name="Coin" parent="Props" instance=ExtResource( 7 )]
+position = Vector2( 512, 895 )
+
+[node name="Coin2" parent="Props" instance=ExtResource( 7 )]
+position = Vector2( 489, 845 )
+
+[node name="Coin3" parent="Props" instance=ExtResource( 7 )]
+position = Vector2( 476, 879 )
 
 [node name="Chest" parent="Props" instance=ExtResource( 6 )]
 position = Vector2( 610, 874 )
