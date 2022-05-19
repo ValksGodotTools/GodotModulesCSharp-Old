@@ -188,12 +188,12 @@ animations = [ {
 } ]
 
 [sub_resource type="CapsuleShape2D" id=96]
-radius = 13.0
-height = 35.0
+radius = 9.0
+height = 4.0
 
 [sub_resource type="CapsuleShape2D" id=97]
 radius = 15.0
-height = 35.0
+height = 4.0
 
 [node name="Player" type="KinematicBody2D"]
 z_index = 1
@@ -218,12 +218,13 @@ playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
+position = Vector2( 0, 18 )
 shape = SubResource( 96 )
 
 [node name="Area2D" type="Area2D" parent="."]
-visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2( 0, 11 )
 shape = SubResource( 97 )
 
 [connection signal="area_entered" from="Area2D" to="." method="_on_Area2D_area_entered"]
