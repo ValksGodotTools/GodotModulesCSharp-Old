@@ -436,7 +436,7 @@ position = Vector2( 615, 192 )
 position = Vector2( -35, -56 )
 z_index = 3
 
-[node name="ColorRect" type="ColorRect" parent="God Rays"]
+[node name="God Rays" type="ColorRect" parent="God Rays"]
 material = SubResource( 98 )
 margin_left = -667.0
 margin_top = -994.0
