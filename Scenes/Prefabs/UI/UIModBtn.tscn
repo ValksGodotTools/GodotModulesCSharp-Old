@@ -1,0 +1,48 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Scripts/UI/UIModBtn.cs" type="Script" id=1]
+[ext_resource path="res://Themes/Main.tres" type="Theme" id=2]
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 1, 0.32549, 0.94902, 1 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+content_margin_left = 30.0
+content_margin_right = 30.0
+content_margin_top = 5.0
+content_margin_bottom = 5.0
+bg_color = Color( 0.203922, 0.203922, 0.203922, 1 )
+
+[node name="UIModBtn" type="PanelContainer"]
+margin_right = 14.0
+margin_bottom = 14.0
+theme = ExtResource( 2 )
+script = ExtResource( 1 )
+NodePathBtnInfo = NodePath("HBoxContainer/Info")
+NodePathBtnEnable = NodePath("HBoxContainer/Enable")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 157.0
+margin_bottom = 28.0
+custom_constants/separation = 0
+
+[node name="Info" type="Button" parent="HBoxContainer"]
+margin_right = 126.0
+margin_bottom = 27.0
+size_flags_horizontal = 3
+custom_styles/pressed = SubResource( 3 )
+custom_styles/normal = SubResource( 2 )
+text = "Some mod"
+
+[node name="Enable" type="Button" parent="HBoxContainer"]
+margin_left = 126.0
+margin_right = 156.0
+margin_bottom = 27.0
+rect_min_size = Vector2( 30, 0 )
+toggle_mode = true
+text = "[  ]"
+
+[connection signal="pressed" from="HBoxContainer/Info" to="." method="_on_Info_pressed"]
+[connection signal="toggled" from="HBoxContainer/Enable" to="." method="_on_Enable_toggled"]
