@@ -8,6 +8,7 @@ namespace GodotModules
     public static class ModLoader
     {
         public static SceneMods SceneMods { get; set; }
+        public static string ModLoaderLogs { get; set; }
         public static string PathModsFolder { get; private set; }
         public static Dictionary<string, Mod> Mods { get; private set; }
 
@@ -19,6 +20,7 @@ namespace GodotModules
 
         public static void Init(SystemFileManager systemFileManager, GodotFileManager godotFileManager)
         {
+            ModLoaderLogs = "";
             PathModsFolder = Path.Combine(systemFileManager.GameDataPath, "Mods");
             _pathModsEnabled = Path.Combine(PathModsFolder, "enabled.json");
             _pathLuaScripts = Path.Combine("Scripts", "Lua");
@@ -64,9 +66,7 @@ namespace GodotModules
             {
                 if (mod.ModInfo.MissingDependencies.Count > 0) 
                 {
-                    var message = $"{mod.ModInfo.Name} is missing dependencies: {mod.ModInfo.MissingDependencies.Print(false)}";
-                    SceneMods?.Log(message);
-                    Logger.LogWarning(message);
+                    Log($"{mod.ModInfo.Name} is missing dependencies: {mod.ModInfo.MissingDependencies.Print(false)}");
                     continue;
                 }
 
@@ -74,11 +74,7 @@ namespace GodotModules
                     LoadMod(mod, ref loadedModCount);
             }
 
-            {
-                var message = loadedModCount != 0 ? $"{loadedModCount} mods have loaded successfully" : "No mods have been loaded";
-                SceneMods?.Log(message);
-                Logger.Log(message);
-            }
+            Log(loadedModCount != 0 ? $"{loadedModCount} mods have loaded successfully" : "No mods have been loaded");
         }
 
         public static void EnableMod(string name) 
@@ -96,6 +92,13 @@ namespace GodotModules
         public static void SaveEnabled() =>
             _systemFileManager.WriteConfig(Path.Combine("Mods", "enabled"), Mods.ToDictionary(x => x.Key, x => x.Value.ModInfo.Enabled));
 
+        private static void Log(string message)
+        {
+            ModLoaderLogs += $"{message}\n";
+            SceneMods?.Log(message);
+            Logger.Log(message);
+        }
+        
         private static void DisableModsWithLackingDependencies()
         {
             foreach (var pair in Mods)
@@ -131,14 +134,12 @@ namespace GodotModules
             try
             {
                 _script.DoFile(mod.PathScript);
-                var message = $"Loaded {mod.ModInfo.Name}";
-                SceneMods?.Log(message);
-                Logger.Log(message);
+                Log($"Loaded {mod.ModInfo.Name}");
                 modLoadedCount++;
             }
             catch (ScriptRuntimeException e)
             {
-                SceneMods?.Log($"Failed to load {mod.ModInfo.Name}");
+                Log($"Failed to load {mod.ModInfo.Name}");
                 Logger.LogErr(e, "[ModLoader]: ");
             }
         }
@@ -205,11 +206,7 @@ namespace GodotModules
                     if (err == Godot.Error.Ok)
                         _script.DoString(luaScript.GetAsText());
                     else
-                    {
-                        var message = $"Could not open file: {absolutePath}";
-                        SceneMods?.Log(message);
-                        Logger.LogWarning(message);
-                    }
+                        Log($"Could not open file: {absolutePath}");
                 }
             });
         }

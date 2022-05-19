@@ -40,6 +40,7 @@ namespace GodotModules
             ModBtnsRight = new Dictionary<string, UIModBtn>();
             
             _modLoaderLogs = GetNode<RichTextLabel>(NodePathModLoaderLogs);
+            _modLoaderLogs.Text = ModLoader.ModLoaderLogs;
 
             UpdateUI();
             ModLoader.SceneMods = this;
@@ -80,6 +81,7 @@ namespace GodotModules
 
         private void _on_Load_Mods_pressed()
         {
+            ModLoader.ModLoaderLogs = "";
             _modLoaderLogs.Clear();
             ModLoader.LoadMods();
         }
