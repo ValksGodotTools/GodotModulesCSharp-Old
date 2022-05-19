@@ -58,7 +58,7 @@ namespace GodotModules
 
             _sceneMods.ModBtnsRight.Clear();
 
-            foreach (var dependency in info.Dependencies) 
+            foreach (var dependency in info.Dependencies.ToList().OrderBy(x => x)) 
             {
                 var modBtn = Prefabs.UIModBtn.Instance<UIModBtn>();
                 modBtn.PreInit(_sceneMods);
