@@ -5,11 +5,13 @@ namespace GodotModules
 {
     public class SystemFileManager
     {
-        private readonly string _gameDataPath = System.IO.Path.Combine
+        public readonly string GameDataPath = System.IO.Path.Combine
         (
             System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), 
             "Godot Modules"
         );
+
+        public readonly char Separator = Path.DirectorySeparatorChar;
 
         public T WriteConfig<T>(string pathToFile) where T : new() => 
             WriteConfig<T>(pathToFile, new T());
@@ -33,6 +35,6 @@ namespace GodotModules
             File.Exists(GetConfigPath(pathToFile));
 
         private string GetConfigPath(string pathToFile) => 
-            $"{_gameDataPath}{Path.DirectorySeparatorChar}{pathToFile}.json";
+            $"{GameDataPath}{Separator}{pathToFile}.json";
     }
 }
