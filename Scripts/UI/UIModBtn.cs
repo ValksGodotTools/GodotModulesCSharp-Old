@@ -24,6 +24,12 @@ namespace GodotModules
             _btnEnable = GetNode<Button>(NodePathBtnEnable);
         }
 
+        public void DisableButtons() 
+        {
+            _btnInfo.Disabled = true;
+            _btnEnable.Disabled = true;
+        }
+
         public void SetModName(string name) 
         {
             _modName = name;
@@ -65,8 +71,11 @@ namespace GodotModules
                     var modEnabled = mods[dependency].ModInfo.Enabled;
                     modBtn.SetEnabled(modEnabled);
                 }
-                else
+                else 
+                {
                     modBtn.SetEnabled(false);
+                    modBtn.DisableButtons();
+                }
             }
             _sceneMods.Description.Text = info.Description;
         }
