@@ -1,9 +1,9 @@
 [gd_scene load_steps=17 format=2]
 
-[ext_resource path="res://Scripts/Game.cs" type="Script" id=1]
 [ext_resource path="res://Themes/Main.tres" type="Theme" id=2]
 [ext_resource path="res://Scripts/Managers/ConsoleManager.cs" type="Script" id=3]
 [ext_resource path="res://Scripts/Managers/ErrorNotifierManager.cs" type="Script" id=4]
+[ext_resource path="res://Scripts/Managers/Managers.cs" type="Script" id=5]
 
 [sub_resource type="Environment" id=14]
 background_mode = 4
@@ -61,19 +61,17 @@ bg_color = Color( 0, 0, 0, 0.352941 )
 [sub_resource type="StyleBoxEmpty" id=4]
 
 [node name="Main" type="Node"]
+script = ExtResource( 5 )
+NodePathAudioStreamPlayer = NodePath("AudioStreamPlayer")
+NodePathWebRequestList = NodePath("WebRequests")
+NodePathScenes = NodePath("Scenes")
+NodePathConsole = NodePath("Persistent GUI/Window/Console")
+NodePathErrorNotifierManager = NodePath("Persistent GUI/Window/ErrorNotifier")
+NodePathMenuParticles = NodePath("Persistent GUI/Window/Menu Particles")
+NodePathPopups = NodePath("Persistent GUI/Window/Popups")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( 14 )
-
-[node name="Game" type="Node" parent="."]
-script = ExtResource( 1 )
-NodePathAudioStreamPlayer = NodePath("../AudioStreamPlayer")
-NodePathWebRequestList = NodePath("../WebRequests")
-NodePathScenes = NodePath("../Scenes")
-NodePathConsole = NodePath("../Persistent GUI/Window/Console")
-NodePathErrorNotifierManager = NodePath("../Persistent GUI/Window/ErrorNotifier")
-NodePathMenuParticles = NodePath("../Persistent GUI/Window/Menu Particles")
-NodePathPopups = NodePath("../Persistent GUI/Window/Popups")
 
 [node name="Scenes" type="PanelContainer" parent="."]
 anchor_right = 1.0
@@ -136,5 +134,5 @@ caret_blink_speed = 0.5
 [node name="ErrorNotifier" type="Node" parent="Persistent GUI/Window"]
 script = ExtResource( 4 )
 
-[connection signal="resized" from="Scenes" to="Game" method="_on_Scenes_resized"]
+[connection signal="resized" from="Scenes" to="." method="_on_Scenes_resized"]
 [connection signal="text_entered" from="Persistent GUI/Window/Console/Console Input" to="Persistent GUI/Window/Console" method="_on_Console_Input_text_entered"]
