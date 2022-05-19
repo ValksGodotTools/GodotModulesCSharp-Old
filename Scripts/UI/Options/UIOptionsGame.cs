@@ -4,9 +4,9 @@ namespace GodotModules
 {
     public class UIOptionsGame : Control
     {
-        [Export] public readonly NodePath NodePathColorPlayer;
-        [Export] public readonly NodePath NodePathColorEnemy;
-        [Export] public readonly NodePath NodePathColorChatText;
+        [Export] protected readonly NodePath NodePathColorPlayer;
+        [Export] protected readonly NodePath NodePathColorEnemy;
+        [Export] protected readonly NodePath NodePathColorChatText;
 
         private OptionsManager _optionsManager;
         private OptionColors _optionColors;

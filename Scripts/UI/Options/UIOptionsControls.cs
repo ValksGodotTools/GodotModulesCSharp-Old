@@ -4,7 +4,7 @@ namespace GodotModules
 {
     public class UIOptionsControls : Control
     {
-        [Export] public readonly NodePath NodePathTabContainer;
+        [Export] protected readonly NodePath NodePathTabContainer;
         private TabContainer _tabContainer;
 
         private HotkeyManager _hotkeyManager { get; set; }

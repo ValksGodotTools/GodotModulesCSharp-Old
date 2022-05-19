@@ -4,7 +4,7 @@ namespace GodotModules
 {
     public class OtherPlayer : KinematicBody2D
     {
-        [Export] public readonly NodePath NodePathSprite;
+        [Export] protected readonly NodePath NodePathSprite;
         protected Sprite _sprite;
 
         public override void _Ready()

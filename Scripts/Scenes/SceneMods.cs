@@ -4,12 +4,12 @@ namespace GodotModules
 {
     public class SceneMods : AScene
     {
-        [Export] public readonly NodePath NodePathModList;
-        [Export] public readonly NodePath NodePathModName;
-        [Export] public readonly NodePath NodePathModGameVersions;
-        [Export] public readonly NodePath NodePathModDependencies;
-        [Export] public readonly NodePath NodePathModDescription;
-        [Export] public readonly NodePath NodePathModLoaderLogs;
+        [Export] protected readonly NodePath NodePathModList;
+        [Export] protected readonly NodePath NodePathModName;
+        [Export] protected readonly NodePath NodePathModGameVersions;
+        [Export] protected readonly NodePath NodePathModDependencies;
+        [Export] protected readonly NodePath NodePathModDescription;
+        [Export] protected readonly NodePath NodePathModLoaderLogs;
 
         private Control _modList;
         private Label _modName;

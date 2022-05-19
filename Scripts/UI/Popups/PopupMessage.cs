@@ -4,7 +4,7 @@ namespace GodotModules
 {
     public class PopupMessage : WindowDialog
     {
-        [Export] public readonly NodePath NodePathMessage;
+        [Export] protected readonly NodePath NodePathMessage;
 
         private string _message;
         private string _title;

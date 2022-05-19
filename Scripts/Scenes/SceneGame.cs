@@ -4,9 +4,9 @@ namespace GodotModules
 {
     public class SceneGame : AScene
     {
-        [Export] public readonly NodePath NodePathPositionPlayerSpawn;
-        [Export] public readonly NodePath NodePathPositionEnemySpawn;
-        [Export] public readonly NodePath NodePathNavigation2D;
+        [Export] protected readonly NodePath NodePathPositionPlayerSpawn;
+        [Export] protected readonly NodePath NodePathPositionEnemySpawn;
+        [Export] protected readonly NodePath NodePathNavigation2D;
         public Navigation2D Navigation2D { get; set; }
         public Position2D PositionPlayerSpawn { get; set; }
         public Position2D PositionEnemySpawn { get; set; }

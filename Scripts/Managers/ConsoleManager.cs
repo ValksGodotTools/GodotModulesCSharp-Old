@@ -4,8 +4,8 @@ namespace GodotModules
 {
     public class ConsoleManager : Control
     {
-        [Export] public readonly NodePath NodePathConsoleLogs;
-        [Export] public readonly NodePath NodePathConsoleInput;
+        [Export] protected readonly NodePath NodePathConsoleLogs;
+        [Export] protected readonly NodePath NodePathConsoleInput;
         private TextEdit ConsoleLogs;
         private LineEdit ConsoleInput;
 

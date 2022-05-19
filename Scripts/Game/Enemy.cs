@@ -4,7 +4,7 @@ namespace GodotModules
 {
     public class Enemy : KinematicBody2D
     {
-        [Export] public readonly NodePath NodePathSprite;
+        [Export] protected readonly NodePath NodePathSprite;
         private Sprite Sprite { get; set; }
 
         private List<OtherPlayer> _players;

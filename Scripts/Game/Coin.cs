@@ -4,7 +4,7 @@ namespace GodotModules
 {
     public class Coin : RigidBody2D
     {
-        [Export] public readonly NodePath NodePathAnimatedSprite;
+        [Export] protected readonly NodePath NodePathAnimatedSprite;
 
         public override void _Ready()
         {

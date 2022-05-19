@@ -20,7 +20,7 @@
 		"scope": "csharp",
 		"prefix": "nodepath",
 		"body": [
-			"[Export] public readonly NodePath NodePath"
+			"[Export] protected readonly NodePath NodePath"
 		],
 		"description": "A public export set via the in-game editor"
 	},

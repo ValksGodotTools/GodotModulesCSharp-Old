@@ -4,7 +4,7 @@ namespace GodotModules
 {
     public class SceneMenu : AScene
     {
-        [Export] public readonly NodePath NodePathBtnPlay;
+        [Export] protected readonly NodePath NodePathBtnPlay;
 
         private Managers _managers;
         private Particles2D _menuParticles;

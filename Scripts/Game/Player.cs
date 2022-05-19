@@ -4,8 +4,8 @@ namespace GodotModules
 {
     public class Player : OtherPlayer
     {
-        [Export] public readonly NodePath NodePathCamera;
-        [Export] public readonly NodePath NodePathAnimatedSprite;
+        [Export] protected readonly NodePath NodePathCamera;
+        [Export] protected readonly NodePath NodePathAnimatedSprite;
         private Camera2D _camera;
         private AnimatedSprite _animatedSprite;
 

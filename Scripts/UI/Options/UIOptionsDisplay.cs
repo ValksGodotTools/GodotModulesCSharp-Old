@@ -4,10 +4,10 @@ namespace GodotModules
 {
     public class UIOptionsDisplay : Control
     {
-        [Export] public readonly NodePath NodePathFullscreen;
-        [Export] public readonly NodePath NodePathVSync;
-        [Export] public readonly NodePath NodePathWindowSizeWidth;
-        [Export] public readonly NodePath NotePathWindowSizeHeight;
+        [Export] protected readonly NodePath NodePathFullscreen;
+        [Export] protected readonly NodePath NodePathVSync;
+        [Export] protected readonly NodePath NodePathWindowSizeWidth;
+        [Export] protected readonly NodePath NotePathWindowSizeHeight;
         private LineEdit _windowSizeWidth;
         private LineEdit _windowSizeHeight;
         private Vector2 _windowSize;

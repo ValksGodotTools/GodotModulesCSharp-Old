@@ -4,10 +4,10 @@ namespace GodotModules
 {
     public class UILobby : Node
     {
-        [Export] public readonly NodePath NodePathLobbyName;
-        [Export] public readonly NodePath NodePathLobbyPlayerCount;
-        [Export] public readonly NodePath NodePathPlayerList;
-        [Export] public readonly NodePath NodePathChatLogs;
+        [Export] protected readonly NodePath NodePathLobbyName;
+        [Export] protected readonly NodePath NodePathLobbyPlayerCount;
+        [Export] protected readonly NodePath NodePathPlayerList;
+        [Export] protected readonly NodePath NodePathChatLogs;
 
         private Label _lobbyName;
         private Label _lobbyPlayerCount;

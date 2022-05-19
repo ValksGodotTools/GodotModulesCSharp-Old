@@ -4,8 +4,8 @@ namespace GodotModules
 {
     public class UIOptionsAudio : Control
     {
-        [Export] public readonly NodePath NodePathMusic;
-        [Export] public readonly NodePath NodePathSFX;
+        [Export] protected readonly NodePath NodePathMusic;
+        [Export] protected readonly NodePath NodePathSFX;
 
         private HSlider _music;
         private HSlider _sfx;

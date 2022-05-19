@@ -4,11 +4,11 @@ namespace GodotModules
 {
     public class PopupCreateLobby : WindowDialog
     {
-        [Export] public readonly NodePath NodePathName;
-        [Export] public readonly NodePath NodePathDescription;
-        [Export] public readonly NodePath NodePathPort;
-        [Export] public readonly NodePath NodePathMaxPlayers;
-        [Export] public readonly NodePath NodePathPassword;
+        [Export] protected readonly NodePath NodePathName;
+        [Export] protected readonly NodePath NodePathDescription;
+        [Export] protected readonly NodePath NodePathPort;
+        [Export] protected readonly NodePath NodePathMaxPlayers;
+        [Export] protected readonly NodePath NodePathPassword;
 
         private LineEdit _name;
         private TextEdit _description;

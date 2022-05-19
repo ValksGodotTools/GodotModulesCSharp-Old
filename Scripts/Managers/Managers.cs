@@ -18,13 +18,13 @@ namespace GodotModules
     {
         public static Managers Instance { get; private set; }
 
-        [Export] public readonly NodePath NodePathAudioStreamPlayer;
-        [Export] public readonly NodePath NodePathWebRequestList;
-        [Export] public readonly NodePath NodePathScenes;
-        [Export] public readonly NodePath NodePathConsole;
-        [Export] public readonly NodePath NodePathErrorNotifierManager;
+        [Export] protected readonly NodePath NodePathAudioStreamPlayer;
+        [Export] protected readonly NodePath NodePathWebRequestList;
+        [Export] protected readonly NodePath NodePathScenes;
+        [Export] protected readonly NodePath NodePathConsole;
+        [Export] protected readonly NodePath NodePathErrorNotifierManager;
         [Export] protected readonly NodePath NodePathMenuParticles;
-        [Export] public readonly NodePath NodePathPopups;
+        [Export] protected readonly NodePath NodePathPopups;
 
         public OptionsManager Options { get; private set; }
         public TokenManager Token { get; private set; }

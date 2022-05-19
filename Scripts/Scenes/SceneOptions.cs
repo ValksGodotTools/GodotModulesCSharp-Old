@@ -6,19 +6,19 @@ namespace GodotModules
     {
         private static OptionSection _currentSection = OptionSection.Game;
 
-        [Export] public readonly NodePath NodePathBtnGame;
-        [Export] public readonly NodePath NodePathBtnVideo;
-        [Export] public readonly NodePath NodePathBtnDisplay;
-        [Export] public readonly NodePath NodePathBtnAudio;
-        [Export] public readonly NodePath NodePathBtnControls;
-        [Export] public readonly NodePath NodePathBtnMultiplayer;
+        [Export] protected readonly NodePath NodePathBtnGame;
+        [Export] protected readonly NodePath NodePathBtnVideo;
+        [Export] protected readonly NodePath NodePathBtnDisplay;
+        [Export] protected readonly NodePath NodePathBtnAudio;
+        [Export] protected readonly NodePath NodePathBtnControls;
+        [Export] protected readonly NodePath NodePathBtnMultiplayer;
 
-        [Export] public readonly NodePath NodePathOptionsGame;
-        [Export] public readonly NodePath NodePathOptionsVideo;
-        [Export] public readonly NodePath NodePathOptionsDisplay;
-        [Export] public readonly NodePath NodePathOptionsAudio;
-        [Export] public readonly NodePath NodePathOptionsControls;
-        [Export] public readonly NodePath NodePathOptionsMultiplayer;
+        [Export] protected readonly NodePath NodePathOptionsGame;
+        [Export] protected readonly NodePath NodePathOptionsVideo;
+        [Export] protected readonly NodePath NodePathOptionsDisplay;
+        [Export] protected readonly NodePath NodePathOptionsAudio;
+        [Export] protected readonly NodePath NodePathOptionsControls;
+        [Export] protected readonly NodePath NodePathOptionsMultiplayer;
 
         private Button _btnGame;
         private Button _btnVideo;

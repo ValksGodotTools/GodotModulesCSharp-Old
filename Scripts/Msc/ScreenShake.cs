@@ -4,7 +4,7 @@ namespace GodotModules
 {
     public class ScreenShake : Node
     {
-        [Export] public readonly NodePath NodePathShakeTween;
+        [Export] protected readonly NodePath NodePathShakeTween;
         private Tween _shakeTween;
         private Camera2D _camera2D;
         private GTimer _frequency;

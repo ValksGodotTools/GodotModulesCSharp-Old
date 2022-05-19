@@ -4,7 +4,7 @@ namespace GodotModules
 {
     public class PopupError : WindowDialog
     {
-        [Export] public readonly NodePath NodePathError;
+        [Export] protected readonly NodePath NodePathError;
 
         private string _message;
         private string _title;

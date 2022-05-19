@@ -4,7 +4,7 @@ namespace GodotModules
 {
     public class PopupLineEdit : WindowDialog
     {
-        [Export] public readonly NodePath NodePathLineEdit;
+        [Export] protected readonly NodePath NodePathLineEdit;
         private LineEdit _lineEdit;
 
         private string _title;

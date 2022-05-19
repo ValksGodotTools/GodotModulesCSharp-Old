@@ -4,8 +4,8 @@ namespace GodotModules
 {
     public class UIHotkey : Node
     {
-        [Export] public readonly NodePath NodePathLabel;
-        [Export] public readonly NodePath NodePathBtnHotkey;
+        [Export] protected readonly NodePath NodePathLabel;
+        [Export] protected readonly NodePath NodePathBtnHotkey;
 
         private Label _label;
         private UIBtnHotkey _btnHotkey;

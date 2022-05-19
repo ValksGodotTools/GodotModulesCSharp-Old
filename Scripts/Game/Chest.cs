@@ -4,7 +4,7 @@ namespace GodotModules
 {
     public class Chest : Node2D
     {
-        [Export] public readonly NodePath NodePathAnimatedSprite;
+        [Export] protected readonly NodePath NodePathAnimatedSprite;
 
         private AnimatedSprite _animatedSprite;
         private bool _opened;

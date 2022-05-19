@@ -4,10 +4,10 @@ namespace GodotModules
 {
     public class UIOptionsMultiplayer : Control
     {
-        [Export] public readonly NodePath NodePathOnlineUsername;
-        [Export] public readonly NodePath NodePathWebServerAddress;
-        [Export] public readonly NodePath NodePathBtnCheckConnection;
-        [Export] public readonly NodePath NodePathWebServerStatus;
+        [Export] protected readonly NodePath NodePathOnlineUsername;
+        [Export] protected readonly NodePath NodePathWebServerAddress;
+        [Export] protected readonly NodePath NodePathBtnCheckConnection;
+        [Export] protected readonly NodePath NodePathWebServerStatus;
         private LineEdit _onlineUsername;
         private LineEdit _webServerAddress;
         private Button _btnCheckConnection;

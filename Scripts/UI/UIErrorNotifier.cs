@@ -4,8 +4,8 @@ namespace GodotModules
 {
     public class UIErrorNotifier : Control
     {
-        [Export] public readonly NodePath NodePathLabel;
-        [Export] public readonly NodePath NodePathTween;
+        [Export] protected readonly NodePath NodePathLabel;
+        [Export] protected readonly NodePath NodePathTween;
 
         public int Count { get; set; }
 
