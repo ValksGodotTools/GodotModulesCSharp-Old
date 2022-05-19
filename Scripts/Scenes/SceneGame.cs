@@ -41,7 +41,7 @@ namespace GodotModules
             }
 
             //for (int i = 0; i < 5; i++)
-                //_gameManager.CreateEnemy(PositionEnemySpawn.Position);
+                //CreateEnemy(PositionEnemySpawn.Position);
         }
 
         public void CreateMainPlayer(Vector2 pos = default(Vector2))

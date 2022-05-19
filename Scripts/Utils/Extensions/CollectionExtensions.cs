@@ -5,6 +5,8 @@ namespace GodotModules
         public static string Print<T>(this IEnumerable<T> value, bool newLine = true) =>
             value != null ? string.Join(newLine ? "\n" : ", ", value) : null;
 
+        public static string PrintFull(this object v) => Newtonsoft.Json.JsonConvert.SerializeObject(v, Newtonsoft.Json.Formatting.Indented);
+
         public static void ForEach<T>(this IEnumerable<T> value, Action<T> action)
         {
             foreach (T element in value)
