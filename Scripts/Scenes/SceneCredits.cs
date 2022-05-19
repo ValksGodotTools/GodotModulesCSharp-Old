@@ -11,7 +11,7 @@ namespace GodotModules
         private SceneManager _sceneManager;
 
         public override void PreInitManagers(Managers managers) => 
-            _sceneManager = managers.Scene;
+            _sceneManager = managers.ManagerScene;
 
         public override void _Ready()
         {

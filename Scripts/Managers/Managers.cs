@@ -26,16 +26,16 @@ namespace GodotModules
         [Export] protected readonly NodePath NodePathMenuParticles;
         [Export] protected readonly NodePath NodePathPopups;
 
-        public OptionsManager Options { get; private set; }
-        public TokenManager Token { get; private set; }
-        public NetworkManager Network { get; private set; }
-        public SceneManager Scene { get; private set; }
-        public WebManager Web { get; private set; }
-        public MusicManager Music { get; private set; }
-        public ErrorNotifierManager ErrorNotifier { get; private set; }
-        public PopupManager Popup { get; private set; }
-        public HotkeyManager Hotkey { get; private set; }
-        public ConsoleManager Console { get; private set; }
+        public OptionsManager ManagerOptions { get; private set; }
+        public TokenManager ManagerToken { get; private set; }
+        public NetworkManager ManagerNetwork { get; private set; }
+        public SceneManager ManagerScene { get; private set; }
+        public WebManager ManagerWeb { get; private set; }
+        public MusicManager ManagerMusic { get; private set; }
+        public ErrorNotifierManager ManagerErrorNotifier { get; private set; }
+        public PopupManager ManagerPopup { get; private set; }
+        public HotkeyManager ManagerHotkey { get; private set; }
+        public ConsoleManager ManagerConsole { get; private set; }
 
         private Particles2D _menuParticles;
         private bool _ready;
@@ -45,87 +45,87 @@ namespace GodotModules
             Instance = this;
 
             var systemFileManager = new SystemFileManager();
-            Hotkey = new(systemFileManager, new List<string>() {"UI", "Player", "Camera"});
-            Options = new(systemFileManager, Hotkey);
-            Token = new();
-            Web = new(new WebRequests(GetNode<Node>(NodePathWebRequestList)), Token, Options.Options.WebServerAddress);
-            Music = new(GetNode<AudioStreamPlayer>(NodePathAudioStreamPlayer), Options);
-            ErrorNotifier = GetNode<ErrorNotifierManager>(NodePathErrorNotifierManager);
-            Popup = new(GetNode<Node>(NodePathPopups));
-            Network = new(Popup);
-            Console = GetNode<ConsoleManager>(NodePathConsole);
+            ManagerHotkey = new(systemFileManager, new List<string>() {"UI", "Player", "Camera"});
+            ManagerOptions = new(systemFileManager, ManagerHotkey);
+            ManagerToken = new();
+            ManagerWeb = new(new WebRequests(GetNode<Node>(NodePathWebRequestList)), ManagerToken, ManagerOptions.Options.WebServerAddress);
+            ManagerMusic = new(GetNode<AudioStreamPlayer>(NodePathAudioStreamPlayer), ManagerOptions);
+            ManagerErrorNotifier = GetNode<ErrorNotifierManager>(NodePathErrorNotifierManager);
+            ManagerPopup = new(GetNode<Node>(NodePathPopups));
+            ManagerNetwork = new(ManagerPopup);
+            ManagerConsole = GetNode<ConsoleManager>(NodePathConsole);
 
             _menuParticles = GetNode<Particles2D>(NodePathMenuParticles);
             _menuParticles.Emitting = true;
 
-            await InitSceneManager(GetNode<Control>(NodePathScenes), Hotkey);
+            await InitSceneManager(GetNode<Control>(NodePathScenes), ManagerHotkey);
                         
-            Logger.UIConsole = Console;
-            Logger.ErrorNotifierManager = ErrorNotifier;
+            Logger.UIConsole = ManagerConsole;
+            Logger.ErrorNotifierManager = ManagerErrorNotifier;
 
             UpdateParticleSystem();
 
-            Music.LoadTrack("Menu", "Audio/Music/Unsolicited trailer music loop edit.wav");
-            Music.PlayTrack("Menu");
+            ManagerMusic.LoadTrack("Menu", "Audio/Music/Unsolicited trailer music loop edit.wav");
+            ManagerMusic.PlayTrack("Menu");
 
-            Network.StartServer(25565, 100);
-            Network.StartClient("127.0.0.1", 25565);
+            ManagerNetwork.StartServer(25565, 100);
+            ManagerNetwork.StartClient("127.0.0.1", 25565);
 
-            await Web.CheckConnectionAsync();
+            await ManagerWeb.CheckConnectionAsync();
 
-            if (Web.ConnectionAlive)
-                await Web.GetExternalIpAsync();
+            if (ManagerWeb.ConnectionAlive)
+                await ManagerWeb.GetExternalIpAsync();
 
             _ready = true;
         }
 
         public async Task InitSceneManager(Control sceneList, HotkeyManager hotkeyManager)
         {
-            Scene = new(sceneList, new GodotFileManager(), hotkeyManager, this);
+            ManagerScene = new(sceneList, new GodotFileManager(), hotkeyManager, this);
 
             // Custom Pre Init
-            Scene.PreInit[GameScene.Menu] = (node) => {
+            ManagerScene.PreInit[GameScene.Menu] = (node) => {
                 ((SceneMenu)node).PreInit(_menuParticles);
             };
 
             // Esc Pressed
-            Scene.EscPressed[GameScene.Credits] = async () => await Scene.ChangeScene(GameScene.Menu);
-            Scene.EscPressed[GameScene.GameServers] = async () => await Scene.ChangeScene(GameScene.Menu);
-            Scene.EscPressed[GameScene.Mods] = async () => await Scene.ChangeScene(GameScene.Menu);
-            Scene.EscPressed[GameScene.Options] = async () =>
+            ManagerScene.EscPressed[GameScene.Credits] = async () => await ManagerScene.ChangeScene(GameScene.Menu);
+            ManagerScene.EscPressed[GameScene.GameServers] = async () => await ManagerScene.ChangeScene(GameScene.Menu);
+            ManagerScene.EscPressed[GameScene.Mods] = async () => await ManagerScene.ChangeScene(GameScene.Menu);
+            ManagerScene.EscPressed[GameScene.Options] = async () =>
             {
-                Token.Cancel("check_connection");
-                await Scene.ChangeScene(GameScene.Menu);
+                ManagerToken.Cancel("check_connection");
+                await ManagerScene.ChangeScene(GameScene.Menu);
             };
-            Scene.EscPressed[GameScene.Lobby] = async () => await Scene.ChangeScene(GameScene.GameServers);
-            Scene.EscPressed[GameScene.Game] = async () => {
-                await Scene.ChangeScene(GameScene.Menu);
+            ManagerScene.EscPressed[GameScene.Lobby] = async () => await ManagerScene.ChangeScene(GameScene.GameServers);
+            ManagerScene.EscPressed[GameScene.Game] = async () => {
+                await ManagerScene.ChangeScene(GameScene.Menu);
                 _menuParticles.Emitting = true;
                 _menuParticles.Visible = true;
             };
 
-            await Scene.InitAsync();
+            await ManagerScene.InitAsync();
         }
 
         public override async void _Process(float delta)
         {
             Logger.Update();
-            await Network.Update();
+            await ManagerNetwork.Update();
         }
 
         public override void _Input(InputEvent @event)
         {
             if (Input.IsActionJustPressed("ui_cancel"))
-                if (Console.Visible)
-                    Console.ToggleVisibility();
-                else if (Scene.EscPressed.ContainsKey(Scene.CurScene))
-                    Scene.EscPressed[Scene.CurScene]();
+                if (ManagerConsole.Visible)
+                    ManagerConsole.ToggleVisibility();
+                else if (ManagerScene.EscPressed.ContainsKey(ManagerScene.CurScene))
+                    ManagerScene.EscPressed[ManagerScene.CurScene]();
 
             if (Input.IsActionJustPressed("ui_fullscreen"))
-                Options.ToggleFullscreen();
+                ManagerOptions.ToggleFullscreen();
 
             if (Input.IsActionJustPressed("ui_console"))
-                Console.ToggleVisibility();
+                ManagerConsole.ToggleVisibility();
         }
 
         public override async void _Notification(int what)
@@ -151,9 +151,9 @@ namespace GodotModules
 
         private async Task Cleanup()
         {
-            Options.SaveOptions();
-            await Network.Cleanup();
-            Token.Cleanup();
+            ManagerOptions.SaveOptions();
+            await ManagerNetwork.Cleanup();
+            ManagerToken.Cleanup();
             GetTree().Quit();
         }
     }
