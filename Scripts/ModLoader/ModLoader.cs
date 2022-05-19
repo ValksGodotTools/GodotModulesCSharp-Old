@@ -11,10 +11,10 @@ namespace GodotModules
         public static string ModLoaderLogs { get; set; }
         public static string PathModsFolder { get; private set; }
         public static Dictionary<string, Mod> Mods { get; private set; }
+        public static Script Script { get; set; }
 
         private static string _pathModsEnabled { get; set; }
         private static string _pathLuaScripts { get; set; }
-        private static Script _script { get; set; }
         private static SystemFileManager _systemFileManager { get; set; }
         private static GodotFileManager _godotFileManager { get; set; }
 
@@ -40,7 +40,7 @@ namespace GodotModules
         {
             try
             {
-                _script.Call(_script.Globals[v], args);
+                Script.Call(Script.Globals[v], args);
             }
             catch (ScriptRuntimeException e)
             {
@@ -55,7 +55,7 @@ namespace GodotModules
             foreach (var mod in Mods.Values)
                 mod.ModInfo.MissingDependencies.Clear();
 
-            _script = new Script();
+            Script = new Script();
             LoadLuaScripts(_pathLuaScripts);
 
             DisableModsWithLackingDependencies();
@@ -133,7 +133,7 @@ namespace GodotModules
         {
             try
             {
-                _script.DoFile(mod.PathScript);
+                Script.DoFile(mod.PathScript);
                 Log($"Loaded {mod.ModInfo.Name}");
                 modLoadedCount++;
             }
@@ -204,7 +204,7 @@ namespace GodotModules
                     var err = luaScript.Open(absolutePath, Godot.File.ModeFlags.Read);
 
                     if (err == Godot.Error.Ok)
-                        _script.DoString(luaScript.GetAsText());
+                        Script.DoString(luaScript.GetAsText());
                     else
                         Log($"Could not open file: {absolutePath}");
                 }

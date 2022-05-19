@@ -40,8 +40,21 @@ namespace GodotModules
                     coin.Target = Player;
             }
 
+            ModLoader.Script.Globals["Game", "Test"] = (Action<int>)Test;
+            ModLoader.Call("OnGameInit");
+
             //for (int i = 0; i < 5; i++)
                 //CreateEnemy(PositionEnemySpawn.Position);
+        }
+
+        public override void _PhysicsProcess(float delta)
+        {
+            ModLoader.Call("OnGameUpdate", delta);
+        }
+
+        public void Test(int x)
+        {
+            Logger.Log("Hello from Lua: " + x);
         }
 
         public void CreateMainPlayer(Vector2 pos = default(Vector2))

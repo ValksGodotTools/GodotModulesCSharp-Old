@@ -1,5 +1,5 @@
--- Player
 Player = {}
+Game = {}
 
 -- Functions
 function OnGameInit() end
