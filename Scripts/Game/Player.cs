@@ -10,6 +10,7 @@ namespace GodotModules
         private AnimatedSprite _animatedSprite;
 
         private bool _movingDown, _movingUp, _movingLeft, _movingRight, _running, _attack;
+        private float _zoom = 0.75f;
 
         public override void _Ready()
         {
@@ -23,6 +24,13 @@ namespace GodotModules
             //_sprite.LerpRotationToTarget(GetGlobalMousePosition());
             HandleMovement(delta);
             HandleShoot();
+
+            _camera.Zoom = _camera.Zoom.Lerp(new Vector2(_zoom, _zoom), 0.1f);
+        }
+
+        public override void _Input(InputEvent @event)
+        {
+            HandleCameraZoom();
         }
 
         private void _on_Area2D_area_entered(Area2D area)
@@ -32,6 +40,17 @@ namespace GodotModules
                 var chest = (Chest)area.GetParent();
                 chest.Open();
             }
+        }
+
+        private void HandleCameraZoom()
+        {
+            if (Input.IsActionPressed("camera_zoom_in"))
+                _zoom -= 0.1f;
+
+            if (Input.IsActionPressed("camera_zoom_out"))
+                _zoom += 0.1f;
+
+            _zoom = _zoom.Clamp(0.3f, 1.5f);
         }
 
         private void HandleShoot()
