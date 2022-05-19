@@ -389,6 +389,7 @@ script = ExtResource( 3 )
 NodePathPositionPlayerSpawn = NodePath("Player Spawn")
 NodePathPositionEnemySpawn = NodePath("Enemy Spawn")
 NodePathNavigation2D = NodePath("Navigation2D")
+NodePathCoinList = NodePath("Props")
 
 [node name="Lights" type="Node" parent="."]
 

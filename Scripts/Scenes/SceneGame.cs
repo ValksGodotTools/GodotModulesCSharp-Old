@@ -4,11 +4,10 @@ namespace GodotModules
 {
     public class SceneGame : AScene
     {
-        public static SceneGame Instance { get; private set; }
-
         [Export] protected readonly NodePath NodePathPositionPlayerSpawn;
         [Export] protected readonly NodePath NodePathPositionEnemySpawn;
         [Export] protected readonly NodePath NodePathNavigation2D;
+        [Export] protected readonly NodePath NodePathCoinList;
 
         public Navigation2D Navigation2D { get; set; }
         public Position2D PositionPlayerSpawn { get; set; }
@@ -25,8 +24,6 @@ namespace GodotModules
 
         public override void _Ready()
         {
-            Instance = this;
-            
             Navigation2D = GetNode<Navigation2D>(NodePathNavigation2D);
             PositionPlayerSpawn = GetNode<Position2D>(NodePathPositionPlayerSpawn);
             PositionEnemySpawn = GetNode<Position2D>(NodePathPositionEnemySpawn);
@@ -35,6 +32,14 @@ namespace GodotModules
             Players = new();
 
             CreateMainPlayer(PositionPlayerSpawn.Position);
+
+            var coinList = GetNode<Node>(NodePathCoinList);
+            foreach (var child in coinList.GetChildren())
+            {
+                if (child is Coin coin)
+                    coin.Target = Player;
+            }
+
             //for (int i = 0; i < 5; i++)
                 //_gameManager.CreateEnemy(PositionEnemySpawn.Position);
         }

@@ -6,6 +6,8 @@ namespace GodotModules
     {
         [Export] protected readonly NodePath NodePathAnimatedSprite;
 
+        public OtherPlayer Target { get; set; }
+
         public override void _Ready()
         {
             var animatedSprite = GetNode<AnimatedSprite>(NodePathAnimatedSprite);
@@ -16,6 +18,12 @@ namespace GodotModules
         public override void _IntegrateForces(Physics2DDirectBodyState state)
         {
             RotationDegrees = 0;
+
+            if (Target != null)
+            {
+                var dir = (Target.Position - Position).Normalized();
+                LinearVelocity = dir * 10;
+            }
         }
     }
 }

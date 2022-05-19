@@ -16,8 +16,6 @@ namespace GodotModules
 {
     public class Managers : Node
     {
-        public static Managers Instance { get; private set; }
-
         [Export] protected readonly NodePath NodePathAudioStreamPlayer;
         [Export] protected readonly NodePath NodePathWebRequestList;
         [Export] protected readonly NodePath NodePathScenes;
@@ -42,8 +40,6 @@ namespace GodotModules
 
         public override async void _Ready()
         {
-            Instance = this;
-
             var systemFileManager = new SystemFileManager();
             ManagerHotkey = new(systemFileManager, new List<string>() {"UI", "Player", "Camera"});
             ManagerOptions = new(systemFileManager, ManagerHotkey);
