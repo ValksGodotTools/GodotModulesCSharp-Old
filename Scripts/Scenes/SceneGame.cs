@@ -40,9 +40,9 @@ namespace GodotModules
                     coin.Target = Player;
             }
 
-            ModLoader.Script.Globals["Game", "CreateMainPlayer"] = (Action<Vector2>)CreateMainPlayer;
-            ModLoader.Script.Globals["Game", "CreateOtherPlayer"] = (Action<Vector2>)CreateOtherPlayer;
-            ModLoader.Script.Globals["Game", "CreateEnemy"] = (Action<Vector2>)CreateEnemy;
+            ModLoader.Hook("Game", nameof(CreateMainPlayer),  (Action<Vector2>)CreateMainPlayer);
+            ModLoader.Hook("Game", nameof(CreateOtherPlayer), (Action<Vector2>)CreateOtherPlayer);
+            ModLoader.Hook("Game", nameof(CreateEnemy),       (Action<Vector2>)CreateEnemy);
             ModLoader.Call("OnGameInit");
 
             //for (int i = 0; i < 5; i++)

@@ -11,12 +11,15 @@ namespace GodotModules
         public static string ModLoaderLogs { get; set; }
         public static string PathModsFolder { get; private set; }
         public static Dictionary<string, Mod> Mods { get; private set; }
-        public static Script Script { get; set; }
 
+        private static Script Script { get; set; }
         private static string _pathModsEnabled { get; set; }
         private static string _pathLuaScripts { get; set; }
         private static SystemFileManager _systemFileManager { get; set; }
         private static GodotFileManager _godotFileManager { get; set; }
+
+        public static void Hook<T>(string className, string methodName, T method)
+            => Script.Globals[className, methodName] = method;
 
         public static void Init(SystemFileManager systemFileManager, GodotFileManager godotFileManager)
         {
