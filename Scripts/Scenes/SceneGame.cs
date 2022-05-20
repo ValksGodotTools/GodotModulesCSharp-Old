@@ -40,7 +40,7 @@ namespace GodotModules
                     coin.Target = Player;
             }
 
-            ModLoader.Script.Globals["Game", "Test"] = (Action<int>)Test;
+            ModLoader.Script.Globals["Game", "Test"] = (Action<Vector2>)Test;
             ModLoader.Call("OnGameInit");
 
             //for (int i = 0; i < 5; i++)
@@ -52,7 +52,7 @@ namespace GodotModules
             ModLoader.Call("OnGameUpdate", delta);
         }
 
-        public void Test(int x)
+        public void Test(Vector2 x)
         {
             Logger.Log("Hello from Lua: " + x);
         }
