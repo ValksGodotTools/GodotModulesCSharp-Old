@@ -85,3 +85,7 @@ margin_left = 617.0
 margin_right = 739.0
 margin_bottom = 52.0
 text = "Refresh"
+
+[connection signal="pressed" from="VBoxContainer/MarginContainer2/Nav/Create Lobby" to="." method="_on_Create_Lobby_pressed"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer2/Nav/Direct Connect" to="." method="_on_Direct_Connect_pressed"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer2/Nav/Refresh" to="." method="_on_Refresh_pressed"]
