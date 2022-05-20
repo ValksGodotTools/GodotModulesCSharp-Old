@@ -40,7 +40,9 @@ namespace GodotModules
                     coin.Target = Player;
             }
 
-            ModLoader.Script.Globals["Game", "Test"] = (Action<Vector2>)Test;
+            ModLoader.Script.Globals["Game", "CreateMainPlayer"] = (Action<Vector2>)CreateMainPlayer;
+            ModLoader.Script.Globals["Game", "CreateOtherPlayer"] = (Action<Vector2>)CreateOtherPlayer;
+            ModLoader.Script.Globals["Game", "CreateEnemy"] = (Action<Vector2>)CreateEnemy;
             ModLoader.Call("OnGameInit");
 
             //for (int i = 0; i < 5; i++)
@@ -50,11 +52,6 @@ namespace GodotModules
         public override void _PhysicsProcess(float delta)
         {
             ModLoader.Call("OnGameUpdate", delta);
-        }
-
-        public void Test(Vector2 x)
-        {
-            Logger.Log("Hello from Lua: " + x);
         }
 
         public void CreateMainPlayer(Vector2 pos = default(Vector2))
