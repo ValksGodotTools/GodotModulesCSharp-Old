@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Themes/Button New/Large.tres" type="Theme" id=1]
 [ext_resource path="res://Themes/Main.tres" type="Theme" id=2]
@@ -6,12 +6,16 @@
 
 [sub_resource type="StyleBoxEmpty" id=1]
 
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 0.101961, 0.101961, 0.101961, 1 )
+
 [node name="Game Servers" type="PanelContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 2 )
 custom_styles/panel = SubResource( 1 )
 script = ExtResource( 3 )
+NodePathLobbyList = NodePath("VBoxContainer/MarginContainer/VBoxContainer/ScrollContainer/Lobby List")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 margin_right = 1024.0
@@ -26,30 +30,60 @@ custom_constants/margin_top = 10
 custom_constants/margin_left = 10
 custom_constants/margin_bottom = 10
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer"]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 1014.0
 margin_bottom = 514.0
+custom_constants/separation = 0
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/MarginContainer/VBoxContainer"]
+margin_right = 1004.0
+margin_bottom = 23.0
+custom_styles/panel = SubResource( 3 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/PanelContainer"]
+margin_right = 1004.0
+margin_bottom = 23.0
+
+[node name="SortName" type="Button" parent="VBoxContainer/MarginContainer/VBoxContainer/PanelContainer/HBoxContainer"]
+margin_left = 102.0
+margin_right = 145.0
+margin_bottom = 23.0
+size_flags_horizontal = 6
+text = "Name"
+
+[node name="SortPlayers" type="Button" parent="VBoxContainer/MarginContainer/VBoxContainer/PanelContainer/HBoxContainer"]
+margin_left = 350.0
+margin_right = 402.0
+margin_bottom = 23.0
+size_flags_horizontal = 6
+text = "Players"
+
+[node name="SortPing" type="Button" parent="VBoxContainer/MarginContainer/VBoxContainer/PanelContainer/HBoxContainer"]
+margin_left = 611.0
+margin_right = 645.0
+margin_bottom = 23.0
+size_flags_horizontal = 6
+text = "Ping"
+
+[node name="SortDescription" type="Button" parent="VBoxContainer/MarginContainer/VBoxContainer/PanelContainer/HBoxContainer"]
+margin_left = 842.0
+margin_right = 918.0
+margin_bottom = 23.0
+size_flags_horizontal = 6
+text = "Description"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/MarginContainer/VBoxContainer"]
+margin_top = 23.0
+margin_right = 1004.0
+margin_bottom = 504.0
 size_flags_vertical = 3
 
-[node name="Lobby List" type="VBoxContainer" parent="VBoxContainer/MarginContainer/ScrollContainer"]
+[node name="Lobby List" type="VBoxContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/ScrollContainer"]
 margin_right = 1004.0
-margin_bottom = 104.0
 size_flags_horizontal = 3
-
-[node name="Button" type="Button" parent="VBoxContainer/MarginContainer/ScrollContainer/Lobby List"]
-margin_right = 1004.0
-margin_bottom = 50.0
-rect_min_size = Vector2( 0, 50 )
-text = "Valks Server (120ms) 1/5"
-
-[node name="Button2" type="Button" parent="VBoxContainer/MarginContainer/ScrollContainer/Lobby List"]
-margin_top = 54.0
-margin_right = 1004.0
-margin_bottom = 104.0
-rect_min_size = Vector2( 0, 50 )
-text = "PewDiePie's Server (120ms) 1/5"
+custom_constants/separation = 0
 
 [node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer"]
 margin_top = 528.0
@@ -86,6 +120,10 @@ margin_right = 739.0
 margin_bottom = 52.0
 text = "Refresh"
 
+[connection signal="pressed" from="VBoxContainer/MarginContainer/VBoxContainer/PanelContainer/HBoxContainer/SortName" to="." method="_on_SortName_pressed"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer/VBoxContainer/PanelContainer/HBoxContainer/SortPlayers" to="." method="_on_SortPlayers_pressed"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer/VBoxContainer/PanelContainer/HBoxContainer/SortPing" to="." method="_on_SortPing_pressed"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer/VBoxContainer/PanelContainer/HBoxContainer/SortDescription" to="." method="_on_SortDescription_pressed"]
 [connection signal="pressed" from="VBoxContainer/MarginContainer2/Nav/Create Lobby" to="." method="_on_Create_Lobby_pressed"]
 [connection signal="pressed" from="VBoxContainer/MarginContainer2/Nav/Direct Connect" to="." method="_on_Direct_Connect_pressed"]
 [connection signal="pressed" from="VBoxContainer/MarginContainer2/Nav/Refresh" to="." method="_on_Refresh_pressed"]

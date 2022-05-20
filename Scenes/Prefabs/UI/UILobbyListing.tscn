@@ -1,0 +1,56 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scripts/UI/UILobbyListing.cs" type="Script" id=1]
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.12549, 0.12549, 0.12549, 1 )
+
+[node name="LobbyListing" type="PanelContainer"]
+margin_right = 1004.0
+margin_bottom = 25.0
+rect_min_size = Vector2( 0, 25 )
+custom_styles/panel = SubResource( 2 )
+script = ExtResource( 1 )
+NodePathName = NodePath("HBox/Name")
+NodePathPlayers = NodePath("HBox/Players")
+NodePathPing = NodePath("HBox/Ping")
+NodePathDescription = NodePath("HBox/Description")
+
+[node name="HBox" type="HBoxContainer" parent="."]
+margin_right = 1004.0
+margin_bottom = 25.0
+mouse_filter = 2
+
+[node name="Name" type="Label" parent="HBox"]
+margin_left = 85.0
+margin_top = 5.0
+margin_right = 162.0
+margin_bottom = 19.0
+size_flags_horizontal = 6
+text = "Valks Server"
+
+[node name="Players" type="Label" parent="HBox"]
+margin_left = 353.0
+margin_top = 5.0
+margin_right = 398.0
+margin_bottom = 19.0
+size_flags_horizontal = 6
+text = "5 / 100"
+
+[node name="Ping" type="Label" parent="HBox"]
+margin_left = 620.0
+margin_top = 5.0
+margin_right = 636.0
+margin_bottom = 19.0
+size_flags_horizontal = 6
+text = "86"
+
+[node name="Description" type="Label" parent="HBox"]
+margin_left = 794.0
+margin_top = 5.0
+margin_right = 966.0
+margin_bottom = 19.0
+size_flags_horizontal = 6
+text = "This is a server description"
+
+[connection signal="gui_input" from="." to="." method="_on_PanelContainer_gui_input"]
