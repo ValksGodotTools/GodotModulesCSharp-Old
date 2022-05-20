@@ -20,9 +20,9 @@ namespace GodotModules
 
         private async void _on_Play_pressed() 
         {
+            await _managers.ManagerScene.ChangeScene(GameScene.Game);
             _menuParticles.Emitting = false;
             _menuParticles.Visible = false;
-            await _managers.ManagerScene.ChangeScene(GameScene.Game);
         }
 
         private async void _on_Multiplayer_pressed() 
