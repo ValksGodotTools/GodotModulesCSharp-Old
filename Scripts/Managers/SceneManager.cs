@@ -2,27 +2,30 @@ using Godot;
 
 namespace GodotModules
 {
-    public class SceneManager
+    public class SceneManager : Node
     {
         public readonly Dictionary<GameScene, Action<Node>> PreInit = new();
         public readonly Dictionary<GameScene, Action> EscPressed = new Dictionary<GameScene, Action>();
 
-        public GameScene CurScene { get; set; }
-        public GameScene PrevScene { get; set; }
+        public GameScene CurScene { get; private set; }
+        public GameScene PrevScene { get; private set; }
 
         private Node _activeScene;
-        private readonly Dictionary<GameScene, PackedScene> _scenes = new Dictionary<GameScene, PackedScene>();
-        private readonly GodotFileManager _godotFileManager;
-        private readonly HotkeyManager _hotkeyManager;
-        private readonly Control _sceneList;
+        private Dictionary<GameScene, PackedScene> _scenes = new Dictionary<GameScene, PackedScene>();
+        private GodotFileManager _godotFileManager;
+        private HotkeyManager _hotkeyManager;
+        private Control _sceneList;
         private Managers _managers;
+        private GTimer _timer;
 
-        public SceneManager(Control sceneList, GodotFileManager godotFileManager, HotkeyManager hotkeyManager, Managers managers) 
+        public void Init(Control sceneList, GodotFileManager godotFileManager, HotkeyManager hotkeyManager, Managers managers) 
         {
             _sceneList = sceneList;
             _godotFileManager = godotFileManager;
             _hotkeyManager = hotkeyManager;
             _managers = managers;
+
+            _timer = new GTimer(this, 100);
         }
 
         public async Task InitAsync()
@@ -41,6 +44,11 @@ namespace GodotModules
         {
             if (CurScene == scene)
                 return;
+
+            if (_timer.IsActive())
+                return;
+
+            _timer.Start();
                 
             PrevScene = CurScene;
             CurScene = scene;

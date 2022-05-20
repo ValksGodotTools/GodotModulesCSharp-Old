@@ -23,6 +23,7 @@ namespace GodotModules
         [Export] protected readonly NodePath NodePathErrorNotifierManager;
         [Export] protected readonly NodePath NodePathMenuParticles;
         [Export] protected readonly NodePath NodePathPopups;
+        [Export] protected readonly NodePath NodePathSceneManager;
 
         public OptionsManager ManagerOptions { get; private set; }
         public TokenManager ManagerToken { get; private set; }
@@ -81,7 +82,8 @@ namespace GodotModules
 
         public async Task InitSceneManager(Control sceneList, HotkeyManager hotkeyManager)
         {
-            ManagerScene = new(sceneList, ManagerFileGodot, hotkeyManager, this);
+            ManagerScene = GetNode<SceneManager>(NodePathSceneManager);
+            ManagerScene.Init(sceneList, ManagerFileGodot, hotkeyManager, this);
 
             // Custom Pre Init
             ManagerScene.PreInit[GameScene.Menu] = (node) =>

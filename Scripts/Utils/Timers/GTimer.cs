@@ -1,21 +1,33 @@
+using Godot;
+using Timer = Godot.Timer;
+
 namespace GodotModules
 {
     public class GTimer
     {
-        private readonly Godot.Timer _timer = new Godot.Timer();
+        private readonly Timer _timer = new Timer();
         
         public float Delay { get; set; }
+
+        public GTimer(Node target, int delayMs = 1000, bool loop = false, bool autoStart = false) =>
+            Init(target, delayMs, loop, autoStart);
         
-        public GTimer(Godot.Node target, string methodName, int delayMs = 1000, bool loop = true, bool autoStart = true)
+        public GTimer(Node target, string methodName, int delayMs = 1000, bool loop = true, bool autoStart = true)
+        {
+            Init(target, delayMs, loop, autoStart);
+            _timer.Connect("timeout", target, methodName);
+        }
+
+        private void Init(Node target, int delayMs, bool loop, bool autoStart)
         {
             _timer.WaitTime = delayMs / 1000f;
             Delay = _timer.WaitTime;
             _timer.OneShot = !loop;
             _timer.Autostart = autoStart;
-            _timer.Connect("timeout", target, methodName);
             target.AddChild(_timer);
         }
 
+        public bool IsActive() => _timer.TimeLeft != 0;
         public void SetDelay(float delay) => _timer.WaitTime = delay;
         public void SetDelayMs(int delayMs) => _timer.WaitTime = delayMs / 1000f;
 
