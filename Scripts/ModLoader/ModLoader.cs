@@ -32,8 +32,34 @@ namespace GodotModules
             if (!_systemFileManager.ConfigExists(Path.Combine("Mods", "enabled")))
                 _systemFileManager.WriteConfig(Path.Combine("Mods", "enabled"), new Dictionary<string, bool>());
 
+            RegisterAll();
             GetMods();
             LoadMods();
+        }
+
+        private static void RegisterAll()
+        {
+            var customConverters = Script.GlobalOptions.CustomConverters;
+
+            // to create Vector2 in Lua
+            // position = {1.0, 1.0}
+            customConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Godot.Vector2), dynVal =>
+            {
+                var table = dynVal.Table;
+                float x = (float)((Double)table[1]);
+                float y = (float)((Double)table[2]);
+                return new Godot.Vector2(x, y);
+            });
+
+            // to create Vector3 in Lua
+            // position = {1.0, 1.0, 1.0}
+            customConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Godot.Vector3), dynVal => {
+                var table = dynVal.Table;
+                float x = (float)((Double)table[1]);
+                float y = (float)((Double)table[2]);
+                float z = (float)((Double)table[3]);
+                return new Godot.Vector3(x, y, z);
+            });
         }
 
         public static void Call(string v, params object[] args)
@@ -62,9 +88,9 @@ namespace GodotModules
 
             var loadedModCount = 0;
 
-            foreach (var mod in Mods.Values) 
+            foreach (var mod in Mods.Values)
             {
-                if (mod.ModInfo.MissingDependencies.Count > 0) 
+                if (mod.ModInfo.MissingDependencies.Count > 0)
                 {
                     Log($"{mod.ModInfo.Name} is missing dependencies: {mod.ModInfo.MissingDependencies.Print(false)}");
                     continue;
@@ -77,13 +103,13 @@ namespace GodotModules
             Log(loadedModCount != 0 ? $"{loadedModCount} mods have loaded successfully" : "No mods have been loaded");
         }
 
-        public static void EnableMod(string name) 
+        public static void EnableMod(string name)
         {
             if (Mods.ContainsKey(name))
                 Mods[name].ModInfo.Enabled = true;
         }
 
-        public static void DisableMod(string name) 
+        public static void DisableMod(string name)
         {
             if (Mods.ContainsKey(name))
                 Mods[name].ModInfo.Enabled = false;
@@ -98,7 +124,7 @@ namespace GodotModules
             SceneMods?.Log(message);
             Logger.Log(message);
         }
-        
+
         private static void DisableModsWithLackingDependencies()
         {
             foreach (var pair in Mods)
