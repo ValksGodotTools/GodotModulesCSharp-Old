@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Scripts/Game/3D/FPSController.cs" type="Script" id=1]
 
@@ -14,28 +14,24 @@ sun_angle_min = 40.45
 
 [sub_resource type="Environment" id=9]
 background_sky = SubResource( 8 )
-ambient_light_energy = 16.0
-fog_enabled = true
 fog_color = Color( 0.141176, 0.141176, 0.141176, 1 )
 fog_sun_color = Color( 1, 1, 0.772549, 1 )
 fog_depth_end = 150.0
 tonemap_mode = 4
-tonemap_exposure = 0.5
 auto_exposure_enabled = true
 ss_reflections_enabled = true
-dof_blur_far_enabled = true
+ssao_enabled = true
 dof_blur_far_distance = 75.0
 dof_blur_far_quality = 2
-dof_blur_near_enabled = true
 dof_blur_near_distance = 5.0
 dof_blur_near_quality = 2
 glow_enabled = true
 glow_bicubic_upscale = true
 glow_high_quality = true
 
-[sub_resource type="CapsuleShape" id=3]
-
 [sub_resource type="CapsuleMesh" id=4]
+
+[sub_resource type="CapsuleShape" id=12]
 
 [sub_resource type="CubeMesh" id=7]
 
@@ -47,18 +43,9 @@ roughness = 0.06
 
 [sub_resource type="BoxShape" id=2]
 
-[sub_resource type="CylinderMesh" id=5]
+[sub_resource type="CubeMesh" id=13]
 
-[sub_resource type="SpatialMaterial" id=11]
-metallic_specular = 1.0
-roughness = 0.0
-emission_enabled = true
-emission = Color( 0.980392, 0.654902, 1, 1 )
-emission_energy = 10.0
-emission_operator = 0
-emission_on_uv2 = false
-
-[sub_resource type="CylinderShape" id=6]
+[sub_resource type="BoxShape" id=14]
 
 [node name="Spatial" type="Spatial"]
 
@@ -67,7 +54,6 @@ environment = SubResource( 9 )
 
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
 transform = Transform( 0.707107, 0.5, -0.5, 0, 0.707107, 0.707107, 0.707107, -0.5, 0.5, 0, 0, 0 )
-visible = false
 light_color = Color( 0.976471, 1, 0.831373, 1 )
 shadow_enabled = true
 
@@ -79,19 +65,30 @@ shadow_enabled = true
 omni_range = 30.943
 
 [node name="Player" type="KinematicBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.47602, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -7.98769, 4.36927, -9.29924 )
 script = ExtResource( 1 )
+NodePathHead = NodePath("Head")
+NodePathGroundCheck = NodePath("GroundCheck")
 
-[node name="Camera" type="ClippedCamera" parent="Player"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.73326, -1.28811 )
+[node name="Head" type="Spatial" parent="Player"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.73499, 0 )
 
-[node name="CollisionShape" type="CollisionShape" parent="Player"]
-shape = SubResource( 3 )
+[node name="Camera" type="ClippedCamera" parent="Player/Head"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.24472 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Player"]
-transform = Transform( 1, 0, 0, 0, -6.20487e-08, 1.41951, 0, -1, -4.37114e-08, 0, 2.46393, 0 )
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 2, 0, -1, -8.74228e-08, 0, 0, 0 )
 mesh = SubResource( 4 )
 material/0 = null
+
+[node name="CollisionBody" type="CollisionShape" parent="Player"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 2, 0, -1, -8.74228e-08, 0, 0, 0 )
+shape = SubResource( 12 )
+
+[node name="GroundCheck" type="RayCast" parent="Player"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00789309, -1.53365, 0.0140533 )
+enabled = true
+cast_to = Vector3( 0, -1.5, 0 )
 
 [node name="Props" type="Node" parent="."]
 
@@ -109,11 +106,11 @@ transform = Transform( 1, 0, 0, 0, 1, 1.11022e-16, 0, 0, 1, 0, 0, 0 )
 shape = SubResource( 2 )
 
 [node name="StaticBody" type="StaticBody" parent="Props"]
-transform = Transform( 3.93786, 0, 0, 0, 12.497, 0, 0, 0, 3.93786, 9.33519, 13.407, 7.97923 )
+transform = Transform( 6.24467, -0.640136, 0, 5.20323, 0.768261, 0, 0, 0, 2.75359, 4.51798, 5.45391, 0 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Props/StaticBody"]
-mesh = SubResource( 5 )
-material/0 = SubResource( 11 )
+mesh = SubResource( 13 )
+material/0 = null
 
 [node name="CollisionShape" type="CollisionShape" parent="Props/StaticBody"]
-shape = SubResource( 6 )
+shape = SubResource( 14 )
