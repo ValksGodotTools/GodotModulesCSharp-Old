@@ -6,19 +6,24 @@ namespace GodotModules
     {
         [Export] protected readonly NodePath NodePathHead;
         [Export] protected readonly NodePath NodePathGroundCheck;
+        [Export] protected readonly NodePath NodePathAnimationPlayer;
 
         private Spatial _head;
         private RayCast _groundCheck;
+        private AnimationPlayer _animationPlayer;
 
         private float _horzAcceleration = 50;
         private float _airAcceleration = 20;
         private float _normalAcceleration = 50;
         private float _mouseSensitivity = 0.10f;
-        private float _moveSpeed = 10f;
+        private float _moveSpeed = 5f;
         private float _gravityForce = 40f;
         private float _jumpForce = 10f;
         private int _jumpDelay = 500;
         private bool _canJump = true;
+        private float _minAngleLookDown = -62f;
+        private float _maxAngleLookUp = 89f;
+        private bool _isWalking;
 
         private Vector3 _horzVelocity;
         private Vector3 _movement;
@@ -30,6 +35,7 @@ namespace GodotModules
         {
             _head = GetNode<Spatial>(NodePathHead);
             _groundCheck = GetNode<RayCast>(NodePathGroundCheck);
+            _animationPlayer = GetNode<AnimationPlayer>(NodePathAnimationPlayer);
 
             _jumpDelayTimer = new GTimer(this, nameof(JumpDelayTimerFinished), _jumpDelay, false, false);
 
@@ -57,7 +63,7 @@ namespace GodotModules
                     RotateY((-motion.Relative.x * _mouseSensitivity).ToRadians());
                     _head.RotateX((-motion.Relative.y * _mouseSensitivity).ToRadians());
                     var headRotation = _head.Rotation;
-                    headRotation.x = Mathf.Clamp(headRotation.x, -89f.ToRadians(), 89f.ToRadians());
+                    headRotation.x = Mathf.Clamp(headRotation.x, _minAngleLookDown.ToRadians(), _maxAngleLookUp.ToRadians());
                     _head.Rotation = headRotation;
                 }
             }
@@ -104,14 +110,29 @@ namespace GodotModules
         {
             var direction = new Vector3();
 
-            if (Input.IsActionPressed("player_move_up"))
+            var moveUp = Input.IsActionPressed("player_move_up");
+            var moveDown = Input.IsActionPressed("player_move_down");
+            var moveLeft = Input.IsActionPressed("player_move_left");
+            var moveRight = Input.IsActionPressed("player_move_right");
+
+            if (moveUp)
                 direction -= Transform.basis.z;
-            if (Input.IsActionPressed("player_move_down"))
+            if (moveDown)
                 direction += Transform.basis.z;
-            if (Input.IsActionPressed("player_move_left"))
+            if (moveLeft)
                 direction -= Transform.basis.x;
-            if (Input.IsActionPressed("player_move_right"))
+            if (moveRight)
                 direction += Transform.basis.x;
+
+            if (moveUp || moveDown || moveLeft || moveRight) 
+            {
+                _isWalking = true;
+                _animationPlayer.Play("Walk");
+            }
+            else 
+            {
+                _isWalking = false;
+            }
 
             direction = direction.Normalized();
             _horzVelocity = _horzVelocity.MoveToward(direction * _moveSpeed, _horzAcceleration * delta);

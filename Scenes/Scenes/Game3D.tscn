@@ -61,7 +61,7 @@ shadow_enabled = true
 omni_range = 30.943
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -18.2995, 3, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -18.2995, 1.04996, 0 )
 
 [node name="Props" type="Node" parent="."]
 
