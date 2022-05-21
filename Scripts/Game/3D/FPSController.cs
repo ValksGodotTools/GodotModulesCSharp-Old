@@ -102,6 +102,7 @@ namespace GodotModules
             {
                 _gravity = Vector3.Up * _jumpForce;
                 _jumpDelayTimer.Start();
+                _animationPlayer.Play("Jump");
                 _canJump = false;
             }
         }
