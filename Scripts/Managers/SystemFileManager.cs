@@ -11,8 +11,6 @@ namespace GodotModules
             "Godot Modules"
         );
 
-        public readonly char Separator = Path.DirectorySeparatorChar;
-
         public T WriteConfig<T>(string pathToFile) where T : new() => 
             WriteConfig<T>(pathToFile, new T());
 
@@ -35,6 +33,6 @@ namespace GodotModules
             File.Exists(GetConfigPath(pathToFile));
 
         private string GetConfigPath(string pathToFile) => 
-            $"{GameDataPath}{Separator}{pathToFile}.json";
+            $"{GameDataPath}{Path.DirectorySeparatorChar}{pathToFile}.json";
     }
 }

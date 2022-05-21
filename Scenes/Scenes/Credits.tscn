@@ -13,29 +13,57 @@ NodePathCreditsContent = NodePath("Label")
 
 [node name="Tween" type="Tween" parent="."]
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="RichTextLabel" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_bottom = -303.0
-text = "Lead Contributor
+bbcode_enabled = true
+bbcode_text = "THIS IS SAMPLE TEXT, THE ACTUAL CREDITS ARE IN RES://CREDITS.TXT
+THIS IS SAMPLE TEXT, THE ACTUAL CREDITS ARE IN RES://CREDITS.TXT
+
+[center]
+Lead Contributor
+[url=\"https://github.com/valkyrienyanko\"]valk[/url]
+
+Contributors
+[url=\"https://github.com/irj\"]irj[/url]
+[url=\"https://github.com/LazerGoat\"]LazerGoat[/url]
+[url=\"https://github.com/Scorpieth\"]Scorpieth[/url]
+
+Testers
+[url=\"https://www.twitch.tv/perezdispenser\"]SCUDSTORM[/url]
+
+Art
+Player Animations by [url=\"https://opengameart.org/users/skoam\"]Sylvius Fischer[/url] CC0
+Chest Animation by [url=\"https://opengameart.org/users/saint11\"]saint11[/url] CC0
+
+Music
+Unsolicited Trailer Music by [url=\"https://opengameart.org/users/emmama\"]Emma Andersson[/url] CC0
+[/center]"
+text = "THIS IS SAMPLE TEXT, THE ACTUAL CREDITS ARE IN RES://CREDITS.TXT
+THIS IS SAMPLE TEXT, THE ACTUAL CREDITS ARE IN RES://CREDITS.TXT
+
+
+Lead Contributor
 valk
 
 Contributors
-aer
-Rettoph
+irj
 LazerGoat
 Scorpieth
 
 Testers
-LazerGoat
 SCUDSTORM
 
 Art
-Player Animations by Sylvius Fischer (https://opengameart.org/content/fumiko-complete-charset)
-Chest Animation by saint11 (https://opengameart.org/content/chest-animation-0)
+Player Animations by Sylvius Fischer CC0
+Chest Animation by saint11 CC0
 
 Music
-Unsolicited Trailer Music by Emma_MA (https://opengameart.org/content/unsolicited-trailer-music)"
-align = 1
+Unsolicited Trailer Music by Emma Andersson CC0
+"
+fit_content_height = true
+scroll_active = false
 
 [connection signal="tween_completed" from="Tween" to="." method="_on_Tween_tween_completed"]
+[connection signal="meta_clicked" from="Label" to="." method="_on_Label_meta_clicked"]

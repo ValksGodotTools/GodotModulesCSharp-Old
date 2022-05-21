@@ -1,0 +1,19 @@
+[center]
+Lead Contributor
+[url="https://github.com/valkyrienyanko"]valk[/url]
+
+Contributors
+[url="https://github.com/irj"]irj[/url]
+[url="https://github.com/LazerGoat"]LazerGoat[/url]
+[url="https://github.com/Scorpieth"]Scorpieth[/url]
+
+Testers
+[url="https://www.twitch.tv/perezdispenser"]SCUDSTORM[/url]
+
+Art
+Player Animations by [url="https://opengameart.org/users/skoam"]Sylvius Fischer[/url] CC0
+Chest Animation by [url="https://opengameart.org/users/saint11"]saint11[/url] CC0
+
+Music
+Unsolicited Trailer Music by [url="https://opengameart.org/users/emmama"]Emma Andersson[/url] CC0
+[/center]
