@@ -1,6 +1,6 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=9 format=2]
 
-[ext_resource path="res://Scripts/Game/3D/FPSController.cs" type="Script" id=1]
+[ext_resource path="res://Scenes/Prefabs/3D/Player.tscn" type="PackedScene" id=1]
 
 [sub_resource type="ProceduralSky" id=8]
 sky_top_color = Color( 0.458824, 1, 0.529412, 1 )
@@ -28,10 +28,6 @@ dof_blur_near_quality = 2
 glow_enabled = true
 glow_bicubic_upscale = true
 glow_high_quality = true
-
-[sub_resource type="CapsuleMesh" id=4]
-
-[sub_resource type="CapsuleShape" id=12]
 
 [sub_resource type="CubeMesh" id=7]
 
@@ -64,31 +60,8 @@ light_energy = 10.0
 shadow_enabled = true
 omni_range = 30.943
 
-[node name="Player" type="KinematicBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -7.98769, 4.36927, -9.29924 )
-script = ExtResource( 1 )
-NodePathHead = NodePath("Head")
-NodePathGroundCheck = NodePath("GroundCheck")
-
-[node name="Head" type="Spatial" parent="Player"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.73499, 0 )
-
-[node name="Camera" type="ClippedCamera" parent="Player/Head"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.24472 )
-
-[node name="MeshInstance" type="MeshInstance" parent="Player"]
-transform = Transform( 1, 0, 0, 0, -4.37114e-08, 2, 0, -1, -8.74228e-08, 0, 0, 0 )
-mesh = SubResource( 4 )
-material/0 = null
-
-[node name="CollisionBody" type="CollisionShape" parent="Player"]
-transform = Transform( 1, 0, 0, 0, -4.37114e-08, 2, 0, -1, -8.74228e-08, 0, 0, 0 )
-shape = SubResource( 12 )
-
-[node name="GroundCheck" type="RayCast" parent="Player"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00789309, -1.53365, 0.0140533 )
-enabled = true
-cast_to = Vector3( 0, -1.5, 0 )
+[node name="Player" parent="." instance=ExtResource( 1 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -18.2995, 3, 0 )
 
 [node name="Props" type="Node" parent="."]
 

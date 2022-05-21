@@ -5,8 +5,8 @@
 [ext_resource path="res://Scripts/Scenes/SceneGame.cs" type="Script" id=3]
 [ext_resource path="res://Fonts/Roboto/Roboto-Bold.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://Sprites/Tilesets/dungeon.png" type="Texture" id=5]
-[ext_resource path="res://Scenes/Prefabs/Game/Chest.tscn" type="PackedScene" id=6]
-[ext_resource path="res://Scenes/Prefabs/Game/Coin.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Scenes/Prefabs/2D/Chest.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Scenes/Prefabs/2D/Coin.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Shaders/Canvas/GodRays.shader" type="Shader" id=8]
 
 [sub_resource type="NavigationPolygon" id=3]
