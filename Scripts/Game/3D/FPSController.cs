@@ -6,11 +6,11 @@ namespace GodotModules
     {
         [Export] protected readonly NodePath NodePathHead;
         [Export] protected readonly NodePath NodePathGroundCheck;
-        [Export] protected readonly NodePath NodePathAnimationPlayer;
+        [Export] protected readonly NodePath NodePathAnimationTree;
 
         private Spatial _head;
         private RayCast _groundCheck;
-        private AnimationPlayer _animationPlayer;
+        private AnimationTree _animationTree;
 
         private float _horzAcceleration = 50;
         private float _airAcceleration = 20;
@@ -35,7 +35,7 @@ namespace GodotModules
         {
             _head = GetNode<Spatial>(NodePathHead);
             _groundCheck = GetNode<RayCast>(NodePathGroundCheck);
-            _animationPlayer = GetNode<AnimationPlayer>(NodePathAnimationPlayer);
+            _animationTree = GetNode<AnimationTree>(NodePathAnimationTree);
 
             _jumpDelayTimer = new GTimer(this, nameof(JumpDelayTimerFinished), _jumpDelay, false, false);
 
@@ -51,6 +51,8 @@ namespace GodotModules
                 HandleGravity(delta, fullContact);
                 HandleJump(fullContact);
                 HandleMovement(delta);
+
+                _animationTree.Set("parameters/IdleWalkRun/blend_position", _movement.Length());
             }
         }
 
@@ -100,9 +102,9 @@ namespace GodotModules
         {
             if (Input.IsActionJustPressed("player_jump") && _canJump && (IsOnFloor() || fullContact)) 
             {
+                _animationTree.Set("parameters/JumpShot/active", true);
                 _gravity = Vector3.Up * _jumpForce;
                 _jumpDelayTimer.Start();
-                _animationPlayer.Play("Jump");
                 _canJump = false;
             }
         }
@@ -128,15 +130,16 @@ namespace GodotModules
             if (moveUp || moveDown || moveLeft || moveRight) 
             {
                 _isWalking = true;
-                _animationPlayer.Play("Walk");
             }
             else 
             {
                 _isWalking = false;
             }
 
+            var sprint = Input.IsActionPressed("player_sprint") ? 1.5f : 1f;
+
             direction = direction.Normalized();
-            _horzVelocity = _horzVelocity.MoveToward(direction * _moveSpeed, _horzAcceleration * delta);
+            _horzVelocity = _horzVelocity.MoveToward(direction * _moveSpeed * sprint, _horzAcceleration * delta);
             _movement.z = _horzVelocity.z + _gravity.z;
             _movement.x = _horzVelocity.x + _gravity.x;
             _movement.y = _gravity.y;
