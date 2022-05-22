@@ -7,22 +7,25 @@ namespace GodotModules
         [Export] protected readonly NodePath NodePathHead;
         [Export] protected readonly NodePath NodePathGroundCheck;
         [Export] protected readonly NodePath NodePathAnimationTree;
+        [Export] protected readonly NodePath NodePathSkeleton;
 
         private Spatial _head;
         private RayCast _groundCheck;
         private AnimationTree _animationTree;
+        private Skeleton _skeleton;
+        private BoneAttachment _boneAttachment;
 
-        private float _horzAcceleration = 50;
-        private float _airAcceleration = 20;
-        private float _normalAcceleration = 50;
+        private float _horzAcceleration = 15;
+        private float _airAcceleration = 5;
+        private float _normalAcceleration = 15;
         private float _mouseSensitivity = 0.10f;
         private float _moveSpeed = 5f;
         private float _gravityForce = 40f;
         private float _jumpForce = 10f;
         private int _jumpDelay = 500;
         private bool _canJump = true;
-        private float _minAngleLookDown = -62f;
-        private float _maxAngleLookUp = 89f;
+        private float _minAngleLookDown = -40f;
+        private float _maxAngleLookUp = 80f;
         private bool _isWalking;
 
         private Vector3 _horzVelocity;
@@ -36,6 +39,10 @@ namespace GodotModules
             _head = GetNode<Spatial>(NodePathHead);
             _groundCheck = GetNode<RayCast>(NodePathGroundCheck);
             _animationTree = GetNode<AnimationTree>(NodePathAnimationTree);
+            _skeleton = GetNode<Skeleton>(NodePathSkeleton);
+            _boneAttachment = new BoneAttachment();
+            _skeleton.AddChild(_boneAttachment);
+            _boneAttachment.BoneName = "mixamorig_Head";
 
             _jumpDelayTimer = new GTimer(this, nameof(JumpDelayTimerFinished), _jumpDelay, false, false);
 
@@ -48,11 +55,15 @@ namespace GodotModules
             {
                 var fullContact = _groundCheck.IsColliding();
 
+                var headTransform = _head.GlobalTransform;
+                headTransform.origin = _boneAttachment.GlobalTransform.origin;
+                _head.GlobalTransform = headTransform;
+
                 HandleGravity(delta, fullContact);
                 HandleJump(fullContact);
                 HandleMovement(delta);
 
-                _animationTree.Set("parameters/IdleWalkRun/blend_position", _movement.Length());
+                _animationTree.Set("parameters/IdleWalkRun/blend_position", _horzVelocity.Length());
             }
         }
 
@@ -65,7 +76,7 @@ namespace GodotModules
         {
             if (Input.GetMouseMode() == Input.MouseMode.Captured)
             {
-                if (@event is InputEventMouseMotion motion) 
+                if (@event is InputEventMouseMotion motion)
                 {
                     RotateY((-motion.Relative.x * _mouseSensitivity).ToRadians());
                     _head.RotateX((-motion.Relative.y * _mouseSensitivity).ToRadians());
@@ -86,17 +97,17 @@ namespace GodotModules
 
         private void HandleGravity(float delta, bool fullContact)
         {
-            if (!IsOnFloor()) 
+            if (!IsOnFloor())
             {
                 _gravity += Vector3.Down * _gravityForce * delta;
                 _horzAcceleration = _airAcceleration;
             }
-            else if (IsOnFloor() && fullContact) 
+            else if (IsOnFloor() && fullContact)
             {
                 _gravity = -GetFloorNormal() * _gravityForce;
                 _horzAcceleration = _normalAcceleration;
             }
-            else 
+            else
             {
                 _gravity = -GetFloorNormal();
                 _horzAcceleration = _normalAcceleration;
@@ -105,10 +116,10 @@ namespace GodotModules
 
         private void HandleJump(bool fullContact)
         {
-            if (Input.IsActionJustPressed("player_jump") && _canJump && (IsOnFloor() || fullContact)) 
+            if (Input.IsActionJustPressed("player_jump") && _canJump && (IsOnFloor() || fullContact))
             {
                 _animationTree.Set("parameters/JumpShot/active", true);
-                _gravity = Vector3.Up * _jumpForce;
+                //_gravity = Vector3.Up * _jumpForce;
                 _jumpDelayTimer.Start();
                 _canJump = false;
             }
@@ -132,11 +143,11 @@ namespace GodotModules
             if (moveRight)
                 direction += Transform.basis.x;
 
-            if (moveUp || moveDown || moveLeft || moveRight) 
+            if (moveUp || moveDown || moveLeft || moveRight)
             {
                 _isWalking = true;
             }
-            else 
+            else
             {
                 _isWalking = false;
             }

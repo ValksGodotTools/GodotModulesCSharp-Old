@@ -1722,9 +1722,9 @@ fadein_time = 1.0
 fadeout_time = 1.0
 
 [sub_resource type="AnimationNodeBlendTree" id=14]
-graph_offset = Vector2( -361.486, -70.77 )
+graph_offset = Vector2( -287.486, -66.9 )
 nodes/IdleWalkRun/node = SubResource( 13 )
-nodes/IdleWalkRun/position = Vector2( -164.36, -35.52 )
+nodes/IdleWalkRun/position = Vector2( -153.36, -9.52001 )
 nodes/Jump/node = SubResource( 18 )
 nodes/Jump/position = Vector2( -129.486, 130.1 )
 nodes/JumpShot/node = SubResource( 19 )
@@ -1737,12 +1737,17 @@ script = ExtResource( 1 )
 NodePathHead = NodePath("Head")
 NodePathGroundCheck = NodePath("GroundCheck")
 NodePathAnimationTree = NodePath("AnimationTree")
+NodePathSkeleton = NodePath("PlayerModel/Character/Skeleton")
 
 [node name="Head" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.492, 0 )
 
 [node name="Camera" type="ClippedCamera" parent="Head"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.520654 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.174658 )
+v_offset = 0.086
+fov = 120.0
+near = 0.01
+far = 90.0
 
 [node name="PlayerModel" type="Spatial" parent="."]
 
@@ -2101,5 +2106,5 @@ cast_to = Vector3( 0, -1.5, 0 )
 tree_root = SubResource( 14 )
 anim_player = NodePath("../PlayerModel/AnimationPlayer")
 active = true
-parameters/IdleWalkRun/blend_position = 0.0
+parameters/IdleWalkRun/blend_position = -1.96543
 parameters/JumpShot/active = false
