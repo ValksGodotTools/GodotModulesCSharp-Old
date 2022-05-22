@@ -8,12 +8,17 @@ namespace GodotModules
         [Export] protected readonly NodePath NodePathGroundCheck;
         [Export] protected readonly NodePath NodePathAnimationTree;
         [Export] protected readonly NodePath NodePathSkeleton;
+        [Export] protected readonly NodePath NodePathGun;
 
         private Spatial _head;
         private RayCast _groundCheck;
         private AnimationTree _animationTree;
         private Skeleton _skeleton;
-        private BoneAttachment _boneAttachment;
+        private BoneAttachment _boneHead;
+        private BoneAttachment _boneRightHand;
+
+        private MeshInstance _gun;
+        private Position3D _positionHoldGun;
 
         private float _horzAcceleration = 15;
         private float _airAcceleration = 5;
@@ -33,6 +38,7 @@ namespace GodotModules
         private Vector3 _gravity;
         private Vector2 _mouseRelative;
         private bool _mouseMovement;
+        private bool _aiming;
 
         private GTimer _jumpDelayTimer;
 
@@ -41,10 +47,19 @@ namespace GodotModules
             _head = GetNode<Spatial>(NodePathHead);
             _groundCheck = GetNode<RayCast>(NodePathGroundCheck);
             _animationTree = GetNode<AnimationTree>(NodePathAnimationTree);
+
             _skeleton = GetNode<Skeleton>(NodePathSkeleton);
-            _boneAttachment = new BoneAttachment();
-            _skeleton.AddChild(_boneAttachment);
-            _boneAttachment.BoneName = "mixamorig_Head";
+
+            _gun = GetNode<MeshInstance>(NodePathGun);
+
+            _boneHead = new BoneAttachment();
+            _boneRightHand = new BoneAttachment();
+
+            _skeleton.AddChild(_boneHead);
+            _skeleton.AddChild(_boneRightHand);
+
+            _boneHead.BoneName = "mixamorig_Head";
+            _boneRightHand.BoneName = "mixamorig_RightHand";
 
             _jumpDelayTimer = new GTimer(this, nameof(JumpDelayTimerFinished), _jumpDelay, false, false);
 
@@ -53,12 +68,12 @@ namespace GodotModules
 
         public override void _Process(float delta)
         {
+            //_gun.GlobalTransform = _boneRightHand.GlobalTransform;
+
             if (Input.GetMouseMode() == Input.MouseMode.Captured)
             {
-                var fullContact = _groundCheck.IsColliding();
-
                 var headTransform = _head.GlobalTransform;
-                headTransform.origin = _boneAttachment.GlobalTransform.origin;
+                headTransform.origin = _boneHead.GlobalTransform.origin;
 
                 var mouseVelocity = _mouseMovement ? _mouseRelative : Vector2.Zero;
 
@@ -70,13 +85,18 @@ namespace GodotModules
 
                 _head.GlobalTransform = headTransform;
                 _mouseMovement = false;
-                
-                HandleGravity(delta, fullContact);
-                HandleJump(fullContact);
-                HandleMovement(delta);
-
-                _animationTree.Set("parameters/IdleWalkRun/blend_position", _horzVelocity.Length());
             }
+
+            var fullContact = _groundCheck.IsColliding();
+
+            HandleGravity(delta, fullContact);
+            HandleJump(fullContact);
+            HandleMovement(delta);
+
+            _animationTree.Set("parameters/IdleWalkRun/blend_position", _horzVelocity.Length());
+            _animationTree.Set("parameters/RifleIdleWalkRun/blend_position", _horzVelocity.Length());
+
+            _animationTree.Set("parameters/BlendRifleNoRifle/blend_amount", 0f);
         }
 
         public override void _PhysicsProcess(float delta)
@@ -97,8 +117,13 @@ namespace GodotModules
 
             if (Input.GetMouseMode() == Input.MouseMode.Visible)
                 if (@event is InputEventMouseButton button)
+                {
                     if (button.ButtonIndex == (int)ButtonList.Left)
                         Input.SetMouseMode(Input.MouseMode.Captured);
+
+                    if (button.ButtonIndex == (int)ButtonList.Right)
+                        _aiming = !_aiming;
+                }
 
             if (Input.IsActionJustPressed("ui_cancel"))
                 Input.SetMouseMode(Input.MouseMode.Visible);
