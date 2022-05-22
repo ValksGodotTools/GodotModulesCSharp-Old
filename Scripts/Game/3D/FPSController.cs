@@ -42,7 +42,7 @@ namespace GodotModules
             Input.SetMouseMode(Input.MouseMode.Captured);
         }
 
-        public override void _PhysicsProcess(float delta)
+        public override void _Process(float delta)
         {
             if (Input.GetMouseMode() == Input.MouseMode.Captured)
             {
@@ -54,6 +54,11 @@ namespace GodotModules
 
                 _animationTree.Set("parameters/IdleWalkRun/blend_position", _movement.Length());
             }
+        }
+
+        public override void _PhysicsProcess(float delta)
+        {
+            MoveAndSlide(_movement, Vector3.Up);
         }
 
         public override void _Input(InputEvent @event)
@@ -143,8 +148,6 @@ namespace GodotModules
             _movement.z = _horzVelocity.z + _gravity.z;
             _movement.x = _horzVelocity.x + _gravity.x;
             _movement.y = _gravity.y;
-
-            MoveAndSlide(_movement, Vector3.Up);
         }
 
         private void JumpDelayTimerFinished() => _canJump = true;
