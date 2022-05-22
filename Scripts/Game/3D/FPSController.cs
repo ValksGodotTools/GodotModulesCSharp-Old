@@ -55,10 +55,6 @@ namespace GodotModules
             {
                 var fullContact = _groundCheck.IsColliding();
 
-                var headTransform = _head.GlobalTransform;
-                headTransform.origin = _boneAttachment.GlobalTransform.origin;
-                _head.GlobalTransform = headTransform;
-
                 HandleGravity(delta, fullContact);
                 HandleJump(fullContact);
                 HandleMovement(delta);
