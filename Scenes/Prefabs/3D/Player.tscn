@@ -3602,23 +3602,27 @@ NodePathHead = NodePath("Head")
 NodePathGroundCheck = NodePath("GroundCheck")
 NodePathAnimationTree = NodePath("AnimationTree")
 NodePathSkeleton = NodePath("PlayerModel/Character/Skeleton")
-NodePathGun = NodePath("Gun")
-
-[node name="Gun" type="MeshInstance" parent="."]
-transform = Transform( 0.0266955, 0.00122347, 0.0186211, -0.00129115, 0.0263734, 0.00337902, -0.0101568, -0.00230652, 0.817133, 0.291567, 1.28997, -0.110949 )
-mesh = SubResource( 21 )
-skeleton = NodePath("../Head/Camera")
-material/0 = null
+NodePathGun = NodePath("Head/Camera/GunPos/Gun")
 
 [node name="Head" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.492, 0 )
 
 [node name="Camera" type="ClippedCamera" parent="Head"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.174658 )
+keep_aspect = 0
 v_offset = 0.086
 fov = 120.0
 near = 0.01
 far = 90.0
+
+[node name="GunPos" type="Position3D" parent="Head/Camera"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0621902, -0.207813, -0.516997 )
+
+[node name="Gun" type="MeshInstance" parent="Head/Camera/GunPos"]
+transform = Transform( 0.0266955, 0.00122347, 0.0186211, -0.00129115, 0.0263734, 0.00337902, -0.0043184, -0.000980675, 0.347424, 0, 0, 0 )
+mesh = SubResource( 21 )
+skeleton = NodePath("../..")
+material/0 = null
 
 [node name="PlayerModel" type="Spatial" parent="."]
 
@@ -3985,4 +3989,4 @@ active = true
 parameters/BlendRifleNoRifle/blend_amount = 0.0
 parameters/IdleWalkRun/blend_position = 0.0
 parameters/JumpShot/active = false
-parameters/RifleIdleWalkRun/blend_position = 5.21259
+parameters/RifleIdleWalkRun/blend_position = 0.0
