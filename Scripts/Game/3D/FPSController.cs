@@ -31,6 +31,8 @@ namespace GodotModules
         private Vector3 _horzVelocity;
         private Vector3 _movement;
         private Vector3 _gravity;
+        private Vector2 _mouseRelative;
+        private bool _mouseMovement;
 
         private GTimer _jumpDelayTimer;
 
@@ -55,6 +57,20 @@ namespace GodotModules
             {
                 var fullContact = _groundCheck.IsColliding();
 
+                var headTransform = _head.GlobalTransform;
+                headTransform.origin = _boneAttachment.GlobalTransform.origin;
+
+                var mouseVelocity = _mouseMovement ? _mouseRelative : Vector2.Zero;
+
+                RotateY((-mouseVelocity.x * _mouseSensitivity).ToRadians());
+                _head.RotateX((-mouseVelocity.y * _mouseSensitivity).ToRadians());
+                var headRotation = _head.Rotation;
+                headRotation.x = Mathf.Clamp(headRotation.x, _minAngleLookDown.ToRadians(), _maxAngleLookUp.ToRadians());
+                _head.Rotation = headRotation;
+
+                _head.GlobalTransform = headTransform;
+                _mouseMovement = false;
+                
                 HandleGravity(delta, fullContact);
                 HandleJump(fullContact);
                 HandleMovement(delta);
@@ -74,11 +90,8 @@ namespace GodotModules
             {
                 if (@event is InputEventMouseMotion motion)
                 {
-                    RotateY((-motion.Relative.x * _mouseSensitivity).ToRadians());
-                    _head.RotateX((-motion.Relative.y * _mouseSensitivity).ToRadians());
-                    var headRotation = _head.Rotation;
-                    headRotation.x = Mathf.Clamp(headRotation.x, _minAngleLookDown.ToRadians(), _maxAngleLookUp.ToRadians());
-                    _head.Rotation = headRotation;
+                    _mouseRelative = motion.Relative;
+                    _mouseMovement = true;
                 }
             }
 

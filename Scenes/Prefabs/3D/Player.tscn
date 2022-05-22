@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://Scripts/Game/3D/FPSController.cs" type="Script" id=1]
 [ext_resource path="res://Models/Player/SpacePirate_M.material" type="Material" id=2]
@@ -216,6 +216,8 @@ bind/63/pose = Transform( 49.9789, -8.67057e-05, -1.45257, -1.45252, -0.424707, 
 bind/64/name = "mixamorig_LeftToe_End"
 bind/64/bone = -1
 bind/64/pose = Transform( 49.9789, -9.44924e-05, -1.45256, -1.45251, -0.424705, -49.9771, -0.0122438, 49.9982, -0.42452, 6.87142, -11.8344, 0.141916 )
+
+[sub_resource type="CubeMesh" id=21]
 
 [sub_resource type="Animation" id=3]
 resource_name = "Idle"
@@ -1944,7 +1946,7 @@ bones/37/name = "mixamorig_RightHandThumb3"
 bones/37/parent = 36
 bones/37/rest = Transform( 0.950957, 0.278105, 0.135415, -0.27779, 0.960399, -0.0216, -0.13606, -0.0170764, 0.990553, -8.31907e-06, 2.65237, 7.27234e-06 )
 bones/37/enabled = true
-bones/37/bound_children = [  ]
+bones/37/bound_children = [ NodePath("BoneAttachment") ]
 bones/38/name = "mixamorig_RightHandThumb4"
 bones/38/parent = 37
 bones/38/rest = Transform( 1, -4.06523e-07, 5.6345e-07, 4.06522e-07, 1, 2.43262e-06, -5.63451e-07, -2.43261e-06, 1, 2.53321e-06, 2.70565, 1.03861e-05 )
@@ -2084,6 +2086,16 @@ bones/64/bound_children = [  ]
 [node name="Mesh without Head" type="MeshInstance" parent="PlayerModel/Character/Skeleton"]
 mesh = SubResource( 1 )
 skin = SubResource( 2 )
+material/0 = null
+
+[node name="BoneAttachment" type="BoneAttachment" parent="PlayerModel/Character/Skeleton"]
+transform = Transform( 0.413354, -0.15047, 0.898051, 0.850228, 0.416832, -0.321501, -0.32596, 0.896443, 0.300234, -8.83282, 6.7723, -67.1777 )
+bone_name = "mixamorig_RightHandThumb3"
+
+[node name="MeshInstance" type="MeshInstance" parent="PlayerModel/Character/Skeleton/BoneAttachment"]
+transform = Transform( -0.481912, 0.472258, -8.62051, 0.184653, -1.17947, -4.27935, -1.23886, -0.359507, 2.71551, 0, 0, 0 )
+mesh = SubResource( 21 )
+skeleton = NodePath("../../../../../Head/Camera")
 material/0 = null
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="PlayerModel"]
