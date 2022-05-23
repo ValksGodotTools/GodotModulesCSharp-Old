@@ -1,11 +1,12 @@
 using GodotModules.Netcode.Client;
 
-namespace GodotModules.Netcode;
-
-public abstract class APacketServer : APacket
+namespace GodotModules.Netcode
 {
-    /// <summary>
-    /// The packet handled client-side
-    /// </summary>
-    public virtual Task Handle(GameClient client) => Task.FromResult(1);
+    public abstract class APacketServer : APacket
+    {
+        /// <summary>
+        /// The packet handled client-side
+        /// </summary>
+        public virtual Task Handle(GameClient client) => Task.FromResult(1);
+    }
 }

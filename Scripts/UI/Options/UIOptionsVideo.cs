@@ -1,13 +1,14 @@
 using Godot;
 
-namespace GodotModules;
-
-public class UIOptionsVideo : Control
+namespace GodotModules
 {
-    private OptionsManager _optionsManager;
-
-    public void PreInit(OptionsManager optionsManager)
+    public class UIOptionsVideo : Control
     {
-        _optionsManager = optionsManager;
+        private OptionsManager _optionsManager;
+
+        public void PreInit(OptionsManager optionsManager)
+        {
+            _optionsManager = optionsManager;
+        }
     }
 }

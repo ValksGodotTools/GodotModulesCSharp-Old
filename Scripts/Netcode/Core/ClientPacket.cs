@@ -1,22 +1,23 @@
 using ENet;
 
-namespace GodotModules.Netcode;
-
-public class ClientPacket : GamePacket
+namespace GodotModules.Netcode
 {
-    public ClientPacket(byte opcode, PacketFlags flags, APacket writable = null)
+    public class ClientPacket : GamePacket
     {
-        using (var writer = new PacketWriter())
+        public ClientPacket(byte opcode, PacketFlags flags, APacket writable = null)
         {
-            writer.Write(opcode);
-            if (writable != null)
-                writable.Write(writer);
+            using (var writer = new PacketWriter())
+            {
+                writer.Write(opcode);
+                if (writable != null)
+                    writable.Write(writer);
 
-            Data = writer.Stream.ToArray();
-            Size = writer.Stream.Length;
+                Data = writer.Stream.ToArray();
+                Size = writer.Stream.Length;
+            }
+
+            PacketFlags = flags;
+            Opcode = opcode;
         }
-
-        PacketFlags = flags;
-        Opcode = opcode;
     }
 }

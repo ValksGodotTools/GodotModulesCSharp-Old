@@ -1,14 +1,15 @@
 using System.Reflection;
 
-namespace GodotModules;
-
-public class CommandHelp : Command
+namespace GodotModules
 {
-    private static readonly List<string> CommandNames = Assembly.GetExecutingAssembly()
-        .GetTypes()
-        .Where(x => typeof(Command).IsAssignableFrom(x) && !x.IsAbstract)
-        .Select(Activator.CreateInstance).Cast<Command>()
-        .Select(x => x.GetType().Name.Replace("Command", "").ToLower()).ToList();
+    public class CommandHelp : Command
+    {
+        private static readonly List<string> CommandNames = Assembly.GetExecutingAssembly()
+                .GetTypes()
+                .Where(x => typeof(Command).IsAssignableFrom(x) && !x.IsAbstract)
+                .Select(Activator.CreateInstance).Cast<Command>()
+                .Select(x => x.GetType().Name.Replace("Command", "").ToLower()).ToList();
 
-    public override void Run(string[] args) => Logger.Log($"Commands:\n{CommandNames.Print()}");
+        public override void Run(string[] args) => Logger.Log($"Commands:\n{CommandNames.Print()}");
+    }
 }

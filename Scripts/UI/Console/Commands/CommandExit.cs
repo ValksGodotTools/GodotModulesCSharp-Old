@@ -1,11 +1,12 @@
-namespace GodotModules;
-
-public class CommandExit : Command
+namespace GodotModules
 {
-    public CommandExit() => Aliases = new string[] { "stop" };
-
-    public override void Run(string[] args)
+    public class CommandExit : Command
     {
-        Logger.LogTodo("This has not been implemented yet");
+        public CommandExit() => Aliases = new string[] { "stop" };
+
+        public override void Run(string[] args)
+        {
+            Logger.LogTodo("This has not been implemented yet");
+        }
     }
 }

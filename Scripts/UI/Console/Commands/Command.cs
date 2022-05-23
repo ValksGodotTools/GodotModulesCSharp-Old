@@ -1,25 +1,26 @@
 using System.Reflection;
 
-namespace GodotModules;
-
-public abstract class Command
+namespace GodotModules
 {
-    public static readonly List<Command> Instances = Assembly.GetExecutingAssembly()
-        .GetTypes()
-        .Where(x => typeof(Command).IsAssignableFrom(x) && !x.IsAbstract)
-        .Select(Activator.CreateInstance).Cast<Command>()
-        .ToList();
-
-    public string[] Aliases { get; set; }
-
-    public bool IsMatch(string cmd)
+    public abstract class Command
     {
-        var cmdMatchesAlias = false;
-        if (Aliases != null)
-            cmdMatchesAlias = Aliases.Contains(cmd);
+        public static readonly List<Command> Instances = Assembly.GetExecutingAssembly()
+                .GetTypes()
+                .Where(x => typeof(Command).IsAssignableFrom(x) && !x.IsAbstract)
+                .Select(Activator.CreateInstance).Cast<Command>()
+                .ToList();
 
-        return cmdMatchesAlias || GetType().Name.Replace("Command", "").ToLower() == cmd;
+        public string[] Aliases { get; set; }
+
+        public bool IsMatch(string cmd)
+        {
+            var cmdMatchesAlias = false;
+            if (Aliases != null)
+                cmdMatchesAlias = Aliases.Contains(cmd);
+
+            return cmdMatchesAlias || GetType().Name.Replace("Command", "").ToLower() == cmd;
+        }
+
+        public abstract void Run(string[] args);
     }
-
-    public abstract void Run(string[] args);
 }

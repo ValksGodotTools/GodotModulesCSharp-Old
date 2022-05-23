@@ -1,54 +1,55 @@
 using Godot;
 
-namespace GodotModules;
-
-public class ConsoleManager : Control
+namespace GodotModules
 {
-    [Export] protected readonly NodePath NodePathConsoleLogs;
-    [Export] protected readonly NodePath NodePathConsoleInput;
-    private TextEdit ConsoleLogs;
-    private LineEdit ConsoleInput;
-
-    public override void _Ready()
+    public class ConsoleManager : Control
     {
-        ConsoleLogs = GetNode<TextEdit>(NodePathConsoleLogs);
-        ConsoleInput = GetNode<LineEdit>(NodePathConsoleInput);
-    }
+        [Export] protected readonly NodePath NodePathConsoleLogs;
+        [Export] protected readonly NodePath NodePathConsoleInput;
+        private TextEdit ConsoleLogs;
+        private LineEdit ConsoleInput;
 
-    public void AddException(Exception e) => 
-        AddMessage($"{e.Message}\n{e.StackTrace}");
+        public override void _Ready()
+        {
+            ConsoleLogs = GetNode<TextEdit>(NodePathConsoleLogs);
+            ConsoleInput = GetNode<LineEdit>(NodePathConsoleInput);
+        }
 
-    public void AddMessage(string message)
-    {
-        ConsoleLogs.Text += $"{message}\n";
-        ScrollToBottom();
-    }
+        public void AddException(Exception e) => 
+            AddMessage($"{e.Message}\n{e.StackTrace}");
 
-    public void ToggleVisibility()
-    {
-        Visible = !Visible;
-        ConsoleInput.GrabFocus();
-        ScrollToBottom();
-    }
+        public void AddMessage(string message)
+        {
+            ConsoleLogs.Text += $"{message}\n";
+            ScrollToBottom();
+        }
 
-    private void ScrollToBottom() => 
-        ConsoleLogs.ScrollVertical = Mathf.Inf;
+        public void ToggleVisibility()
+        {
+            Visible = !Visible;
+            ConsoleInput.GrabFocus();
+            ScrollToBottom();
+        }
 
-    private void _on_Console_Input_text_entered(string text)
-    {
-        var inputArr = text.Trim().ToLower().Split(' ');
-        var cmd = inputArr[0];
+        private void ScrollToBottom() => 
+            ConsoleLogs.ScrollVertical = Mathf.Inf;
 
-        if (string.IsNullOrWhiteSpace(cmd))
-            return;
+        private void _on_Console_Input_text_entered(string text)
+        {
+            var inputArr = text.Trim().ToLower().Split(' ');
+            var cmd = inputArr[0];
 
-        var command = Command.Instances.FirstOrDefault(x => x.IsMatch(cmd));
+            if (string.IsNullOrWhiteSpace(cmd))
+                return;
 
-        if (command != null)
-            command.Run(inputArr.Skip(1).ToArray());
-        else
-            Logger.Log($"The command '{cmd}' does not exist");
+            var command = Command.Instances.FirstOrDefault(x => x.IsMatch(cmd));
 
-        ConsoleInput.Clear();
+            if (command != null)
+                command.Run(inputArr.Skip(1).ToArray());
+            else
+                Logger.Log($"The command '{cmd}' does not exist");
+
+            ConsoleInput.Clear();
+        }
     }
 }

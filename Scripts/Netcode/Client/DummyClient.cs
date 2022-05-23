@@ -1,12 +1,13 @@
-namespace GodotModules.Netcode.Client;
-
-public class DummyClient : ENetClient 
+namespace GodotModules.Netcode.Client 
 {
-    public DummyClient(NetworkManager networkManager) : base(networkManager) 
-    {}
-
-    protected override void Sent(ClientPacketOpcode opcode)
+    public class DummyClient : ENetClient 
     {
-        _networkManager.PingSent = DateTime.Now;
+        public DummyClient(NetworkManager networkManager) : base(networkManager) 
+        {}
+
+        protected override void Sent(ClientPacketOpcode opcode)
+        {
+            _networkManager.PingSent = DateTime.Now;
+        }
     }
 }

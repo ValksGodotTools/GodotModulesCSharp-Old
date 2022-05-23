@@ -1,47 +1,49 @@
+using Godot;
 using GodotModules.Netcode.Client;
 
-namespace GodotModules.Netcode;
-
-public class SPacketPlayerTransforms : APacketServer
+namespace GodotModules.Netcode
 {
-    public Dictionary<byte, DataTransform> PlayerTransforms { get; set; }
-
-    public override void Write(PacketWriter writer)
+    public class SPacketPlayerTransforms : APacketServer
     {
-        writer.Write((byte)PlayerTransforms.Count);
-        PlayerTransforms.ForEach(pair =>
+        public Dictionary<byte, DataTransform> PlayerTransforms { get; set; }
+
+        public override void Write(PacketWriter writer)
         {
-            var transform = pair.Value;
+            writer.Write((byte)PlayerTransforms.Count);
+            PlayerTransforms.ForEach(pair =>
+            {
+                var transform = pair.Value;
 
-            writer.Write((byte)pair.Key); // id
-            writer.Write(transform.Position);
-            writer.Write((float)Math.Round(transform.Rotation, 1));
-        });
-    }
-
-    public override void Read(PacketReader reader)
-    {
-        PlayerTransforms = new Dictionary<byte, DataTransform>();
-        var count = reader.ReadByte();
-        for (int i = 0; i < count; i++)
-        {
-            var id = reader.ReadByte();
-            var pos = reader.ReadVector2();
-            var rot = reader.ReadFloat();
-
-            PlayerTransforms[id] = new DataTransform {
-                Position = pos,
-                Rotation = rot
-            };
+                writer.Write((byte)pair.Key); // id
+                writer.Write(transform.Position);
+                writer.Write((float)Math.Round(transform.Rotation, 1));
+            });
         }
-    }
+
+        public override void Read(PacketReader reader)
+        {
+            PlayerTransforms = new Dictionary<byte, DataTransform>();
+            var count = reader.ReadByte();
+            for (int i = 0; i < count; i++)
+            {
+                var id = reader.ReadByte();
+                var pos = reader.ReadVector2();
+                var rot = reader.ReadFloat();
+
+                PlayerTransforms[id] = new DataTransform {
+                    Position = pos,
+                    Rotation = rot
+                };
+            }
+        }
 
 #if CLIENT
-    public override async Task Handle(GameClient client)
-    {
-        /*if (SceneManager.InGame())
-            SceneManager.GetActiveSceneScript<Game.SceneGame>().UpdatePlayerPositions(PlayerTransforms);*/
-        await Task.FromResult(1);
-    }
+        public override async Task Handle(GameClient client)
+        {
+            /*if (SceneManager.InGame())
+                SceneManager.GetActiveSceneScript<Game.SceneGame>().UpdatePlayerPositions(PlayerTransforms);*/
+            await Task.FromResult(1);
+        }
 #endif
+    }
 }

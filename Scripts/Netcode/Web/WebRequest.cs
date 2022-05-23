@@ -1,107 +1,108 @@
 using Godot;
 
-namespace GodotModules;
-
-public class WebRequest : HTTPRequest
+namespace GodotModules
 {
-    private static int _id;
-    private WebServerResponse _webServerResponse;
-
-    public WebRequest(Node parent)
+    public class WebRequest : HTTPRequest
     {
-        Timeout = 10; // in seconds
-        UseThreads = true;
-        parent.AddChild(this);
-        var error = Connect("request_completed", this, nameof(OnRequestCompleted));
-        if (error != Error.Ok)
-            Logger.LogWarning("Failed to connect request_completed signal for WebRequest");
-    }
+        private static int _id;
+        private WebServerResponse _webServerResponse;
 
-    public async Task<WebServerResponse> GetAsync(string url, CancellationTokenSource cts)
-    {
-        try
+        public WebRequest(Node parent)
         {
-            using var task = Task.Run(async () =>
+            Timeout = 10; // in seconds
+            UseThreads = true;
+            parent.AddChild(this);
+            var error = Connect("request_completed", this, nameof(OnRequestCompleted));
+            if (error != Error.Ok)
+                Logger.LogWarning("Failed to connect request_completed signal for WebRequest");
+        }
+
+        public async Task<WebServerResponse> GetAsync(string url, CancellationTokenSource cts)
+        {
+            try
             {
-                Name = $"Request GET ({++_id})";
-
-                var errorRequest = Request(url);
-
-                if (errorRequest != Error.Ok)
+                using var task = Task.Run(async () =>
                 {
-                    //Logger.LogWarning($"Failed to make GET request to {url}");
-                    await Task.FromResult(new WebServerResponse(errorRequest));
-                }
+                    Name = $"Request GET ({++_id})";
 
-                while (_webServerResponse == null)
-                    await Task.Delay(1, cts.Token);
-            }, cts.Token);
-            await task;
+                    var errorRequest = Request(url);
+
+                    if (errorRequest != Error.Ok)
+                    {
+                        //Logger.LogWarning($"Failed to make GET request to {url}");
+                        await Task.FromResult(new WebServerResponse(errorRequest));
+                    }
+
+                    while (_webServerResponse == null)
+                        await Task.Delay(1, cts.Token);
+                }, cts.Token);
+                await task;
+            }
+            catch (TaskCanceledException) { }
+
+            _id--;
+            QueueFree();
+
+            return _webServerResponse;
         }
-        catch (TaskCanceledException) { }
 
-        _id--;
-        QueueFree();
-
-        return _webServerResponse;
-    }
-
-    public async Task<WebServerResponse> PostAsync(string url, object data, CancellationTokenSource cts)
-    {
-        try
+        public async Task<WebServerResponse> PostAsync(string url, object data, CancellationTokenSource cts)
         {
-            using var task = Task.Run(async () =>
+            try
             {
-                Name = $"Request POST ({++_id})";
-
-                var query = JSON.Print(data);
-                var headers = new string[] { "Content-Type: application/json" };
-                var errorRequest = Request(url, headers, true, HTTPClient.Method.Post, query);
-
-                if (errorRequest != Error.Ok)
+                using var task = Task.Run(async () =>
                 {
-                    //Logger.LogWarning($"Failed to make GET request to {url}");
-                    await Task.FromResult(new WebServerResponse(errorRequest));
-                }
+                    Name = $"Request POST ({++_id})";
 
-                while (_webServerResponse == null)
-                    await Task.Delay(1, cts.Token);
-            }, cts.Token);
-            await task;
+                    var query = JSON.Print(data);
+                    var headers = new string[] { "Content-Type: application/json" };
+                    var errorRequest = Request(url, headers, true, HTTPClient.Method.Post, query);
+
+                    if (errorRequest != Error.Ok)
+                    {
+                        //Logger.LogWarning($"Failed to make GET request to {url}");
+                        await Task.FromResult(new WebServerResponse(errorRequest));
+                    }
+
+                    while (_webServerResponse == null)
+                        await Task.Delay(1, cts.Token);
+                }, cts.Token);
+                await task;
+            }
+            catch (TaskCanceledException) {}
+
+            _id--;
+            QueueFree();
+
+            return _webServerResponse;
         }
-        catch (TaskCanceledException) {}
 
-        _id--;
-        QueueFree();
-
-        return _webServerResponse;
-    }
-
-    public void OnRequestCompleted(int result, int response_code, string[] headers, byte[] body)
-    {
-        var godotError = (Error)result;
-        var webError = (System.Net.HttpStatusCode)response_code;
-        if (godotError != Error.Ok || webError != System.Net.HttpStatusCode.OK)
+        public void OnRequestCompleted(int result, int response_code, string[] headers, byte[] body)
         {
-            if (godotError == Error.FileCantOpen) // if request times out godot throws a FileCantOpen error, this seems weird
-                godotError = Error.ConnectionError;
+            var godotError = (Error)result;
+            var webError = (System.Net.HttpStatusCode)response_code;
+            if (godotError != Error.Ok || webError != System.Net.HttpStatusCode.OK)
+            {
+                if (godotError == Error.FileCantOpen) // if request times out godot throws a FileCantOpen error, this seems weird
+                    godotError = Error.ConnectionError;
 
-            _webServerResponse = new WebServerResponse(godotError);
-            return;
+                _webServerResponse = new WebServerResponse(godotError);
+                return;
+            }
+
+            _webServerResponse = new WebServerResponse(godotError, System.Text.Encoding.UTF8.GetString(body));
         }
-
-        _webServerResponse = new WebServerResponse(godotError, System.Text.Encoding.UTF8.GetString(body));
     }
-}
 
-public class WebServerResponse
-{
-    public Error Error { get; set; }
-    public string Response { get; set; }
-
-    public WebServerResponse(Error error, string response = null)
+    public class WebServerResponse
     {
-        Error = error;
-        Response = response;
+        public Error Error { get; set; }
+        public string Response { get; set; }
+
+        public WebServerResponse(Error error, string response = null)
+        {
+            Error = error;
+            Response = response;
+        }
     }
 }

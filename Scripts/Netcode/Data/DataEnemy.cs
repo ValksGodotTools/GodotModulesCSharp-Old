@@ -1,6 +1,7 @@
-namespace GodotModules.Netcode;
-
-public class DataEnemy : DataTransform
+namespace GodotModules.Netcode
 {
+    public class DataEnemy : DataTransform
+    {
         
+    }
 }

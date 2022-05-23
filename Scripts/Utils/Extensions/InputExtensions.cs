@@ -1,88 +1,89 @@
 using Godot;
 
-namespace GodotModules;
-
-public static class InputExtensions 
+namespace GodotModules 
 {
-    private static Dictionary<ulong, string> _prevTexts = new();
-    private static Dictionary<ulong, int> _prevNums = new();
-
-    public static string Filter(this LineEdit lineEdit, Func<string, bool> filter) 
+    public static class InputExtensions 
     {
-        var text = lineEdit.Text;
-        var id = lineEdit.GetInstanceId();
+        private static Dictionary<ulong, string> _prevTexts = new();
+        private static Dictionary<ulong, int> _prevNums = new();
 
-        if (string.IsNullOrWhiteSpace(text))
-            return _prevTexts.ContainsKey(id) ? _prevTexts[id] : null;
-
-        if (!filter(text)) 
+        public static string Filter(this LineEdit lineEdit, Func<string, bool> filter) 
         {
-            if (!_prevTexts.ContainsKey(id)) 
+            var text = lineEdit.Text;
+            var id = lineEdit.GetInstanceId();
+
+            if (string.IsNullOrWhiteSpace(text))
+                return _prevTexts.ContainsKey(id) ? _prevTexts[id] : null;
+
+            if (!filter(text)) 
             {
-                lineEdit.ChangeLineEditText("");
-                return null;
+                if (!_prevTexts.ContainsKey(id)) 
+                {
+                    lineEdit.ChangeLineEditText("");
+                    return null;
+                }
+
+                lineEdit.ChangeLineEditText(_prevTexts[id]);
+                return _prevTexts[id];
             }
 
-            lineEdit.ChangeLineEditText(_prevTexts[id]);
-            return _prevTexts[id];
+            _prevTexts[id] = text;
+            return text;
         }
 
-        _prevTexts[id] = text;
-        return text;
-    }
-
-    public static int FilterRange(this LineEdit lineEdit, int maxRange, int minRange = 0) 
-    {
-        var text = lineEdit.Text;
-        var id = lineEdit.GetInstanceId();
-
-        if (string.IsNullOrWhiteSpace(text))
-            return minRange - 1;
-
-        if (text == "-")
-            return minRange - 1;
-
-        if (!int.TryParse(text.Trim(), out int numAttempts))
+        public static int FilterRange(this LineEdit lineEdit, int maxRange, int minRange = 0) 
         {
-            if (!_prevNums.ContainsKey(id)) 
-            {
-                lineEdit.ChangeLineEditText("");
+            var text = lineEdit.Text;
+            var id = lineEdit.GetInstanceId();
+
+            if (string.IsNullOrWhiteSpace(text))
                 return minRange - 1;
+
+            if (text == "-")
+                return minRange - 1;
+
+            if (!int.TryParse(text.Trim(), out int numAttempts))
+            {
+                if (!_prevNums.ContainsKey(id)) 
+                {
+                    lineEdit.ChangeLineEditText("");
+                    return minRange - 1;
+                }
+
+                lineEdit.ChangeLineEditText($"{_prevNums[id]}");
+                return _prevNums[id];
             }
 
-            lineEdit.ChangeLineEditText($"{_prevNums[id]}");
-            return _prevNums[id];
+            if (text.Length > maxRange.ToString().Length && numAttempts <= maxRange)
+            {
+                var spliced = text.Remove(text.Length - 1);
+                _prevNums[id] = int.Parse(spliced);
+
+                lineEdit.Text = spliced;
+                lineEdit.CaretPosition = spliced.Length;
+                return _prevNums[id];
+            }
+
+            if (numAttempts > maxRange)
+            {
+                numAttempts = maxRange;
+                lineEdit.ChangeLineEditText($"{maxRange}");
+            }
+
+            if (numAttempts < minRange) 
+            {
+                numAttempts = minRange;
+                lineEdit.ChangeLineEditText($"{minRange}");
+            }
+
+            _prevNums[id] = numAttempts;
+            return numAttempts;
         }
 
-        if (text.Length > maxRange.ToString().Length && numAttempts <= maxRange)
+        private static void ChangeLineEditText(this LineEdit lineEdit, string text) 
         {
-            var spliced = text.Remove(text.Length - 1);
-            _prevNums[id] = int.Parse(spliced);
-
-            lineEdit.Text = spliced;
-            lineEdit.CaretPosition = spliced.Length;
-            return _prevNums[id];
+            lineEdit.Text = text;
+            lineEdit.CaretPosition = text.Length;
         }
-
-        if (numAttempts > maxRange)
-        {
-            numAttempts = maxRange;
-            lineEdit.ChangeLineEditText($"{maxRange}");
-        }
-
-        if (numAttempts < minRange) 
-        {
-            numAttempts = minRange;
-            lineEdit.ChangeLineEditText($"{minRange}");
-        }
-
-        _prevNums[id] = numAttempts;
-        return numAttempts;
-    }
-
-    private static void ChangeLineEditText(this LineEdit lineEdit, string text) 
-    {
-        lineEdit.Text = text;
-        lineEdit.CaretPosition = text.Length;
     }
 }

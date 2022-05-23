@@ -1,25 +1,26 @@
 using ENet;
 
-namespace GodotModules.Netcode;
-
-public class ServerPacket : GamePacket
+namespace GodotModules.Netcode
 {
-    public Peer[] Peers { get; private set; }
-
-    public ServerPacket(byte opcode, PacketFlags packetFlags, APacket writable = null, params Peer[] peers)
+    public class ServerPacket : GamePacket
     {
-        using (var writer = new PacketWriter())
+        public Peer[] Peers { get; private set; }
+
+        public ServerPacket(byte opcode, PacketFlags packetFlags, APacket writable = null, params Peer[] peers)
         {
-            writer.Write(opcode);
-            if (writable != null)
-                writable.Write(writer);
+            using (var writer = new PacketWriter())
+            {
+                writer.Write(opcode);
+                if (writable != null)
+                    writable.Write(writer);
 
-            Data = writer.Stream.ToArray();
-            Size = writer.Stream.Length;
+                Data = writer.Stream.ToArray();
+                Size = writer.Stream.Length;
+            }
+
+            Opcode = opcode;
+            PacketFlags = packetFlags;
+            Peers = peers;
         }
-
-        Opcode = opcode;
-        PacketFlags = packetFlags;
-        Peers = peers;
     }
 }

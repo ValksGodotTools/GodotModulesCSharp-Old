@@ -1,70 +1,72 @@
+using Godot;
 using GodotModules.Netcode.Client;
 
-namespace GodotModules.Netcode;
-
-public class SPacketGame : APacketServer
+namespace GodotModules.Netcode
 {
-    private GameOpcode GameOpcode { get; set; }
-    public Dictionary<ushort, DataEnemy> Enemies { get; set; }
-
-    public SPacketGame() { } // need for reflection
-
-    public SPacketGame(GameOpcode opcode)
+    public class SPacketGame : APacketServer
     {
-        GameOpcode = opcode;
-    }
+        private GameOpcode GameOpcode { get; set; }
+        public Dictionary<ushort, DataEnemy> Enemies { get; set; }
 
-    public override void Write(PacketWriter writer)
-    {
-        writer.Write((byte)GameOpcode);
+        public SPacketGame() { } // need for reflection
 
-        if (GameOpcode == GameOpcode.EnemiesSpawned)
+        public SPacketGame(GameOpcode opcode)
         {
-            writer.Write((ushort)Enemies.Count);
-            foreach (var pair in Enemies)
-            {
-                writer.Write((ushort)pair.Key); // id
-                writer.Write(pair.Value.Position);
-            }
+            GameOpcode = opcode;
         }
-    }
 
-    public override void Read(PacketReader reader)
-    {
-        GameOpcode = (GameOpcode)reader.ReadByte();
-
-        if (GameOpcode == GameOpcode.EnemiesSpawned)
+        public override void Write(PacketWriter writer)
         {
-            Enemies = new Dictionary<ushort, DataEnemy>();
-            var count = reader.ReadUShort();
-            for (int i = 0; i < count; i++)
-            {
-                var id = reader.ReadUShort();
-                var pos = reader.ReadVector2();
+            writer.Write((byte)GameOpcode);
 
-                Enemies.Add(id, new DataEnemy
+            if (GameOpcode == GameOpcode.EnemiesSpawned)
+            {
+                writer.Write((ushort)Enemies.Count);
+                foreach (var pair in Enemies)
                 {
-                    Position = pos
-                });
+                    writer.Write((ushort)pair.Key); // id
+                    writer.Write(pair.Value.Position);
+                }
             }
         }
-    }
+
+        public override void Read(PacketReader reader)
+        {
+            GameOpcode = (GameOpcode)reader.ReadByte();
+
+            if (GameOpcode == GameOpcode.EnemiesSpawned)
+            {
+                Enemies = new Dictionary<ushort, DataEnemy>();
+                var count = reader.ReadUShort();
+                for (int i = 0; i < count; i++)
+                {
+                    var id = reader.ReadUShort();
+                    var pos = reader.ReadVector2();
+
+                    Enemies.Add(id, new DataEnemy
+                    {
+                        Position = pos
+                    });
+                }
+            }
+        }
 
 #if CLIENT
-    public override async Task Handle(GameClient client)
-    {
-        /*var sceneGameScript = SceneManager.GetActiveSceneScript<Game.SceneGame>();
-
-        foreach (var pair in Enemies)
+        public override async Task Handle(GameClient client)
         {
-            var enemy = Prefabs.Enemy.Instance<GodotModules.Netcode.Server.Enemy>();
-            enemy.Position = pair.Value.Position;
-            enemy.SetPlayers(sceneGameScript.Players);
-            sceneGameScript.AddChild(enemy);
-            sceneGameScript.Enemies[pair.Key] = enemy;
-        }*/
+            /*var sceneGameScript = SceneManager.GetActiveSceneScript<Game.SceneGame>();
 
-        await Task.FromResult(1);
-    }
+            foreach (var pair in Enemies)
+            {
+                var enemy = Prefabs.Enemy.Instance<GodotModules.Netcode.Server.Enemy>();
+                enemy.Position = pair.Value.Position;
+                enemy.SetPlayers(sceneGameScript.Players);
+                sceneGameScript.AddChild(enemy);
+                sceneGameScript.Enemies[pair.Key] = enemy;
+            }*/
+
+            await Task.FromResult(1);
+        }
 #endif
+    }
 }

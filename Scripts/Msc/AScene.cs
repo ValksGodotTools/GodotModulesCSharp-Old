@@ -1,6 +1,7 @@
-namespace GodotModules;
-
-public abstract class AScene : Godot.Node 
+namespace GodotModules 
 {
-    public abstract void PreInitManagers(Managers managers);
+    public abstract class AScene : Godot.Node 
+    {
+        public abstract void PreInitManagers(Managers managers);
+    }
 }

@@ -1,38 +1,39 @@
 using ENet;
 
-namespace GodotModules.Netcode.Client;
-
-public class GameClient : ENetClient
+namespace GodotModules.Netcode.Client 
 {
-    public GameClient(NetworkManager networkManager, GodotCommands godotCmds) : base(networkManager)
+    public class GameClient : ENetClient
     {
-        _godotCmds = godotCmds;
-    }
+        public GameClient(NetworkManager networkManager, GodotCommands godotCmds) : base(networkManager)
+        {
+            _godotCmds = godotCmds;
+        }
 
-    protected override void Connecting()
-    {
-        Log("Client connecting...");
-    }
+        protected override void Connecting()
+        {
+            Log("Client connecting...");
+        }
 
-    protected override void Receive(PacketReader reader)
-    {
-        _godotCmds.Enqueue(GodotOpcode.ENetPacket, new PacketInfo(reader, this));
-    }
+        protected override void Receive(PacketReader reader)
+        {
+            _godotCmds.Enqueue(GodotOpcode.ENetPacket, new PacketInfo(reader, this));
+        }
 
-    protected override void Connect(ref Event netEvent)
-    {
-        Log("Client connected");
-    }
+        protected override void Connect(ref Event netEvent)
+        {
+            Log("Client connected");
+        }
 
-    protected override void Leave(ref Event netEvent)
-    {
-        Log("Client left");
-    }
+        protected override void Leave(ref Event netEvent)
+        {
+            Log("Client left");
+        }
 
-    protected override void Stopped() 
-    {
-        Log("Client stopped");
-    }
+        protected override void Stopped() 
+        {
+            Log("Client stopped");
+        }
 
-    private void Log(object v) => Logger.Log($"[Client]: {v}", ConsoleColor.DarkGreen);
+        private void Log(object v) => Logger.Log($"[Client]: {v}", ConsoleColor.DarkGreen);
+    }
 }

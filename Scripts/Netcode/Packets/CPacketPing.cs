@@ -1,11 +1,12 @@
 using GodotModules.Netcode.Server;
 
-namespace GodotModules.Netcode;
-
-public class CPacketPing : APacketClient
+namespace GodotModules.Netcode
 {
-    public override void Handle(GameServer server, ENet.Peer peer)
+    public class CPacketPing : APacketClient
     {
-        server.Send(ServerPacketOpcode.Pong, peer);
+        public override void Handle(GameServer server, ENet.Peer peer)
+        {
+            server.Send(ServerPacketOpcode.Pong, peer);
+        }
     }
 }

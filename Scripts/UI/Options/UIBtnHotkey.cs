@@ -1,88 +1,89 @@
 using Godot;
 
-namespace GodotModules;
-
-public class UIBtnHotkey : Button
+namespace GodotModules
 {
-    private string _action;
-    private string _hotkey = "";
-    private bool _waitingForHotkey;
-    private bool _skip;
-    private HotkeyManager _hotkeyManager;
-
-    public void PreInit(HotkeyManager hotkeyManager, string action)
+    public class UIBtnHotkey : Button
     {
-        _hotkeyManager = hotkeyManager;
-        _action = action;
-        var key = (InputEvent)InputMap.GetActionList(_action)[0];
-        Text = key.Display();
-        _hotkey = key.Display();
-    }
+        private string _action;
+        private string _hotkey = "";
+        private bool _waitingForHotkey;
+        private bool _skip;
+        private HotkeyManager _hotkeyManager;
 
-    public override void _Input(InputEvent @event)
-    {
-        if (@event is InputEventKey keyEvent && !keyEvent.Pressed && _waitingForHotkey)
+        public void PreInit(HotkeyManager hotkeyManager, string action)
         {
-            _waitingForHotkey = false;
-            SetHotkeyText(@event.Display());
-            _hotkeyManager.SetHotkey(_action, keyEvent);
+            _hotkeyManager = hotkeyManager;
+            _action = action;
+            var key = (InputEvent)InputMap.GetActionList(_action)[0];
+            Text = key.Display();
+            _hotkey = key.Display();
         }
 
-        if (@event is InputEventJoypadButton joypadButtonEvent && !joypadButtonEvent.Pressed && _waitingForHotkey)
+        public override void _Input(InputEvent @event)
         {
-            _waitingForHotkey = false;
-            SetHotkeyText(@event.Display());
-            _hotkeyManager.SetHotkey(_action, joypadButtonEvent);
-        }
-
-        if (@event is InputEventMouseButton mouseEvent)
-        {
-            if (
-                mouseEvent.Pressed && 
-                mouseEvent.ButtonMask == (int)ButtonList.Left && 
-                !GetGlobalRect().HasPoint(mouseEvent.Position)
-            )
-            {
-                LostFocus();
-                return;
-            }
-
-            if (!mouseEvent.Pressed && _waitingForHotkey)
+            if (@event is InputEventKey keyEvent && !keyEvent.Pressed && _waitingForHotkey)
             {
                 _waitingForHotkey = false;
                 SetHotkeyText(@event.Display());
-                _hotkeyManager.SetHotkey(_action, mouseEvent);
-                _skip = true;
+                _hotkeyManager.SetHotkey(_action, keyEvent);
+            }
+
+            if (@event is InputEventJoypadButton joypadButtonEvent && !joypadButtonEvent.Pressed && _waitingForHotkey)
+            {
+                _waitingForHotkey = false;
+                SetHotkeyText(@event.Display());
+                _hotkeyManager.SetHotkey(_action, joypadButtonEvent);
+            }
+
+            if (@event is InputEventMouseButton mouseEvent)
+            {
+                if (
+                    mouseEvent.Pressed && 
+                    mouseEvent.ButtonMask == (int)ButtonList.Left && 
+                    !GetGlobalRect().HasPoint(mouseEvent.Position)
+                )
+                {
+                    LostFocus();
+                    return;
+                }
+
+                if (!mouseEvent.Pressed && _waitingForHotkey)
+                {
+                    _waitingForHotkey = false;
+                    SetHotkeyText(@event.Display());
+                    _hotkeyManager.SetHotkey(_action, mouseEvent);
+                    _skip = true;
+                }
             }
         }
-    }
 
-    public void SetHotkeyText(string v) 
-    {
-        _hotkey = v;
-        Text = v;
-    }
-
-    private void _on_Btn_pressed()
-    {
-        if (_waitingForHotkey)
-            return;
-
-        if (_skip)
+        public void SetHotkeyText(string v) 
         {
-            _skip = false;
-            return;
+            _hotkey = v;
+            Text = v;
         }
 
-        _waitingForHotkey = true;
-        Text = "...";
-    }
+        private void _on_Btn_pressed()
+        {
+            if (_waitingForHotkey)
+                return;
 
-    private void _on_Btn_focus_exited() => LostFocus();
+            if (_skip)
+            {
+                _skip = false;
+                return;
+            }
 
-    private void LostFocus() 
-    {
-        _waitingForHotkey = false;
-        Text = _hotkey;
+            _waitingForHotkey = true;
+            Text = "...";
+        }
+
+        private void _on_Btn_focus_exited() => LostFocus();
+
+        private void LostFocus() 
+        {
+            _waitingForHotkey = false;
+            Text = _hotkey;
+        }
     }
 }
