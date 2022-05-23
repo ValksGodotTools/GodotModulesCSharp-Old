@@ -1,4 +1,3 @@
-global using GodotModules;
 global using GodotModules.Netcode;
 global using System;
 global using System.Collections.Generic;
@@ -12,158 +11,157 @@ global using System.Linq;
 
 using Godot;
 
-namespace GodotModules
+namespace GodotModules;
+
+public class Managers : Node
 {
-    public class Managers : Node
+    [Export] protected readonly NodePath NodePathAudioStreamPlayer;
+    [Export] protected readonly NodePath NodePathWebRequestList;
+    [Export] protected readonly NodePath NodePathScenes;
+    [Export] protected readonly NodePath NodePathConsole;
+    [Export] protected readonly NodePath NodePathErrorNotifierManager;
+    [Export] protected readonly NodePath NodePathMenuParticles;
+    [Export] protected readonly NodePath NodePathPopups;
+    [Export] protected readonly NodePath NodePathSceneManager;
+
+    public OptionsManager ManagerOptions { get; private set; }
+    public TokenManager ManagerToken { get; private set; }
+    public NetworkManager ManagerNetwork { get; private set; }
+    public SceneManager ManagerScene { get; private set; }
+    public WebManager ManagerWeb { get; private set; }
+    public MusicManager ManagerMusic { get; private set; }
+    public ErrorNotifierManager ManagerErrorNotifier { get; private set; }
+    public PopupManager ManagerPopup { get; private set; }
+    public HotkeyManager ManagerHotkey { get; private set; }
+    public ConsoleManager ManagerConsole { get; private set; }
+    public SystemFileManager ManagerFileSystem { get; private set; }
+    public GodotFileManager ManagerFileGodot { get; private set; }
+
+    private Particles2D _menuParticles;
+    private bool _ready;
+
+    public override async void _Ready()
     {
-        [Export] protected readonly NodePath NodePathAudioStreamPlayer;
-        [Export] protected readonly NodePath NodePathWebRequestList;
-        [Export] protected readonly NodePath NodePathScenes;
-        [Export] protected readonly NodePath NodePathConsole;
-        [Export] protected readonly NodePath NodePathErrorNotifierManager;
-        [Export] protected readonly NodePath NodePathMenuParticles;
-        [Export] protected readonly NodePath NodePathPopups;
-        [Export] protected readonly NodePath NodePathSceneManager;
+        ManagerFileGodot = new();
+        ManagerFileSystem = new();
+        ManagerHotkey = new(ManagerFileSystem, new List<string>() { "UI", "Player", "Camera" });
+        ManagerOptions = new(ManagerFileSystem, ManagerHotkey);
+        ManagerToken = new();
+        ManagerWeb = new(new(GetNode<Node>(NodePathWebRequestList)), ManagerToken, ManagerOptions.Options.WebServerAddress);
+        ManagerMusic = new(GetNode<AudioStreamPlayer>(NodePathAudioStreamPlayer), ManagerOptions);
+        ManagerErrorNotifier = GetNode<ErrorNotifierManager>(NodePathErrorNotifierManager);
+        ManagerPopup = new(GetNode<Node>(NodePathPopups));
+        ManagerNetwork = new(ManagerPopup);
+        ManagerConsole = GetNode<ConsoleManager>(NodePathConsole);
 
-        public OptionsManager ManagerOptions { get; private set; }
-        public TokenManager ManagerToken { get; private set; }
-        public NetworkManager ManagerNetwork { get; private set; }
-        public SceneManager ManagerScene { get; private set; }
-        public WebManager ManagerWeb { get; private set; }
-        public MusicManager ManagerMusic { get; private set; }
-        public ErrorNotifierManager ManagerErrorNotifier { get; private set; }
-        public PopupManager ManagerPopup { get; private set; }
-        public HotkeyManager ManagerHotkey { get; private set; }
-        public ConsoleManager ManagerConsole { get; private set; }
-        public SystemFileManager ManagerFileSystem { get; private set; }
-        public GodotFileManager ManagerFileGodot { get; private set; }
+        _menuParticles = GetNode<Particles2D>(NodePathMenuParticles);
+        _menuParticles.Emitting = true;
 
-        private Particles2D _menuParticles;
-        private bool _ready;
+        await InitSceneManager(GetNode<Control>(NodePathScenes), ManagerHotkey);
 
-        public override async void _Ready()
+        Logger.UIConsole = ManagerConsole;
+        Logger.ErrorNotifierManager = ManagerErrorNotifier;
+        ModLoader.Init(ManagerFileSystem, ManagerFileGodot);
+
+        UpdateParticleSystem();
+
+        ManagerMusic.LoadTrack("Menu", "Audio/Music/Unsolicited trailer music loop edit.wav");
+        ManagerMusic.PlayTrack("Menu");
+
+        ManagerNetwork.StartServer(25565, 100);
+        ManagerNetwork.StartClient("127.0.0.1", 25565);
+
+        await ManagerWeb.CheckConnectionAsync();
+
+        if (ManagerWeb.ConnectionAlive)
+            await ManagerWeb.GetExternalIpAsync();
+
+        _ready = true;
+    }
+
+    public async Task InitSceneManager(Control sceneList, HotkeyManager hotkeyManager)
+    {
+        ManagerScene = GetNode<SceneManager>(NodePathSceneManager);
+        ManagerScene.Init(sceneList, ManagerFileGodot, hotkeyManager, this);
+
+        // Custom Pre Init
+        ManagerScene.PreInit[GameScene.Menu] = (node) =>
         {
-            ManagerFileGodot = new();
-            ManagerFileSystem = new();
-            ManagerHotkey = new(ManagerFileSystem, new List<string>() { "UI", "Player", "Camera" });
-            ManagerOptions = new(ManagerFileSystem, ManagerHotkey);
-            ManagerToken = new();
-            ManagerWeb = new(new(GetNode<Node>(NodePathWebRequestList)), ManagerToken, ManagerOptions.Options.WebServerAddress);
-            ManagerMusic = new(GetNode<AudioStreamPlayer>(NodePathAudioStreamPlayer), ManagerOptions);
-            ManagerErrorNotifier = GetNode<ErrorNotifierManager>(NodePathErrorNotifierManager);
-            ManagerPopup = new(GetNode<Node>(NodePathPopups));
-            ManagerNetwork = new(ManagerPopup);
-            ManagerConsole = GetNode<ConsoleManager>(NodePathConsole);
+            ((SceneMenu)node).PreInit(_menuParticles);
+        };
 
-            _menuParticles = GetNode<Particles2D>(NodePathMenuParticles);
+        // Esc Pressed
+        ManagerScene.EscPressed[GameScene.Credits] = async () => await ManagerScene.ChangeScene(GameScene.Menu);
+        ManagerScene.EscPressed[GameScene.GameServers] = async () => await ManagerScene.ChangeScene(GameScene.Menu);
+        ManagerScene.EscPressed[GameScene.Mods] = async () => 
+        {
+            ModLoader.SceneMods = null;
+            await ManagerScene.ChangeScene(GameScene.Menu);
+        };
+        ManagerScene.EscPressed[GameScene.Options] = async () =>
+        {
+            ManagerToken.Cancel("check_connection");
+            await ManagerScene.ChangeScene(GameScene.Menu);
+        };
+        ManagerScene.EscPressed[GameScene.Lobby] = async () => await ManagerScene.ChangeScene(GameScene.GameServers);
+        ManagerScene.EscPressed[GameScene.Game] = async () =>
+        {
+            await ManagerScene.ChangeScene(GameScene.Menu);
             _menuParticles.Emitting = true;
+            _menuParticles.Visible = true;
+        };
 
-            await InitSceneManager(GetNode<Control>(NodePathScenes), ManagerHotkey);
+        await ManagerScene.InitAsync();
+    }
 
-            Logger.UIConsole = ManagerConsole;
-            Logger.ErrorNotifierManager = ManagerErrorNotifier;
-            ModLoader.Init(ManagerFileSystem, ManagerFileGodot);
+    public override async void _Process(float delta)
+    {
+        Logger.Update();
+        await ManagerNetwork.Update();
+    }
 
-            UpdateParticleSystem();
-
-            ManagerMusic.LoadTrack("Menu", "Audio/Music/Unsolicited trailer music loop edit.wav");
-            ManagerMusic.PlayTrack("Menu");
-
-            ManagerNetwork.StartServer(25565, 100);
-            ManagerNetwork.StartClient("127.0.0.1", 25565);
-
-            await ManagerWeb.CheckConnectionAsync();
-
-            if (ManagerWeb.ConnectionAlive)
-                await ManagerWeb.GetExternalIpAsync();
-
-            _ready = true;
-        }
-
-        public async Task InitSceneManager(Control sceneList, HotkeyManager hotkeyManager)
-        {
-            ManagerScene = GetNode<SceneManager>(NodePathSceneManager);
-            ManagerScene.Init(sceneList, ManagerFileGodot, hotkeyManager, this);
-
-            // Custom Pre Init
-            ManagerScene.PreInit[GameScene.Menu] = (node) =>
-            {
-                ((SceneMenu)node).PreInit(_menuParticles);
-            };
-
-            // Esc Pressed
-            ManagerScene.EscPressed[GameScene.Credits] = async () => await ManagerScene.ChangeScene(GameScene.Menu);
-            ManagerScene.EscPressed[GameScene.GameServers] = async () => await ManagerScene.ChangeScene(GameScene.Menu);
-            ManagerScene.EscPressed[GameScene.Mods] = async () => 
-            {
-                ModLoader.SceneMods = null;
-                await ManagerScene.ChangeScene(GameScene.Menu);
-            };
-            ManagerScene.EscPressed[GameScene.Options] = async () =>
-            {
-                ManagerToken.Cancel("check_connection");
-                await ManagerScene.ChangeScene(GameScene.Menu);
-            };
-            ManagerScene.EscPressed[GameScene.Lobby] = async () => await ManagerScene.ChangeScene(GameScene.GameServers);
-            ManagerScene.EscPressed[GameScene.Game] = async () =>
-            {
-                await ManagerScene.ChangeScene(GameScene.Menu);
-                _menuParticles.Emitting = true;
-                _menuParticles.Visible = true;
-            };
-
-            await ManagerScene.InitAsync();
-        }
-
-        public override async void _Process(float delta)
-        {
-            Logger.Update();
-            await ManagerNetwork.Update();
-        }
-
-        public override void _Input(InputEvent @event)
-        {
-            if (Input.IsActionJustPressed("ui_cancel"))
-                if (ManagerConsole.Visible)
-                    ManagerConsole.ToggleVisibility();
-                else if (ManagerScene.EscPressed.ContainsKey(ManagerScene.CurScene))
-                    ManagerScene.EscPressed[ManagerScene.CurScene]();
-
-            if (Input.IsActionJustPressed("ui_fullscreen"))
-                ManagerOptions.ToggleFullscreen();
-
-            if (Input.IsActionJustPressed("ui_console"))
+    public override void _Input(InputEvent @event)
+    {
+        if (Input.IsActionJustPressed("ui_cancel"))
+            if (ManagerConsole.Visible)
                 ManagerConsole.ToggleVisibility();
-        }
+            else if (ManagerScene.EscPressed.ContainsKey(ManagerScene.CurScene))
+                ManagerScene.EscPressed[ManagerScene.CurScene]();
 
-        public override async void _Notification(int what)
-        {
-            if (what == MainLoop.NotificationWmQuitRequest)
-            {
-                GetTree().SetAutoAcceptQuit(false);
-                await Cleanup();
-            }
-        }
+        if (Input.IsActionJustPressed("ui_fullscreen"))
+            ManagerOptions.ToggleFullscreen();
 
-        private void _on_Scenes_resized()
-        {
-            if (_ready)
-                UpdateParticleSystem();
-        }
+        if (Input.IsActionJustPressed("ui_console"))
+            ManagerConsole.ToggleVisibility();
+    }
 
-        private void UpdateParticleSystem()
+    public override async void _Notification(int what)
+    {
+        if (what == MainLoop.NotificationWmQuitRequest)
         {
-            _menuParticles.Position = new Vector2(OS.WindowSize.x / 2, OS.WindowSize.y);
-            _menuParticles.ProcessMaterial.SetIndexed("emission_box_extents:x", OS.WindowSize.x / 2);
+            GetTree().SetAutoAcceptQuit(false);
+            await Cleanup();
         }
+    }
 
-        private async Task Cleanup()
-        {
-            ModLoader.SaveEnabled();
-            ManagerOptions.SaveOptions();
-            await ManagerNetwork.Cleanup();
-            ManagerToken.Cleanup();
-            GetTree().Quit();
-        }
+    private void _on_Scenes_resized()
+    {
+        if (_ready)
+            UpdateParticleSystem();
+    }
+
+    private void UpdateParticleSystem()
+    {
+        _menuParticles.Position = new Vector2(OS.WindowSize.x / 2, OS.WindowSize.y);
+        _menuParticles.ProcessMaterial.SetIndexed("emission_box_extents:x", OS.WindowSize.x / 2);
+    }
+
+    private async Task Cleanup()
+    {
+        ModLoader.SaveEnabled();
+        ManagerOptions.SaveOptions();
+        await ManagerNetwork.Cleanup();
+        ManagerToken.Cleanup();
+        GetTree().Quit();
     }
 }

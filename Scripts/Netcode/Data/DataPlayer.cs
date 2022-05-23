@@ -1,9 +1,8 @@
-namespace GodotModules.Netcode
+namespace GodotModules.Netcode;
+
+public class DataPlayer : DataTransform 
 {
-    public class DataPlayer : DataTransform 
-    {
-        public string Username { get; set; }
-        public bool Ready { get; set; }
-        public bool Host { get; set; }
-    }
+    public string Username { get; set; }
+    public bool Ready { get; set; }
+    public bool Host { get; set; }
 }

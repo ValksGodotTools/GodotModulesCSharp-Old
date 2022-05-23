@@ -1,11 +1,10 @@
-namespace GodotModules.Netcode
-{
-    public abstract class APacket
-    {
-        public virtual void Write(PacketWriter writer)
-        { }
+namespace GodotModules.Netcode;
 
-        public virtual void Read(PacketReader reader)
-        { }
-    }
+public abstract class APacket
+{
+    public virtual void Write(PacketWriter writer)
+    { }
+
+    public virtual void Read(PacketReader reader)
+    { }
 }

@@ -1,27 +1,26 @@
 using Godot;
 
-namespace GodotModules 
+namespace GodotModules;
+
+public class ErrorNotifierManager : Node
 {
-    public class ErrorNotifierManager : Node
+    private int _errorCount;
+
+    public override void _Ready() =>
+        new GTimer(this, nameof(SpawnErrorNotification), 1500);
+
+    public void IncrementErrorCount() => 
+        _errorCount++;
+
+    public void SpawnErrorNotification()
     {
-        private int _errorCount;
+        if (_errorCount == 0)
+            return;
 
-        public override void _Ready() =>
-            new GTimer(this, nameof(SpawnErrorNotification), 1500);
+        var notifyError = Prefabs.UIErrorNotifier.Instance<UIErrorNotifier>();
+        notifyError.Count = _errorCount;
+        AddChild(notifyError);
 
-        public void IncrementErrorCount() => 
-            _errorCount++;
-
-        public void SpawnErrorNotification()
-        {
-            if (_errorCount == 0)
-                return;
-
-            var notifyError = Prefabs.UIErrorNotifier.Instance<UIErrorNotifier>();
-            notifyError.Count = _errorCount;
-            AddChild(notifyError);
-
-            _errorCount = 0;
-        }
+        _errorCount = 0;
     }
 }

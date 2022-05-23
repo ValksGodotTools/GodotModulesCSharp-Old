@@ -1,18 +1,14 @@
-using GodotModules.Netcode.Client;
-using GodotModules.Netcode.Server;
+namespace GodotModules;
 
-namespace GodotModules
+public class CommandDebug : Command
 {
-    public class CommandDebug : Command
-    {
-        public CommandDebug() => Aliases = new string[] { "x" };
+    public CommandDebug() => Aliases = new string[] { "x" };
 
-        public override void Run(string[] args)
-        {
-            // debug command
-            // do debug stuff here
-            if (args.Length == 0)
-                return;
-        }
+    public override void Run(string[] args)
+    {
+        // debug command
+        // do debug stuff here
+        if (args.Length == 0)
+            return;
     }
 }

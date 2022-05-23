@@ -1,25 +1,24 @@
 using Godot;
 using GodotModules.Netcode.Server;
 
-namespace GodotModules.Netcode
+namespace GodotModules.Netcode;
+
+public class CPacketPlayerPosition : APacketClient
 {
-    public class CPacketPlayerPosition : APacketClient
+    public Vector2 Position { get; set; }
+
+    public override void Write(PacketWriter writer)
     {
-        public Vector2 Position { get; set; }
+        writer.Write(Position);
+    }
 
-        public override void Write(PacketWriter writer)
-        {
-            writer.Write(Position);
-        }
+    public override void Read(PacketReader reader)
+    {
+        Position = reader.ReadVector2();
+    }
 
-        public override void Read(PacketReader reader)
-        {
-            Position = reader.ReadVector2();
-        }
-
-        public override void Handle(GameServer server, ENet.Peer peer)
-        {
-            server.Players[(byte)peer.ID].Position = Position;
-        }
+    public override void Handle(GameServer server, ENet.Peer peer)
+    {
+        server.Players[(byte)peer.ID].Position = Position;
     }
 }
