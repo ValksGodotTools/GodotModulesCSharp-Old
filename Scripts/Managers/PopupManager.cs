@@ -6,10 +6,12 @@ namespace GodotModules
     {
         private Queue<WindowDialog> _queue = new();
         private Node _popups;
+        private Managers _managers;
 
-        public PopupManager(Node popups)
+        public PopupManager(Node popups, Managers managers)
         {
             _popups = popups;
+            _managers = managers;
         }
 
         public void SpawnMessage(string message, string title = "")
@@ -28,10 +30,10 @@ namespace GodotModules
             Spawn(popup);
         }
 
-        public void SpawnLineEdit(Action<LineEdit> onTextChanged, Action<string> onHide, int maxLength = 50, string title = "") 
+        public void SpawnLineEdit(Action<LineEdit> onTextChanged, Action<string> onHide, string title = "", int maxLength = 50, string text = "") 
         {
             var popup = Prefabs.PopupLineEdit.Instance<PopupLineEdit>();
-            popup.PreInit(this, onTextChanged, onHide, maxLength, title);
+            popup.PreInit(this, onTextChanged, onHide, maxLength, title, text);
 
             Spawn(popup);
         }
@@ -39,7 +41,7 @@ namespace GodotModules
         public void SpawnCreateLobby()
         {
             var popup = Prefabs.PopupCreateLobby.Instance<PopupCreateLobby>();
-            popup.PreInit(this);
+            popup.PreInit(this, _managers);
 
             Spawn(popup);
         }

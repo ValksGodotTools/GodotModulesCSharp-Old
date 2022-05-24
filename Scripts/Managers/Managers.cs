@@ -46,7 +46,7 @@ namespace GodotModules
 			ManagerWeb = new(new(GetNode<Node>(NodePathWebRequestList)), ManagerToken, ManagerOptions.Options.WebServerAddress);
 			ManagerMusic = new(GetNode<AudioStreamPlayer>(NodePathAudioStreamPlayer), ManagerOptions);
 			ManagerErrorNotifier = GetNode<ErrorNotifierManager>(NodePathErrorNotifierManager);
-			ManagerPopup = new(GetNode<Node>(NodePathPopups));
+			ManagerPopup = new(GetNode<Node>(NodePathPopups), this);
 			ManagerNetwork = new(ManagerPopup);
 			ManagerConsole = GetNode<ConsoleManager>(NodePathConsole);
 
@@ -66,9 +66,6 @@ namespace GodotModules
 
 			ManagerMusic.LoadTrack("Menu", "Audio/Music/Unsolicited trailer music loop edit.wav");
 			ManagerMusic.PlayTrack("Menu");
-
-			ManagerNetwork.StartServer(25565, 100);
-			ManagerNetwork.StartClient("127.0.0.1", 25565);
 
 			await ManagerWeb.CheckConnectionAsync();
 

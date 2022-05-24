@@ -31,6 +31,30 @@ namespace GodotModules
             return text;
         }
 
+        public static string Filter(this TextEdit textEdit, Func<string, bool> filter) 
+        {
+            var text = textEdit.Text;
+            var id = textEdit.GetInstanceId();
+
+            if (string.IsNullOrWhiteSpace(text))
+                return _prevTexts.ContainsKey(id) ? _prevTexts[id] : null;
+
+            if (!filter(text)) 
+            {
+                if (!_prevTexts.ContainsKey(id)) 
+                {
+                    textEdit.ChangeTextEditText("");
+                    return null;
+                }
+
+                textEdit.ChangeTextEditText(_prevTexts[id]);
+                return _prevTexts[id];
+            }
+
+            _prevTexts[id] = text;
+            return text;
+        }
+
         public static int FilterRange(this LineEdit lineEdit, int maxRange, int minRange = 0) 
         {
             var text = lineEdit.Text;
@@ -84,6 +108,12 @@ namespace GodotModules
         {
             lineEdit.Text = text;
             lineEdit.CaretPosition = text.Length;
+        }
+
+        private static void ChangeTextEditText(this TextEdit textEdit, string text) 
+        {
+            textEdit.Text = text;
+            //textEdit.CaretPosition = text.Length;
         }
     }
 }

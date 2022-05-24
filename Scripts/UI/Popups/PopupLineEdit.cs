@@ -12,14 +12,16 @@ namespace GodotModules
         private Action<LineEdit> _onTextChanged;
         private Action<string> _onHide;
         private int _maxLength;
+        private string _text;
 
-        public void PreInit(PopupManager popupManager, Action<LineEdit> onTextChanged, Action<string> onHide, int maxLength = 50, string title = "") 
+        public void PreInit(PopupManager popupManager, Action<LineEdit> onTextChanged, Action<string> onHide, int maxLength = 50, string title = "", string text = "") 
         {
             _popupManager = popupManager;
             _title = title;
             _onTextChanged = onTextChanged;
             _onHide = onHide;
             _maxLength = maxLength;
+            _text = text;
         }
 
         public override void _Ready()
@@ -27,6 +29,7 @@ namespace GodotModules
             _lineEdit = GetNode<LineEdit>(NodePathLineEdit);
             _lineEdit.MaxLength = _maxLength;
             WindowTitle = _title;
+            _lineEdit.Text = _text;
         }
 
         private void _on_LineEdit_text_changed(string newText) => _onTextChanged(_lineEdit);

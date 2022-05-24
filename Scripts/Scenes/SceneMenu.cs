@@ -40,7 +40,7 @@ namespace GodotModules
                 _managers.ManagerPopup.SpawnLineEdit(
                     lineEdit => lineEdit.Filter((text) => Regex.IsMatch(text, "^[a-z]+$")), 
                     result => _managers.ManagerOptions.Options.OnlineUsername = result, 
-                    20, "Set Online Username");
+                    "Set Online Username", 20);
                 return;
             }
 

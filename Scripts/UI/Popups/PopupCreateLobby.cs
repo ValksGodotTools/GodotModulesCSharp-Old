@@ -10,52 +10,62 @@ namespace GodotModules
         [Export] protected readonly NodePath NodePathMaxPlayers;
         [Export] protected readonly NodePath NodePathPassword;
 
-        private LineEdit _name;
-        private TextEdit _description;
-        private LineEdit _port;
-        private LineEdit _maxPlayers;
-        private LineEdit _password;
+        private LineEdit _inputName;
+        private TextEdit _inputDescription;
+        private LineEdit _inputPort;
+        private LineEdit _inputMaxPlayers;
+        private LineEdit _inputPassword;
+
+        private string _name;
+        private string _description;
+        private ushort _port;
+        private byte _maxPlayers;
+        private string _password;
         
         private PopupManager _popupManager;
+        private Managers _managers;
 
-        public void PreInit(PopupManager popupManager)
+        public void PreInit(PopupManager popupManager, Managers managers)
         {
             _popupManager = popupManager;
+            _managers = managers;
         }
 
         public override void _Ready()
         {
-            _name = GetNode<LineEdit>(NodePathName);
-            _description = GetNode<TextEdit>(NodePathDescription);
-            _port = GetNode<LineEdit>(NodePathPort);
-            _maxPlayers = GetNode<LineEdit>(NodePathMaxPlayers);
-            _password = GetNode<LineEdit>(NodePathPassword);
+            _inputName = GetNode<LineEdit>(NodePathName);
+            _inputDescription = GetNode<TextEdit>(NodePathDescription);
+            _inputPort = GetNode<LineEdit>(NodePathPort);
+            _inputMaxPlayers = GetNode<LineEdit>(NodePathMaxPlayers);
+            _inputPassword = GetNode<LineEdit>(NodePathPassword);
+
+            _name = "Another lobby";
+            _description = "Some description";
+            _port = 25565;
+            _maxPlayers = 100;
+            _password = "";
+
+            _inputName.Text = _name;
+            _inputDescription.Text = _description;
+            _inputPort.Text = $"{_port}";
+            _inputMaxPlayers.Text = $"{_maxPlayers}";
+            _inputPassword.Text = _password;
         }
 
-        private void _on_Name_text_changed(string v)
-        {
+        private void _on_Name_text_changed(string v) => 
+            _name = _inputName.Filter((text) => text.IsMatch("^[A-Za-z ]+$"));
 
-        }
+        private void _on_Description_text_changed() => 
+            _description = _inputDescription.Filter((text) => text.Length < 250);
 
-        private void _on_Description_text_changed()
-        {
+        private void _on_Password_text_changed(string v) =>
+            _password = _inputPassword.Filter((text) => text.Length < 100);
 
-        }
+        private void _on_Port_text_changed(string v) =>
+            _port = (ushort)_inputPort.FilterRange(ushort.MaxValue);
 
-        private void _on_Password_text_changed(string v)
-        {
-
-        }
-
-        private void _on_Port_text_changed(string v)
-        {
-
-        }
-
-        private void _on_Max_Players_text_changed(string v)
-        {
-
-        }
+        private void _on_Max_Players_text_changed(string v) =>
+            _maxPlayers = (byte)_inputMaxPlayers.FilterRange(byte.MaxValue);
 
         private void _on_PopupCreateLobby_popup_hide()
         {
@@ -65,6 +75,7 @@ namespace GodotModules
 
         private void _on_Create_pressed()
         {
+            _managers.ManagerNetwork.StartServer(_port, _maxPlayers);
             Hide();
         }
     }

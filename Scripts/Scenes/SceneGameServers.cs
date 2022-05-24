@@ -8,10 +8,12 @@ namespace GodotModules
 
         private List<UILobbyListing> _lobbyListings = new();
         private Control _lobbyList;
+        private Managers _managers;
+        private bool _connectingToLobby;
 
         public override void PreInitManagers(Managers managers)
         {
-            
+            _managers = managers;
         }
 
         public override void _Ready()
@@ -20,7 +22,7 @@ namespace GodotModules
 
             var colorSwitch = false;
 
-            for (int i = 0; i < 20; i++) 
+            for (int i = 0; i < 20; i++)
             {
                 var lobby = Prefabs.UILobbyListing.Instance<UILobbyListing>();
                 _lobbyList.AddChild(lobby);
@@ -38,14 +40,41 @@ namespace GodotModules
             Sort(x => x.Ping, _sortPingPressed);
         }
 
-        private void _on_Create_Lobby_pressed()
-        {
-
-        }
+        private void _on_Create_Lobby_pressed() => _managers.ManagerPopup.SpawnCreateLobby();
 
         private void _on_Direct_Connect_pressed()
         {
+            if (_connectingToLobby)
+                return;
 
+            _managers.ManagerPopup.SpawnLineEdit
+            (
+                (lineEdit) =>
+                {
+                    // no realtime filter
+                },
+                (text) =>
+                {
+                    ushort port = 25565; // default port
+                    var ip = "127.0.0.1"; // default ip
+
+                    // try to extract ip and port from text
+                    var colonIndex = text.IndexOf(':');
+
+                    if (colonIndex == -1)
+                        return;
+
+                    if (ushort.TryParse(text.Substring(colonIndex + 1), out ushort result))
+                    {
+                        port = result;
+                        ip = text.Substring(0, colonIndex);
+                    }
+
+                    _connectingToLobby = true;
+                    _managers.ManagerNetwork.StartClient(ip, port);
+                },
+                "Direct Connect", 100, "127.0.0.1:25565"
+            );
         }
 
         private void _on_Refresh_pressed()
@@ -89,7 +118,7 @@ namespace GodotModules
 
             var colorSwitch = false;
 
-            foreach (var lobbyListing in ascending ? _lobbyListings.OrderBy(keySelector) : _lobbyListings.OrderByDescending(keySelector)) 
+            foreach (var lobbyListing in ascending ? _lobbyListings.OrderBy(keySelector) : _lobbyListings.OrderByDescending(keySelector))
             {
                 _lobbyList.AddChild(lobbyListing);
                 lobbyListing.SetDark(colorSwitch);
