@@ -98,7 +98,6 @@ namespace GodotModules
         public void SaveOptions() 
         {
             _hotkeyManager.SaveHotkeys();
-
             Options.WindowSize = OS.WindowSize;
             _systemFileManager.WriteConfig("options", Options);
         }
