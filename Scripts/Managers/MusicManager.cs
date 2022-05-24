@@ -15,13 +15,8 @@ namespace GodotModules
             _audioStreamPlayer.VolumeDb = optionsManager.Options.MusicVolume;
         }
 
-        public void LoadTrack(string name, string path)
-        {
-            if (!path.Contains("res://"))
-                path = "res://" + path;
-
-            _tracks[name.ToLower()] = ResourceLoader.Load<AudioStream>(path);
-        }
+        public void LoadTrack(string name, string path) =>
+            _tracks[name.ToLower()] = ResourceLoader.Load<AudioStream>($"res://{path}");
 
         public void PlayTrack(string name)
         {
