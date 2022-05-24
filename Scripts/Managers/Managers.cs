@@ -45,7 +45,7 @@ namespace GodotModules
 		{
 			ManagerFileGodot = new();
 			ManagerFileSystem = new();
-			ManagerHotkey = new(ManagerFileSystem, new List<string> { "UI", "Player", "Camera" });
+			ManagerHotkey = new();
 			ManagerOptions = new(ManagerFileSystem, ManagerHotkey);
 			ManagerToken = new();
 			ManagerWeb = new(new(GetNode<Node>(NodePathWebRequestList)), ManagerToken, ManagerOptions.Options.WebServerAddress);
@@ -54,6 +54,9 @@ namespace GodotModules
 			ManagerPopup = new(GetNode<Node>(NodePathPopups));
 			ManagerNetwork = new(ManagerPopup);
 			ManagerConsole = GetNode<ConsoleManager>(NodePathConsole);
+
+			ManagerHotkey.AddCategories("ui", "player", "camera");
+			ManagerHotkey.Init();
 
 			_menuParticles = GetNode<Particles2D>(NodePathMenuParticles);
 			_menuParticles.Emitting = true;

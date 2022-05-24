@@ -1,7 +1,6 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Scripts/UI/Options/UIHotkey.cs" type="Script" id=1]
-[ext_resource path="res://Scripts/UI/Options/UIBtnHotkey.cs" type="Script" id=2]
 [ext_resource path="res://Themes/Main.tres" type="Theme" id=3]
 [ext_resource path="res://Sprites/UI/undo.png" type="Texture" id=4]
 
@@ -25,7 +24,6 @@ margin_left = 154.0
 margin_right = 229.0
 margin_bottom = 23.0
 rect_min_size = Vector2( 75, 0 )
-script = ExtResource( 2 )
 
 [node name="Reset To Default" type="Button" parent="."]
 margin_left = 233.0
@@ -37,6 +35,6 @@ icon = ExtResource( 4 )
 flat = true
 expand_icon = true
 
-[connection signal="focus_exited" from="Btn" to="Btn" method="_on_Btn_focus_exited"]
-[connection signal="pressed" from="Btn" to="Btn" method="_on_Btn_pressed"]
+[connection signal="focus_exited" from="Btn" to="." method="_on_Btn_focus_exited"]
+[connection signal="pressed" from="Btn" to="." method="_on_Btn_pressed"]
 [connection signal="pressed" from="Reset To Default" to="." method="_on_Reset_To_Default_pressed"]
