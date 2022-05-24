@@ -39,13 +39,13 @@ namespace GodotModules
 
         private void Navigate(float delta)
         {
-            if (_path.Length > 0)
-            {
-                var speed = 150f * 50;
-                Sprite.LerpRotationToTarget(_path[1]);
-                //Sprite.Rotation = Mathf.LerpAngle(Sprite.Rotation, (_path[1] - Position).Angle(), 0.1f);
-                _velocity = GlobalPosition.DirectionTo(_path[1]) * delta * speed;
-            }
+            if (_path.Length <= 0) 
+                return;
+            
+            var speed = 150f * 50;
+            Sprite.LerpRotationToTarget(_path[1]);
+            //Sprite.Rotation = Mathf.LerpAngle(Sprite.Rotation, (_path[1] - Position).Angle(), 0.1f);
+            _velocity = GlobalPosition.DirectionTo(_path[1]) * delta * speed;
         }
     }
 }

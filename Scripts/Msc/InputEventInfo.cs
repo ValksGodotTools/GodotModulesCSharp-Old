@@ -85,21 +85,17 @@ namespace GodotModules
             };
         }
 
-        public InputEvent ToEvent()
+        public InputEvent ToEvent() => Type switch
         {
-            if (Type == InputEventType.Key)
-                return ToEventKey();
-            
-            if (Type == InputEventType.MouseButton)
-                return ToEventMouseButton();
-            
-            if (Type == InputEventType.JoypadButton)
-                return ToEventJoypadButton();
-            
-            throw new InvalidOperationException("This InputEventInfo is not a Key, MouseButton or JoypadButton event.");
-        }
+            InputEventType.Key => ToEventKey(),
+            InputEventType.MouseButton => ToEventMouseButton(),
+            InputEventType.JoypadButton => ToEventJoypadButton(),
+            _ => throw new InvalidOperationException(
+                "This InputEventInfo is not a Key, MouseButton or JoypadButton event.")
+        };
+        
 
-        public static InputEventInfo From(InputEventKey k) => new InputEventInfo
+        public static InputEventInfo From(InputEventKey k) => new()
         {
             Type = InputEventType.Key,
             Device = k.Device,
@@ -113,7 +109,7 @@ namespace GodotModules
             Unicode = k.Unicode,
         };
 
-        public static InputEventInfo From(InputEventMouseButton m) => new InputEventInfo
+        public static InputEventInfo From(InputEventMouseButton m) => new()
         {
             Type = InputEventType.MouseButton,
             Device = m.Device,
@@ -125,25 +121,19 @@ namespace GodotModules
             ButtonIndex = m.ButtonIndex,
         };
 
-        public static InputEventInfo From(InputEventJoypadButton j) => new InputEventInfo
+        public static InputEventInfo From(InputEventJoypadButton j) => new()
         {
             Type = InputEventType.JoypadButton,
             Device = j.Device,
             ButtonIndex = j.ButtonIndex,
         };
 
-        public static InputEventInfo? TryFrom(InputEvent e)
+        public static InputEventInfo? TryFrom(InputEvent e) => e switch
         {
-            if (e is InputEventKey k)
-                return From(k);
-            
-            if (e is InputEventMouseButton m)
-                return From(m);
-            
-            if (e is InputEventJoypadButton j)
-                return From(j);
-            
-            return null;
-        }
+            InputEventKey k => From(k),
+            InputEventMouseButton m => From(m),
+            InputEventJoypadButton j => From(j),
+            _ => null
+        };
     }
 } 

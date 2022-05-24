@@ -5,7 +5,7 @@ namespace GodotModules
 {
     public class CommandDebug : Command
     {
-        public CommandDebug() => Aliases = new string[] { "x" };
+        public CommandDebug() => Aliases = new[] { "x" };
 
         public override void Run(string[] args)
         {

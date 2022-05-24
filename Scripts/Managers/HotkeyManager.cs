@@ -47,10 +47,10 @@ namespace GodotModules
         public void LoadPersistentHotkeys()
         {
             var data = _systemFileManager.ReadConfig<List<JsonInputKey>>("controls");
-            _hotkeys = new();
+            _hotkeys = new Dictionary<string, HotkeyInfo>();
 
             foreach (var e in data)
-                _hotkeys[e.Action] = new(e.Action, e.Category, ConvertToInput(e));
+                _hotkeys[e.Action] = new HotkeyInfo(e.Action, e.Category, ConvertToInput(e));
 
             foreach (var hotkey in Hotkeys)
                 SetHotkeyEvent(hotkey.Action, hotkey.Event);
@@ -64,7 +64,7 @@ namespace GodotModules
 
         public void ResetToDefaultHotkeys()
         {
-            _hotkeys = new(_defaultHotkeys);
+            _hotkeys = new Dictionary<string, HotkeyInfo>(_defaultHotkeys);
 
             foreach (var hotkey in Hotkeys)
                 SetHotkeyEvent(hotkey.Action, hotkey.Event);
@@ -79,20 +79,11 @@ namespace GodotModules
                 if (actionList.Count == 0)
                     continue;
 
-                if
-                (
-                    actionList[0] is InputEvent e && 
-                    (
-                        e is InputEventKey || 
-                        e is InputEventMouseButton || 
-                        e is InputEventJoypadButton
-                    )
-                ) {
-                    _defaultHotkeys[action] = new(action, GetHotkeyCategory(action), e);
-                }
+                if (actionList[0] is InputEvent e and (InputEventKey or InputEventMouseButton or InputEventJoypadButton))
+                    _defaultHotkeys[action] = new HotkeyInfo(action, GetHotkeyCategory(action), e);
             }
 
-            _hotkeys = new(_defaultHotkeys);
+            _hotkeys = new Dictionary<string, HotkeyInfo>(_defaultHotkeys);
         }
 
         public void SaveHotkeys()
@@ -123,7 +114,7 @@ namespace GodotModules
             return _categories[0];
         }
 
-        private JsonInputKey ConvertToJson(HotkeyInfo info) => new JsonInputKey
+        private JsonInputKey ConvertToJson(HotkeyInfo info) => new()
         {
             Action = info.Action,
             Category = info.Category,

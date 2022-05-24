@@ -7,7 +7,7 @@ namespace GodotModules
         public CancellationTokenSource Create(string name)
         {
             Cancel(name);
-            return _cts[name] = new();
+            return _cts[name] = new CancellationTokenSource();
         }
 
         public bool Cancelled(string name) => 

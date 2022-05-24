@@ -11,7 +11,7 @@ namespace GodotModules.Netcode
 
         public PacketWriter()
         {
-            _writer = new(Stream);
+            _writer = new BinaryWriter(Stream);
         }
 
         public void Write(byte v) => _writer.Write(v);

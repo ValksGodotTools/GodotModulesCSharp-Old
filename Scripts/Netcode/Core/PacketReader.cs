@@ -13,8 +13,8 @@ namespace GodotModules.Netcode
 
         public PacketReader(Packet packet)
         {
-            _stream = new(ReadBuffer);
-            _reader = new(_stream);
+            _stream = new MemoryStream(ReadBuffer);
+            _reader = new BinaryReader(_stream);
             packet.CopyTo(ReadBuffer);
             packet.Dispose();
         }
@@ -71,7 +71,7 @@ namespace GodotModules.Netcode
                         .MakeGenericType(vt));
 
                     for (var i = 0; i < count; i++)
-                        list.Add(Read((Type)vt));
+                        list.Add(Read(vt));
 
                     return list;
                 }

@@ -28,8 +28,8 @@ namespace GodotModules
             PositionPlayerSpawn = GetNode<Position2D>(NodePathPositionPlayerSpawn);
             PositionEnemySpawn = GetNode<Position2D>(NodePathPositionEnemySpawn);
 
-            Enemies = new();
-            Players = new();
+            Enemies = new List<Enemy>();
+            Players = new List<OtherPlayer>();
 
             CreateMainPlayer(PositionPlayerSpawn.Position);
 
@@ -54,7 +54,7 @@ namespace GodotModules
             ModLoader.Call("OnGameUpdate", delta);
         }
 
-        public void CreateMainPlayer(Vector2 pos = default(Vector2))
+        public void CreateMainPlayer(Vector2 pos = default)
         {
             var player = Prefabs.Player.Instance<Player>();
             player.Position = pos;
@@ -63,7 +63,7 @@ namespace GodotModules
             Players.Add(player);
         }
 
-        public void CreateOtherPlayer(Vector2 pos = default(Vector2))
+        public void CreateOtherPlayer(Vector2 pos = default)
         {
             var otherPlayer = Prefabs.OtherPlayer.Instance<OtherPlayer>();
             otherPlayer.Position = pos;
@@ -71,7 +71,7 @@ namespace GodotModules
             Players.Add(otherPlayer);
         }
 
-        public void CreateEnemy(Vector2 pos = default(Vector2))
+        public void CreateEnemy(Vector2 pos = default)
         {
             var enemy = Prefabs.Enemy.Instance<Enemy>();
             enemy.Init(Players, Navigation2D);

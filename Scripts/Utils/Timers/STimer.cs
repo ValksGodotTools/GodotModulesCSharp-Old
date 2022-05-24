@@ -6,12 +6,12 @@ namespace GodotModules.Netcode.Server
     {
         private readonly System.Timers.Timer _timer;
 
-        public STimer(Action action, double delayMs = 1000, bool autoreset = true, bool enabled = true)
+        public STimer(Action action, double delayMs = 1000, bool autoReset = true, bool enabled = true)
         {
             void Callback(Object source, ElapsedEventArgs e) => action();
             _timer = new System.Timers.Timer(delayMs);
             _timer.Enabled = enabled;
-            _timer.AutoReset = autoreset;
+            _timer.AutoReset = autoReset;
             _timer.Elapsed += Callback;
         }
 

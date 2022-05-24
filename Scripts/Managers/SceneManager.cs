@@ -5,13 +5,13 @@ namespace GodotModules
     public class SceneManager : Node
     {
         public readonly Dictionary<GameScene, Action<Node>> PreInit = new();
-        public readonly Dictionary<GameScene, Action> EscPressed = new Dictionary<GameScene, Action>();
+        public readonly Dictionary<GameScene, Action> EscPressed = new();
 
         public GameScene CurScene { get; private set; }
         public GameScene PrevScene { get; private set; }
 
         private Node _activeScene;
-        private Dictionary<GameScene, PackedScene> _scenes = new Dictionary<GameScene, PackedScene>();
+        private Dictionary<GameScene, PackedScene> _scenes = new();
         private GodotFileManager _godotFileManager;
         private HotkeyManager _hotkeyManager;
         private Control _sceneList;

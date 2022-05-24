@@ -9,7 +9,7 @@ namespace GodotModules
 
         public static void ForEach<T>(this IEnumerable<T> value, Action<T> action)
         {
-            foreach (T element in value)
+            foreach (var element in value)
                 action(element);
         }
         
@@ -18,14 +18,13 @@ namespace GodotModules
             [CallerMemberName] string caller = null,
             [CallerFilePath] string path = null)
         {
-            if (dict.ContainsKey(key))
-            {
-                Logger.LogWarning($"'{caller}' tried to add duplicate key '{key}' to dictionary\n" +
-                    $"   at {path} line:{lineNumber}");
-                return true;
-            }
+            if (!dict.ContainsKey(key)) 
+                return false;
+            
+            Logger.LogWarning($"'{caller}' tried to add duplicate key '{key}' to dictionary\n" +
+                                $"   at {path} line:{lineNumber}");
+            return true;
 
-            return false;
         }
 
         public static bool DoesNotHave<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key,
@@ -33,14 +32,13 @@ namespace GodotModules
             [CallerMemberName] string caller = null,
             [CallerFilePath] string path = null)
         {
-            if (!dict.ContainsKey(key))
-            {
-                Logger.LogWarning($"'{caller}' tried to access non-existent key '{key}' from dictionary\n" +
-                    $"   at {path} line:{lineNumber}");
-                return true;
-            }
+            if (dict.ContainsKey(key)) 
+                return false;
+            
+            Logger.LogWarning($"'{caller}' tried to access non-existent key '{key}' from dictionary\n" +
+                                $"   at {path} line:{lineNumber}");
+            return true;
 
-            return false;
         }
     }
 }

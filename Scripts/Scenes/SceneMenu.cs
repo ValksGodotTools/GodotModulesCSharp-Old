@@ -38,8 +38,8 @@ namespace GodotModules
             if (string.IsNullOrWhiteSpace(_managers.ManagerOptions.Options.OnlineUsername))
             {
                 _managers.ManagerPopup.SpawnLineEdit(
-                    (lineEdit) => lineEdit.Filter((text) => Regex.IsMatch(text, "^[a-z]+$")), 
-                    (result) => _managers.ManagerOptions.Options.OnlineUsername = result, 
+                    lineEdit => lineEdit.Filter((text) => Regex.IsMatch(text, "^[a-z]+$")), 
+                    result => _managers.ManagerOptions.Options.OnlineUsername = result, 
                     20, "Set Online Username");
                 return;
             }
