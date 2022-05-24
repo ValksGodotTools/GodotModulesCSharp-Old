@@ -1,3 +1,4 @@
+global using Godot;
 global using GodotModules;
 global using GodotModules.Netcode;
 global using System;
@@ -9,8 +10,6 @@ global using System.Threading;
 global using System.Text.RegularExpressions;
 global using System.Threading.Tasks;
 global using System.Linq;
-
-using Godot;
 
 namespace GodotModules
 {

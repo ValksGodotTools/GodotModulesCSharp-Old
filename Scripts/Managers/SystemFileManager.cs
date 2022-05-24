@@ -1,5 +1,8 @@
 using Newtonsoft.Json;
-using System.IO;
+using Directory = System.IO.Directory;
+using Environment = System.Environment;
+using File = System.IO.File;
+using Path = System.IO.Path;
 
 namespace GodotModules
 {

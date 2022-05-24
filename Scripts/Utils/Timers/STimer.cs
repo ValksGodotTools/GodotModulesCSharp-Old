@@ -1,4 +1,5 @@
 using System.Timers;
+using Object = System.Object;
 
 namespace GodotModules.Netcode.Server
 {

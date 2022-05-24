@@ -1,7 +1,10 @@
 using MoonSharp.Interpreter;
 using MoonSharp.VsCodeDebugger;
 using Newtonsoft.Json;
-using System.IO;
+using Directory = System.IO.Directory;
+using File = System.IO.File;
+using Path = System.IO.Path;
+using Script = MoonSharp.Interpreter.Script;
 
 namespace GodotModules
 {
