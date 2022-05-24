@@ -49,8 +49,8 @@ namespace GodotModules
             customConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Godot.Vector2), dynVal =>
             {
                 var table = dynVal.Table;
-                float x = (float)((Double)table[1]);
-                float y = (float)((Double)table[2]);
+                float x = (float)(Double)table[1];
+                float y = (float)(Double)table[2];
                 return new Godot.Vector2(x, y);
             });
 
@@ -58,9 +58,9 @@ namespace GodotModules
             // position = {1.0, 1.0, 1.0}
             customConverters.SetScriptToClrCustomConversion(DataType.Table, typeof(Godot.Vector3), dynVal => {
                 var table = dynVal.Table;
-                float x = (float)((Double)table[1]);
-                float y = (float)((Double)table[2]);
-                float z = (float)((Double)table[3]);
+                float x = (float)(Double)table[1];
+                float y = (float)(Double)table[2];
+                float z = (float)(Double)table[3];
                 return new Godot.Vector3(x, y, z);
             });
         }
@@ -177,7 +177,7 @@ namespace GodotModules
         {
             var mods = new Dictionary<string, Mod>();
 
-            // retreive mod data
+            // retrieve mod data
             foreach (var modDirectory in Directory.GetDirectories(PathModsFolder))
             {
                 var pathInfo = Path.Combine(modDirectory, "info.json");
@@ -203,7 +203,7 @@ namespace GodotModules
                 mods.Add(modInfo.Name, new Mod(modInfo, pathScript));
             }
 
-            // retreive mods enabled
+            // retrieve mods enabled
             var modsEnabled = JsonConvert.DeserializeObject<Dictionary<string, bool>>(File.ReadAllText(_pathModsEnabled));
 
             foreach (var mod in modsEnabled)
@@ -226,7 +226,9 @@ namespace GodotModules
                 var absolutePath = $"{dir.GetCurrentDir()}/{fileName}";
 
                 if (dir.CurrentIsDir())
+                {
                     LoadLuaScripts(absolutePath);
+                }
                 else
                 {
                     var luaScript = new Godot.File();
@@ -261,7 +263,7 @@ namespace GodotModules
         public string Version { get; set; }
         public string[] GameVersions { get; set; }
         public string[] Dependencies { get; set; }
-        public List<string> MissingDependencies = new List<string>();
+        public List<string> MissingDependencies = new();
         public bool Enabled { get; set; }
     }
 }

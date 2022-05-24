@@ -6,7 +6,7 @@ namespace GodotModules
     {
         [Export] protected readonly NodePath NodePathLobbyList;
 
-        private List<UILobbyListing> _lobbyListings = new List<UILobbyListing>();
+        private List<UILobbyListing> _lobbyListings = new();
         private Control _lobbyList;
 
         public override void PreInitManagers(Managers managers)

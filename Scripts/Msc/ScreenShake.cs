@@ -15,8 +15,8 @@ namespace GodotModules
         {
             _shakeTween = GetNode<Tween>(NodePathShakeTween);
             _camera2D = (Camera2D)GetParent();
-            _frequency = new(this, nameof(FrequencyTimeout), 1000, true, false);
-            _duration = new(this, nameof(DurationTimeout), 200, false, false);
+            _frequency = new GTimer(this, nameof(FrequencyTimeout), 1000, true, false);
+            _duration = new GTimer(this, nameof(DurationTimeout), 200, false, false);
         }
 
         public void Start(int duration = 200, int frequency = 25, float amplitude = 1000)

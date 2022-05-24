@@ -2,7 +2,7 @@ namespace GodotModules
 {
     public class CommandExit : Command
     {
-        public CommandExit() => Aliases = new string[] { "stop" };
+        public CommandExit() => Aliases = new[] { "stop" };
 
         public override void Run(string[] args)
         {

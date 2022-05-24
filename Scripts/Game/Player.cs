@@ -90,32 +90,22 @@ namespace GodotModules
 
         private void HandleAnimation()
         {
-            if (!_running)
+            if (_movingUp || _movingDown || _movingLeft || _movingRight)
             {
-                if (_movingUp)
-                    _animatedSprite.Play("walk_up");
-                else if (_movingDown)
-                    _animatedSprite.Play("walk_down");
-                else if (_movingLeft)
-                    _animatedSprite.Play("walk_left");
-                else if (_movingRight)
-                    _animatedSprite.Play("walk_right");
+                var mode = _running ? "run" : "walk";
+                
+                var dir = 
+                    _movingUp ? "up" :
+                    _movingDown ? "down" :
+                    _movingLeft ? "left" :
+                    _movingRight ? "right" : throw new InvalidOperationException();
+                
+                _animatedSprite.Play($"{mode}_{dir}");
             }
-
-            if (_running)
+            else
             {
-                if (_movingUp)
-                    _animatedSprite.Play("run_up");
-                else if (_movingDown)
-                    _animatedSprite.Play("run_down");
-                else if (_movingLeft)
-                    _animatedSprite.Play("run_left");
-                else if (_movingRight)
-                    _animatedSprite.Play("run_right");
-            }
-
-            if (!_movingUp && !_movingDown && !_movingLeft && !_movingRight)
                 _animatedSprite.Play("idle");
+            }
 
             if (_attack) 
             {

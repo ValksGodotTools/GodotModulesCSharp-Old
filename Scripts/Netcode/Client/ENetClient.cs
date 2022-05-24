@@ -7,16 +7,16 @@ namespace GodotModules.Netcode.Client
     {
         public static readonly Dictionary<ServerPacketOpcode, APacketServer> HandlePacket = ReflectionUtils.LoadInstances<ServerPacketOpcode, APacketServer>("SPacket");
 
-        public bool IsConnected { get => Interlocked.Read(ref _connected) == 1; }
-        public bool IsRunning { get => Interlocked.Read(ref _running) == 1; }
+        public bool IsConnected => Interlocked.Read(ref _connected) == 1;
+        public bool IsRunning => Interlocked.Read(ref _running) == 1;
 
-        protected CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
+        protected CancellationTokenSource CancellationTokenSource = new();
         protected GodotCommands _godotCmds;
 
-        private readonly ConcurrentQueue<ENetClientCmd> ENetCmds = new ConcurrentQueue<ENetClientCmd>();
+        private readonly ConcurrentQueue<ENetClientCmd> ENetCmds = new();
         private long _connected;
         private long _running;
-        private readonly ConcurrentDictionary<int, ClientPacket> _outgoing = new ConcurrentDictionary<int, ClientPacket>();
+        private readonly ConcurrentDictionary<int, ClientPacket> _outgoing = new();
         private int _outgoingId;
         protected readonly NetworkManager _networkManager;
 
@@ -127,7 +127,7 @@ namespace GodotModules.Netcode.Client
                 }
 
                 // Outgoing
-                while (_outgoing.TryRemove(_outgoingId, out ClientPacket clientPacket))
+                while (_outgoing.TryRemove(_outgoingId, out var clientPacket))
                 {
                     _outgoingId--;
                     byte channelID = 0; // The channel all networking traffic will be going through
@@ -139,7 +139,7 @@ namespace GodotModules.Netcode.Client
 
                 while (!polled)
                 {
-                    if (client.CheckEvents(out Event netEvent) <= 0)
+                    if (client.CheckEvents(out var netEvent) <= 0)
                     {
                         if (client.Service(15, out netEvent) <= 0)
                             break;

@@ -4,7 +4,7 @@ namespace GodotModules
 {
     public static class HotkeyExtensions 
     {
-        private static readonly Dictionary<int, string> _mouseButtons = new Dictionary<int, string>
+        private static readonly Dictionary<int, string> _mouseButtons = new()
         {
             { (int)ButtonList.Left, "Left Click" },
             { (int)ButtonList.Right, "Right Click" },

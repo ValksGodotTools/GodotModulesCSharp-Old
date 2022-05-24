@@ -14,7 +14,7 @@ namespace GodotModules.Netcode
             {
                 var transform = pair.Value;
 
-                writer.Write((byte)pair.Key); // id
+                writer.Write(pair.Key); // id
                 writer.Write(transform.Position);
                 writer.Write((float)Math.Round(transform.Rotation, 1));
             });

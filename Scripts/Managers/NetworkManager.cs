@@ -17,10 +17,10 @@ namespace GodotModules.Netcode
         public NetworkManager(PopupManager popupManager)
         {
             _popupManager = popupManager;
-            _godotCmds = new(this, popupManager);
+            _godotCmds = new GodotCommands(this, popupManager);
 
-            Client = new(this, _godotCmds);
-            Server = new(this);
+            Client = new GameClient(this, _godotCmds);
+            Server = new GameServer(this);
 
             try 
             {

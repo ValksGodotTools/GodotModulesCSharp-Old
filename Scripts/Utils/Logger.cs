@@ -6,7 +6,7 @@ namespace GodotModules
     {
         public static ConsoleManager UIConsole { get; set; }
         public static ErrorNotifierManager ErrorNotifierManager { get; set; }
-        private static readonly ConcurrentQueue<LogInfo> _messages = new ConcurrentQueue<LogInfo>();
+        private static readonly ConcurrentQueue<LogInfo> _messages = new();
 
         public static void LogErr(Exception e, string hint = "", ConsoleColor c = ConsoleColor.Red) => _messages.Enqueue(new LogInfo(LoggerOpcode.Exception, $"[Error]: {(string.IsNullOrWhiteSpace(hint) ? "" : $"'{hint}' ")}{e.Message}\n{e.StackTrace}", c));
         public static void LogDebug(object v, ConsoleColor c = ConsoleColor.Magenta, bool trace = true, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0) => _messages.Enqueue(new LogInfo(LoggerOpcode.Debug, new LogMessageDebug($"[Debug]: {v}", trace, $"   at {filePath.Substring(filePath.IndexOf("Scripts\\"))} line:{lineNumber}"), c));
@@ -43,7 +43,7 @@ namespace GodotModules
 
                     case LoggerOpcode.Debug:
                         var data = (LogMessageDebug)result.Data;
-                        UIConsole.AddMessage((string)data.Message);
+                        UIConsole.AddMessage(data.Message);
                         Print(data.Message, result.Color);
                         if (data.Trace) 
                         {

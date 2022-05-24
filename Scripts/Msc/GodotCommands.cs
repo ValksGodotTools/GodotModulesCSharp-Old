@@ -4,7 +4,7 @@ namespace GodotModules
 {
     public class GodotCommands
     {
-        private readonly ConcurrentQueue<GodotCmd> _godotCmdQueue = new ConcurrentQueue<GodotCmd>();
+        private readonly ConcurrentQueue<GodotCmd> _godotCmdQueue = new();
         private readonly NetworkManager _networkManager;
         private readonly PopupManager _popupManager;
 
@@ -18,7 +18,7 @@ namespace GodotModules
 
         public async Task Update()
         {
-            if (_godotCmdQueue.TryDequeue(out GodotCmd cmd))
+            if (_godotCmdQueue.TryDequeue(out var cmd))
             {
                 switch (cmd.Opcode)
                 {

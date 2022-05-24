@@ -7,17 +7,17 @@ namespace GodotModules.Netcode.Server
     {
         protected static readonly Dictionary<ClientPacketOpcode, APacketClient> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, APacketClient>("CPacket");
 
-        public bool HasSomeoneConnected { get => Interlocked.Read(ref _someoneConnected) == 1; }
-        public bool IsRunning { get => Interlocked.Read(ref _running) == 1; }
-        public readonly ConcurrentQueue<ENetServerCmd> ENetCmds = new ConcurrentQueue<ENetServerCmd>();
+        public bool HasSomeoneConnected => Interlocked.Read(ref _someoneConnected) == 1;
+        public bool IsRunning => Interlocked.Read(ref _running) == 1;
+        public readonly ConcurrentQueue<ENetServerCmd> ENetCmds = new();
 
-        protected readonly Dictionary<uint, Peer> Peers = new Dictionary<uint, Peer>();
-        protected CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
+        protected readonly Dictionary<uint, Peer> Peers = new();
+        protected CancellationTokenSource CancellationTokenSource = new();
         protected bool _queueRestart { get; set; }
 
         private long _someoneConnected = 0;
         private long _running = 0;
-        private readonly ConcurrentQueue<ServerPacket> _outgoing = new ConcurrentQueue<ServerPacket>();
+        private readonly ConcurrentQueue<ServerPacket> _outgoing = new();
         private readonly NetworkManager _networkManager;
 
         public ENetServer(NetworkManager networkManager) 
@@ -92,8 +92,10 @@ namespace GodotModules.Netcode.Server
         private Task ENetThreadWorker(ushort port, int maxClients)
         {
             using var server = new Host();
-            Address address = new Address();
-            address.Port = port;
+            var address = new Address
+            {
+                Port = port
+            };
 
             try
             {

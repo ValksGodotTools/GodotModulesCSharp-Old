@@ -17,13 +17,13 @@ namespace GodotModules
             Regex.IsMatch(v, expression);
 
         public static bool IsNum(this string v) =>
-            int.TryParse(v, out int _);
+            int.TryParse(v, out _);
 
         public static string SmallWordsToUpper(this string v, int maxLength = 2, Func<string, bool> filter = null)
         {
             var words = v.Split(' ');
 
-            for (int i = 0; i < words.Length; i++)
+            for (var i = 0; i < words.Length; i++)
                 if (words[i].Length <= maxLength && (filter == null || filter(words[i])))
                     words[i] = words[i].ToUpper();
 

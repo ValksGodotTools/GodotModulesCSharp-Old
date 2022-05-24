@@ -5,7 +5,7 @@ namespace GodotModules
     public class GodotFileManager
     {
         public string GetProjectPath() => OS.HasFeature("standalone")
-            ? System.IO.Directory.GetParent(OS.GetExecutablePath()).FullName
+            ? System.IO.Directory.GetParent(OS.GetExecutablePath())!.FullName
             : ProjectSettings.GlobalizePath("res://");
 
         public string ReadFile(string path) 
@@ -22,7 +22,7 @@ namespace GodotModules
             return content;
         }
 
-        public bool LoadDir(string path, System.Action<Directory, string> action)
+        public bool LoadDir(string path, Action<Directory, string> action)
         {
             var dir = new Directory();
 

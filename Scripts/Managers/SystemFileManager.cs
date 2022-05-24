@@ -5,20 +5,20 @@ namespace GodotModules
 {
     public class SystemFileManager
     {
-        public readonly string GameDataPath = System.IO.Path.Combine
+        public readonly string GameDataPath = Path.Combine
         (
-            System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), 
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), 
             "Godot Modules"
         );
 
         public T WriteConfig<T>(string pathToFile) where T : new() => 
-            WriteConfig<T>(pathToFile, new T());
+            WriteConfig(pathToFile, new T());
 
         public T WriteConfig<T>(string pathToFile, T data)
         {
             var path = GetConfigPath(pathToFile);
             var contents = JsonConvert.SerializeObject(data, Formatting.Indented);
-            Directory.CreateDirectory(Path.GetDirectoryName(path));
+            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
             File.WriteAllText(path, contents);
             return data;
         }
@@ -26,7 +26,7 @@ namespace GodotModules
         public T ReadConfig<T>(string pathToFile)
         {
             var path = GetConfigPath(pathToFile);
-            return File.Exists(path) ? JsonConvert.DeserializeObject<T>(File.ReadAllText(path)) : default(T);
+            return File.Exists(path) ? JsonConvert.DeserializeObject<T>(File.ReadAllText(path)) : default;
         }
 
         public bool ConfigExists(string pathToFile) => 

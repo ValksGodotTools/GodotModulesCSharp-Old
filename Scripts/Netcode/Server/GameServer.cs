@@ -4,7 +4,7 @@ namespace GodotModules.Netcode.Server
 {
     public class GameServer : ENetServer
     {
-        public Dictionary<byte, DataPlayer> Players = new Dictionary<byte, DataPlayer>();
+        public Dictionary<byte, DataPlayer> Players = new();
         public DataLobby Lobby { get; set; }
 
         public GameServer(NetworkManager networkManager) : base(networkManager) {}

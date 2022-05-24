@@ -55,7 +55,7 @@ namespace GodotModules
                     Name = $"Request POST ({++_id})";
 
                     var query = JSON.Print(data);
-                    var headers = new string[] { "Content-Type: application/json" };
+                    var headers = new[] { "Content-Type: application/json" };
                     var errorRequest = Request(url, headers, true, HTTPClient.Method.Post, query);
 
                     if (errorRequest != Error.Ok)
