@@ -93,8 +93,11 @@ namespace GodotModules
             PersistentHotkeys[action] = new HotkeyInfo
             {
                 Category = GetCategory(action),
-                InputEventInfo = new List<InputEventInfo> { DefaultHotkeys[action].InputEventInfo[0] }
+                InputEventInfo = new List<InputEventInfo>()
             };
+
+            foreach (var inputEventInfo in DefaultHotkeys[action].InputEventInfo)
+                PersistentHotkeys[action].InputEventInfo.Add(inputEventInfo);
         }
 
         public void SetHotkey(string action, InputEvent inputEvent)
@@ -111,6 +114,8 @@ namespace GodotModules
 
         public void ResetAllHotkeysToDefaults()
         {
+            PersistentHotkeys = DeepCopy(DefaultHotkeys);
+
             foreach (var pair in DefaultHotkeys)
             {
                 var action = pair.Key;

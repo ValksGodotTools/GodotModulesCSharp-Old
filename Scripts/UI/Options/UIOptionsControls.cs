@@ -24,7 +24,7 @@ namespace GodotModules
             foreach (var category in _hotkeyManager.Categories)
             {
                 var panelContainer = new PanelContainer();
-                panelContainer.Name = "" + category;
+                panelContainer.Name = "" + category.ToTitleCase().SmallWordsToUpper();
 
                 var scrollContainer = new ScrollContainer();
                 panelContainer.AddChild(scrollContainer);

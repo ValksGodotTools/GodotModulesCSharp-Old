@@ -89,13 +89,10 @@ namespace GodotModules
 
 		private void _on_Btn_focus_exited() => LostFocus();
 
-		//public void SetHotkeyText(string v) => _btnHotkey.SetHotkeyText(v);
-
 		private void _on_Reset_To_Default_pressed() 
 		{
-			// TODO
-			//_hotkeyManager.ResetHotkey(_action);
-			//SetHotkeyText(_hotkeyManager.HotkeysByAction[_action].Event.Display());
+			_hotkeyManager.ResetHotkey(_action);
+			SetHotkeyText(_hotkeyManager.DefaultHotkeys[_action].InputEventInfo[0].Display());
 		}
 
 		public void SetHotkeyText(InputEvent inputEvent) 
