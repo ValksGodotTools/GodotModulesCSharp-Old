@@ -34,18 +34,14 @@ namespace GodotModules
 		public PopupManager ManagerPopup { get; private set; }
 		public HotkeyManager ManagerHotkey { get; private set; }
 		public ConsoleManager ManagerConsole { get; private set; }
-		public SystemFileManager ManagerFileSystem { get; private set; }
-		public GodotFileManager ManagerFileGodot { get; private set; }
 
 		private Particles2D _menuParticles;
 		private bool _ready;
 
 		public override async void _Ready()
 		{
-			ManagerFileGodot = new();
-			ManagerFileSystem = new();
 			ManagerHotkey = new();
-			ManagerOptions = new(ManagerFileSystem, ManagerHotkey);
+			ManagerOptions = new(ManagerHotkey);
 			ManagerToken = new();
 			ManagerWeb = new(new(GetNode<Node>(NodePathWebRequestList)), ManagerToken, ManagerOptions.Options.WebServerAddress);
 			ManagerMusic = new(GetNode<AudioStreamPlayer>(NodePathAudioStreamPlayer), ManagerOptions);
@@ -64,7 +60,7 @@ namespace GodotModules
 
 			Logger.UIConsole = ManagerConsole;
 			Logger.ErrorNotifierManager = ManagerErrorNotifier;
-			ModLoader.Init(ManagerFileSystem, ManagerFileGodot);
+			ModLoader.Init();
 
 			UpdateParticleSystem();
 
@@ -85,7 +81,7 @@ namespace GodotModules
 		public async Task InitSceneManager(Control sceneList, HotkeyManager hotkeyManager)
 		{
 			ManagerScene = GetNode<SceneManager>(NodePathSceneManager);
-			ManagerScene.Init(sceneList, ManagerFileGodot, hotkeyManager, this);
+			ManagerScene.Init(sceneList, hotkeyManager, this);
 
 			// Custom Pre Init
 			ManagerScene.PreInit[GameScene.Menu] = (node) =>

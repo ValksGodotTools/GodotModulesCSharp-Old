@@ -8,9 +8,9 @@ namespace GodotModules
         private readonly SystemFileManager _systemFileManager;
         private readonly HotkeyManager _hotkeyManager;
 
-        public OptionsManager(SystemFileManager systemFileManager, HotkeyManager hotkeyManager)
+        public OptionsManager(HotkeyManager hotkeyManager)
         {
-            _systemFileManager = systemFileManager;
+            _systemFileManager = new();
             _hotkeyManager = hotkeyManager;
             LoadOptions();
         }

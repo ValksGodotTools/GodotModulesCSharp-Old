@@ -24,14 +24,17 @@ namespace GodotModules
         public static void Hook<T>(string className, string methodName, T method)
             => Script.Globals[className, methodName] = method;
 
-        public static void Init(SystemFileManager systemFileManager, GodotFileManager godotFileManager)
+        public static void Init()
         {
+            _systemFileManager = new();
+            _godotFileManager = new();
+
             ModLoaderLogs = "";
-            PathModsFolder = Path.Combine(systemFileManager.GameDataPath, "Mods");
+            PathModsFolder = Path.Combine(_systemFileManager.GameDataPath, "Mods");
             _pathModsEnabled = Path.Combine(PathModsFolder, "enabled.json");
             _pathLuaScripts = Path.Combine("Scripts", "Lua");
-            _systemFileManager = systemFileManager;
-            _godotFileManager = godotFileManager;
+            _systemFileManager = _systemFileManager;
+            _godotFileManager = _godotFileManager;
 
             Directory.CreateDirectory(PathModsFolder);
 

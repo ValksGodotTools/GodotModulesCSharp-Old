@@ -18,10 +18,10 @@ namespace GodotModules
         private Managers _managers;
         private GTimer _timer;
 
-        public void Init(Control sceneList, GodotFileManager godotFileManager, HotkeyManager hotkeyManager, Managers managers) 
+        public void Init(Control sceneList, HotkeyManager hotkeyManager, Managers managers) 
         {
             _sceneList = sceneList;
-            _godotFileManager = godotFileManager;
+            _godotFileManager = new();
             _hotkeyManager = hotkeyManager;
             _managers = managers;
 
