@@ -1,4 +1,3 @@
-
 using Timer = Godot.Timer;
 
 namespace GodotModules

@@ -1,5 +1,3 @@
-
-
 namespace GodotModules
 {
     public class Coin : RigidBody2D

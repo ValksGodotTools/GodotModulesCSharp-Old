@@ -1,5 +1,3 @@
-
-
 namespace GodotModules
 {
     public class PopupLineEdit : WindowDialog

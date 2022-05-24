@@ -1,5 +1,3 @@
-
-
 namespace GodotModules 
 {
     public static class HotkeyExtensions 

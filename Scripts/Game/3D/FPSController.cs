@@ -1,4 +1,3 @@
-
 using MouseMode = Godot.Input.MouseMode;
 
 namespace GodotModules
