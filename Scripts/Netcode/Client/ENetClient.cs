@@ -2,31 +2,31 @@ using ENet;
 
 namespace GodotModules.Netcode.Client 
 {
-    public abstract class ENetClient : IDisposable
+    public abstract class ENetClient
     {
         public static readonly Dictionary<ServerPacketOpcode, APacketServer> HandlePacket = ReflectionUtils.LoadInstances<ServerPacketOpcode, APacketServer>("SPacket");
 
         public bool IsConnected => Interlocked.Read(ref _connected) == 1;
         public bool IsRunning => Interlocked.Read(ref _running) == 1;
 
-        protected CancellationTokenSource CancellationTokenSource = new();
         protected GodotCommands _godotCmds;
+        protected readonly NetworkManager _networkManager;
 
-        private readonly ConcurrentQueue<ENetClientCmd> ENetCmds = new();
         private long _connected;
         private long _running;
-        private readonly ConcurrentDictionary<int, ClientPacket> _outgoing = new();
         private int _outgoingId;
-        protected readonly NetworkManager _networkManager;
+        private CancellationTokenSource _cancellationTokenSource = new();
+        private readonly ConcurrentQueue<ENetClientCmd> _enetCmds = new();
+        private readonly ConcurrentDictionary<int, ClientPacket> _outgoing = new();
 
         public ENetClient(NetworkManager networkManager)
         {
             _networkManager = networkManager;
         }
 
-        public async void Start(string ip, ushort port) => await StartAsync(ip, port);
+        public async void Start(string ip, ushort port) => await StartAsync(ip, port, _cancellationTokenSource);
 
-        public async Task StartAsync(string ip, ushort port)
+        public async Task StartAsync(string ip, ushort port, CancellationTokenSource cts)
         {
             try
             {
@@ -37,9 +37,9 @@ namespace GodotModules.Netcode.Client
                 }
 
                 _running = 1;
-                CancellationTokenSource = new CancellationTokenSource();
+                _cancellationTokenSource = cts;
 
-                var task = Task.Run(() => ENetThreadWorker(ip, port), CancellationTokenSource.Token);
+                using var task = Task.Run(() => ENetThreadWorker(ip, port), _cancellationTokenSource.Token);
                 await task;
             }
             catch (Exception e)
@@ -48,7 +48,7 @@ namespace GodotModules.Netcode.Client
             }
         }
 
-        public void Stop() => ENetCmds.Enqueue(new ENetClientCmd(ENetClientOpcode.Disconnect));
+        public void Stop() => _enetCmds.Enqueue(new ENetClientCmd(ENetClientOpcode.Disconnect));
 
         public async Task StopAsync()
         {
@@ -103,23 +103,23 @@ namespace GodotModules.Netcode.Client
             peer.PingInterval(pingInterval);
             peer.Timeout(timeout, timeoutMinimum, timeoutMaximum);
 
-            while (!CancellationTokenSource.IsCancellationRequested)
+            while (!_cancellationTokenSource.IsCancellationRequested)
             {
                 var polled = false;
 
                 // ENet Cmds from Godot Thread
-                while (ENetCmds.TryDequeue(out ENetClientCmd cmd))
+                while (_enetCmds.TryDequeue(out ENetClientCmd cmd))
                 {
                     switch (cmd.Opcode)
                     {
                         case ENetClientOpcode.Disconnect:
-                            if (CancellationTokenSource.IsCancellationRequested)
+                            if (_cancellationTokenSource.IsCancellationRequested)
                             {
                                 Logger.LogWarning("Client is in the middle of stopping");
                                 break;
                             }
 
-                            CancellationTokenSource.Cancel();
+                            _cancellationTokenSource.Cancel();
                             peer.Disconnect(0);
                             break;
                     }
@@ -167,13 +167,13 @@ namespace GodotModules.Netcode.Client
                             break;
 
                         case EventType.Timeout:
-                            CancellationTokenSource.Cancel();
+                            _cancellationTokenSource.Cancel();
                             Timeout(ref netEvent);
                             Leave(ref netEvent);
                             break;
 
                         case EventType.Disconnect:
-                            CancellationTokenSource.Cancel();
+                            _cancellationTokenSource.Cancel();
                             Disconnect(ref netEvent);
                             Leave(ref netEvent);
                             break;
@@ -188,11 +188,6 @@ namespace GodotModules.Netcode.Client
             Stopped();
 
             return Task.FromResult(1);
-        }
-
-        public void Dispose()
-        {
-            CancellationTokenSource.Dispose();
         }
     }
 

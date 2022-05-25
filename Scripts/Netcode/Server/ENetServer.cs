@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace GodotModules.Netcode.Server
 {
-    public abstract class ENetServer : IDisposable
+    public abstract class ENetServer
     {
         protected static readonly Dictionary<ClientPacketOpcode, APacketClient> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, APacketClient>("CPacket");
 
@@ -25,7 +25,7 @@ namespace GodotModules.Netcode.Server
             _networkManager = networkManager;
         }
 
-        public async Task StartAsync(ushort port, int maxClients)
+        public async Task StartAsync(ushort port, int maxClients, CancellationTokenSource cts)
         {
             try
             {
@@ -36,9 +36,9 @@ namespace GodotModules.Netcode.Server
                 }
 
                 _running = 1;
-                CancellationTokenSource = new CancellationTokenSource();
+                CancellationTokenSource = cts;
 
-                var task = Task.Run(() => ENetThreadWorker(port, maxClients), CancellationTokenSource.Token);
+                using var task = Task.Run(() => ENetThreadWorker(port, maxClients), CancellationTokenSource.Token);
                 await task;
             }
             catch (Exception e)
@@ -180,7 +180,7 @@ namespace GodotModules.Netcode.Server
             if (_queueRestart)
             {
                 _queueRestart = false;
-                _networkManager.StartServer(port, maxClients);
+                _networkManager.StartServer(port, maxClients, CancellationTokenSource);
             }
 
             return Task.FromResult(1);
@@ -198,11 +198,6 @@ namespace GodotModules.Netcode.Server
         {
             _running = 0;
             Stopped();
-        }
-
-        public void Dispose()
-        {
-            CancellationTokenSource.Dispose();
         }
     }
 
