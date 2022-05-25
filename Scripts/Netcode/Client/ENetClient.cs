@@ -39,7 +39,7 @@ namespace GodotModules.Netcode.Client
                 _running = 1;
                 CancellationTokenSource = new CancellationTokenSource();
 
-                using var task = Task.Run(() => ENetThreadWorker(ip, port), CancellationTokenSource.Token);
+                var task = Task.Run(() => ENetThreadWorker(ip, port), CancellationTokenSource.Token);
                 await task;
             }
             catch (Exception e)
