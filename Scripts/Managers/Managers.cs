@@ -91,7 +91,7 @@ namespace GodotModules
 
 			ManagerScene.EscPressed[GameScene.GameServers] = async () => 
 			{
-				ManagerToken.Cancel("waiting_for_client_to_connect");
+				ManagerToken.Cancel("client_running");
 				await ManagerScene.ChangeScene(GameScene.Menu);
 			};
 
@@ -107,10 +107,17 @@ namespace GodotModules
 				await ManagerScene.ChangeScene(GameScene.Menu);
 			};
 
-			ManagerScene.EscPressed[GameScene.Lobby] = async () => await ManagerScene.ChangeScene(GameScene.GameServers);
+			ManagerScene.EscPressed[GameScene.Lobby] = async () => 
+			{
+				ManagerToken.Cancel("client_running");
+				ManagerToken.Cancel("server_running");
+				await ManagerScene.ChangeScene(GameScene.GameServers);
+			};
 
 			ManagerScene.EscPressed[GameScene.Game] = async () =>
 			{
+				ManagerToken.Cancel("client_running");
+				ManagerToken.Cancel("server_running");
 				await ManagerScene.ChangeScene(GameScene.Menu);
 				_menuParticles.Emitting = true;
 				_menuParticles.Visible = true;
