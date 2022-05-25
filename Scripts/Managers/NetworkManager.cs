@@ -43,7 +43,7 @@ namespace GodotModules.Netcode
             await _godotCmds.Update();
         }
 
-        public async void StartClient(string ip, ushort port)
+        public async void StartClient(string ip, ushort port, CancellationTokenSource cts)
         {
             if (!EnetInitialized) 
             {
@@ -51,12 +51,11 @@ namespace GodotModules.Netcode
                 return;
             }
             
-            Client.Dispose();
             Client = new GameClient(this, _godotCmds);
-            await Client.StartAsync(ip, port);
+            await Client.StartAsync(ip, port, cts);
         }
 
-        public async void StartServer(ushort port, int maxPlayers)
+        public async void StartServer(ushort port, int maxPlayers, CancellationTokenSource cts)
         {
             if (!EnetInitialized) 
             {
@@ -64,9 +63,8 @@ namespace GodotModules.Netcode
                 return;
             }
 
-            Server.Dispose();
             Server = new GameServer(this);
-            await Server.StartAsync(port, maxPlayers);
+            await Server.StartAsync(port, maxPlayers, cts);
         }
 
         public bool IsMultiplayer() => 
@@ -75,16 +73,10 @@ namespace GodotModules.Netcode
         public async Task Cleanup()
         {
             if (Client.IsRunning) 
-            {
                 await Client.StopAsync();
-                Client.Dispose();
-            }
 
             if (Server.IsRunning)
-            {
                 await Server.StopAsync();
-                Server.Dispose();
-            }
 
             if (EnetInitialized)
                 ENet.Library.Deinitialize();
