@@ -38,7 +38,13 @@ namespace GodotModules
             Sort(x => x.Ping, _sortPingPressed);
         }
 
-        private void _on_Create_Lobby_pressed() => _managers.ManagerPopup.SpawnCreateLobby();
+        private void _on_Create_Lobby_pressed() 
+        {
+            if (_connectingToLobby)
+                return;
+            
+            _managers.ManagerPopup.SpawnCreateLobby();
+        }
 
         private void _on_Direct_Connect_pressed()
         {
@@ -69,10 +75,10 @@ namespace GodotModules
                     }
 
                     _connectingToLobby = true;
-                    _managers.ManagerNetwork.StartClient(ip, port);
 
-                    var cts = _managers.ManagerToken.Create("waiting_for_client_to_connect");
-                    cts.CancelAfter(1000);
+                    var cts = _managers.ManagerToken.Create("client_running");
+
+                    _managers.ManagerNetwork.StartClient(ip, port, cts);
 
                     try
                     {
@@ -81,11 +87,16 @@ namespace GodotModules
                     }
                     catch (TaskCanceledException)
                     {
-                        Logger.Log("task was cancelled");
+                        // There are many reasons why "client_running" task could be cancelled, here are a few
+                        // 1. user backed out of game servers to main menu or backed out of lobby to game servers
+                        // 2. client disconnected or timed out
+                        _connectingToLobby = false;
                         return;
                     }
 
-                    Logger.Log("this part of the code was reached");
+                    // Client connected
+                    await _managers.ManagerScene.ChangeScene(GameScene.Lobby);
+                    _connectingToLobby = false;
                 },
                 "Direct Connect", 100, "127.0.0.1:25565"
             );
