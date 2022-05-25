@@ -4,10 +4,12 @@ namespace GodotModules
     {
         private Dictionary<string, CancellationTokenSource> _cts = new();
 
-        public CancellationTokenSource Create(string name)
+        public CancellationTokenSource Create(string name, int timeout = 0)
         {
             Cancel(name);
-            return _cts[name] = new CancellationTokenSource();
+            _cts[name] = new CancellationTokenSource();
+            if (timeout > 0) _cts[name].CancelAfter(timeout);
+            return _cts[name];
         }
 
         public bool Cancelled(string name) => 
