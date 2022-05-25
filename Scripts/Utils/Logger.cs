@@ -20,6 +20,8 @@ namespace GodotModules
             Log($"Took {watch.ElapsedMilliseconds} ms", ConsoleColor.DarkGray);
         }
 
+        public static bool StillWorking() => _messages.Count > 0;
+
         public static void Update()
         {
             if (_messages.TryDequeue(out LogInfo result))
