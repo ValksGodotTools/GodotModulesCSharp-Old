@@ -47,7 +47,7 @@ namespace GodotModules
 			ManagerMusic = new(GetNode<AudioStreamPlayer>(NodePathAudioStreamPlayer), ManagerOptions);
 			ManagerErrorNotifier = GetNode<ErrorNotifierManager>(NodePathErrorNotifierManager);
 			ManagerPopup = new(GetNode<Node>(NodePathPopups), this);
-			ManagerNetwork = new(ManagerPopup);
+			ManagerNetwork = new(this);
 			ManagerConsole = GetNode<ConsoleManager>(NodePathConsole);
 
 			ManagerHotkey.AddCategories("ui", "player", "camera");

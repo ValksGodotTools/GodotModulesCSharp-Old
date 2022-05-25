@@ -38,7 +38,7 @@ namespace GodotModules.Netcode
         }
 
 #if CLIENT
-        public override async Task Handle(GameClient client)
+        public override async Task Handle(GameClient client, Managers managers)
         {
             /*if (SceneManager.InGame())
                 SceneManager.GetActiveSceneScript<Game.SceneGame>().UpdatePlayerPositions(PlayerTransforms);*/

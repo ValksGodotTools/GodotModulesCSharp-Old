@@ -6,12 +6,12 @@ namespace GodotModules
     {
         private readonly ConcurrentQueue<GodotCmd> _godotCmdQueue = new();
         private readonly NetworkManager _networkManager;
-        private readonly PopupManager _popupManager;
+        private readonly Managers _managers;
 
-        public GodotCommands(NetworkManager networkManager, PopupManager popupManager) 
+        public GodotCommands(NetworkManager networkManager, Managers managers) 
         {
             _networkManager = networkManager;
-            _popupManager = popupManager;
+            _managers = managers;
         }
 
         public void Enqueue(GodotOpcode opcode, object data = null) => _godotCmdQueue.Enqueue(new GodotCmd(opcode, data));
@@ -32,17 +32,17 @@ namespace GodotModules
                         var handlePacket = ENetClient.HandlePacket[opcode];
                         handlePacket.Read(packetReader);
 
-                        await handlePacket.Handle(packetInfo.GameClient);
+                        await handlePacket.Handle(packetInfo.GameClient, _managers);
 
                         packetReader.Dispose();
                         break;
                     case GodotOpcode.SpawnPopupMessage:
                         var dataMessage = (GodotCmdPopupMessage)cmd.Data;
-                        _popupManager.SpawnMessage(dataMessage.Message, dataMessage.Title);
+                        _managers.ManagerPopup.SpawnMessage(dataMessage.Message, dataMessage.Title);
                         break;
                     case GodotOpcode.SpawnPopupError:
                         var dataError = (GodotCmdPopupError)cmd.Data;
-                        _popupManager.SpawnError(dataError.Exception, dataError.Title);
+                        _managers.ManagerPopup.SpawnError(dataError.Exception, dataError.Title);
                         break;
                 }
             }

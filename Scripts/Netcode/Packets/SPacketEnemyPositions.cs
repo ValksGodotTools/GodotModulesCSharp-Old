@@ -36,7 +36,7 @@ namespace GodotModules.Netcode
         }
 
 #if CLIENT
-        public override async Task Handle(GameClient client)
+        public override async Task Handle(GameClient client, Managers managers)
         {
             //var sceneGameScript = SceneManager.GetActiveSceneScript<Game.SceneGame>();
 

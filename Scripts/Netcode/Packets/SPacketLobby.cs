@@ -147,12 +147,12 @@ namespace GodotModules.Netcode
         }
 
 #if CLIENT
-        public override async Task Handle(GameClient client)
+        public override async Task Handle(GameClient client, Managers managers)
         {
             switch (LobbyOpcode)
             {
                 case LobbyOpcode.LobbyCreate:
-                    await HandleCreate();
+                    await HandleCreate(managers);
                     break;
 
                 case LobbyOpcode.LobbyInfo:
@@ -185,7 +185,7 @@ namespace GodotModules.Netcode
             }
         }
 
-        private async Task HandleCreate()
+        private async Task HandleCreate(Managers managers)
         {
             /*NetworkManager.PeerId = Id;
             NetworkManager.IsHost = true;
@@ -193,7 +193,8 @@ namespace GodotModules.Netcode
             Client.Players[Id] = Logger.Options.OnlineUsername;
 
             await SceneManager.ChangeScene("Lobby");*/
-            await Task.FromResult(1);
+
+            await managers.ManagerScene.ChangeScene(GameScene.Lobby);
         }
 
         private void HandleChatMessage()
