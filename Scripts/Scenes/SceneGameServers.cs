@@ -51,7 +51,7 @@ namespace GodotModules
                 {
                     // no realtime filter
                 },
-                (text) =>
+                async (text) =>
                 {
                     ushort port = 25565; // default port
                     var ip = "127.0.0.1"; // default ip
@@ -70,6 +70,22 @@ namespace GodotModules
 
                     _connectingToLobby = true;
                     _managers.ManagerNetwork.StartClient(ip, port);
+
+                    var cts = _managers.ManagerToken.Create("waiting_for_client_to_connect");
+                    cts.CancelAfter(1000);
+
+                    try
+                    {
+                        while (!_managers.ManagerNetwork.Client.IsConnected)
+                            await Task.Delay(1, cts.Token);
+                    }
+                    catch (TaskCanceledException)
+                    {
+                        Logger.Log("task was cancelled");
+                        return;
+                    }
+
+                    Logger.Log("this part of the code was reached");
                 },
                 "Direct Connect", 100, "127.0.0.1:25565"
             );
