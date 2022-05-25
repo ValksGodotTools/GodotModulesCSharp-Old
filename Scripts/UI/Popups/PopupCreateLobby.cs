@@ -71,9 +71,11 @@ namespace GodotModules
             QueueFree();
         }
 
-        private void _on_Create_pressed()
+        private async void _on_Create_pressed()
         {
-            _managers.ManagerNetwork.StartServer(_port, _maxPlayers);
+            var cts = _managers.ManagerToken.Create("server_running");
+            _managers.ManagerNetwork.StartServer(_port, _maxPlayers, cts);
+            await _managers.ManagerScene.ChangeScene(GameScene.Lobby);
             Hide();
         }
     }
