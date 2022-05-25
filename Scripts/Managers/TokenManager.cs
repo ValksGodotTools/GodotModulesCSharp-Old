@@ -16,7 +16,16 @@ namespace GodotModules
         public void Cancel(string name) 
         {
             if (_cts.ContainsKey(name)) 
-                _cts[name].Cancel();
+            {
+                try 
+                {
+                    _cts[name].Cancel();
+                }
+                catch (ObjectDisposedException) 
+                {
+                    Logger.LogWarning($"Token '{name}' could not be cancelled because it has been disposed");
+                }
+            }
         }
 
         public void Cleanup() => _cts.Values.ForEach(x =>
