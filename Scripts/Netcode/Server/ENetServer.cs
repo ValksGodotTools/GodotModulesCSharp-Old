@@ -7,9 +7,11 @@ namespace GodotModules.Netcode.Server
     {
         protected static readonly Dictionary<ClientPacketOpcode, APacketClient> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, APacketClient>("CPacket");
 
+        // thread safe props
         public bool HasSomeoneConnected => Interlocked.Read(ref _someoneConnected) == 1;
         public bool IsRunning => Interlocked.Read(ref _running) == 1;
         public readonly ConcurrentQueue<ENetServerCmd> ENetCmds = new();
+        private readonly ConcurrentQueue<ServerPacket> _outgoing = new();
 
         protected readonly Dictionary<uint, Peer> Peers = new();
         protected CancellationTokenSource CancellationTokenSource = new();
@@ -17,7 +19,6 @@ namespace GodotModules.Netcode.Server
 
         private long _someoneConnected = 0;
         private long _running = 0;
-        private readonly ConcurrentQueue<ServerPacket> _outgoing = new();
         private readonly NetworkManager _networkManager;
 
         public ENetServer(NetworkManager networkManager) 
