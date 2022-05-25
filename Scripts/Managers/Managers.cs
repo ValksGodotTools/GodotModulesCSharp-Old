@@ -88,18 +88,27 @@ namespace GodotModules
 
 			// Esc Pressed
 			ManagerScene.EscPressed[GameScene.Credits] = async () => await ManagerScene.ChangeScene(GameScene.Menu);
-			ManagerScene.EscPressed[GameScene.GameServers] = async () => await ManagerScene.ChangeScene(GameScene.Menu);
+
+			ManagerScene.EscPressed[GameScene.GameServers] = async () => 
+			{
+				ManagerToken.Cancel("waiting_for_client_to_connect");
+				await ManagerScene.ChangeScene(GameScene.Menu);
+			};
+
 			ManagerScene.EscPressed[GameScene.Mods] = async () => 
 			{
 				ModLoader.SceneMods = null;
 				await ManagerScene.ChangeScene(GameScene.Menu);
 			};
+
 			ManagerScene.EscPressed[GameScene.Options] = async () =>
 			{
 				ManagerToken.Cancel("check_connection");
 				await ManagerScene.ChangeScene(GameScene.Menu);
 			};
+
 			ManagerScene.EscPressed[GameScene.Lobby] = async () => await ManagerScene.ChangeScene(GameScene.GameServers);
+
 			ManagerScene.EscPressed[GameScene.Game] = async () =>
 			{
 				await ManagerScene.ChangeScene(GameScene.Menu);
@@ -154,6 +163,9 @@ namespace GodotModules
 
 		private async Task Cleanup()
 		{
+			if (Logger.StillWorking()) 
+				await Task.Delay(1);
+			
 			ModLoader.SaveEnabled();
 			ManagerOptions.SaveOptions();
 			await ManagerNetwork.Cleanup();
