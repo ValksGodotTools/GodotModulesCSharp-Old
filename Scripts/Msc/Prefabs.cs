@@ -8,6 +8,10 @@ namespace GodotModules
         public readonly static PackedScene UIModBtn = LoadUI("UIModBtn");
         public readonly static PackedScene UILobbyListing = LoadUI("UILobbyListing");
 
+        // Inventory
+        public readonly static PackedScene InventoryItem = LoadUI("Inventory/InventoryItem");
+        public readonly static PackedScene InventoryItemCursor = LoadUI("Inventory/InventoryItemCursor");
+
         // Popups
         public readonly static PackedScene PopupMessage = LoadPopup("PopupMessage");
         public readonly static PackedScene PopupError = LoadPopup("PopupError");
