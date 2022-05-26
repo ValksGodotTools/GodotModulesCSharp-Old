@@ -1,26 +1,33 @@
 namespace GodotModules
 {
-    public class Coin : RigidBody2D
+    public class Coin : AnimatedSprite
     {
-        [Export] protected readonly NodePath NodePathAnimatedSprite;
-
-        public OtherPlayer Target { get; set; }
+        private bool _movingToPlayer;
+        private Player _player;
 
         public override void _Ready()
         {
-            var animatedSprite = GetNode<AnimatedSprite>(NodePathAnimatedSprite);
-            animatedSprite.Frame = (int)GD.RandRange(0, animatedSprite.Frames.GetFrameCount("Coin"));
-            animatedSprite.Playing = true;
+            Frame = (int)GD.RandRange(0, Frames.GetFrameCount("Coin"));
+            Playing = true;
         }
 
-        public override void _IntegrateForces(Physics2DDirectBodyState state)
+        public void MoveToPlayer(Player player) 
         {
-            RotationDegrees = 0;
+            _movingToPlayer = true;
+            _player = player;
+        }
 
-            if (Target != null)
+        public override void _PhysicsProcess(float delta)
+        {
+            if (!_movingToPlayer)
+                return;
+
+            Position = Position.Lerp(_player.Position, 0.1f);
+
+            if (Position.DistanceTo(_player.Position) < 20) 
             {
-                var dir = (Target.Position - Position).Normalized();
-                LinearVelocity = dir * 10;
+                _player.Gold++;
+                QueueFree();
             }
         }
     }

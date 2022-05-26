@@ -31,13 +31,6 @@ namespace GodotModules
 
             CreateMainPlayer(PositionPlayerSpawn.Position);
 
-            var coinList = GetNode<Node>(NodePathCoinList);
-            foreach (var child in coinList.GetChildren())
-            {
-                if (child is Coin coin)
-                    coin.Target = Player;
-            }
-
             ModLoader.Hook("Game", nameof(CreateMainPlayer),  (Action<Vector2>)CreateMainPlayer);
             ModLoader.Hook("Game", nameof(CreateOtherPlayer), (Action<Vector2>)CreateOtherPlayer);
             ModLoader.Hook("Game", nameof(CreateEnemy),       (Action<Vector2>)CreateEnemy);

@@ -10,6 +10,8 @@ namespace GodotModules
         private bool _movingDown, _movingUp, _movingLeft, _movingRight, _running, _attack;
         private float _zoom = 0.75f;
 
+        public int Gold;
+
         public override void _Ready()
         {
             _camera = GetNode<Camera2D>(NodePathCamera);
@@ -37,6 +39,12 @@ namespace GodotModules
             {
                 var chest = (Chest)area.GetParent();
                 chest.Open();
+            }
+
+            if (area.IsInGroup("Coin"))
+            {
+                var coin = (Coin)area.GetParent();
+                coin.MoveToPlayer(this);
             }
         }
 

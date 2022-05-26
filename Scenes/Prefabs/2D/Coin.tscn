@@ -3,9 +3,6 @@
 [ext_resource path="res://Sprites/Game/Full Coins.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Game/Coin.cs" type="Script" id=2]
 
-[sub_resource type="CircleShape2D" id=10]
-radius = 8.0
-
 [sub_resource type="AtlasTexture" id=2]
 atlas = ExtResource( 1 )
 region = Rect2( 0, 0, 16, 16 )
@@ -46,17 +43,15 @@ animations = [ {
 "speed": 10.0
 } ]
 
-[node name="Coin" type="RigidBody2D"]
-collision_layer = 2
-collision_mask = 2
-gravity_scale = 0.0
-linear_damp = 2.0
-script = ExtResource( 2 )
-NodePathAnimatedSprite = NodePath("AnimatedSprite")
+[sub_resource type="RectangleShape2D" id=10]
+extents = Vector2( 20, 20 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource( 10 )
-
-[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+[node name="AnimatedSprite" type="AnimatedSprite"]
 frames = SubResource( 1 )
 animation = "Coin"
+script = ExtResource( 2 )
+
+[node name="Pickup" type="Area2D" parent="." groups=["Coin"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pickup"]
+shape = SubResource( 10 )
