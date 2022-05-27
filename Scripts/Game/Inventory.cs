@@ -33,7 +33,10 @@ namespace GodotModules
                 {
                     var item = Prefabs.InventoryItem.Instance<InventoryItem>();
                     item.Init(this);
-                    item.Item = Item.MiniGodotChan;
+                    if (GD.Randf() < 0.5f)
+                        item.Item = Item.MiniGodotChan;
+                    else
+                        item.Item = Item.Coin;
                     _gridContainer.AddChild(item);
                     Items[c][r] = item;
                 }

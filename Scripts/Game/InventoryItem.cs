@@ -2,25 +2,32 @@ namespace GodotModules
 {
     public class InventoryItem : Control
     {
-        [Export] protected readonly NodePath NodePathTextureRect;
-
         public Item Item { get; set; }
 
-        private TextureRect _textureRect;
         private Inventory _inventory;
 
         public override void _Ready()
         {
-            _textureRect = GetNode<TextureRect>(NodePathTextureRect);
+            var invItemSize = new Vector2(50, 50);
+            var itemSize = new Vector2(25, 25);
 
             if (Item == Item.MiniGodotChan)
             {
-                _textureRect.Texture = Textures.MiniGodotChan;
+                var sprite = new Sprite();
+                sprite.Texture = Textures.MiniGodotChan;
+                sprite.Position += invItemSize / 2;
+                sprite.Scale = itemSize / sprite.Texture.GetSize();
+                AddChild(sprite);
             }
 
             if (Item == Item.Coin)
             {
-                //_textureRect.Texture = Textures.
+                var sprite = new AnimatedSprite();
+                sprite.Frames = Textures.Coin;
+                sprite.Playing = true;
+                sprite.Position += invItemSize / 2;
+                sprite.Scale = itemSize / sprite.Frames.GetFrame("default", 0).GetSize();
+                AddChild(sprite);
             }
         }
 
@@ -38,9 +45,9 @@ namespace GodotModules
                     if (_inventory.HoldingItem)
                         return;
 
-                    _textureRect.Texture = null;
-                    var item = Prefabs.InventoryItemCursor.Instance<InventoryItemCursor>();
-                    _inventory.HoldItem(item);
+                    //_textureRect.Texture = null;
+                    //var item = Prefabs.InventoryItemCursor.Instance<InventoryItemCursor>();
+                    //_inventory.HoldItem(item);
                 }
             }
         }

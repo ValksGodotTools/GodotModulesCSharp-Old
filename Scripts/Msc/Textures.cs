@@ -2,20 +2,10 @@ namespace GodotModules
 {
     public static class Textures 
     {
-        public readonly static Texture MiniGodotChan = Load("Items/MiniGodotChan.png");
-        
-        /*private static AnimatedTexture GetCoin()
-        {
-            var coinFrames = ResourceLoader.Load<SpriteFrames>("res://Msc/CoinFrames.tres");
-            var animatedTexture = new AnimatedTexture();
+        public readonly static Texture MiniGodotChan = LoadSprite("Items/MiniGodotChan.png");
+        public readonly static SpriteFrames Coin = LoadSpriteFrames("Items/Animated/Coin.tres");
 
-            foreach (Texture coinFrame in coinFrames.Frames)
-            {
-                //animatedTexture.SetFrameTexture(0, null);
-            }
-            
-        }*/
-
-        private static Texture Load(string path) => ResourceLoader.Load<Texture>($"res://Scenes/Prefabs/{path}");
+        private static SpriteFrames LoadSpriteFrames(string path) => ResourceLoader.Load<SpriteFrames>($"res://Sprites/{path}");
+        private static Texture LoadSprite(string path) => ResourceLoader.Load<Texture>($"res://Sprites/{path}");
     }
 }
