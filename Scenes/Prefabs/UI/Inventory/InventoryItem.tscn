@@ -11,23 +11,5 @@ margin_bottom = 50.0
 rect_min_size = Vector2( 50, 50 )
 custom_styles/panel = SubResource( 99 )
 script = ExtResource( 2 )
-NodePathTextureRect = NodePath("MarginContainer/TextureRect")
-
-[node name="MarginContainer" type="MarginContainer" parent="."]
-margin_right = 50.0
-margin_bottom = 50.0
-mouse_filter = 2
-custom_constants/margin_right = 5
-custom_constants/margin_top = 5
-custom_constants/margin_left = 5
-custom_constants/margin_bottom = 5
-
-[node name="TextureRect" type="TextureRect" parent="MarginContainer"]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 45.0
-margin_bottom = 45.0
-mouse_filter = 2
-expand = true
 
 [connection signal="gui_input" from="." to="." method="_on_Item_gui_input"]

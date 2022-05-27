@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://Msc/CoinFrames.tres" type="SpriteFrames" id=1]
+[ext_resource path="res://Sprites/Items/Animated/Coin.tres" type="SpriteFrames" id=1]
 [ext_resource path="res://Scripts/Game/Coin.cs" type="Script" id=2]
 
 [sub_resource type="RectangleShape2D" id=10]
@@ -8,7 +8,6 @@ extents = Vector2( 20, 20 )
 
 [node name="AnimatedSprite" type="AnimatedSprite"]
 frames = ExtResource( 1 )
-animation = "Coin"
 script = ExtResource( 2 )
 
 [node name="Pickup" type="Area2D" parent="." groups=["Coin"]]

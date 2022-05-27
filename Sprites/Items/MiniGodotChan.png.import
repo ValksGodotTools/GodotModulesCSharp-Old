@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/MiniGodotChan.png-2f21090105344ba7e474535f0fbad50b.stex"
+path="res://.import/MiniGodotChan.png-964cf3692cbf620658e5548953e07cfd.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Scenes/Prefabs/Items/MiniGodotChan.png"
-dest_files=[ "res://.import/MiniGodotChan.png-2f21090105344ba7e474535f0fbad50b.stex" ]
+source_file="res://Sprites/Items/MiniGodotChan.png"
+dest_files=[ "res://.import/MiniGodotChan.png-964cf3692cbf620658e5548953e07cfd.stex" ]
 
 [params]
 
