@@ -8,7 +8,7 @@
 [ext_resource path="res://Scenes/Prefabs/2D/Chest.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Scenes/Prefabs/2D/Coin.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Shaders/Canvas/GodRays.shader" type="Shader" id=8]
-[ext_resource path="res://Scripts/Game/Inventory.cs" type="Script" id=10]
+[ext_resource path="res://Scripts/UI/Inventory/Inventory.cs" type="Script" id=10]
 
 [sub_resource type="NavigationPolygon" id=3]
 vertices = PoolVector2Array( 40, 24, 0, 24, 0, 64, 40, 64 )
