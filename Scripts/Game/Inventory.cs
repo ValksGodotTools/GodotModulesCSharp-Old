@@ -7,7 +7,7 @@ namespace GodotModules
 
         private GridContainer _gridContainer;
 
-        public Dictionary<int, Dictionary<int, InventoryItem>> Items = new Dictionary<int, Dictionary<int, InventoryItem>>();
+        public Dictionary<int, Dictionary<int, ControlInventoryItem>> Items = new Dictionary<int, Dictionary<int, ControlInventoryItem>>();
         public bool HoldingItem;
 
         private Node _groupCursor;
@@ -27,11 +27,11 @@ namespace GodotModules
 
             for (int c = 0; c < columns; c++)
             {
-                Items[c] = new Dictionary<int, InventoryItem>();
+                Items[c] = new Dictionary<int, ControlInventoryItem>();
 
                 for (int r = 0; r < rows; r++)
                 {
-                    var item = Prefabs.InventoryItem.Instance<InventoryItem>();
+                    var item = Prefabs.InventoryItem.Instance<ControlInventoryItem>();
                     item.Init(this);
                     /*if (GD.Randf() < 0.5f)
                         item.ItemType = Item.MiniGodotChan;
@@ -41,6 +41,8 @@ namespace GodotModules
                     Items[c][r] = item;
                 }
             }
+
+            Items[0][0].ItemType = Item.Coin;
         }
 
         public override void _Input(InputEvent @event)
@@ -64,6 +66,7 @@ namespace GodotModules
 
     public enum Item 
     {
+        None,
         MiniGodotChan,
         Coin
     }

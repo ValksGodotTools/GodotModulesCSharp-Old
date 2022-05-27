@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Fonts/Roboto/Roboto-Bold.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://Scripts/Game/InventoryItem.cs" type="Script" id=2]
+[ext_resource path="res://Scripts/Game/ControlInventoryItem.cs" type="Script" id=2]
 
 [sub_resource type="StyleBoxFlat" id=99]
 bg_color = Color( 0.227451, 0.227451, 0.227451, 1 )

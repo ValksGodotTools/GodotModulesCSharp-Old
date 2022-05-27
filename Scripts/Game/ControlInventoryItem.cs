@@ -1,6 +1,6 @@
 namespace GodotModules
 {
-    public class InventoryItem : Control
+    public class ControlInventoryItem : Control
     {
         [Export] protected readonly NodePath NodePathItem;
 
@@ -15,7 +15,7 @@ namespace GodotModules
             _item = GetNode<Node>(NodePathItem);
 
             var invItemSize = new Vector2(50, 50);
-            var itemSize = new Vector2(25, 25);
+            var itemSize = new Vector2(20, 20);
 
             if (ItemType == Item.MiniGodotChan)
             {
