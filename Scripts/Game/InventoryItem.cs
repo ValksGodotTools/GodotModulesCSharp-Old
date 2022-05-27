@@ -2,32 +2,38 @@ namespace GodotModules
 {
     public class InventoryItem : Control
     {
-        public Item Item { get; set; }
+        [Export] protected readonly NodePath NodePathItem;
+
+        private Node _item;
+
+        public Item ItemType { get; set; }
 
         private Inventory _inventory;
 
         public override void _Ready()
         {
+            _item = GetNode<Node>(NodePathItem);
+
             var invItemSize = new Vector2(50, 50);
             var itemSize = new Vector2(25, 25);
 
-            if (Item == Item.MiniGodotChan)
+            if (ItemType == Item.MiniGodotChan)
             {
                 var sprite = new Sprite();
                 sprite.Texture = Textures.MiniGodotChan;
                 sprite.Position += invItemSize / 2;
                 sprite.Scale = itemSize / sprite.Texture.GetSize();
-                AddChild(sprite);
+                _item.AddChild(sprite);
             }
 
-            if (Item == Item.Coin)
+            if (ItemType == Item.Coin)
             {
                 var sprite = new AnimatedSprite();
                 sprite.Frames = Textures.Coin;
                 sprite.Playing = true;
                 sprite.Position += invItemSize / 2;
                 sprite.Scale = itemSize / sprite.Frames.GetFrame("default", 0).GetSize();
-                AddChild(sprite);
+                _item.AddChild(sprite);
             }
         }
 
