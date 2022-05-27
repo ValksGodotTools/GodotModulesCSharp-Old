@@ -7,7 +7,7 @@ namespace GodotModules
 
         public override void _Ready()
         {
-            Frame = (int)GD.RandRange(0, Frames.GetFrameCount("Coin"));
+            Frame = (int)GD.RandRange(0, Frames.GetFrameCount("default"));
             Playing = true;
         }
 
