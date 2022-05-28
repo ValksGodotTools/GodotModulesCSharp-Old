@@ -39,6 +39,9 @@ namespace GodotModules
 
         private void _on_Item_gui_input(InputEvent @event)
         {
+            if (_item == null)
+                return;
+
             if (@event is InputEventMouseButton mouseButton)
             {
                 if (mouseButton.ButtonIndex == (int)ButtonList.Left && mouseButton.Pressed)
@@ -48,14 +51,20 @@ namespace GodotModules
 
                     ClearItem();
 
-                    if (_item.Type == InventoryItemType.Static)
-                        _inventory.HoldItem(InitSprite(_item.Name));
+                    if (_item.Type == InventoryItemType.Static) 
+                    {
+                        var sprite = InitSprite(_item.Name);
+                        var controlInventoryItemCursor = Prefabs.InventoryItemCursor.Instance<ControlInventoryItemCursor>();
+                        sprite.AddChild(controlInventoryItemCursor);
+                        _inventory.HoldItem(sprite);
+                    }
                     else if (_item.Type == InventoryItemType.Animated)
-                        _inventory.HoldItem(InitAnimatedSprite(_item.Name));
-
-                    //_textureRect.Texture = null;
-                    //var item = Prefabs.InventoryItemCursor.Instance<InventoryItemCursor>();
-                    //_inventory.HoldItem(item);
+                    {
+                        var animatedSprite = InitAnimatedSprite(_item.Name);
+                        var controlInventoryItemCursor = Prefabs.InventoryItemCursor.Instance<ControlInventoryItemCursor>();
+                        animatedSprite.AddChild(controlInventoryItemCursor);
+                        _inventory.HoldItem(animatedSprite);
+                    }
                 }
             }
         }

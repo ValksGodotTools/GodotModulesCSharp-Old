@@ -1,10 +1,11 @@
 namespace GodotModules
 {
-    public class InventoryItemCursor : TextureRect
+    public class ControlInventoryItemCursor : Node2D
     {
         public override void _PhysicsProcess(float delta)
         {
-            RectGlobalPosition = GetGlobalMousePosition() - RectSize / 2;
+            var parent = (Node2D)GetParent();
+            parent.GlobalPosition = GetGlobalMousePosition();
         }
     }
 }
