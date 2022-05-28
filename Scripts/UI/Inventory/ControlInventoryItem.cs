@@ -24,16 +24,14 @@ namespace GodotModules
             _inventory = inventory;
         }
 
-        public void SetItem(string name, int stackSize)
+        public void SetItem(InventoryItem item)
         {
-            if (Items.Sprites.ContainsKey(name))
-                SetSprite(name);
-            else if (Items.AnimatedSprites.ContainsKey(name))
-                SetAnimatedSprite(name);
-            else
-                throw new InvalidOperationException($"The item '{name}' does not exist as a sprite or animated sprite");
+            if (item.Type == InventoryItemType.Static)
+                SetSprite(item.Name);
+            else if (item.Type == InventoryItemType.Animated)
+                SetAnimatedSprite(item.Name);
 
-            _stackSize.Text = $"{stackSize}";
+            _stackSize.Text = $"{item.StackSize}";
         }
 
         private void _on_Item_gui_input(InputEvent @event)
