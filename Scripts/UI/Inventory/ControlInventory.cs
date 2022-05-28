@@ -35,7 +35,7 @@ namespace GodotModules
                 }
             }
 
-            Items[0][0].SetItem("MiniGodotChan");
+            Items[0][0].SetItem("MiniGodotChan", 10);
         }
 
         public override void _Input(InputEvent @event)
@@ -55,12 +55,5 @@ namespace GodotModules
             HoldingItem = true;
             _groupCursor.AddChild(item);
         }
-    }
-
-    public enum Item 
-    {
-        None,
-        MiniGodotChan,
-        Coin
     }
 }

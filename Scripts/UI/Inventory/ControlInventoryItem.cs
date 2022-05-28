@@ -8,8 +8,6 @@ namespace GodotModules
         private Node _itemParent;
         private Label _stackSize;
 
-        public Item ItemType { get; set; }
-
         private ControlInventory _inventory;
 
         private Vector2 _invItemSize = new Vector2(50, 50);
