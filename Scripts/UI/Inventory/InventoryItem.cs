@@ -11,6 +11,6 @@ namespace GodotModules
             controlInventory.GridContainer.AddChild(_controlInventoryItem);
         }
 
-        public void SetItem(string name) => _controlInventoryItem.SetItem(name);
+        public void SetItem(string name, int stackSize = 1) => _controlInventoryItem.SetItem(name, stackSize);
     }
 }

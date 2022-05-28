@@ -3,8 +3,10 @@ namespace GodotModules
     public class ControlInventoryItem : Control
     {
         [Export] protected readonly NodePath NodePathItem;
+        [Export] protected readonly NodePath NodePathStackSize;
 
         private Node _itemParent;
+        private Label _stackSize;
 
         public Item ItemType { get; set; }
 
@@ -16,6 +18,7 @@ namespace GodotModules
         public override void _Ready()
         {
             _itemParent = GetNode<Node>(NodePathItem);
+            _stackSize = GetNode<Label>(NodePathStackSize);
         }
 
         public void Init(ControlInventory inventory)
@@ -23,7 +26,7 @@ namespace GodotModules
             _inventory = inventory;
         }
 
-        public void SetItem(string name)
+        public void SetItem(string name, int stackSize)
         {
             if (Items.Sprites.ContainsKey(name))
                 SetSprite(name);
@@ -31,6 +34,8 @@ namespace GodotModules
                 SetAnimatedSprite(name);
             else
                 throw new InvalidOperationException($"The item '{name}' does not exist as a sprite or animated sprite");
+
+            _stackSize.Text = $"{stackSize}";
         }
 
         private void _on_Item_gui_input(InputEvent @event)
