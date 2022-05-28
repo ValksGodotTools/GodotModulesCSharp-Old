@@ -50,7 +50,7 @@ namespace GodotModules
             }
         }
 
-        public void HoldItem(InventoryItemCursor item)
+        public void HoldItem(Node2D item)
         {
             HoldingItem = true;
             _groupCursor.AddChild(item);

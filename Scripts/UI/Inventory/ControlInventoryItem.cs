@@ -9,6 +9,7 @@ namespace GodotModules
         private Label _stackSize;
 
         private ControlInventory _inventory;
+        private InventoryItem _item;
 
         private Vector2 _invItemSize = new Vector2(50, 50);
         private Vector2 _itemSize = new Vector2(20, 20);
@@ -26,12 +27,14 @@ namespace GodotModules
 
         public void SetItem(InventoryItem item)
         {
-            if (item.Type == InventoryItemType.Static)
-                SetSprite(item.Name);
-            else if (item.Type == InventoryItemType.Animated)
-                SetAnimatedSprite(item.Name);
+            _item = item;
 
-            _stackSize.Text = $"{item.StackSize}";
+            if (_item.Type == InventoryItemType.Static)
+                SetSprite(_item.Name);
+            else if (_item.Type == InventoryItemType.Animated)
+                SetAnimatedSprite(_item.Name);
+
+            _stackSize.Text = $"{_item.StackSize}";
         }
 
         private void _on_Item_gui_input(InputEvent @event)
@@ -42,6 +45,13 @@ namespace GodotModules
                 {
                     if (_inventory.HoldingItem)
                         return;
+
+                    ClearItem();
+
+                    if (_item.Type == InventoryItemType.Static)
+                        _inventory.HoldItem(InitSprite(_item.Name));
+                    else if (_item.Type == InventoryItemType.Animated)
+                        _inventory.HoldItem(InitAnimatedSprite(_item.Name));
 
                     //_textureRect.Texture = null;
                     //var item = Prefabs.InventoryItemCursor.Instance<InventoryItemCursor>();
@@ -54,23 +64,35 @@ namespace GodotModules
         {
             ClearItem();
 
+            var sprite = InitSprite(name);
+            _itemParent.AddChild(sprite);
+        }
+
+        private Sprite InitSprite(string name)
+        {
             var sprite = new Sprite();
             sprite.Texture = Items.Sprites[name];
             sprite.Position += _invItemSize / 2;
             sprite.Scale = _itemSize / sprite.Texture.GetSize();
-            _itemParent.AddChild(sprite);
+            return sprite;
         }
 
         private void SetAnimatedSprite(string name)
         {
             ClearItem();
 
-            var sprite = new AnimatedSprite();
-            sprite.Frames = Items.AnimatedSprites[name];
-            sprite.Playing = true;
-            sprite.Position += _invItemSize / 2;
-            sprite.Scale = _itemSize / sprite.Frames.GetFrame("default", 0).GetSize();
-            _itemParent.AddChild(sprite);
+            var animatedSprite = InitAnimatedSprite(name);
+            _itemParent.AddChild(animatedSprite);
+        }
+
+        private AnimatedSprite InitAnimatedSprite(string name)
+        {
+            var animatedSprite = new AnimatedSprite();
+            animatedSprite.Frames = Items.AnimatedSprites[name];
+            animatedSprite.Playing = true;
+            animatedSprite.Position += _invItemSize / 2;
+            animatedSprite.Scale = _itemSize / animatedSprite.Frames.GetFrame("default", 0).GetSize();
+            return animatedSprite;
         }
 
         private void ClearItem()
