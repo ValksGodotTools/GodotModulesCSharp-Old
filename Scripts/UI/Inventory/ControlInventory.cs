@@ -7,7 +7,7 @@ namespace GodotModules
 
         public GridContainer GridContainer;
         public Dictionary<int, Dictionary<int, InventoryItem>> Items = new Dictionary<int, Dictionary<int, InventoryItem>>();
-        public bool HoldingItem;
+        public InventoryItem HoldingItem;
         public Node CursorParent;
 
         public override void _Ready()
@@ -29,7 +29,7 @@ namespace GodotModules
 
                 for (int r = 0; r < rows; r++)
                 {
-                    var item = new InventoryItem(this);
+                    var item = new InventoryItem(this, c, r);
                     Items[c][r] = item;
                 }
             }
@@ -41,11 +41,10 @@ namespace GodotModules
         {
             if (@event is InputEventMouseButton mouseButton && mouseButton.ButtonIndex == (int)ButtonList.Left && mouseButton.Pressed) 
             {
-                if (HoldingItem) 
-                {
-                    //HoldingItem = false;
-                    //CursorParent.GetChild(0).QueueFree();
-                }
+                if (HoldingItem != null)
+                    return;
+
+                
             }
         }
     }

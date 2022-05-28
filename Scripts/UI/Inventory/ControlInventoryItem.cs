@@ -40,20 +40,32 @@ namespace GodotModules
             _stackSize.Text = $"{_item.StackSize}";
         }
 
+        public void RemoveItem()
+        {
+            _content.Visible = true;
+            ClearItem();
+        }
+
         private void _on_Item_gui_input(InputEvent @event)
         {
-            if (_item == null)
-                return;
-
             if (@event is InputEventMouseButton mouseButton)
             {
                 if (mouseButton.ButtonIndex == (int)ButtonList.Left && mouseButton.Pressed)
                 {
-                    if (_inventory.HoldingItem)
-                        return;
+                    if (_inventory.HoldingItem != null) 
+                    {
+                        if (!_inventory.HoldingItem.Equals(_item)) // position is not the same, lets move the currently held item to this slot
+                        {
+                            //_inventory.HoldingItem.RemoveItem();
+                            //_inventory.HoldingItem = null;
 
+                            SetItem(_inventory.HoldingItem);
+                        }
+                    }
+                        
                     // Pick up item (put item on mouse cursor position)
-                    Pickup();
+                    if (_inventory.HoldingItem == null)
+                        Pickup();
                 }
             }
         }
@@ -61,6 +73,7 @@ namespace GodotModules
         private void Pickup()
         {
             _content.Visible = false;
+            _inventory.HoldingItem = _item;
 
             if (_item.Type == InventoryItemType.Static)
             {
@@ -80,7 +93,7 @@ namespace GodotModules
 
         private void SetSprite(string name)
         {
-            ClearItem();
+            RemoveItem();
 
             var sprite = InitSprite(name);
             _itemParent.AddChild(sprite);
@@ -97,7 +110,7 @@ namespace GodotModules
 
         private void SetAnimatedSprite(string name)
         {
-            ClearItem();
+            RemoveItem();
 
             var animatedSprite = InitAnimatedSprite(name);
             _itemParent.AddChild(animatedSprite);
