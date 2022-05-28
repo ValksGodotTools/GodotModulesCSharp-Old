@@ -39,7 +39,7 @@ namespace GodotModules
 
         public override void _Input(InputEvent @event)
         {
-            if (@event is InputEventMouseButton mouseButton && mouseButton.ButtonIndex == (int)ButtonList.Left&& mouseButton.Pressed) 
+            if (@event is InputEventMouseButton mouseButton && mouseButton.ButtonIndex == (int)ButtonList.Left && mouseButton.Pressed) 
             {
                 if (HoldingItem) 
                 {

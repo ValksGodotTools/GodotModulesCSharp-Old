@@ -19,12 +19,17 @@ margin_bottom = 50.0
 rect_min_size = Vector2( 50, 50 )
 custom_styles/panel = SubResource( 99 )
 script = ExtResource( 2 )
-NodePathItem = NodePath("Item")
-NodePathStackSize = NodePath("StackSize")
+NodePathItem = NodePath("Content/Item")
+NodePathStackSize = NodePath("Content/StackSize")
 
-[node name="Item" type="Control" parent="."]
+[node name="Content" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
 
-[node name="StackSize" type="Label" parent="."]
+[node name="Item" type="Control" parent="Content"]
+
+[node name="StackSize" type="Label" parent="Content"]
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -32,15 +37,5 @@ margin_top = -17.0
 custom_fonts/font = SubResource( 100 )
 align = 1
 valign = 1
-
-[node name="MarginContainer" type="MarginContainer" parent="."]
-anchor_top = 1.0
-anchor_bottom = 1.0
-margin_top = 533.0
-margin_right = 50.0
-margin_bottom = 550.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-custom_constants/margin_left = 3
 
 [connection signal="gui_input" from="." to="." method="_on_Item_gui_input"]
