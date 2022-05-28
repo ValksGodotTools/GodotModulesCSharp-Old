@@ -4,7 +4,7 @@ namespace GodotModules
     {
         [Export] protected readonly NodePath NodePathItem;
 
-        private Node _item;
+        private Node _itemParent;
 
         public Item ItemType { get; set; }
 
@@ -15,7 +15,7 @@ namespace GodotModules
 
         public override void _Ready()
         {
-            _item = GetNode<Node>(NodePathItem);
+            _itemParent = GetNode<Node>(NodePathItem);
         }
 
         public void Init(ControlInventory inventory)
@@ -57,7 +57,7 @@ namespace GodotModules
             sprite.Texture = Items.Sprites[name];
             sprite.Position += _invItemSize / 2;
             sprite.Scale = _itemSize / sprite.Texture.GetSize();
-            _item.AddChild(sprite);
+            _itemParent.AddChild(sprite);
         }
 
         private void SetAnimatedSprite(string name)
@@ -69,12 +69,12 @@ namespace GodotModules
             sprite.Playing = true;
             sprite.Position += _invItemSize / 2;
             sprite.Scale = _itemSize / sprite.Frames.GetFrame("default", 0).GetSize();
-            _item.AddChild(sprite);
+            _itemParent.AddChild(sprite);
         }
 
         private void ClearItem()
         {
-            foreach (Node child in _item.GetChildren())
+            foreach (Node child in _itemParent.GetChildren())
                 child.QueueFree();
         }
     }
