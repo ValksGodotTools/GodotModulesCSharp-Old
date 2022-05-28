@@ -23,7 +23,7 @@ namespace GodotModules
             ClearItem();
 
             var sprite = new Sprite();
-            sprite.Texture = Textures.MiniGodotChan;
+            sprite.Texture = Items.Sprites["MiniGodotChan"];
             sprite.Position += _invItemSize / 2;
             sprite.Scale = _itemSize / sprite.Texture.GetSize();
             _item.AddChild(sprite);
@@ -34,7 +34,7 @@ namespace GodotModules
             ClearItem();
 
             var sprite = new AnimatedSprite();
-            sprite.Frames = Textures.Coin;
+            sprite.Frames = Items.AnimatedSprites["Coin"];
             sprite.Playing = true;
             sprite.Position += _invItemSize / 2;
             sprite.Scale = _itemSize / sprite.Frames.GetFrame("default", 0).GetSize();

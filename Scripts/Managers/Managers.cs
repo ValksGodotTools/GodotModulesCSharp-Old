@@ -62,6 +62,8 @@ namespace GodotModules
 			Logger.ErrorNotifierManager = ManagerErrorNotifier;
 			ModLoader.Init();
 
+			Items.Init();
+
 			UpdateParticleSystem();
 
 			ManagerMusic.LoadTrack("Menu", "Audio/Music/Unsolicited trailer music loop edit.wav");

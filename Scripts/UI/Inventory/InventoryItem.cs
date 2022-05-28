@@ -10,7 +10,11 @@ namespace GodotModules
             _controlInventoryItem.Init(controlInventory);
             controlInventory.GridContainer.AddChild(_controlInventoryItem);
             _controlInventoryItem.SetSprite();
-            _controlInventoryItem.SetAnimatedSprite();
+        }
+
+        public void SetItem()
+        {
+
         }
     }
 }
