@@ -9,6 +9,7 @@ namespace GodotModules
             _controlInventoryItem = Prefabs.InventoryItem.Instance<ControlInventoryItem>();
             _controlInventoryItem.Init(controlInventory);
             controlInventory.GridContainer.AddChild(_controlInventoryItem);
+            _controlInventoryItem.SetSprite();
         }
     }
 }

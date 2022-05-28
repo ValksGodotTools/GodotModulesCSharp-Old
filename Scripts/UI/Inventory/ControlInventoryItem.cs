@@ -10,31 +10,31 @@ namespace GodotModules
 
         private ControlInventory _inventory;
 
+        private Vector2 _invItemSize = new Vector2(50, 50);
+        private Vector2 _itemSize = new Vector2(20, 20);
+
         public override void _Ready()
         {
             _item = GetNode<Node>(NodePathItem);
+        }
 
-            var invItemSize = new Vector2(50, 50);
-            var itemSize = new Vector2(20, 20);
+        public void SetSprite()
+        {
+            var sprite = new Sprite();
+            sprite.Texture = Textures.MiniGodotChan;
+            sprite.Position += _invItemSize / 2;
+            sprite.Scale = _itemSize / sprite.Texture.GetSize();
+            _item.AddChild(sprite);
+        }
 
-            if (ItemType == Item.MiniGodotChan)
-            {
-                var sprite = new Sprite();
-                sprite.Texture = Textures.MiniGodotChan;
-                sprite.Position += invItemSize / 2;
-                sprite.Scale = itemSize / sprite.Texture.GetSize();
-                _item.AddChild(sprite);
-            }
-
-            if (ItemType == Item.Coin)
-            {
-                var sprite = new AnimatedSprite();
-                sprite.Frames = Textures.Coin;
-                sprite.Playing = true;
-                sprite.Position += invItemSize / 2;
-                sprite.Scale = itemSize / sprite.Frames.GetFrame("default", 0).GetSize();
-                _item.AddChild(sprite);
-            }
+        public void SetAnimatedSprite()
+        {
+            var sprite = new AnimatedSprite();
+            sprite.Frames = Textures.Coin;
+            sprite.Playing = true;
+            sprite.Position += _invItemSize / 2;
+            sprite.Scale = _itemSize / sprite.Frames.GetFrame("default", 0).GetSize();
+            _item.AddChild(sprite);
         }
 
         public void Init(ControlInventory inventory)
@@ -44,9 +44,9 @@ namespace GodotModules
 
         private void _on_Item_gui_input(InputEvent @event)
         {
-            if (@event is InputEventMouseButton mouseButton) 
+            if (@event is InputEventMouseButton mouseButton)
             {
-                if (mouseButton.ButtonIndex == (int)ButtonList.Left && mouseButton.Pressed) 
+                if (mouseButton.ButtonIndex == (int)ButtonList.Left && mouseButton.Pressed)
                 {
                     if (_inventory.HoldingItem)
                         return;
