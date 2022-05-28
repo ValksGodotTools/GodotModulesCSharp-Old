@@ -23,7 +23,7 @@ NodePathItem = NodePath("Item")
 
 [node name="Item" type="Control" parent="."]
 
-[node name="Label" type="Label" parent="."]
+[node name="Count" type="Label" parent="."]
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
