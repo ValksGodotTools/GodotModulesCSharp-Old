@@ -20,6 +20,8 @@ namespace GodotModules
 
         public void SetSprite()
         {
+            ClearItem();
+
             var sprite = new Sprite();
             sprite.Texture = Textures.MiniGodotChan;
             sprite.Position += _invItemSize / 2;
@@ -29,12 +31,20 @@ namespace GodotModules
 
         public void SetAnimatedSprite()
         {
+            ClearItem();
+
             var sprite = new AnimatedSprite();
             sprite.Frames = Textures.Coin;
             sprite.Playing = true;
             sprite.Position += _invItemSize / 2;
             sprite.Scale = _itemSize / sprite.Frames.GetFrame("default", 0).GetSize();
             _item.AddChild(sprite);
+        }
+
+        private void ClearItem()
+        {
+            foreach (Node child in _item.GetChildren())
+                child.QueueFree();
         }
 
         public void Init(ControlInventory inventory)
