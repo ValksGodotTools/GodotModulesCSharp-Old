@@ -5,9 +5,8 @@ namespace GodotModules
         [Export] protected readonly NodePath NodePathGridContainer;
         [Export] protected readonly NodePath NodePathGroupCursor;
 
-        private GridContainer _gridContainer;
-
-        public Dictionary<int, Dictionary<int, ControlInventoryItem>> Items = new Dictionary<int, Dictionary<int, ControlInventoryItem>>();
+        public GridContainer GridContainer;
+        public Dictionary<int, Dictionary<int, InventoryItem>> Items = new Dictionary<int, Dictionary<int, InventoryItem>>();
         public bool HoldingItem;
 
         private Node _groupCursor;
@@ -22,27 +21,19 @@ namespace GodotModules
             var rows = 6;
             RectSize = new Vector2(invItemSize * columns, invItemSize * rows);
 
-            _gridContainer = GetNode<GridContainer>(NodePathGridContainer);
-            _gridContainer.Columns = columns;
+            GridContainer = GetNode<GridContainer>(NodePathGridContainer);
+            GridContainer.Columns = columns;
 
             for (int c = 0; c < columns; c++)
             {
-                Items[c] = new Dictionary<int, ControlInventoryItem>();
+                Items[c] = new Dictionary<int, InventoryItem>();
 
                 for (int r = 0; r < rows; r++)
                 {
-                    var item = Prefabs.InventoryItem.Instance<ControlInventoryItem>();
-                    item.Init(this);
-                    /*if (GD.Randf() < 0.5f)
-                        item.ItemType = Item.MiniGodotChan;
-                    else
-                        item.ItemType = Item.Coin;*/
-                    _gridContainer.AddChild(item);
+                    var item = new InventoryItem(this);
                     Items[c][r] = item;
                 }
             }
-
-            Items[0][0].ItemType = Item.Coin;
         }
 
         public override void _Input(InputEvent @event)
