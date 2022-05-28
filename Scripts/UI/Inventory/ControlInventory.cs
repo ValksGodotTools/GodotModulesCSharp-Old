@@ -1,6 +1,6 @@
 namespace GodotModules
 {
-    public class Inventory : Control
+    public class ControlInventory : Control
     {
         [Export] protected readonly NodePath NodePathGridContainer;
         [Export] protected readonly NodePath NodePathGroupCursor;

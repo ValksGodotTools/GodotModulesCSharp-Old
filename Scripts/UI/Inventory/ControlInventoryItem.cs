@@ -8,7 +8,7 @@ namespace GodotModules
 
         public Item ItemType { get; set; }
 
-        private Inventory _inventory;
+        private ControlInventory _inventory;
 
         public override void _Ready()
         {
@@ -37,7 +37,7 @@ namespace GodotModules
             }
         }
 
-        public void Init(Inventory inventory)
+        public void Init(ControlInventory inventory)
         {
             _inventory = inventory;
         }
