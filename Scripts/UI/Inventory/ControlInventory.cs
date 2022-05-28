@@ -8,12 +8,11 @@ namespace GodotModules
         public GridContainer GridContainer;
         public Dictionary<int, Dictionary<int, InventoryItem>> Items = new Dictionary<int, Dictionary<int, InventoryItem>>();
         public bool HoldingItem;
-
-        private Node _groupCursor;
+        public Node CursorParent;
 
         public override void _Ready()
         {
-            _groupCursor = GetNode<Node>(NodePathGroupCursor);
+            CursorParent = GetNode<Node>(NodePathGroupCursor);
 
             // Inventory size
             var invItemSize = 52;
@@ -44,16 +43,10 @@ namespace GodotModules
             {
                 if (HoldingItem) 
                 {
-                    HoldingItem = false;
-                    _groupCursor.GetChild(0).QueueFree();
+                    //HoldingItem = false;
+                    //CursorParent.GetChild(0).QueueFree();
                 }
             }
-        }
-
-        public void HoldItem(Node2D item)
-        {
-            HoldingItem = true;
-            _groupCursor.AddChild(item);
         }
     }
 }

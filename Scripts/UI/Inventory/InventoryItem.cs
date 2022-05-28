@@ -6,13 +6,15 @@ namespace GodotModules
         public int StackSize { get; set; }
         public InventoryItemType Type { get; set; }
 
+        private ControlInventory _controlInventory;
         private ControlInventoryItem _controlInventoryItem;
 
         public InventoryItem(ControlInventory controlInventory)
         {
+            _controlInventory = controlInventory;
             _controlInventoryItem = Prefabs.InventoryItem.Instance<ControlInventoryItem>();
             _controlInventoryItem.Init(controlInventory);
-            controlInventory.GridContainer.AddChild(_controlInventoryItem);
+            _controlInventory.GridContainer.AddChild(_controlInventoryItem);
         }
 
         public void SetItem(string name, int stackSize = 1) 

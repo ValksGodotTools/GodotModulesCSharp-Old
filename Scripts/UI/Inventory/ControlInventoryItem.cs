@@ -49,23 +49,29 @@ namespace GodotModules
                     if (_inventory.HoldingItem)
                         return;
 
+                    // Pick up item (put item on mouse cursor position)
                     ClearItem();
 
-                    if (_item.Type == InventoryItemType.Static) 
-                    {
-                        var sprite = InitSprite(_item.Name);
-                        var controlInventoryItemCursor = Prefabs.InventoryItemCursor.Instance<ControlInventoryItemCursor>();
-                        sprite.AddChild(controlInventoryItemCursor);
-                        _inventory.HoldItem(sprite);
-                    }
-                    else if (_item.Type == InventoryItemType.Animated)
-                    {
-                        var animatedSprite = InitAnimatedSprite(_item.Name);
-                        var controlInventoryItemCursor = Prefabs.InventoryItemCursor.Instance<ControlInventoryItemCursor>();
-                        animatedSprite.AddChild(controlInventoryItemCursor);
-                        _inventory.HoldItem(animatedSprite);
-                    }
+                    Pickup();
                 }
+            }
+        }
+
+        private void Pickup()
+        {
+            if (_item.Type == InventoryItemType.Static)
+            {
+                var sprite = InitSprite(_item.Name);
+                var controlInventoryItemCursor = Prefabs.InventoryItemCursor.Instance<ControlInventoryItemCursor>();
+                sprite.AddChild(controlInventoryItemCursor);
+                _inventory.CursorParent.AddChild(sprite);
+            }
+            else if (_item.Type == InventoryItemType.Animated)
+            {
+                var animatedSprite = InitAnimatedSprite(_item.Name);
+                var controlInventoryItemCursor = Prefabs.InventoryItemCursor.Instance<ControlInventoryItemCursor>();
+                animatedSprite.AddChild(controlInventoryItemCursor);
+                _inventory.CursorParent.AddChild(animatedSprite);
             }
         }
 
