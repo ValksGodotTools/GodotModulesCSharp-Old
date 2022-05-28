@@ -34,6 +34,8 @@ namespace GodotModules
                     Items[c][r] = item;
                 }
             }
+
+            Items[0][0].SetItem("MiniGodotChan");
         }
 
         public override void _Input(InputEvent @event)

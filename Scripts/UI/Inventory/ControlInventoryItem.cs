@@ -18,38 +18,19 @@ namespace GodotModules
             _item = GetNode<Node>(NodePathItem);
         }
 
-        public void SetSprite()
-        {
-            ClearItem();
-
-            var sprite = new Sprite();
-            sprite.Texture = Items.Sprites["MiniGodotChan"];
-            sprite.Position += _invItemSize / 2;
-            sprite.Scale = _itemSize / sprite.Texture.GetSize();
-            _item.AddChild(sprite);
-        }
-
-        public void SetAnimatedSprite()
-        {
-            ClearItem();
-
-            var sprite = new AnimatedSprite();
-            sprite.Frames = Items.AnimatedSprites["Coin"];
-            sprite.Playing = true;
-            sprite.Position += _invItemSize / 2;
-            sprite.Scale = _itemSize / sprite.Frames.GetFrame("default", 0).GetSize();
-            _item.AddChild(sprite);
-        }
-
-        private void ClearItem()
-        {
-            foreach (Node child in _item.GetChildren())
-                child.QueueFree();
-        }
-
         public void Init(ControlInventory inventory)
         {
             _inventory = inventory;
+        }
+
+        public void SetItem(string name)
+        {
+            if (Items.Sprites.ContainsKey(name))
+                SetSprite(name);
+            else if (Items.AnimatedSprites.ContainsKey(name))
+                SetAnimatedSprite(name);
+            else
+                throw new InvalidOperationException($"The item '{name}' does not exist as a sprite or animated sprite");
         }
 
         private void _on_Item_gui_input(InputEvent @event)
@@ -66,6 +47,35 @@ namespace GodotModules
                     //_inventory.HoldItem(item);
                 }
             }
+        }
+
+        private void SetSprite(string name)
+        {
+            ClearItem();
+
+            var sprite = new Sprite();
+            sprite.Texture = Items.Sprites[name];
+            sprite.Position += _invItemSize / 2;
+            sprite.Scale = _itemSize / sprite.Texture.GetSize();
+            _item.AddChild(sprite);
+        }
+
+        private void SetAnimatedSprite(string name)
+        {
+            ClearItem();
+
+            var sprite = new AnimatedSprite();
+            sprite.Frames = Items.AnimatedSprites[name];
+            sprite.Playing = true;
+            sprite.Position += _invItemSize / 2;
+            sprite.Scale = _itemSize / sprite.Frames.GetFrame("default", 0).GetSize();
+            _item.AddChild(sprite);
+        }
+
+        private void ClearItem()
+        {
+            foreach (Node child in _item.GetChildren())
+                child.QueueFree();
         }
     }
 }
