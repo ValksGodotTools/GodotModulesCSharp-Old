@@ -19,6 +19,7 @@ margin_bottom = 50.0
 rect_min_size = Vector2( 50, 50 )
 custom_styles/panel = SubResource( 99 )
 script = ExtResource( 2 )
+NodePathContent = NodePath("Content")
 NodePathItem = NodePath("Content/Item")
 NodePathStackSize = NodePath("Content/StackSize")
 

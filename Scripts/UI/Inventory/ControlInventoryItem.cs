@@ -2,9 +2,11 @@ namespace GodotModules
 {
     public class ControlInventoryItem : Control
     {
+        [Export] protected readonly NodePath NodePathContent;
         [Export] protected readonly NodePath NodePathItem;
         [Export] protected readonly NodePath NodePathStackSize;
 
+        private Control _content;
         private Node _itemParent;
         private Label _stackSize;
 
@@ -16,6 +18,7 @@ namespace GodotModules
 
         public override void _Ready()
         {
+            _content = GetNode<Control>(NodePathContent);
             _itemParent = GetNode<Node>(NodePathItem);
             _stackSize = GetNode<Label>(NodePathStackSize);
         }
@@ -50,8 +53,6 @@ namespace GodotModules
                         return;
 
                     // Pick up item (put item on mouse cursor position)
-                    ClearItem();
-
                     Pickup();
                 }
             }
@@ -59,6 +60,8 @@ namespace GodotModules
 
         private void Pickup()
         {
+            _content.Visible = false;
+
             if (_item.Type == InventoryItemType.Static)
             {
                 var sprite = InitSprite(_item.Name);
