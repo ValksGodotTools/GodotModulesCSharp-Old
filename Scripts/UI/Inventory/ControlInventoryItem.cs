@@ -56,8 +56,7 @@ namespace GodotModules
                     {
                         if (!_inventory.HoldingItem.Equals(_item)) // position is not the same, lets move the currently held item to this slot
                         {
-                            //_inventory.HoldingItem.RemoveItem();
-                            //_inventory.HoldingItem = null;
+                            _inventory.HoldingItem.RemoveItem();
 
                             SetItem(_inventory.HoldingItem);
                         }
