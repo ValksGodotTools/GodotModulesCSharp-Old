@@ -52,13 +52,19 @@ namespace GodotModules
             {
                 if (mouseButton.ButtonIndex == (int)ButtonList.Left && mouseButton.Pressed)
                 {
-                    if (_inventory.HoldingItem != null) 
+                    Logger.LogDebug($"{_item?.Name} {_item?.X} {_item?.Y}");
+
+                    if (_inventory.IsHoldingItem) 
                     {
                         if (!_inventory.HoldingItem.Equals(_item)) // position is not the same, lets move the currently held item to this slot
                         {
                             _inventory.HoldingItem.RemoveItem();
 
                             SetItem(_inventory.HoldingItem);
+
+                            ClearCursorItem();
+
+                            _inventory.IsHoldingItem = false;
                         }
                     }
                         
@@ -72,6 +78,7 @@ namespace GodotModules
         private void Pickup()
         {
             _content.Visible = false;
+            _inventory.IsHoldingItem = true;
             _inventory.HoldingItem = _item;
 
             if (_item.Type == InventoryItemType.Static)
@@ -88,6 +95,12 @@ namespace GodotModules
                 animatedSprite.AddChild(controlInventoryItemCursor);
                 _inventory.CursorParent.AddChild(animatedSprite);
             }
+        }
+
+        private void ClearCursorItem()
+        {
+            foreach (Node child in _inventory.CursorParent.GetChildren())
+                child.QueueFree();
         }
 
         private void SetSprite(string name)
@@ -129,6 +142,8 @@ namespace GodotModules
         {
             foreach (Node child in _itemParent.GetChildren())
                 child.QueueFree();
+
+            _stackSize.Text = "";
         }
     }
 }

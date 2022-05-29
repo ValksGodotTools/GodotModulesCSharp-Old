@@ -8,6 +8,7 @@ namespace GodotModules
         public GridContainer GridContainer;
         public Dictionary<int, Dictionary<int, InventoryItem>> Items = new Dictionary<int, Dictionary<int, InventoryItem>>();
         public InventoryItem HoldingItem;
+        public bool IsHoldingItem;
         public Node CursorParent;
 
         public override void _Ready()
