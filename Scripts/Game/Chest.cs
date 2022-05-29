@@ -29,7 +29,8 @@ namespace GodotModules
             for (int i = 0; i < 10; i++)
             {
                 var coin = Prefabs.Coin.Instance<Coin>();
-                coin.GlobalPosition = GlobalPosition + new Vector2(0, 50) + (Utils.RandomDir() * 25) * GD.Randf();
+                var pos = GlobalPosition + new Vector2(0, 50) + (Utils.RandomDir() * 25) * GD.Randf();
+                coin.JumpOutOfChest(GlobalPosition, pos);
                 _game.CoinList.AddChild(coin);
             }
         }
