@@ -471,6 +471,7 @@ theme = ExtResource( 1 )
 value = 39.0
 
 [node name="Inventory" type="PanelContainer" parent="CanvasLayer"]
+visible = false
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
