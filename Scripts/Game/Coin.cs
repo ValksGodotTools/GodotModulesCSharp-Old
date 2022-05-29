@@ -22,7 +22,7 @@ namespace GodotModules
             if (!_movingToPlayer)
                 return;
 
-            Position = Position.Lerp(_player.Position, 0.1f);
+            Position = Position.Lerp(_player.Position, 0.05f);
 
             if (Position.DistanceTo(_player.Position) < 20) 
             {

@@ -6,10 +6,13 @@ namespace GodotModules
         [Export] protected readonly NodePath NodePathPositionEnemySpawn;
         [Export] protected readonly NodePath NodePathNavigation2D;
         [Export] protected readonly NodePath NodePathCoinList;
+        [Export] protected readonly NodePath NodePathChestList;
 
         public Navigation2D Navigation2D { get; set; }
         public Position2D PositionPlayerSpawn { get; set; }
         public Position2D PositionEnemySpawn { get; set; }
+        public Node CoinList { get; set; }
+        public Node ChestList { get; set; }
 
         public List<OtherPlayer> Players { get; set; }
         public Player Player { get; set; }
@@ -25,6 +28,11 @@ namespace GodotModules
             Navigation2D = GetNode<Navigation2D>(NodePathNavigation2D);
             PositionPlayerSpawn = GetNode<Position2D>(NodePathPositionPlayerSpawn);
             PositionEnemySpawn = GetNode<Position2D>(NodePathPositionEnemySpawn);
+            CoinList = GetNode<Node>(NodePathCoinList);
+            ChestList = GetNode<Node>(NodePathChestList);
+
+            foreach (Chest chest in ChestList.GetChildren())
+                chest.PreInit(this);
 
             Enemies = new List<Enemy>();
             Players = new List<OtherPlayer>();

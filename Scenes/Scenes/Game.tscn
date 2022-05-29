@@ -390,7 +390,8 @@ script = ExtResource( 3 )
 NodePathPositionPlayerSpawn = NodePath("Player Spawn")
 NodePathPositionEnemySpawn = NodePath("Enemy Spawn")
 NodePathNavigation2D = NodePath("Navigation2D")
-NodePathCoinList = NodePath("Props")
+NodePathCoinList = NodePath("Props/Coins")
+NodePathChestList = NodePath("Props/Chests")
 
 [node name="Lights" type="Node" parent="."]
 
@@ -404,28 +405,32 @@ __meta__ = {
 
 [node name="Props" type="Node" parent="."]
 
-[node name="Coin" parent="Props" instance=ExtResource( 7 )]
+[node name="Coins" type="Node" parent="Props"]
+
+[node name="Coin" parent="Props/Coins" instance=ExtResource( 7 )]
 position = Vector2( 512, 895 )
 
-[node name="Coin2" parent="Props" instance=ExtResource( 7 )]
+[node name="Coin2" parent="Props/Coins" instance=ExtResource( 7 )]
 position = Vector2( 489, 845 )
 
-[node name="Coin3" parent="Props" instance=ExtResource( 7 )]
+[node name="Coin3" parent="Props/Coins" instance=ExtResource( 7 )]
 position = Vector2( 476, 879 )
 
-[node name="Chest" parent="Props" instance=ExtResource( 6 )]
+[node name="Chests" type="Node" parent="Props"]
+
+[node name="Chest" parent="Props/Chests" instance=ExtResource( 6 )]
 position = Vector2( 610, 874 )
 
-[node name="Chest2" parent="Props" instance=ExtResource( 6 )]
+[node name="Chest2" parent="Props/Chests" instance=ExtResource( 6 )]
 position = Vector2( 570, 874 )
 
-[node name="Chest3" parent="Props" instance=ExtResource( 6 )]
+[node name="Chest3" parent="Props/Chests" instance=ExtResource( 6 )]
 position = Vector2( 650, 875 )
 
-[node name="Chest4" parent="Props" instance=ExtResource( 6 )]
+[node name="Chest4" parent="Props/Chests" instance=ExtResource( 6 )]
 position = Vector2( 530, 808 )
 
-[node name="Chest5" parent="Props" instance=ExtResource( 6 )]
+[node name="Chest5" parent="Props/Chests" instance=ExtResource( 6 )]
 position = Vector2( 688, 810 )
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]

@@ -23,6 +23,7 @@ namespace GodotModules
         public readonly static PackedScene OtherPlayer = Load2D("OtherPlayer");
         public readonly static PackedScene Enemy = Load2D("Enemy");
         public readonly static PackedScene Orb = Load2D("Orb");
+        public readonly static PackedScene Coin = Load2D("Coin");
 
         // 3D
         public readonly static PackedScene Player3D = Load3D("Player");
