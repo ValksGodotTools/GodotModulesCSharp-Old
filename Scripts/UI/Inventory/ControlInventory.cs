@@ -32,10 +32,11 @@ namespace GodotModules
                 {
                     var item = new InventoryItem(this, c, r);
                     Items[c][r] = item;
+                    Items[c][r].InitItem("Air", 0);
                 }
             }
 
-            Items[0][0].SetItem("MiniGodotChan", 10);
+            Items[0][0].InitItem("MiniGodotChan", 10);
         }
 
         public override void _Input(InputEvent @event)

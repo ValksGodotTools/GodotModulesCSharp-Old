@@ -20,7 +20,7 @@ namespace GodotModules
             _controlInventory.GridContainer.AddChild(_controlInventoryItem);
         }
 
-        public void SetItem(string name, int stackSize = 1) 
+        public void InitItem(string name, int stackSize = 1) 
         {
             Name = name;
             StackSize = stackSize;
@@ -30,10 +30,12 @@ namespace GodotModules
             else if (Items.AnimatedSprites.ContainsKey(name))
                 Type = InventoryItemType.Animated;
             else
-                throw new InvalidOperationException($"The item '{name}' does not exist as a sprite or animated sprite");
+                Type = InventoryItemType.None;
             
-            _controlInventoryItem.SetItem(this);
+            _controlInventoryItem.InitItem(this);
         }
+
+        public void SetItem(InventoryItem otherItem) => _controlInventoryItem.SetItem(otherItem);
 
         public void RemoveItem() => _controlInventoryItem.RemoveItem();
 
@@ -52,6 +54,7 @@ namespace GodotModules
 
     public enum InventoryItemType 
     {
+        None,
         Static,
         Animated
     }

@@ -28,16 +28,33 @@ namespace GodotModules
             _inventory = inventory;
         }
 
-        public void SetItem(InventoryItem item)
+        public void InitItem(InventoryItem item)
         {
             _item = item;
+            SetStackSize(item);
+            SetImage();
+        }
 
+        private void SetStackSize(InventoryItem item)
+        {
+            _item.StackSize = item.StackSize;
+            _stackSize.Text = $"{_item.StackSize}";
+        }
+
+        private void SetImage()
+        {
             if (_item.Type == InventoryItemType.Static)
                 SetSprite(_item.Name);
             else if (_item.Type == InventoryItemType.Animated)
                 SetAnimatedSprite(_item.Name);
+        }
 
-            _stackSize.Text = $"{_item.StackSize}";
+        public void SetItem(InventoryItem otherItem)
+        {
+            _item.Name = otherItem.Name;
+            _item.Type = otherItem.Type;
+            SetStackSize(otherItem);
+            SetImage();
         }
 
         public void RemoveItem()
@@ -48,31 +65,28 @@ namespace GodotModules
 
         private void _on_Item_gui_input(InputEvent @event)
         {
-            if (@event is InputEventMouseButton mouseButton)
+            if (@event is not InputEventMouseButton mouseButton || mouseButton.ButtonIndex != (int)ButtonList.Left || !mouseButton.Pressed)
+                return;
+
+            Logger.LogDebug($"{_item?.Name} {_item?.X} {_item?.Y}");
+
+            if (_inventory.IsHoldingItem)
             {
-                if (mouseButton.ButtonIndex == (int)ButtonList.Left && mouseButton.Pressed)
+                if (!_inventory.HoldingItem.Equals(_item)) // position is not the same, lets move the currently held item to this slot
                 {
-                    Logger.LogDebug($"{_item?.Name} {_item?.X} {_item?.Y}");
+                    _inventory.HoldingItem.SetItem(_item);
 
-                    if (_inventory.IsHoldingItem) 
-                    {
-                        if (!_inventory.HoldingItem.Equals(_item)) // position is not the same, lets move the currently held item to this slot
-                        {
-                            _inventory.HoldingItem.RemoveItem();
+                    SetItem(_inventory.HoldingItem);
 
-                            SetItem(_inventory.HoldingItem);
+                    ClearCursorItem();
 
-                            ClearCursorItem();
-
-                            _inventory.IsHoldingItem = false;
-                        }
-                    }
-                        
-                    // Pick up item (put item on mouse cursor position)
-                    if (_inventory.HoldingItem == null)
-                        Pickup();
+                    _inventory.IsHoldingItem = false;
                 }
             }
+
+            // Pick up item (put item on mouse cursor position)
+            if (_inventory.HoldingItem == null)
+                Pickup();
         }
 
         private void Pickup()
