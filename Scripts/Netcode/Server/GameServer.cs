@@ -7,7 +7,7 @@ namespace GodotModules.Netcode.Server
         public Dictionary<byte, DataPlayer> Players = new();
         public DataLobby Lobby { get; set; }
 
-        public GameServer(NetworkManager networkManager) : base(networkManager) {}
+        public GameServer(Net networkManager) : base(networkManager) {}
 
         public Dictionary<byte, DataPlayer> GetOtherPlayers(byte id)
         {

@@ -19,9 +19,9 @@ namespace GodotModules.Netcode.Server
 
         private long _someoneConnected = 0;
         private long _running = 0;
-        private readonly NetworkManager _networkManager;
+        private readonly Net _networkManager;
 
-        public ENetServer(NetworkManager networkManager) 
+        public ENetServer(Net networkManager) 
         {
             _networkManager = networkManager;
         }

@@ -4,7 +4,7 @@ namespace GodotModules.Netcode.Client
 {
     public class GameClient : ENetClient
     {
-        public GameClient(NetworkManager networkManager, GodotCommands godotCmds) : base(networkManager)
+        public GameClient(Net networkManager, GodotCommands godotCmds) : base(networkManager)
         {
             _godotCmds = godotCmds;
         }

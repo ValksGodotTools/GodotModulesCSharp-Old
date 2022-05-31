@@ -3,7 +3,7 @@ using GodotModules.Netcode.Server;
 
 namespace GodotModules.Netcode 
 {
-    public class NetworkManager 
+    public class Net 
     {
         public DateTime PingSent { get; set; }
         public DisconnectOpcode DisconnectOpcode { get; set; }
@@ -13,7 +13,7 @@ namespace GodotModules.Netcode
 
         private readonly GodotCommands _godotCmds;
         
-        public NetworkManager(Managers managers)
+        public Net(Managers managers)
         {
             _godotCmds = new GodotCommands(this, managers);
 

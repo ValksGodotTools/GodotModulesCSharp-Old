@@ -13,14 +13,14 @@ namespace GodotModules.Netcode.Client
         private readonly ConcurrentDictionary<int, ClientPacket> _outgoing = new();
 
         protected GodotCommands _godotCmds;
-        protected readonly NetworkManager _networkManager;
+        protected readonly Net _networkManager;
 
         private long _connected;
         private long _running;
         private int _outgoingId;
         private CancellationTokenSource _cancellationTokenSource = new();
         
-        public ENetClient(NetworkManager networkManager)
+        public ENetClient(Net networkManager)
         {
             _networkManager = networkManager;
         }

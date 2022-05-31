@@ -5,10 +5,10 @@ namespace GodotModules
     public class GodotCommands
     {
         private readonly ConcurrentQueue<GodotCmd> _godotCmdQueue = new();
-        private readonly NetworkManager _networkManager;
+        private readonly Net _networkManager;
         private readonly Managers _managers;
 
-        public GodotCommands(NetworkManager networkManager, Managers managers) 
+        public GodotCommands(Net networkManager, Managers managers) 
         {
             _networkManager = networkManager;
             _managers = managers;
