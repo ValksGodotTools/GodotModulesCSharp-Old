@@ -6,9 +6,9 @@ namespace GodotModules
 
         private string _message;
         private string _title;
-        private PopupManager _popupManager;
+        private Popups _popupManager;
 
-        public void PreInit(PopupManager popupManager, string message, string title = "")
+        public void PreInit(Popups popupManager, string message, string title = "")
         {
             _popupManager = popupManager;
             _message = message;

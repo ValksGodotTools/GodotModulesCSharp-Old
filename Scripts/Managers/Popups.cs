@@ -1,12 +1,12 @@
 namespace GodotModules
 {
-    public class PopupManager
+    public class Popups
     {
         private Queue<WindowDialog> _queue = new();
         private Node _popups;
         private Managers _managers;
 
-        public PopupManager(Node popups, Managers managers)
+        public Popups(Node popups, Managers managers)
         {
             _popups = popups;
             _managers = managers;

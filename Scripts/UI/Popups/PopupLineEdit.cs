@@ -6,13 +6,13 @@ namespace GodotModules
         private LineEdit _lineEdit;
 
         private string _title;
-        private PopupManager _popupManager;
+        private Popups _popupManager;
         private Action<LineEdit> _onTextChanged;
         private Action<string> _onHide;
         private int _maxLength;
         private string _text;
 
-        public void PreInit(PopupManager popupManager, Action<LineEdit> onTextChanged, Action<string> onHide, int maxLength = 50, string title = "", string text = "") 
+        public void PreInit(Popups popupManager, Action<LineEdit> onTextChanged, Action<string> onHide, int maxLength = 50, string title = "", string text = "") 
         {
             _popupManager = popupManager;
             _title = title;

@@ -31,7 +31,7 @@ namespace GodotModules
 		public WebManager ManagerWeb { get; private set; }
 		public MusicManager ManagerMusic { get; private set; }
 		public ErrorNotifierManager ManagerErrorNotifier { get; private set; }
-		public PopupManager ManagerPopup { get; private set; }
+		public Popups ManagerPopup { get; private set; }
 		public HotkeyManager ManagerHotkey { get; private set; }
 		public ConsoleManager ManagerConsole { get; private set; }
 

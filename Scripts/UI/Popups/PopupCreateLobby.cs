@@ -20,10 +20,10 @@ namespace GodotModules
         private byte _maxPlayers;
         private string _password;
         
-        private PopupManager _popupManager;
+        private Popups _popupManager;
         private Managers _managers;
 
-        public void PreInit(PopupManager popupManager, Managers managers)
+        public void PreInit(Popups popupManager, Managers managers)
         {
             _popupManager = popupManager;
             _managers = managers;
