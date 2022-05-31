@@ -24,7 +24,7 @@ namespace GodotModules
 		[Export] protected readonly NodePath NodePathPopups;
 		[Export] protected readonly NodePath NodePathSceneManager;
 
-		public OptionsManager ManagerOptions { get; private set; }
+		public Options ManagerOptions { get; private set; }
 		public TokenManager ManagerToken { get; private set; }
 		public Net ManagerNetwork { get; private set; }
 		public SceneManager ManagerScene { get; private set; }
@@ -43,7 +43,7 @@ namespace GodotModules
 			ManagerHotkey = new();
 			ManagerOptions = new(ManagerHotkey);
 			ManagerToken = new();
-			ManagerWeb = new(new(GetNode<Node>(NodePathWebRequestList)), ManagerToken, ManagerOptions.Options.WebServerAddress);
+			ManagerWeb = new(new(GetNode<Node>(NodePathWebRequestList)), ManagerToken, ManagerOptions.Data.WebServerAddress);
 			ManagerMusic = new(GetNode<AudioStreamPlayer>(NodePathAudioStreamPlayer), ManagerOptions);
 			ManagerErrorNotifier = GetNode<ErrorNotifierManager>(NodePathErrorNotifierManager);
 			ManagerPopup = new(GetNode<Node>(NodePathPopups), this);

@@ -10,16 +10,16 @@ namespace GodotModules
         private LineEdit _windowSizeHeight;
         private Vector2 _windowSize;
 
-        private OptionsManager _optionsManager;
+        private Options _optionsManager;
 
-        public void PreInit(OptionsManager optionsManager)
+        public void PreInit(Options optionsManager)
         {
             _optionsManager = optionsManager;
         }
 
         public override void _Ready()
         {
-            var options = _optionsManager.Options;
+            var options = _optionsManager.Data;
 
             var fullscreen = GetNode<OptionButton>(NodePathFullscreen);
             fullscreen.AddItem("Windowed");
@@ -61,7 +61,7 @@ namespace GodotModules
 
         private void _on_Set_Window_Size_pressed()
         {
-            if (_optionsManager.Options.FullscreenMode != FullscreenMode.Windowed)
+            if (_optionsManager.Data.FullscreenMode != FullscreenMode.Windowed)
                 _optionsManager.SetFullscreenMode(FullscreenMode.Windowed);
             
             OS.WindowSize = _windowSize;

@@ -33,11 +33,11 @@ namespace GodotModules
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(_managers.ManagerOptions.Options.OnlineUsername))
+            if (string.IsNullOrWhiteSpace(_managers.ManagerOptions.Data.OnlineUsername))
             {
                 _managers.ManagerPopup.SpawnLineEdit(
                     lineEdit => lineEdit.Filter((text) => Regex.IsMatch(text, "^[a-z]+$")), 
-                    result => _managers.ManagerOptions.Options.OnlineUsername = result, 
+                    result => _managers.ManagerOptions.Data.OnlineUsername = result, 
                     "Set Online Username", 20);
                 return;
             }

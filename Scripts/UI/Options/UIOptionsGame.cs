@@ -6,13 +6,13 @@ namespace GodotModules
         [Export] protected readonly NodePath NodePathColorEnemy;
         [Export] protected readonly NodePath NodePathColorChatText;
 
-        private OptionsManager _optionsManager;
+        private Options _optionsManager;
         private OptionColors _optionColors;
 
-        public void PreInit(OptionsManager optionsManager)
+        public void PreInit(Options optionsManager)
         {
             _optionsManager = optionsManager;
-            _optionColors = _optionsManager.Options.Colors;
+            _optionColors = _optionsManager.Data.Colors;
         }
 
         public override void _Ready()
@@ -25,19 +25,19 @@ namespace GodotModules
         private void _on_Color_Player_color_changed(Color color) 
         {
             _optionColors.Player = color.ToHtml();
-            _optionsManager.Options.Colors = _optionColors;
+            _optionsManager.Data.Colors = _optionColors;
         }
 
         private void _on_Color_Enemy_color_changed(Color color)
         {
             _optionColors.Enemy = color.ToHtml();
-            _optionsManager.Options.Colors = _optionColors;
+            _optionsManager.Data.Colors = _optionColors;
         }
 
         private void _on_Color_Chat_Text_color_changed(Color color)
         {
             _optionColors.ChatText = color.ToHtml();
-            _optionsManager.Options.Colors = _optionColors;
+            _optionsManager.Data.Colors = _optionColors;
         }
     }
 }

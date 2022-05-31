@@ -9,9 +9,9 @@ namespace GodotModules
         private HSlider _sfx;
 
         private MusicManager _musicManager;
-        private OptionsManager _optionsManager;
+        private Options _optionsManager;
 
-        public void PreInit(MusicManager musicManager, OptionsManager optionsManager) 
+        public void PreInit(MusicManager musicManager, Options optionsManager) 
         {
             _musicManager = musicManager;
             _optionsManager = optionsManager;
@@ -21,8 +21,8 @@ namespace GodotModules
         {
             _music = GetNode<HSlider>(NodePathMusic);
             _sfx = GetNode<HSlider>(NodePathSFX);
-            _music.Value = _optionsManager.Options.MusicVolume;
-            _sfx.Value = _optionsManager.Options.SFXVolume;
+            _music.Value = _optionsManager.Data.MusicVolume;
+            _sfx.Value = _optionsManager.Data.SFXVolume;
         }
 
         private void _on_Music_value_changed(float v) => _musicManager.SetVolumeValue(v);

@@ -92,7 +92,7 @@ namespace GodotModules
             }
             
             _managers.ManagerNetwork.Client.Send(ClientPacketOpcode.Lobby, new CPacketLobby {
-                Username = _managers.ManagerOptions.Options.OnlineUsername,
+                Username = _managers.ManagerOptions.Data.OnlineUsername,
                 LobbyName = _name,
                 LobbyDescription = _description
             });

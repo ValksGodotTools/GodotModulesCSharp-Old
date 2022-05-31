@@ -11,11 +11,11 @@ namespace GodotModules
         private Button _btnCheckConnection;
         private Label _webServerStatus;
 
-        private OptionsManager _optionsManager;
+        private Options _optionsManager;
         private WebManager _webManager;
         private TokenManager _tokenManager;
 
-        public void PreInit(OptionsManager optionsManager, WebManager webManager, TokenManager tokenManager)
+        public void PreInit(Options optionsManager, WebManager webManager, TokenManager tokenManager)
         {
             _optionsManager = optionsManager;
             _webManager = webManager;
@@ -29,20 +29,20 @@ namespace GodotModules
             _btnCheckConnection = GetNode<Button>(NodePathBtnCheckConnection);
             _webServerStatus = GetNode<Label>(NodePathWebServerStatus);
 
-            _onlineUsername.Text = _optionsManager.Options.OnlineUsername;
-            _webServerAddress.Text = _optionsManager.Options.WebServerAddress;
+            _onlineUsername.Text = _optionsManager.Data.OnlineUsername;
+            _webServerAddress.Text = _optionsManager.Data.WebServerAddress;
             SetWebServerStatus(_webManager.ConnectionAlive);
         }
 
         private void _on_OnlineUsername_text_changed(string newText)
         {
-            _optionsManager.Options.OnlineUsername = _onlineUsername.Filter((text) => Regex.IsMatch(text, "^[a-z]+$"));
+            _optionsManager.Data.OnlineUsername = _onlineUsername.Filter((text) => Regex.IsMatch(text, "^[a-z]+$"));
         }
 
         private void _on_WebServerAddress_text_changed(string newText)
         {
             _webManager.Ip = newText;
-            _optionsManager.Options.WebServerAddress = newText;
+            _optionsManager.Data.WebServerAddress = newText;
         }
 
         private async void _on_Check_Connection_pressed()

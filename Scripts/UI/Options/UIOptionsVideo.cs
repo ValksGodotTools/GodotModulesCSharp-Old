@@ -2,9 +2,9 @@ namespace GodotModules
 {
     public class UIOptionsVideo : Control
     {
-        private OptionsManager _optionsManager;
+        private Options _optionsManager;
 
-        public void PreInit(OptionsManager optionsManager)
+        public void PreInit(Options optionsManager)
         {
             _optionsManager = optionsManager;
         }

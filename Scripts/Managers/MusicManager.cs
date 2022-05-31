@@ -4,13 +4,13 @@ namespace GodotModules
     {
         private Dictionary<string, AudioStream> _tracks = new();
         private AudioStreamPlayer _audioStreamPlayer;
-        private OptionsManager _optionsManager;
+        private Options _optionsManager;
 
-        public MusicManager(AudioStreamPlayer audioStreamPlayer, OptionsManager optionsManager)
+        public MusicManager(AudioStreamPlayer audioStreamPlayer, Options optionsManager)
         {
             _audioStreamPlayer = audioStreamPlayer;
             _optionsManager = optionsManager;
-            _audioStreamPlayer.VolumeDb = optionsManager.Options.MusicVolume;
+            _audioStreamPlayer.VolumeDb = optionsManager.Data.MusicVolume;
         }
 
         public void LoadTrack(string name, string path) =>
@@ -30,7 +30,7 @@ namespace GodotModules
                 volume = -80; // can't go lower than this (this essentially mutes the track)
 
             _audioStreamPlayer.VolumeDb = volume;
-            _optionsManager.Options.MusicVolume = volume;
+            _optionsManager.Data.MusicVolume = volume;
         }
 
         public void Pause() => _audioStreamPlayer.Playing = false;

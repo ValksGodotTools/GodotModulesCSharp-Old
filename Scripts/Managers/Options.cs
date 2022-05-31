@@ -1,12 +1,12 @@
 namespace GodotModules 
 {
-    public class OptionsManager 
+    public class Options 
     {
-        public OptionsData Options;
+        public OptionsData Data;
         private readonly SystemFileManager _systemFileManager;
         private readonly HotkeyManager _hotkeyManager;
 
-        public OptionsManager(HotkeyManager hotkeyManager)
+        public Options(HotkeyManager hotkeyManager)
         {
             _systemFileManager = new();
             _hotkeyManager = hotkeyManager;
@@ -16,7 +16,7 @@ namespace GodotModules
         public void SetVSync(bool v)
         {
             OS.VsyncEnabled = v;
-            Options.VSync = v;
+            Data.VSync = v;
         }
 
         public void ToggleFullscreen()
@@ -48,14 +48,14 @@ namespace GodotModules
                     break;
             }
 
-            Options.FullscreenMode = mode;
+            Data.FullscreenMode = mode;
         }
 
         private void SetWindowedMode()
         {
             OS.WindowFullscreen = false;
             OS.WindowBorderless = false;
-            OS.WindowSize = Options.WindowSize;
+            OS.WindowSize = Data.WindowSize;
             CenterWindow();
         }
 
@@ -72,7 +72,7 @@ namespace GodotModules
 
         private void LoadOptions()
         {
-            Options = _systemFileManager.ConfigExists("options")
+            Data = _systemFileManager.ConfigExists("options")
                 ? _systemFileManager.ReadConfig<OptionsData>("options")
                 : new OptionsData
                 {
@@ -89,15 +89,15 @@ namespace GodotModules
                     }
                 };
 
-            SetVSync(Options.VSync);
-            SetFullscreenMode(Options.FullscreenMode);
+            SetVSync(Data.VSync);
+            SetFullscreenMode(Data.FullscreenMode);
         }
 
         public void SaveOptions() 
         {
             _hotkeyManager.SaveHotkeys();
-            Options.WindowSize = OS.WindowSize;
-            _systemFileManager.WriteConfig("options", Options);
+            Data.WindowSize = OS.WindowSize;
+            _systemFileManager.WriteConfig("options", Data);
         }
     }
 
