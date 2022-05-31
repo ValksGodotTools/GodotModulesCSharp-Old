@@ -30,7 +30,15 @@ namespace GodotModules
                 {
                     RotateY((-motion.Relative.x * _mouseSensitivity).ToRadians());
                     _head.RotateX((motion.Relative.y * _mouseSensitivity).ToRadians());
+
+                    var newPose = _skeleton.GetBonePose(7).Rotated(Vector3.Forward, 0.1f);
+                    _skeleton.SetBonePose(7, newPose);
                 }
+
+            if (Input.IsActionJustPressed("player_jump"))
+            {
+                
+            }
 
             if (@event is InputEventMouseButton button)
                 if (button.ButtonIndex == (int)ButtonList.Left && Input.GetMouseMode() == MouseMode.Visible)

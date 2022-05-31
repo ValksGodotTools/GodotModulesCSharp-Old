@@ -1,7 +1,8 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://Scenes/Prefabs/3D/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Models/Player Test/SpacePirate_M.material" type="Material" id=2]
+[ext_resource path="res://Models/Game Rig/player.gltf" type="PackedScene" id=3]
 
 [sub_resource type="ProceduralSky" id=15]
 ground_bottom_color = Color( 0.647059, 0.839216, 0.945098, 1 )
@@ -596,7 +597,7 @@ bones/34/name = "RightHand"
 bones/34/parent = 33
 bones/34/rest = Transform( 0.958734, -0.173611, 0.22514, 0.103806, 0.950987, 0.291286, -0.264676, -0.255895, 0.929766, 5.82702e-08, 0.184362, 8.77998e-08 )
 bones/34/enabled = true
-bones/34/bound_children = [ NodePath("BoneAttachment") ]
+bones/34/bound_children = [  ]
 bones/35/name = "RightHandThumb1"
 bones/35/parent = 34
 bones/35/rest = Transform( 0.857204, 0.292457, -0.423876, -0.432959, 0.85494, -0.285698, 0.278835, 0.428422, 0.85948, 0.0142275, 0.0308619, 0.01284 )
@@ -775,6 +776,9 @@ target_node = NodePath("../BoneAttachment/MeshInstance/Position3D")
 autoplay = "Idle Aiming-loop"
 "anims/Idle Aiming-loop" = SubResource( 3 )
 
+[node name="player" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.21338, -10.6322 )
+
 [node name="Props" type="Node" parent="."]
 
 [node name="Plane" type="StaticBody" parent="Props"]
@@ -798,4 +802,7 @@ mesh = SubResource( 13 )
 material/0 = null
 
 [node name="CollisionShape" type="CollisionShape" parent="Props/StaticBody"]
+transform = Transform( 1, 0, 0, -4.76837e-07, 1, 0, 0, 0, 1, 0, 0, 0 )
 shape = SubResource( 14 )
+
+[editable path="player"]
