@@ -12,10 +12,10 @@ namespace GodotModules
         private Label _webServerStatus;
 
         private Options _optionsManager;
-        private WebManager _webManager;
+        private Web _webManager;
         private Tokens _tokenManager;
 
-        public void PreInit(Options optionsManager, WebManager webManager, Tokens tokenManager)
+        public void PreInit(Options optionsManager, Web webManager, Tokens tokenManager)
         {
             _optionsManager = optionsManager;
             _webManager = webManager;

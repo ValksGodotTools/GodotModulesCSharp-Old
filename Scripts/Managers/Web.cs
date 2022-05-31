@@ -1,6 +1,6 @@
 namespace GodotModules
 {
-    public class WebManager
+    public class Web
     {
         public string Ip { get; set; }
         public bool ConnectionAlive { get; private set; }
@@ -12,7 +12,7 @@ namespace GodotModules
 
         private Dictionary<string, string> DataExternalIp => new() { { "Ip", _externalIp } };
 
-        public WebManager(WebRequests webRequests, Tokens tokenManager, string ip)
+        public Web(WebRequests webRequests, Tokens tokenManager, string ip)
         {
             _tokenManager = tokenManager;
             _webRequests = webRequests;

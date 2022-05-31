@@ -28,7 +28,7 @@ namespace GodotModules
 		public Tokens ManagerToken { get; private set; }
 		public Net ManagerNetwork { get; private set; }
 		public SceneManager ManagerScene { get; private set; }
-		public WebManager ManagerWeb { get; private set; }
+		public Web ManagerWeb { get; private set; }
 		public MusicManager ManagerMusic { get; private set; }
 		public ErrorNotifierManager ManagerErrorNotifier { get; private set; }
 		public Popups ManagerPopup { get; private set; }
