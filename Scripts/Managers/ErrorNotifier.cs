@@ -1,6 +1,6 @@
 namespace GodotModules 
 {
-    public class ErrorNotifierManager : Node
+    public class ErrorNotifier : Node
     {
         private int _errorCount;
 

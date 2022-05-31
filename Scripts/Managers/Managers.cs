@@ -30,7 +30,7 @@ namespace GodotModules
 		public SceneManager ManagerScene { get; private set; }
 		public Web ManagerWeb { get; private set; }
 		public Music ManagerMusic { get; private set; }
-		public ErrorNotifierManager ManagerErrorNotifier { get; private set; }
+		public ErrorNotifier ManagerErrorNotifier { get; private set; }
 		public Popups ManagerPopup { get; private set; }
 		public HotkeyManager ManagerHotkey { get; private set; }
 		public ConsoleManager ManagerConsole { get; private set; }
@@ -45,7 +45,7 @@ namespace GodotModules
 			ManagerToken = new();
 			ManagerWeb = new(new(GetNode<Node>(NodePathWebRequestList)), ManagerToken, ManagerOptions.Data.WebServerAddress);
 			ManagerMusic = new(GetNode<AudioStreamPlayer>(NodePathAudioStreamPlayer), ManagerOptions);
-			ManagerErrorNotifier = GetNode<ErrorNotifierManager>(NodePathErrorNotifierManager);
+			ManagerErrorNotifier = GetNode<ErrorNotifier>(NodePathErrorNotifierManager);
 			ManagerPopup = new(GetNode<Node>(NodePathPopups), this);
 			ManagerNetwork = new(this);
 			ManagerConsole = GetNode<ConsoleManager>(NodePathConsole);

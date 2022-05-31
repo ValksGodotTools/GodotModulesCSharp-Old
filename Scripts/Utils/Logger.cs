@@ -3,7 +3,7 @@ namespace GodotModules
     public static class Logger
     {
         public static ConsoleManager UIConsole { get; set; }
-        public static ErrorNotifierManager ErrorNotifierManager { get; set; }
+        public static ErrorNotifier ErrorNotifierManager { get; set; }
         private static readonly ConcurrentQueue<LogInfo> _messages = new();
 
         public static void LogErr(Exception e, string hint = "", ConsoleColor c = ConsoleColor.Red) => _messages.Enqueue(new LogInfo(LoggerOpcode.Exception, $"[Error]: {(string.IsNullOrWhiteSpace(hint) ? "" : $"'{hint}' ")}{e.Message}\n{e.StackTrace}", c));
