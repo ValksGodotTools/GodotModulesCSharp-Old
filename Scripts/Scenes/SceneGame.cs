@@ -39,6 +39,10 @@ namespace GodotModules
 
             CreateMainPlayer(PositionPlayerSpawn.Position);
 
+            Notifications.AddListener(this, "OnSceneChanged", (sender, args) => {
+                Logger.Log("The scene was changed");
+            });
+
             ModLoader.Hook("Game", nameof(CreateMainPlayer),  (Action<Vector2>)CreateMainPlayer);
             ModLoader.Hook("Game", nameof(CreateOtherPlayer), (Action<Vector2>)CreateOtherPlayer);
             ModLoader.Hook("Game", nameof(CreateEnemy),       (Action<Vector2>)CreateEnemy);
