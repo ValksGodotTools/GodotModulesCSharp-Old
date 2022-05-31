@@ -8,10 +8,10 @@ namespace GodotModules
         private HSlider _music;
         private HSlider _sfx;
 
-        private MusicManager _musicManager;
+        private Music _musicManager;
         private Options _optionsManager;
 
-        public void PreInit(MusicManager musicManager, Options optionsManager) 
+        public void PreInit(Music musicManager, Options optionsManager) 
         {
             _musicManager = musicManager;
             _optionsManager = optionsManager;

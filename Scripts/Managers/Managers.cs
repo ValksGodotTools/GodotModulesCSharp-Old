@@ -29,7 +29,7 @@ namespace GodotModules
 		public Net ManagerNetwork { get; private set; }
 		public SceneManager ManagerScene { get; private set; }
 		public Web ManagerWeb { get; private set; }
-		public MusicManager ManagerMusic { get; private set; }
+		public Music ManagerMusic { get; private set; }
 		public ErrorNotifierManager ManagerErrorNotifier { get; private set; }
 		public Popups ManagerPopup { get; private set; }
 		public HotkeyManager ManagerHotkey { get; private set; }

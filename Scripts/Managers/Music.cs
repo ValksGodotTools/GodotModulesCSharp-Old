@@ -1,12 +1,12 @@
 namespace GodotModules 
 {
-    public class MusicManager 
+    public class Music 
     {
         private Dictionary<string, AudioStream> _tracks = new();
         private AudioStreamPlayer _audioStreamPlayer;
         private Options _optionsManager;
 
-        public MusicManager(AudioStreamPlayer audioStreamPlayer, Options optionsManager)
+        public Music(AudioStreamPlayer audioStreamPlayer, Options optionsManager)
         {
             _audioStreamPlayer = audioStreamPlayer;
             _optionsManager = optionsManager;
