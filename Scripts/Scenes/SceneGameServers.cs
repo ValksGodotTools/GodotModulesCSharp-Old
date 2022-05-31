@@ -43,7 +43,7 @@ namespace GodotModules
             if (_connectingToLobby)
                 return;
             
-            _managers.ManagerPopup.SpawnCreateLobby();
+            _managers.Popups.SpawnCreateLobby();
         }
 
         private void _on_Direct_Connect_pressed()
@@ -51,7 +51,7 @@ namespace GodotModules
             if (_connectingToLobby)
                 return;
 
-            _managers.ManagerPopup.SpawnLineEdit
+            _managers.Popups.SpawnLineEdit
             (
                 (lineEdit) =>
                 {
@@ -76,13 +76,13 @@ namespace GodotModules
 
                     _connectingToLobby = true;
 
-                    var cts = _managers.ManagerToken.Create("client_running");
+                    var cts = _managers.Tokens.Create("client_running");
 
-                    _managers.ManagerNetwork.StartClient(ip, port, cts);
+                    _managers.Net.StartClient(ip, port, cts);
 
                     try
                     {
-                        while (!_managers.ManagerNetwork.Client.IsConnected)
+                        while (!_managers.Net.Client.IsConnected)
                             await Task.Delay(1, cts.Token);
                     }
                     catch (TaskCanceledException)

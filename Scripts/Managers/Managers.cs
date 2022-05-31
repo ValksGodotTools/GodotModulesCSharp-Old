@@ -24,14 +24,14 @@ namespace GodotModules
 		[Export] protected readonly NodePath NodePathPopups;
 		[Export] protected readonly NodePath NodePathSceneManager;
 
-		public Options ManagerOptions { get; private set; }
-		public Tokens ManagerToken { get; private set; }
-		public Net ManagerNetwork { get; private set; }
+		public Options Options { get; private set; }
+		public Tokens Tokens { get; private set; }
+		public Net Net { get; private set; }
 		public SceneManager ManagerScene { get; private set; }
-		public Web ManagerWeb { get; private set; }
-		public Music ManagerMusic { get; private set; }
-		public ErrorNotifier ManagerErrorNotifier { get; private set; }
-		public Popups ManagerPopup { get; private set; }
+		public Web Web { get; private set; }
+		public Music Music { get; private set; }
+		public ErrorNotifier ErrorNotifier { get; private set; }
+		public Popups Popups { get; private set; }
 		public HotkeyManager ManagerHotkey { get; private set; }
 		public ConsoleManager ManagerConsole { get; private set; }
 
@@ -41,13 +41,13 @@ namespace GodotModules
 		public override async void _Ready()
 		{
 			ManagerHotkey = new();
-			ManagerOptions = new(ManagerHotkey);
-			ManagerToken = new();
-			ManagerWeb = new(new(GetNode<Node>(NodePathWebRequestList)), ManagerToken, ManagerOptions.Data.WebServerAddress);
-			ManagerMusic = new(GetNode<AudioStreamPlayer>(NodePathAudioStreamPlayer), ManagerOptions);
-			ManagerErrorNotifier = GetNode<ErrorNotifier>(NodePathErrorNotifierManager);
-			ManagerPopup = new(GetNode<Node>(NodePathPopups), this);
-			ManagerNetwork = new(this);
+			Options = new(ManagerHotkey);
+			Tokens = new();
+			Web = new(new(GetNode<Node>(NodePathWebRequestList)), Tokens, Options.Data.WebServerAddress);
+			Music = new(GetNode<AudioStreamPlayer>(NodePathAudioStreamPlayer), Options);
+			ErrorNotifier = GetNode<ErrorNotifier>(NodePathErrorNotifierManager);
+			Popups = new(GetNode<Node>(NodePathPopups), this);
+			Net = new(this);
 			ManagerConsole = GetNode<ConsoleManager>(NodePathConsole);
 
 			ManagerHotkey.AddCategories("ui", "player", "camera");
@@ -59,20 +59,20 @@ namespace GodotModules
 			await InitSceneManager(GetNode<Control>(NodePathScenes), ManagerHotkey);
 
 			Logger.UIConsole = ManagerConsole;
-			Logger.ErrorNotifierManager = ManagerErrorNotifier;
+			Logger.ErrorNotifierManager = ErrorNotifier;
 			ModLoader.Init();
 
 			Items.Init();
 
 			UpdateParticleSystem();
 
-			ManagerMusic.LoadTrack("Menu", "Audio/Music/Unsolicited trailer music loop edit.wav");
-			ManagerMusic.PlayTrack("Menu");
+			Music.LoadTrack("Menu", "Audio/Music/Unsolicited trailer music loop edit.wav");
+			Music.PlayTrack("Menu");
 
-			await ManagerWeb.CheckConnectionAsync();
+			await Web.CheckConnectionAsync();
 
-			if (ManagerWeb.ConnectionAlive)
-				await ManagerWeb.GetExternalIpAsync();
+			if (Web.ConnectionAlive)
+				await Web.GetExternalIpAsync();
 
 			_ready = true;
 		}
@@ -93,7 +93,7 @@ namespace GodotModules
 
 			ManagerScene.EscPressed[GameScene.GameServers] = async () => 
 			{
-				ManagerToken.Cancel("client_running");
+				Tokens.Cancel("client_running");
 				await ManagerScene.ChangeScene(GameScene.Menu);
 			};
 
@@ -105,21 +105,21 @@ namespace GodotModules
 
 			ManagerScene.EscPressed[GameScene.Options] = async () =>
 			{
-				ManagerToken.Cancel("check_connection");
+				Tokens.Cancel("check_connection");
 				await ManagerScene.ChangeScene(GameScene.Menu);
 			};
 
 			ManagerScene.EscPressed[GameScene.Lobby] = async () => 
 			{
-				ManagerToken.Cancel("client_running");
-				ManagerToken.Cancel("server_running");
+				Tokens.Cancel("client_running");
+				Tokens.Cancel("server_running");
 				await ManagerScene.ChangeScene(GameScene.GameServers);
 			};
 
 			ManagerScene.EscPressed[GameScene.Game] = async () =>
 			{
-				ManagerToken.Cancel("client_running");
-				ManagerToken.Cancel("server_running");
+				Tokens.Cancel("client_running");
+				Tokens.Cancel("server_running");
 				await ManagerScene.ChangeScene(GameScene.Menu);
 				_menuParticles.Emitting = true;
 				_menuParticles.Visible = true;
@@ -131,7 +131,7 @@ namespace GodotModules
 		public override async void _Process(float delta)
 		{
 			Logger.Update();
-			await ManagerNetwork.Update();
+			await Net.Update();
 		}
 
 		public override void _Input(InputEvent @event)
@@ -143,7 +143,7 @@ namespace GodotModules
 					ManagerScene.EscPressed[ManagerScene.CurScene]();
 
 			if (Input.IsActionJustPressed("ui_fullscreen"))
-				ManagerOptions.ToggleFullscreen();
+				Options.ToggleFullscreen();
 
 			if (Input.IsActionJustPressed("ui_console"))
 				ManagerConsole.ToggleVisibility();
@@ -176,9 +176,9 @@ namespace GodotModules
 				await Task.Delay(1);
 			
 			ModLoader.SaveEnabled();
-			ManagerOptions.SaveOptions();
-			await ManagerNetwork.Cleanup();
-			ManagerToken.Cleanup();
+			Options.SaveOptions();
+			await Net.Cleanup();
+			Tokens.Cleanup();
 			GetTree().Quit();
 		}
 	}

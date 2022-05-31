@@ -25,19 +25,19 @@ namespace GodotModules
 
         private async void _on_Multiplayer_pressed() 
         {
-            if (!_managers.ManagerNetwork.EnetInitialized) 
+            if (!_managers.Net.EnetInitialized) 
             {
                 var message = "Multiplayer is disabled because ENet failed to initialize";
                 Logger.LogWarning(message);
-                _managers.ManagerPopup.SpawnMessage(message);
+                _managers.Popups.SpawnMessage(message);
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(_managers.ManagerOptions.Data.OnlineUsername))
+            if (string.IsNullOrWhiteSpace(_managers.Options.Data.OnlineUsername))
             {
-                _managers.ManagerPopup.SpawnLineEdit(
+                _managers.Popups.SpawnLineEdit(
                     lineEdit => lineEdit.Filter((text) => Regex.IsMatch(text, "^[a-z]+$")), 
-                    result => _managers.ManagerOptions.Data.OnlineUsername = result, 
+                    result => _managers.Options.Data.OnlineUsername = result, 
                     "Set Online Username", 20);
                 return;
             }

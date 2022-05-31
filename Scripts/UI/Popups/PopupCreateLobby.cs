@@ -73,15 +73,15 @@ namespace GodotModules
 
         private async void _on_Create_pressed()
         {
-            var ctsServer = _managers.ManagerToken.Create("server_running");
-            var ctsClient = _managers.ManagerToken.Create("client_running");
-            _managers.ManagerNetwork.StartServer(_port, _maxPlayers, ctsServer);
-            _managers.ManagerNetwork.StartClient("127.0.0.1", _port, ctsClient);
+            var ctsServer = _managers.Tokens.Create("server_running");
+            var ctsClient = _managers.Tokens.Create("client_running");
+            _managers.Net.StartServer(_port, _maxPlayers, ctsServer);
+            _managers.Net.StartClient("127.0.0.1", _port, ctsClient);
             Hide();
 
             try 
             {
-                while (!_managers.ManagerNetwork.Server.HasSomeoneConnected)
+                while (!_managers.Net.Server.HasSomeoneConnected)
                 {
                     await Task.Delay(1, ctsServer.Token);
                 }
@@ -91,8 +91,8 @@ namespace GodotModules
                 return;
             }
             
-            _managers.ManagerNetwork.Client.Send(ClientPacketOpcode.Lobby, new CPacketLobby {
-                Username = _managers.ManagerOptions.Data.OnlineUsername,
+            _managers.Net.Client.Send(ClientPacketOpcode.Lobby, new CPacketLobby {
+                Username = _managers.Options.Data.OnlineUsername,
                 LobbyName = _name,
                 LobbyDescription = _description
             });
