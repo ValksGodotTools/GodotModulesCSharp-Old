@@ -13,9 +13,9 @@ namespace GodotModules
 
         private Options _optionsManager;
         private WebManager _webManager;
-        private TokenManager _tokenManager;
+        private Tokens _tokenManager;
 
-        public void PreInit(Options optionsManager, WebManager webManager, TokenManager tokenManager)
+        public void PreInit(Options optionsManager, WebManager webManager, Tokens tokenManager)
         {
             _optionsManager = optionsManager;
             _webManager = webManager;

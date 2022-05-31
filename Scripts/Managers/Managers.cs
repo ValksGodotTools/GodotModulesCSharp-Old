@@ -25,7 +25,7 @@ namespace GodotModules
 		[Export] protected readonly NodePath NodePathSceneManager;
 
 		public Options ManagerOptions { get; private set; }
-		public TokenManager ManagerToken { get; private set; }
+		public Tokens ManagerToken { get; private set; }
 		public Net ManagerNetwork { get; private set; }
 		public SceneManager ManagerScene { get; private set; }
 		public WebManager ManagerWeb { get; private set; }

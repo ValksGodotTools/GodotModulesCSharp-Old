@@ -8,11 +8,11 @@ namespace GodotModules
         private string _externalIp;
 
         private readonly WebRequests _webRequests;
-        private readonly TokenManager _tokenManager;
+        private readonly Tokens _tokenManager;
 
         private Dictionary<string, string> DataExternalIp => new() { { "Ip", _externalIp } };
 
-        public WebManager(WebRequests webRequests, TokenManager tokenManager, string ip)
+        public WebManager(WebRequests webRequests, Tokens tokenManager, string ip)
         {
             _tokenManager = tokenManager;
             _webRequests = webRequests;

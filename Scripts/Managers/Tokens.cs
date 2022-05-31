@@ -1,6 +1,6 @@
 namespace GodotModules 
 {
-    public class TokenManager 
+    public class Tokens 
     {
         private Dictionary<string, CancellationTokenSource> _cts = new();
 
