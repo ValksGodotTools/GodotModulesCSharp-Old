@@ -6,11 +6,9 @@ namespace GodotModules
     {
         [Export] protected readonly NodePath NodePathHead;
         [Export] protected readonly NodePath NodePathHand;
-        [Export] protected readonly NodePath NodePathSkeleton;
 
         private Spatial _head;
         private Spatial _hand;
-        private Skeleton _skeleton;
 
         private float _mouseSensitivity = 0.10f;
 
@@ -18,7 +16,6 @@ namespace GodotModules
         {
             _head = GetNode<Spatial>(NodePathHead);
             _hand = GetNode<Spatial>(NodePathHand);
-            _skeleton = GetNode<Skeleton>(NodePathSkeleton);
 
             Input.SetMouseMode(MouseMode.Captured);
 
@@ -35,9 +32,6 @@ namespace GodotModules
             {
                 RotateY((-motion.Relative.x * _mouseSensitivity).ToRadians());
                 _head.RotateX((motion.Relative.y * _mouseSensitivity).ToRadians());
-
-                var newPose = _skeleton.GetBonePose(7).Rotated(Vector3.Forward, 0.1f);
-                _skeleton.SetBonePose(7, newPose);
             }
         }
 
