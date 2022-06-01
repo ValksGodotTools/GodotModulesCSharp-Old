@@ -30,26 +30,32 @@ namespace GodotModules
 				return !words.Contains(word);
 			});
 			_btn.Text = _hotkey;
-		}
 
-		public override void _Input(InputEvent @event)
-        {
-            if (@event is InputEventKey keyEvent && !keyEvent.Pressed && _waitingForHotkey)
-            {
-                _waitingForHotkey = false;
-                SetHotkeyText(@event);
-                _hotkeyManager.SetHotkey(_action, keyEvent);
-            }
+            Notifications.AddListener(this, Event.OnKeyboardInput, (sender, args) => {
+                var keyEvent = (InputEventKey)args[0];
 
-            if (@event is InputEventJoypadButton joypadButtonEvent && !joypadButtonEvent.Pressed && _waitingForHotkey)
-            {
-                _waitingForHotkey = false;
-                SetHotkeyText(@event);
-                _hotkeyManager.SetHotkey(_action, joypadButtonEvent);
-            }
+                if (!keyEvent.Pressed && _waitingForHotkey) 
+                {
+                    _waitingForHotkey = false;
+                    SetHotkeyText(keyEvent);
+                    _hotkeyManager.SetHotkey(_action, keyEvent);
+                }
+            });
 
-            if (@event is InputEventMouseButton mouseEvent)
-            {
+            Notifications.AddListener(this, Event.OnJoypadButtonInput, (sender, args) => {
+                var joypadButtonEvent = (InputEventJoypadButton)args[0];
+
+                if (!joypadButtonEvent.Pressed && _waitingForHotkey)
+                {
+                    _waitingForHotkey = false;
+                    SetHotkeyText(joypadButtonEvent);
+                    _hotkeyManager.SetHotkey(_action, joypadButtonEvent);
+                }
+            });
+
+            Notifications.AddListener(this, Event.OnMouseButtonInput, (sender, args) => {
+                var mouseEvent = (InputEventMouseButton)args[0];
+
                 if (
                     mouseEvent.Pressed && 
                     mouseEvent.ButtonMask == (int)ButtonList.Left && 
@@ -63,12 +69,12 @@ namespace GodotModules
                 if (!mouseEvent.Pressed && _waitingForHotkey)
                 {
                     _waitingForHotkey = false;
-                    SetHotkeyText(@event);
+                    SetHotkeyText(mouseEvent);
                     _hotkeyManager.SetHotkey(_action, mouseEvent);
                     _skip = true;
                 }
-            }
-        }
+            });
+		}
 
 		private void _on_Btn_pressed()
 		{
