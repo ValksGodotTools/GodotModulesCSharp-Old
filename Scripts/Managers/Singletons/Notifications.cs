@@ -4,6 +4,7 @@ namespace GodotModules
     {
         OnKeyboardInput,
         OnMouseButtonInput,
+        OnMouseMotionInput,
         OnSceneChanged
     }
 
@@ -15,16 +16,6 @@ namespace GodotModules
         {
             if (!_listeners.ContainsKey(eventType))
                 _listeners.Add(eventType, new List<Listener>());
-
-            foreach (var pair in _listeners)
-                foreach (var listener in pair.Value) 
-                {
-                    if (!Godot.Object.IsInstanceValid(listener.Sender))
-                        continue;
-
-                    if (sender.GetInstanceId() == listener.Sender.GetInstanceId())
-                        throw new InvalidOperationException($"Tried to add duplicate listener of event type '{eventType}'");
-                }
 
             _listeners[eventType].Add(new Listener(sender, action));
         }
