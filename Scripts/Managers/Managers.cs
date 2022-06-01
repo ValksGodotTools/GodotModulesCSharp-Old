@@ -136,11 +136,16 @@ namespace GodotModules
 
 		public override void _Input(InputEvent @event)
 		{
-			if (Input.IsActionJustPressed("ui_cancel"))
+			if (@event is InputEventKey inputEventKey && inputEventKey.Pressed)
+				Notifications.Notify(this, Event.OnKeyPressed, inputEventKey);
+
+			if (Input.IsActionJustPressed("ui_cancel")) 
+			{
 				if (ManagerConsole.Visible)
 					ManagerConsole.ToggleVisibility();
 				else if (ManagerScene.EscPressed.ContainsKey(ManagerScene.CurScene))
 					ManagerScene.EscPressed[ManagerScene.CurScene]();
+			}
 
 			if (Input.IsActionJustPressed("ui_fullscreen"))
 				Options.ToggleFullscreen();

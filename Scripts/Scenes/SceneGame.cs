@@ -39,6 +39,8 @@ namespace GodotModules
 
             CreateMainPlayer(PositionPlayerSpawn.Position);
 
+            Notifications.AddListener(this, Event.OnKeyPressed, OnKeyboardInput);
+
             ModLoader.Hook("Game", nameof(CreateMainPlayer),  (Action<Vector2>)CreateMainPlayer);
             ModLoader.Hook("Game", nameof(CreateOtherPlayer), (Action<Vector2>)CreateOtherPlayer);
             ModLoader.Hook("Game", nameof(CreateEnemy),       (Action<Vector2>)CreateEnemy);
@@ -51,6 +53,12 @@ namespace GodotModules
         public override void _PhysicsProcess(float delta)
         {
             ModLoader.Call("OnGameUpdate", delta);
+        }
+
+        private void OnKeyboardInput(Node sender, object[] args) 
+        {
+            if (Input.IsActionJustPressed("ui_cancel"))
+                Logger.Log("todo escape code here");
         }
 
         public void CreateMainPlayer(Vector2 pos = default)
