@@ -35,7 +35,7 @@ namespace GodotModules
 		public HotkeyManager ManagerHotkey { get; private set; }
 		public ConsoleManager ManagerConsole { get; private set; }
 
-		private Particles2D _menuParticles;
+		public Particles2D MenuParticles;
 		private bool _ready;
 
 		public override async void _Ready()
@@ -53,8 +53,8 @@ namespace GodotModules
 			ManagerHotkey.AddCategories("ui", "player", "camera");
 			ManagerHotkey.Init();
 
-			_menuParticles = GetNode<Particles2D>(NodePathMenuParticles);
-			_menuParticles.Emitting = true;
+			MenuParticles = GetNode<Particles2D>(NodePathMenuParticles);
+			MenuParticles.Emitting = true;
 
 			await InitSceneManager(GetNode<Control>(NodePathScenes), ManagerHotkey);
 
@@ -83,47 +83,7 @@ namespace GodotModules
 			ManagerScene.Init(sceneList, hotkeyManager, this);
 
 			// Custom Pre Init
-			ManagerScene.PreInit[GameScene.Menu] = (node) =>
-			{
-				((SceneMenu)node).PreInit(_menuParticles);
-			};
-
-			// Esc Pressed
-			ManagerScene.EscPressed[GameScene.Credits] = async () => await ManagerScene.ChangeScene(GameScene.Menu);
-
-			ManagerScene.EscPressed[GameScene.GameServers] = async () => 
-			{
-				Tokens.Cancel("client_running");
-				await ManagerScene.ChangeScene(GameScene.Menu);
-			};
-
-			ManagerScene.EscPressed[GameScene.Mods] = async () => 
-			{
-				ModLoader.SceneMods = null;
-				await ManagerScene.ChangeScene(GameScene.Menu);
-			};
-
-			ManagerScene.EscPressed[GameScene.Options] = async () =>
-			{
-				Tokens.Cancel("check_connection");
-				await ManagerScene.ChangeScene(GameScene.Menu);
-			};
-
-			ManagerScene.EscPressed[GameScene.Lobby] = async () => 
-			{
-				Tokens.Cancel("client_running");
-				Tokens.Cancel("server_running");
-				await ManagerScene.ChangeScene(GameScene.GameServers);
-			};
-
-			ManagerScene.EscPressed[GameScene.Game] = async () =>
-			{
-				Tokens.Cancel("client_running");
-				Tokens.Cancel("server_running");
-				await ManagerScene.ChangeScene(GameScene.Menu);
-				_menuParticles.Emitting = true;
-				_menuParticles.Visible = true;
-			};
+			ManagerScene.PreInit[GameScene.Menu] = (node) => ((SceneMenu)node).PreInit(MenuParticles);
 
 			await ManagerScene.InitAsync();
 		}
@@ -138,14 +98,6 @@ namespace GodotModules
 		{
 			if (@event is InputEventKey inputEventKey && inputEventKey.Pressed)
 				Notifications.Notify(this, Event.OnKeyPressed, inputEventKey);
-
-			if (Input.IsActionJustPressed("ui_cancel")) 
-			{
-				if (ManagerConsole.Visible)
-					ManagerConsole.ToggleVisibility();
-				else if (ManagerScene.EscPressed.ContainsKey(ManagerScene.CurScene))
-					ManagerScene.EscPressed[ManagerScene.CurScene]();
-			}
 
 			if (Input.IsActionJustPressed("ui_fullscreen"))
 				Options.ToggleFullscreen();
@@ -171,8 +123,8 @@ namespace GodotModules
 
 		private void UpdateParticleSystem()
 		{
-			_menuParticles.Position = new Vector2(OS.WindowSize.x / 2, OS.WindowSize.y);
-			_menuParticles.ProcessMaterial.SetIndexed("emission_box_extents:x", OS.WindowSize.x / 2);
+			MenuParticles.Position = new Vector2(OS.WindowSize.x / 2, OS.WindowSize.y);
+			MenuParticles.ProcessMaterial.SetIndexed("emission_box_extents:x", OS.WindowSize.x / 2);
 		}
 
 		private async Task Cleanup()

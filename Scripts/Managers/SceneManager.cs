@@ -3,7 +3,6 @@ namespace GodotModules
     public class SceneManager : Node
     {
         public readonly Dictionary<GameScene, Action<Node>> PreInit = new();
-        public readonly Dictionary<GameScene, Action> EscPressed = new();
 
         public GameScene CurScene { get; private set; }
         public GameScene PrevScene { get; private set; }
@@ -71,6 +70,17 @@ namespace GodotModules
 
             Notifications.RemoveInvalidListeners();
             Notifications.Notify(this, Event.OnSceneChanged, scene);
+        }
+
+        public void HandleEscape(Action action)
+        {
+            if (Input.IsActionJustPressed("ui_cancel")) 
+            {
+                if (_managers.ManagerConsole.Visible)
+                    _managers.ManagerConsole.ToggleVisibility();
+                else
+                    action();
+            }
         }
 
         private void LoadScene(string scene) 
