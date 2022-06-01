@@ -26,8 +26,12 @@ namespace GodotModules
 		private Button _btnMultiplayer;
 		private Dictionary<OptionSection, Control> _optionSections;
 
+		private Managers _managers;
+
 		public override void PreInitManagers(Managers managers)
 		{
+			_managers = managers;
+
 			_optionSections = new Dictionary<OptionSection, Control>
 			{
 				[OptionSection.Game] = GetNode<UIOptionsGame>(NodePathOptionsGame),
@@ -105,6 +109,13 @@ namespace GodotModules
 						break;
 				}
 			}
+
+			Notifications.AddListener(this, Event.OnKeyPressed, (sender, args) => {
+				_managers.ManagerScene.HandleEscape(async () => {
+					_managers.Tokens.Cancel("check_connection");
+					await _managers.ManagerScene.ChangeScene(GameScene.Menu);
+				});
+			});
 		}
 
 		private void SetFocusNeighborLeft(Control parent, Control target) => GetControlChildren(parent, child => child.FocusNeighbourLeft = target.GetPath());

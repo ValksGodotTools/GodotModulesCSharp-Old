@@ -18,9 +18,11 @@ namespace GodotModules
         public Player Player { get; set; }
         public List<Enemy> Enemies { get; set; }
 
+        private Managers _managers;
+
         public override void PreInitManagers(Managers managers)
         {
-            
+            _managers = managers;
         }
 
         public override void _Ready()
@@ -39,7 +41,15 @@ namespace GodotModules
 
             CreateMainPlayer(PositionPlayerSpawn.Position);
 
-            Notifications.AddListener(this, Event.OnKeyPressed, OnKeyboardInput);
+            Notifications.AddListener(this, Event.OnKeyPressed, (sender, args) => {
+                _managers.ManagerScene.HandleEscape(async () => {
+                    _managers.Tokens.Cancel("client_running");
+                    _managers.Tokens.Cancel("server_running");
+                    await _managers.ManagerScene.ChangeScene(GameScene.Menu);
+                    _managers.MenuParticles.Emitting = true;
+                    _managers.MenuParticles.Visible = true;
+                });
+            });
 
             ModLoader.Hook("Game", nameof(CreateMainPlayer),  (Action<Vector2>)CreateMainPlayer);
             ModLoader.Hook("Game", nameof(CreateOtherPlayer), (Action<Vector2>)CreateOtherPlayer);
@@ -53,12 +63,6 @@ namespace GodotModules
         public override void _PhysicsProcess(float delta)
         {
             ModLoader.Call("OnGameUpdate", delta);
-        }
-
-        private void OnKeyboardInput(Node sender, object[] args) 
-        {
-            if (Input.IsActionJustPressed("ui_cancel"))
-                Logger.Log("todo escape code here");
         }
 
         public void CreateMainPlayer(Vector2 pos = default)

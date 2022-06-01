@@ -19,10 +19,11 @@ namespace GodotModules
         public Dictionary<string, UIModBtn> ModBtnsRight { get; private set; }
 
         private RichTextLabel _modLoaderLogs;
+        private Managers _managers;
 
         public override void PreInitManagers(Managers managers)
         {
-            
+            _managers = managers;
         }
 
         public override void _Ready()
@@ -42,6 +43,13 @@ namespace GodotModules
 
             UpdateUI();
             ModLoader.SceneMods = this;
+
+            Notifications.AddListener(this, Event.OnKeyPressed, (sender, args) => {
+                _managers.ManagerScene.HandleEscape(async () => {
+                    ModLoader.SceneMods = null;
+				    await _managers.ManagerScene.ChangeScene(GameScene.Menu);
+                });
+            });
         }
 
         public void Log(string text) => _modLoaderLogs.AddText($"{text}\n");
