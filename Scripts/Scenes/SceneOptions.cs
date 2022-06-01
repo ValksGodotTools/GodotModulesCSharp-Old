@@ -110,7 +110,7 @@ namespace GodotModules
 				}
 			}
 
-			Notifications.AddListener(this, Event.OnKeyPressed, (sender, args) => {
+			Notifications.AddListener(this, Event.OnKeyboardInput, (sender, args) => {
 				_managers.ManagerScene.HandleEscape(async () => {
 					_managers.Tokens.Cancel("check_connection");
 					await _managers.ManagerScene.ChangeScene(GameScene.Menu);

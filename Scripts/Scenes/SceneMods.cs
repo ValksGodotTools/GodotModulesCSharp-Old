@@ -44,7 +44,7 @@ namespace GodotModules
             UpdateUI();
             ModLoader.SceneMods = this;
 
-            Notifications.AddListener(this, Event.OnKeyPressed, (sender, args) => {
+            Notifications.AddListener(this, Event.OnKeyboardInput, (sender, args) => {
                 _managers.ManagerScene.HandleEscape(async () => {
                     ModLoader.SceneMods = null;
 				    await _managers.ManagerScene.ChangeScene(GameScene.Menu);

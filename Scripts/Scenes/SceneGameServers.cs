@@ -37,7 +37,7 @@ namespace GodotModules
             _sortPingPressed = true;
             Sort(x => x.Ping, _sortPingPressed);
 
-            Notifications.AddListener(this, Event.OnKeyPressed, (sender, args) => {
+            Notifications.AddListener(this, Event.OnKeyboardInput, (sender, args) => {
                 _managers.ManagerScene.HandleEscape(async () => {
                     _managers.Tokens.Cancel("client_running");
 				    await _managers.ManagerScene.ChangeScene(GameScene.Menu);

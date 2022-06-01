@@ -96,8 +96,8 @@ namespace GodotModules
 
 		public override void _Input(InputEvent @event)
 		{
-			if (@event is InputEventKey inputEventKey && inputEventKey.Pressed)
-				Notifications.Notify(this, Event.OnKeyPressed, inputEventKey);
+			if (@event is InputEventKey inputEventKey)
+				Notifications.Notify(this, Event.OnKeyboardInput, inputEventKey);
 
 			if (Input.IsActionJustPressed("ui_fullscreen"))
 				Options.ToggleFullscreen();

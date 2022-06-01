@@ -26,7 +26,7 @@ namespace GodotModules
             Tween.InterpolateProperty(CreditsContent, "rect_position:y", OS.WindowSize.y, -CreditsContent.RectSize.y, duration);
             Tween.Start();
 
-            Notifications.AddListener(this, Event.OnKeyPressed, (sender, args) => {
+            Notifications.AddListener(this, Event.OnKeyboardInput, (sender, args) => {
                 _sceneManager.HandleEscape(async () => {
                     await _sceneManager.ChangeScene(GameScene.Menu);
                 });

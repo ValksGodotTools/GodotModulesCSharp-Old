@@ -2,7 +2,7 @@ namespace GodotModules
 {
     public enum Event 
     {
-        OnKeyPressed,
+        OnKeyboardInput,
         OnSceneChanged
     }
 

@@ -41,7 +41,7 @@ namespace GodotModules
 
             CreateMainPlayer(PositionPlayerSpawn.Position);
 
-            Notifications.AddListener(this, Event.OnKeyPressed, (sender, args) => {
+            Notifications.AddListener(this, Event.OnKeyboardInput, (sender, args) => {
                 _managers.ManagerScene.HandleEscape(async () => {
                     _managers.Tokens.Cancel("client_running");
                     _managers.Tokens.Cancel("server_running");
