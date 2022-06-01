@@ -2,6 +2,8 @@ using ENet;
 
 namespace GodotModules.Netcode.Client 
 {
+    using Event = ENet.Event;
+    
     public abstract class ENetClient
     {
         public static readonly Dictionary<ServerPacketOpcode, APacketServer> HandlePacket = ReflectionUtils.LoadInstances<ServerPacketOpcode, APacketServer>("SPacket");

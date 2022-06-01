@@ -2,6 +2,8 @@ using ENet;
 
 namespace GodotModules.Netcode.Server
 {
+    using Event = ENet.Event;
+    
     public class GameServer : ENetServer
     {
         public Dictionary<byte, DataPlayer> Players = new();

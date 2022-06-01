@@ -3,6 +3,8 @@ using System.Threading;
 
 namespace GodotModules.Netcode.Server
 {
+    using Event = ENet.Event;
+    
     public abstract class ENetServer
     {
         protected static readonly Dictionary<ClientPacketOpcode, APacketClient> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, APacketClient>("CPacket");
