@@ -1,10 +1,16 @@
 namespace GodotModules
 {
+    public enum Event 
+    {
+        OnKeyPressed,
+        OnSceneChanged
+    }
+
     public static class Notifications
     {
-        private static Dictionary<string, List<Listener>> _listeners = new();
+        private static Dictionary<Event, List<Listener>> _listeners = new();
 
-        public static void AddListener(Node sender, string eventType, Action<Node, object[]> action)
+        public static void AddListener(Node sender, Event eventType, Action<Node, object[]> action)
         {
             if (!_listeners.ContainsKey(eventType))
                 _listeners.Add(eventType, new List<Listener>());
@@ -22,7 +28,7 @@ namespace GodotModules
             _listeners[eventType].Add(new Listener(sender, action));
         }
 
-        public static void RemoveListener(Node sender, string eventType)
+        public static void RemoveListener(Node sender, Event eventType)
         {
             if (!_listeners.ContainsKey(eventType))
                 throw new InvalidOperationException($"Tried to remove listener of event type '{eventType}' from an event type that has not even been defined yet");
@@ -45,7 +51,7 @@ namespace GodotModules
 
         public static void RemoveInvalidListeners()
         {
-            var tempListeners = new Dictionary<string, List<Listener>>();
+            var tempListeners = new Dictionary<Event, List<Listener>>();
 
             foreach (var pair in _listeners) 
             {
@@ -62,11 +68,13 @@ namespace GodotModules
             _listeners = new(tempListeners);
         }
 
-        public static void Notify(Node sender, string eventType, params object[] args)
+        public static void Notify(Node sender, Event eventType, params object[] args)
         {
-            foreach (var pair in _listeners)
-                foreach (var listener in pair.Value)
-                    listener.Action(sender, args);
+            if (!_listeners.ContainsKey(eventType))
+                return;
+
+            foreach (var listener in _listeners[eventType])
+                listener.Action(sender, args);
         }
 
         private class Listener 
