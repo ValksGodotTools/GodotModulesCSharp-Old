@@ -44,6 +44,13 @@ namespace GodotModules
 
             await _managers.ManagerScene.ChangeScene(GameScene.GameServers);
         }
+
+        private async void _on_3D_Test_pressed()
+        {
+            await _managers.ManagerScene.ChangeScene(GameScene.Game3D);
+            _menuParticles.Emitting = false;
+            _menuParticles.Visible = false;
+        }
         private async void _on_Options_pressed() => await _managers.ManagerScene.ChangeScene(GameScene.Options);
         private async void _on_Mods_pressed() => await _managers.ManagerScene.ChangeScene(GameScene.Mods);
         private async void _on_Credits_pressed() => await _managers.ManagerScene.ChangeScene(GameScene.Credits);
