@@ -3,6 +3,7 @@ namespace GodotModules
     public enum Event 
     {
         OnKeyboardInput,
+        OnMouseButtonInput,
         OnSceneChanged
     }
 

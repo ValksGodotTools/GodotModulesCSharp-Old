@@ -17,6 +17,8 @@ namespace GodotModules
             _camera = GetNode<Camera2D>(NodePathCamera);
             _animatedSprite = GetNode<AnimatedSprite>(NodePathAnimatedSprite);
             //_sprite = GetNode<Sprite>(NodePathSprite);
+
+            Notifications.AddListener(this, Event.OnMouseButtonInput, OnMouseButtonInput);
         }
 
         public override void _PhysicsProcess(float delta)
@@ -28,7 +30,7 @@ namespace GodotModules
             _camera.Zoom = _camera.Zoom.Lerp(new Vector2(_zoom, _zoom), 0.1f);
         }
 
-        public override void _Input(InputEvent @event)
+        private void OnMouseButtonInput(Node sender, object[] args)
         {
             HandleCameraZoom();
         }
