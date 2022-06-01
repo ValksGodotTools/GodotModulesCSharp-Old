@@ -21,29 +21,36 @@ namespace GodotModules
             _skeleton = GetNode<Skeleton>(NodePathSkeleton);
 
             Input.SetMouseMode(MouseMode.Captured);
+
+            Notifications.AddListener(this, Event.OnMouseMotionInput, OnMouseMotionInput);
+            Notifications.AddListener(this, Event.OnMouseButtonInput, OnMouseButtonInput);
+            Notifications.AddListener(this, Event.OnKeyboardInput, OnKeyboardInput);
         }
 
-        public override void _Input(InputEvent @event)
+        private void OnMouseMotionInput(Node sender, object[] args)
         {
-            if (@event is InputEventMouseMotion motion)
-                if (Input.GetMouseMode() == MouseMode.Captured)
-                {
-                    RotateY((-motion.Relative.x * _mouseSensitivity).ToRadians());
-                    _head.RotateX((motion.Relative.y * _mouseSensitivity).ToRadians());
+            var motion = (InputEventMouseMotion)args[0];
 
-                    var newPose = _skeleton.GetBonePose(7).Rotated(Vector3.Forward, 0.1f);
-                    _skeleton.SetBonePose(7, newPose);
-                }
-
-            if (Input.IsActionJustPressed("player_jump"))
+            if (Input.GetMouseMode() == MouseMode.Captured)
             {
-                
+                RotateY((-motion.Relative.x * _mouseSensitivity).ToRadians());
+                _head.RotateX((motion.Relative.y * _mouseSensitivity).ToRadians());
+
+                var newPose = _skeleton.GetBonePose(7).Rotated(Vector3.Forward, 0.1f);
+                _skeleton.SetBonePose(7, newPose);
             }
+        }
 
-            if (@event is InputEventMouseButton button)
-                if (button.ButtonIndex == (int)ButtonList.Left && Input.GetMouseMode() == MouseMode.Visible)
-                    Input.SetMouseMode(MouseMode.Captured);
+        private void OnMouseButtonInput(Node sender, object[] args)
+        {
+            var button = (InputEventMouseButton)args[0];
 
+            if (button.ButtonIndex == (int)ButtonList.Left && Input.GetMouseMode() == MouseMode.Visible)
+                Input.SetMouseMode(MouseMode.Captured);
+        }
+
+        private void OnKeyboardInput(Node sender, object[] args) 
+        {
             if (Input.IsActionJustPressed("ui_cancel"))
                 Input.SetMouseMode(MouseMode.Visible);
         }
