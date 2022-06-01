@@ -1,10 +1,8 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Scripts/Game/3D/FPSController.cs" type="Script" id=1]
-[ext_resource path="res://Models/Game Rig/player.gltf" type="PackedScene" id=2]
+[ext_resource path="res://Models/Player FPS Rig/FPS Rig.glb" type="PackedScene" id=2]
 [ext_resource path="res://Scripts/Game/3D/ADS.cs" type="Script" id=3]
-
-[sub_resource type="CubeMesh" id=21]
 
 [sub_resource type="CapsuleShape" id=12]
 radius = 0.5
@@ -71,13 +69,12 @@ node_connections = [ "output", 0, "JumpShot", "JumpShot", 0, "BlendRifleNoRifle"
 script = ExtResource( 1 )
 NodePathHead = NodePath("Head")
 NodePathHand = NodePath("Head/Camera/Hand")
-NodePathSkeleton = NodePath("player/Armature/Skeleton2")
 
 [node name="Head" type="Spatial" parent="."]
-transform = Transform( 1, 0, 0, 0, 0.999298, -0.0374634, 0, 0.0374634, 0.999298, 0, 3.5, 2.89643 )
+transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 2.7676, 0 )
 
 [node name="Camera" type="Camera" parent="Head"]
-transform = Transform( 1, -7.29864e-09, 3.05178e-10, 7.29863e-09, 0.996509, -0.0834865, 3.05214e-10, 0.0834865, 0.996509, 0.195703, -0.140749, -0.192103 )
+transform = Transform( 1, 0, 2.84217e-14, 0, 1, 0, -2.84217e-14, 0, 1, 0, -0.203735, 0 )
 keep_aspect = 0
 fov = 120.0
 near = 0.01
@@ -89,20 +86,8 @@ RestPosition = Vector3( 0.126, -0.19, -0.416 )
 ADSPosition = Vector3( 0, -0.046, -0.381 )
 NodePathCamera = NodePath("..")
 
-[node name="Rifle" type="MeshInstance" parent="Head/Camera/Hand"]
-transform = Transform( 0.0270733, 0, 0, 0, 0.02642, 0, 0, 0, 0.347939, 0, 0, 0 )
-mesh = SubResource( 21 )
-skeleton = NodePath("../..")
-material/0 = null
-
-[node name="Hold Front" type="Position3D" parent="Head/Camera/Hand/Rifle"]
-transform = Transform( 0.77913, 0.672611, -0.480665, -0.277408, 0.269361, 12.4989, 0.0474749, -0.0478826, 0.340088, -4.72135, -8.97798, -0.449709 )
-
-[node name="Hold Rear" type="Position3D" parent="Head/Camera/Hand/Rifle"]
-transform = Transform( 0.97216, -0.246969, -0.0885814, 0.0241085, 0.328135, 12.3112, -0.013053, -0.0698217, 0.384304, 6.13844, -3.2654, 2.04638 )
-
-[node name="player" parent="." instance=ExtResource( 2 )]
-transform = Transform( 3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0 )
+[node name="FPS Rig" parent="Head" instance=ExtResource( 2 )]
+transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, -2.7676, 0 )
 
 [node name="CollisionBody" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 1.5, 0 )
@@ -120,4 +105,4 @@ parameters/IdleWalkRun/blend_position = 0.0
 parameters/JumpShot/active = false
 parameters/RifleIdleWalkRun/blend_position = 0.0
 
-[editable path="player"]
+[editable path="Head/FPS Rig"]
