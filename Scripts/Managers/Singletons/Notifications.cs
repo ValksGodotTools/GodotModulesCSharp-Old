@@ -5,6 +5,7 @@ namespace GodotModules
         OnKeyboardInput,
         OnMouseButtonInput,
         OnMouseMotionInput,
+        OnJoypadButtonInput,
         OnSceneChanged
     }
 
