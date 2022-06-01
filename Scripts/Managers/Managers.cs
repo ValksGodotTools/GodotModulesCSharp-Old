@@ -102,6 +102,9 @@ namespace GodotModules
 			if (@event is InputEventMouseButton inputEventMouseButton)
 				Notifications.Notify(this, Event.OnMouseButtonInput, inputEventMouseButton);
 
+			if (@event is InputEventMouseMotion inputEventMouseMotion)
+				Notifications.Notify(this, Event.OnMouseMotionInput, inputEventMouseMotion);
+
 			if (Input.IsActionJustPressed("ui_fullscreen"))
 				Options.ToggleFullscreen();
 
