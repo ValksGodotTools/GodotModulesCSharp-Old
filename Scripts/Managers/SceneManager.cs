@@ -65,10 +65,12 @@ namespace GodotModules
             if (_activeScene is AScene ascene)
                 ascene.PreInitManagers(_managers);
 
-            Notifications.RemoveInvalidListeners();
-            Notifications.Notify(this, "OnSceneChanged", scene);
-
             _sceneList.AddChild(_activeScene);
+
+            await Task.Delay(1); // wait for listeners to become invalid
+
+            Notifications.RemoveInvalidListeners();
+            Notifications.Notify(this, Event.OnSceneChanged, scene);
         }
 
         private void LoadScene(string scene) 
