@@ -1,8 +1,9 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Scripts/Game/3D/FPSController.cs" type="Script" id=1]
 [ext_resource path="res://Models/Player FPS Rig/FPS Rig.glb" type="PackedScene" id=2]
 [ext_resource path="res://Scripts/Game/3D/ADS.cs" type="Script" id=3]
+[ext_resource path="res://Models/Pistol/Pistol.glb" type="PackedScene" id=4]
 
 [sub_resource type="CapsuleShape" id=12]
 radius = 0.5
@@ -88,6 +89,9 @@ NodePathCamera = NodePath("..")
 
 [node name="FPS Rig" parent="Head" instance=ExtResource( 2 )]
 transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, -2.7676, 0 )
+
+[node name="Pistol" parent="Head/FPS Rig" instance=ExtResource( 4 )]
+transform = Transform( 1, 0, 0, 0, 1, 2.84217e-14, 0, -2.84217e-14, 1, 0, 0, 0 )
 
 [node name="CollisionBody" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 1.5, 0 )

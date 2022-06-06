@@ -6,6 +6,7 @@ namespace GodotModules
     {
         [Export] protected readonly NodePath NodePathHead;
         [Export] protected readonly NodePath NodePathHand;
+        [Export] protected readonly NodePath NodePathSkeleton;
 
         private Spatial _head;
         private Spatial _hand;
