@@ -4,8 +4,13 @@ namespace GodotModules
     {
         [Export] protected readonly NodePath NodePathCamera;
         [Export] protected readonly NodePath NodePathAnimatedSprite;
+        [Export] protected readonly NodePath NodePathSword;
+        [Export] protected readonly NodePath NodePathSwordAnimationPlayer;
+
         private Camera2D _camera;
         private AnimatedSprite _animatedSprite;
+        private Node2D _sword;
+        private AnimationPlayer _swordAnimationPlayer;
 
         private bool _movingDown, _movingUp, _movingLeft, _movingRight, _running, _attack;
         private float _zoom = 0.75f;
@@ -16,13 +21,34 @@ namespace GodotModules
         {
             _camera = GetNode<Camera2D>(NodePathCamera);
             _animatedSprite = GetNode<AnimatedSprite>(NodePathAnimatedSprite);
+            _sword = GetNode<Node2D>(NodePathSword);
+            _swordAnimationPlayer = GetNode<AnimationPlayer>(NodePathSwordAnimationPlayer);
             //_sprite = GetNode<Sprite>(NodePathSprite);
 
             Notifications.AddListener(this, Event.OnMouseButtonInput, OnMouseButtonInput);
         }
 
+        public override void _Process(float delta)
+        {
+            if (Input.IsActionJustPressed("player_shoot") && !_swordAnimationPlayer.IsPlaying())
+                _swordAnimationPlayer.Play("attack");
+        }
+
         public override void _PhysicsProcess(float delta)
         {
+            var mouseDirection = (GetGlobalMousePosition() - GlobalPosition).Normalized();
+
+            _sword.Rotation = mouseDirection.Angle();
+
+            var newScale = _sword.Scale;
+
+            if (_sword.Scale.y == 1 && mouseDirection.x < 0)
+                newScale.y = -1;
+            else if (_sword.Scale.y == -1 && mouseDirection.x > 0)
+                newScale.y = 1;
+
+            _sword.Scale = newScale;
+
             //_sprite.LerpRotationToTarget(GetGlobalMousePosition());
             HandleMovement(delta);
             HandleShoot();

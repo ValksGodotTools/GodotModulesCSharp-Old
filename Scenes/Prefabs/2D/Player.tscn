@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=2]
+[gd_scene load_steps=44 format=2]
 
 [ext_resource path="res://Sprites/Game/Fumiko.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Game/Player.cs" type="Script" id=2]
@@ -189,6 +189,62 @@ animations = [ {
 "speed": 6.0
 } ]
 
+[sub_resource type="Animation" id=99]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Node2D:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ -135.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Node2D/Sprite:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+
+[sub_resource type="Animation" id=98]
+resource_name = "attack"
+length = 1.25
+step = 0.01
+tracks/0/type = "value"
+tracks/0/path = NodePath("Node2D:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.15, 0.8, 1.25 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ -135.0, 75.0, 75.0, -135.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Node2D/Sprite:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.05, 0.15 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 27.8, 0.0 ]
+}
+
 [sub_resource type="CapsuleShape2D" id=96]
 radius = 9.0
 height = 4.0
@@ -205,6 +261,8 @@ script = ExtResource( 2 )
 NodePathSprite = NodePath("AnimatedSprite")
 NodePathCamera = NodePath("Camera2D")
 NodePathAnimatedSprite = NodePath("AnimatedSprite")
+NodePathSword = NodePath("Sword")
+NodePathSwordAnimationPlayer = NodePath("Sword/SwordAnimationPlayer")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
@@ -232,6 +290,10 @@ rotation = -2.35619
 [node name="Sprite" type="Sprite" parent="Sword/Node2D"]
 position = Vector2( 43.1335, 4.94975 )
 texture = ExtResource( 5 )
+
+[node name="SwordAnimationPlayer" type="AnimationPlayer" parent="Sword"]
+anims/RESET = SubResource( 99 )
+anims/attack = SubResource( 98 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
