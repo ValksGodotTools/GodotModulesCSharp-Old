@@ -1,10 +1,11 @@
-[gd_scene load_steps=44 format=2]
+[gd_scene load_steps=45 format=2]
 
 [ext_resource path="res://Sprites/Game/Fumiko.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Game/Player.cs" type="Script" id=2]
 [ext_resource path="res://Scenes/Modules/ScreenShake.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Sprites/Game/Cat.png" type="Texture" id=4]
 [ext_resource path="res://Sprites/Game/Sword.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/Game/SwordSlashEffect.png" type="Texture" id=6]
 
 [sub_resource type="ShaderMaterial" id=72]
 
@@ -215,6 +216,30 @@ tracks/1/keys = {
 "update": 0,
 "values": [ 0.0 ]
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath("SlashSprite:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ true ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("SlashSprite:frame")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0 ]
+}
 
 [sub_resource type="Animation" id=98]
 resource_name = "attack"
@@ -243,6 +268,30 @@ tracks/1/keys = {
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
 "values": [ 0.0, 27.8, 0.0 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("SlashSprite:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.03, 0.26 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ false, true, false ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("SlashSprite:frame")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.13, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2 ]
 }
 
 [sub_resource type="CapsuleShape2D" id=96]
@@ -294,6 +343,11 @@ texture = ExtResource( 5 )
 [node name="SwordAnimationPlayer" type="AnimationPlayer" parent="Sword"]
 anims/RESET = SubResource( 99 )
 anims/attack = SubResource( 98 )
+
+[node name="SlashSprite" type="Sprite" parent="Sword"]
+position = Vector2( 32, 0 )
+texture = ExtResource( 6 )
+hframes = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
