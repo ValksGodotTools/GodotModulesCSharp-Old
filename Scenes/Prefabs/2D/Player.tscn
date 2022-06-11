@@ -227,8 +227,10 @@ playing = true
 [node name="Sword" type="Node2D" parent="."]
 
 [node name="Node2D" type="Node2D" parent="Sword"]
+rotation = -2.35619
 
 [node name="Sprite" type="Sprite" parent="Sword/Node2D"]
+position = Vector2( 43.1335, 4.94975 )
 texture = ExtResource( 5 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
