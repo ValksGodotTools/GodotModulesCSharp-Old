@@ -50,7 +50,7 @@ namespace GodotModules
 
             if (!_swordAnimationPlayer.IsPlaying()) 
             {
-                _sword.Rotation = mouseDirection.Angle();
+                _sword.Rotation = Mathf.LerpAngle(_sword.Rotation, mouseDirection.Angle(), 0.2f);
                 _sword.Scale = newScale;
             }
 
