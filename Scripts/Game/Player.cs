@@ -41,9 +41,6 @@ namespace GodotModules
         public override void _PhysicsProcess(float delta)
         {
             var mouseDirection = (GetGlobalMousePosition() - GlobalPosition).Normalized();
-
-            _sword.Rotation = mouseDirection.Angle();
-
             var newScale = _sword.Scale;
 
             if (_sword.Scale.y == 1 && mouseDirection.x < 0)
@@ -51,7 +48,11 @@ namespace GodotModules
             else if (_sword.Scale.y == -1 && mouseDirection.x > 0)
                 newScale.y = 1;
 
-            _sword.Scale = newScale;
+            if (!_swordAnimationPlayer.IsPlaying()) 
+            {
+                _sword.Rotation = mouseDirection.Angle();
+                _sword.Scale = newScale;
+            }
 
             //_sprite.LerpRotationToTarget(GetGlobalMousePosition());
             HandleMovement(delta);

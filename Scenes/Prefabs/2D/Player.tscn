@@ -338,8 +338,8 @@ playing = true
 rotation = -2.35619
 
 [node name="Sprite" type="Sprite" parent="Sword/Node2D"]
-position = Vector2( 43.1335, 4.94975 )
 texture = ExtResource( 5 )
+offset = Vector2( 43, 5 )
 
 [node name="SwordAnimationPlayer" type="AnimationPlayer" parent="Sword"]
 anims/RESET = SubResource( 99 )
