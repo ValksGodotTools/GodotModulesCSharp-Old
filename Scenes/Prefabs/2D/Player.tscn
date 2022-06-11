@@ -1,9 +1,10 @@
-[gd_scene load_steps=41 format=2]
+[gd_scene load_steps=42 format=2]
 
 [ext_resource path="res://Sprites/Game/Fumiko.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Game/Player.cs" type="Script" id=2]
 [ext_resource path="res://Scenes/Modules/ScreenShake.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Sprites/Game/Cat.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/Game/Sword.png" type="Texture" id=5]
 
 [sub_resource type="ShaderMaterial" id=72]
 
@@ -222,6 +223,13 @@ frames = SubResource( 39 )
 animation = "attack"
 frame = 9
 playing = true
+
+[node name="Sword" type="Node2D" parent="."]
+
+[node name="Node2D" type="Node2D" parent="Sword"]
+
+[node name="Sprite" type="Sprite" parent="Sword/Node2D"]
+texture = ExtResource( 5 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
