@@ -6,10 +6,12 @@ namespace GodotModules
         [Export] protected readonly NodePath NodePathAnimatedSprite;
         [Export] protected readonly NodePath NodePathSword;
         [Export] protected readonly NodePath NodePathSwordAnimationPlayer;
+        [Export] protected readonly NodePath NodePathSwordSlashSprite;
 
         private Camera2D _camera;
         private AnimatedSprite _animatedSprite;
         private Node2D _sword;
+        private Sprite _swordSlashSprite;
         private AnimationPlayer _swordAnimationPlayer;
 
         private bool _movingDown, _movingUp, _movingLeft, _movingRight, _running, _attack;
@@ -23,6 +25,8 @@ namespace GodotModules
             _animatedSprite = GetNode<AnimatedSprite>(NodePathAnimatedSprite);
             _sword = GetNode<Node2D>(NodePathSword);
             _swordAnimationPlayer = GetNode<AnimationPlayer>(NodePathSwordAnimationPlayer);
+            _swordSlashSprite = GetNode<Sprite>(NodePathSwordSlashSprite);
+            _swordSlashSprite.Visible = false;
             //_sprite = GetNode<Sprite>(NodePathSprite);
 
             Notifications.AddListener(this, Event.OnMouseButtonInput, OnMouseButtonInput);

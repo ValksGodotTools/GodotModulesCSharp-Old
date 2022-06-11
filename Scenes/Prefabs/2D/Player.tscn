@@ -312,6 +312,7 @@ NodePathCamera = NodePath("Camera2D")
 NodePathAnimatedSprite = NodePath("AnimatedSprite")
 NodePathSword = NodePath("Sword")
 NodePathSwordAnimationPlayer = NodePath("Sword/SwordAnimationPlayer")
+NodePathSwordSlashSprite = NodePath("Sword/SlashSprite")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
