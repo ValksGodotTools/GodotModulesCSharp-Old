@@ -1,8 +1,5 @@
 ## Thread Safety
-**THREAD SAFETY IS NO JOKE**. Really weird things will happen if you don't follow thread safety (as seen [here](https://github.com/valkyrienyanko/GodotModules/issues/13)) :(
-
-Note that tasks are surrounded with try catch so you will see error in console unlike with issue above.
-
+The netcode uses a while loop that runs constantly and thus needs to be on a separate thread from the Godot thread. Two methods are used to safely send data between threads, ConcurrentQueue<T> and Interlocked.Read(). ConcurrentQueue<T> allows any kind of data to be enqueued on one thread and dequeued on another. Interlocked.Read() is a nice and easy way to read a bool from any thread. If data is not accessed through one of these methods, then the rules of thread safety are being violated and will vastly increase the chances of the program crashing with no errors. Trying to debug errors that do not appear in the console is a nightmare, please be mindful when sending data between threads.
 
 ## Reading data from packets
 I make this mistake all the time, the app will continue to run like normal except you will always yet the default value of whatever type you are reading. In this case it is a bool, it would always be false.
