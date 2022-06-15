@@ -67,18 +67,42 @@ GameManager.Exit();
 
 ### Utils
 ```cs
-"hello world".ToTitleCase(); // Hello World
+// string extensions
 "helloWorld".AddSpaceBeforeEachCapitol(); // hello World
 
+"player_move_up".Replace("_", " ").ToTitleCase().SmallWordsToUpper(2, (word) => {
+    var words = new string[] {"Up", "In"};
+    return !words.Contains(word);
+}); // Player Move UP
+
+// collection extensions
 var list = new List<int>{1,2,3};
 list.Print(); // 1, 2, 3
 
 var dict = new Dictionary<int, int>{ {1,1}, {2,3} };
 dict.Print(); // 1 1, 2 3
 
+// utils
 var someValue = 24f;
 someValue.Remap(0, 100, -40, 80); //remap someValue from range 0-100 to range -40-80
 
+Vector2 newPos = Utils.Lerp(playerPos, targetPos, 0.1f);
+
+Vector2 randomDir = Utils.RandomDir();
+enemy.Position = randomDir * 10;
+
+myList.ForEach(x => x.DoSomething()); // functional programming with ForEach extension (do not abuse as hard to debug)
+
+// timers
+var gTimer = new GTimer(this, nameof(Method)); // wrapper for Godot timer
+var sTimer = new STimer(action); // wrapper for System timer
+sTimer.Dispose();
+
+// filters for LineEdit nodes with realtime feedback
+inputName.Filter((text) => text.IsMatch("^[A-Za-z ]+$"));
+inputPort.FilterRange(ushort.MaxValue);
+
+// quick and dirty encryption
 var encryptedPassword = EncryptionHelper.Encrypt("epicPa55w0rd");
 var password = EncryptionHelper.Decrypt(encryptedPassword);
 ```
