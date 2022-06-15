@@ -33,7 +33,7 @@ VSCode is a UI friendly text editor for developers
 
 ### GitHub
 1. Fork this repo
-2. Clone your fork with `git clone https://github.com/<USERNAME>/GodotModules` (replace `<USERNAME>` with your GitHub username) (if you get unrecognized command when doing `git` then install [Git scm](https://git-scm.com/downloads))
+2. Clone your fork with `git clone https://github.com/<USERNAME>/GodotModules` (replace `<USERNAME>` with your GitHub username) (if you get `'git' is not recognized as an internal or external command` then install [Git scm](https://git-scm.com/downloads))
 3. Extract the zip and open the folder in VSCode
 4. Go to the source control tab
 5. Click the 3 dots icon, click `Checkout to...`, switch to `dev` branch
