@@ -31,6 +31,13 @@ VSCode is a UI friendly text editor for developers
     - [MoonSharp Debug](https://marketplace.visualstudio.com/items?itemName=xanathar.moonsharp-debug) (only if debugging lua)
 3. Launch Godot through VSCode by hitting `F1` to open up VSCode command and run `godot tools: open workspace with godot editor` or simply click the `Open Godot Editor` button bottom right
 
+### GitHub
+1. Fork this repo
+2. Clone your fork with `git clone https://github.com/<USERNAME>/GodotModules` (replace `<USERNAME>` with your GitHub username) (if you get unrecognized command when doing `git` then install [Git scm](https://git-scm.com/downloads)
+3. Extract the zip and open the folder in VSCode
+4. Once you make a change to any file you can go to the source control tab, give your commit a message and then push the commit to your fork
+5. Once you have some commits on your fork, you can go [here](https://github.com/GodotModules/GodotModulesCSharp/pulls) and open up a new pull request
+
 ### Common Mistakes
 Some common mistakes are listed in [this](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/COMMON_MISTAKES.md) page.
 
