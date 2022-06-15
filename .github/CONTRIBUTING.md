@@ -34,17 +34,6 @@ VSCode is a UI friendly text editor for developers
 ### Common Mistakes
 Some common mistakes are listed in [this](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/COMMON_MISTAKES.md) page.
 
-## Debugging C#
-Launch the VSCode configuration `Play in Editor` (if configuration is set to this already then just press `F5`)
-
-
-## Debugging Lua
-While the C# debugger is running in the editor launch the VSCode configuration `MoonSharp Attach`
-
-
-## Debugging Netcode
-Export a release of the game to a folder. Open cmd in this folder and run exe. Do again for another client.
-
 
 ## Exporting
 Do not forget to copy enet.dll to exported release folder
