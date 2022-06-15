@@ -42,6 +42,8 @@ VSCode is a UI friendly text editor for developers
 6. All the files you make changes to should appear here as well, you can stage the files you want to commit, give the commit a message and then push it to your fork
 7. Once you have some commits on your fork, you can go [here](https://github.com/GodotModules/GodotModulesCSharp/pulls) and open up a new pull request and request to merge your work with the main repo
 
+> ⚠️ Before committing anything please talk to `valk#9904` in the [Godot Modules Discord Server](https://discord.gg/866cg8yfxZ) so we can mitigate potential merge conflicts. 
+
 ### Common Mistakes
 Some common mistakes are listed in [this](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/COMMON_MISTAKES.md) page.
 
