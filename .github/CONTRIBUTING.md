@@ -35,8 +35,10 @@ VSCode is a UI friendly text editor for developers
 1. Fork this repo
 2. Clone your fork with `git clone https://github.com/<USERNAME>/GodotModules` (replace `<USERNAME>` with your GitHub username) (if you get unrecognized command when doing `git` then install [Git scm](https://git-scm.com/downloads))
 3. Extract the zip and open the folder in VSCode
-4. Once you make a change to any file you can go to the source control tab, give your commit a message and then push the commit to your fork
-5. Once you have some commits on your fork, you can go [here](https://github.com/GodotModules/GodotModulesCSharp/pulls) and open up a new pull request
+4. Go to the source control tab
+5. Click the 3 dots icon, click `Checkout to...`, switch to `dev` branch
+6. All the files you make changes should appear here as well, you can stage the files you want to commit, give the commit a message and then push it to your fork
+7. Once you have some commits on your fork, you can go [here](https://github.com/GodotModules/GodotModulesCSharp/pulls) and open up a new pull request and request to merge your work with the main repo
 
 ### Common Mistakes
 Some common mistakes are listed in [this](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/COMMON_MISTAKES.md) page.
