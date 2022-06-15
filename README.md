@@ -53,7 +53,7 @@ There are also popup error and message windows. The bottom right corner of the s
 
 https://user-images.githubusercontent.com/6277739/165597959-cb42938a-d680-45ec-99f0-d2ba4495a534.mp4
 
-[Trying to sync enemy physics with server and client](https://www.reddit.com/r/opensourcegames/comments/umbqn1/my_first_time_with_server_simulated_enemies_what/)
+[Click here to see an attempt at trying to sync enemy physics with server and client](https://www.reddit.com/r/opensourcegames/comments/umbqn1/my_first_time_with_server_simulated_enemies_what/)
 
 
 ### Tech Tree (coming soon)
