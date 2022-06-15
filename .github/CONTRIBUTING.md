@@ -18,7 +18,7 @@ You can discuss about the project in the [Godot Modules Discord Server](https://
 4. Launch Godot through [VSCode](#vscode)
 5. In `Godot Editor > Editor Settings > Mono > Builds`: Make sure `Build Tool` is set to `dotnet CLI`
 
-If the startup scene is the main menu, the [game server](https://github.com/Raccoons-Rise-Up/server/blob/main/.github/CONTRIBUTING.md#setup) and [web server](https://github.com/Raccoons-Rise-Up/website/blob/main/.github/CONTRIBUTING.md) will need to be running to get past the login screen to the main game scene, otherwise you can change the startup scene to the main game scene by going to `Godot > Project Settings > Application > Run > Main Scene`.
+The Godot startup scene should be set to `res://Scenes/Main.tscn`, if it is not then the game server and web server will not start and a lot of other code that needs to be initialized will not be initialized. To fix this go to `Godot > Project Settings > Application > Run > Main Scene` and set it to the main scene.
 
 ### VSCode
 VSCode is a UI friendly text editor for developers
