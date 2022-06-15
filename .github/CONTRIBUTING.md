@@ -48,7 +48,3 @@ VSCode is a UI friendly text editor for developers
 
 ### Common Mistakes
 Some common mistakes are listed in [this](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/COMMON_MISTAKES.md) page.
-
-
-## Exporting
-Do not forget to copy enet.dll to exported release folder
