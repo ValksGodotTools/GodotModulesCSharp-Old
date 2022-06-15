@@ -20,11 +20,6 @@ You can discuss about the project in the [Godot Modules Discord Server](https://
 
 If the startup scene is the main menu, the [game server](https://github.com/Raccoons-Rise-Up/server/blob/main/.github/CONTRIBUTING.md#setup) and [web server](https://github.com/Raccoons-Rise-Up/website/blob/main/.github/CONTRIBUTING.md) will need to be running to get past the login screen to the main game scene, otherwise you can change the startup scene to the main game scene by going to `Godot > Project Settings > Application > Run > Main Scene`.
 
-
-### Common Mistakes
-Some common mistakes are listed in [this](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/COMMON_MISTAKES.md) page.
-
-
 ### VSCode
 VSCode is a UI friendly text editor for developers
 1. Install [VSCode](https://code.visualstudio.com)
@@ -36,6 +31,8 @@ VSCode is a UI friendly text editor for developers
     - [MoonSharp Debug](https://marketplace.visualstudio.com/items?itemName=xanathar.moonsharp-debug) (only if debugging lua)
 3. Launch Godot through VSCode by hitting `F1` to open up VSCode command and run `godot tools: open workspace with godot editor` or simply click the `Open Godot Editor` button bottom right
 
+### Common Mistakes
+Some common mistakes are listed in [this](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/COMMON_MISTAKES.md) page.
 
 ## Debugging C#
 Launch the VSCode configuration `Play in Editor` (if configuration is set to this already then just press `F5`)
