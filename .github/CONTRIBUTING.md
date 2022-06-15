@@ -46,5 +46,7 @@ VSCode is a UI friendly text editor for developers
 
 > Some development has been moved to a [separate repo](https://github.com/GodotModules/Sandbox) as it's nice to work with a clean environment and sometimes the main repo gets too messy in some areas. Once the code has been refined here, it will be merged back with the main repo.
 
+> You can have a look at the projects roadmap [here](https://github.com/GodotModules/GodotModulesCSharp/issues/124).
+
 ### Common Mistakes
 Some common mistakes are listed in [this](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/COMMON_MISTAKES.md) page.
