@@ -24,9 +24,13 @@ namespace GodotModules
         {
             var dir = new Directory();
 
-            if (dir.Open($"res://{path}") != Error.Ok)
+            path = path.Replace('\\', '/');
+
+            var error = dir.Open($"res://{path}");
+
+            if (error != Error.Ok)
             {
-                Logger.LogWarning($"Failed to open {path}");
+                Logger.LogWarning($"Failed to open res://{path}, Error: '{error}'");
                 return false;
             }
 

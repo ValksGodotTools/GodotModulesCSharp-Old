@@ -45,7 +45,7 @@ namespace GodotModules
                         var data = (LogMessageDebug)result.Data;
                         UIConsole.AddMessage(data.Message);
                         Print(data.Message, result.Color);
-                        if (data.Trace) 
+                        if (data.Trace)
                         {
                             UIConsole.AddMessage(data.TracePath);
                             Print(data.TracePath, ConsoleColor.DarkGray);
@@ -75,7 +75,7 @@ namespace GodotModules
         public object Data { get; set; }
         public ConsoleColor Color { get; set; }
 
-        public LogInfo(LoggerOpcode opcode, object data, ConsoleColor color = ConsoleColor.Gray) 
+        public LogInfo(LoggerOpcode opcode, object data, ConsoleColor color = ConsoleColor.Gray)
         {
             Opcode = opcode;
             Data = data;
@@ -83,7 +83,7 @@ namespace GodotModules
         }
     }
 
-    public class LogMessageDebug 
+    public class LogMessageDebug
     {
         public string Message { get; set; }
         public bool Trace { get; set; }
@@ -97,7 +97,7 @@ namespace GodotModules
         }
     }
 
-    public enum LoggerOpcode 
+    public enum LoggerOpcode
     {
         Message,
         Exception,
