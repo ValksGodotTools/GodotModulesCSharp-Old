@@ -100,8 +100,7 @@ namespace GodotModules
 
             if (shooting)
             {
-                var shake = (ScreenShake)_camera.GetChild(0);
-                shake.Start();
+                
             }
         }
 

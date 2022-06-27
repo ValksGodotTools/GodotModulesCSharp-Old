@@ -1,8 +1,7 @@
-[gd_scene load_steps=45 format=2]
+[gd_scene load_steps=44 format=2]
 
 [ext_resource path="res://Sprites/Game/Fumiko.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Game/Player.cs" type="Script" id=2]
-[ext_resource path="res://Scenes/Modules/ScreenShake.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Sprites/Game/Cat.png" type="Texture" id=4]
 [ext_resource path="res://Sprites/Game/Sword.png" type="Texture" id=5]
 [ext_resource path="res://Sprites/Game/SwordSlashEffect.png" type="Texture" id=6]
@@ -13,17 +12,17 @@
 atlas = ExtResource( 1 )
 region = Rect2( 384, 32, 24, 32 )
 
-[sub_resource type="AtlasTexture" id=87]
+[sub_resource type="AtlasTexture" id=74]
 atlas = ExtResource( 1 )
-region = Rect2( 72, 96, 24, 32 )
+region = Rect2( 0, 64, 24, 32 )
 
-[sub_resource type="AtlasTexture" id=88]
+[sub_resource type="AtlasTexture" id=75]
 atlas = ExtResource( 1 )
-region = Rect2( 96, 96, 24, 32 )
+region = Rect2( 24, 64, 24, 32 )
 
-[sub_resource type="AtlasTexture" id=89]
+[sub_resource type="AtlasTexture" id=76]
 atlas = ExtResource( 1 )
-region = Rect2( 120, 96, 24, 32 )
+region = Rect2( 48, 64, 24, 32 )
 
 [sub_resource type="AtlasTexture" id=80]
 atlas = ExtResource( 1 )
@@ -53,18 +52,6 @@ region = Rect2( 120, 224, 24, 32 )
 atlas = ExtResource( 1 )
 region = Rect2( 144, 224, 24, 32 )
 
-[sub_resource type="AtlasTexture" id=81]
-atlas = ExtResource( 1 )
-region = Rect2( 72, 32, 24, 32 )
-
-[sub_resource type="AtlasTexture" id=82]
-atlas = ExtResource( 1 )
-region = Rect2( 96, 32, 24, 32 )
-
-[sub_resource type="AtlasTexture" id=83]
-atlas = ExtResource( 1 )
-region = Rect2( 120, 32, 24, 32 )
-
 [sub_resource type="AtlasTexture" id=93]
 atlas = ExtResource( 1 )
 region = Rect2( 0, 0, 24, 32 )
@@ -77,17 +64,29 @@ region = Rect2( 24, 0, 24, 32 )
 atlas = ExtResource( 1 )
 region = Rect2( 48, 0, 24, 32 )
 
-[sub_resource type="AtlasTexture" id=74]
+[sub_resource type="AtlasTexture" id=81]
 atlas = ExtResource( 1 )
-region = Rect2( 0, 64, 24, 32 )
+region = Rect2( 72, 32, 24, 32 )
 
-[sub_resource type="AtlasTexture" id=75]
+[sub_resource type="AtlasTexture" id=82]
 atlas = ExtResource( 1 )
-region = Rect2( 24, 64, 24, 32 )
+region = Rect2( 96, 32, 24, 32 )
 
-[sub_resource type="AtlasTexture" id=76]
+[sub_resource type="AtlasTexture" id=83]
 atlas = ExtResource( 1 )
-region = Rect2( 48, 64, 24, 32 )
+region = Rect2( 120, 32, 24, 32 )
+
+[sub_resource type="AtlasTexture" id=87]
+atlas = ExtResource( 1 )
+region = Rect2( 72, 96, 24, 32 )
+
+[sub_resource type="AtlasTexture" id=88]
+atlas = ExtResource( 1 )
+region = Rect2( 96, 96, 24, 32 )
+
+[sub_resource type="AtlasTexture" id=89]
+atlas = ExtResource( 1 )
+region = Rect2( 120, 96, 24, 32 )
 
 [sub_resource type="AtlasTexture" id=84]
 atlas = ExtResource( 1 )
@@ -100,18 +99,6 @@ region = Rect2( 96, 64, 24, 32 )
 [sub_resource type="AtlasTexture" id=86]
 atlas = ExtResource( 1 )
 region = Rect2( 120, 64, 24, 32 )
-
-[sub_resource type="AtlasTexture" id=90]
-atlas = ExtResource( 1 )
-region = Rect2( 72, 0, 24, 32 )
-
-[sub_resource type="AtlasTexture" id=91]
-atlas = ExtResource( 1 )
-region = Rect2( 96, 0, 24, 32 )
-
-[sub_resource type="AtlasTexture" id=92]
-atlas = ExtResource( 1 )
-region = Rect2( 120, 0, 24, 32 )
 
 [sub_resource type="AtlasTexture" id=77]
 atlas = ExtResource( 1 )
@@ -137,6 +124,18 @@ region = Rect2( 24, 32, 24, 32 )
 atlas = ExtResource( 1 )
 region = Rect2( 48, 32, 24, 32 )
 
+[sub_resource type="AtlasTexture" id=90]
+atlas = ExtResource( 1 )
+region = Rect2( 72, 0, 24, 32 )
+
+[sub_resource type="AtlasTexture" id=91]
+atlas = ExtResource( 1 )
+region = Rect2( 96, 0, 24, 32 )
+
+[sub_resource type="AtlasTexture" id=92]
+atlas = ExtResource( 1 )
+region = Rect2( 120, 0, 24, 32 )
+
 [sub_resource type="SpriteFrames" id=39]
 animations = [ {
 "frames": [ SubResource( 73 ) ],
@@ -144,9 +143,9 @@ animations = [ {
 "name": "idle",
 "speed": 6.0
 }, {
-"frames": [ SubResource( 87 ), SubResource( 88 ), SubResource( 89 ) ],
+"frames": [ SubResource( 74 ), SubResource( 75 ), SubResource( 76 ) ],
 "loop": true,
-"name": "run_left",
+"name": "walk_down",
 "speed": 6.0
 }, {
 "frames": [ SubResource( 80 ), SubResource( 65 ), SubResource( 66 ), SubResource( 67 ), SubResource( 68 ), SubResource( 69 ), SubResource( 69 ), SubResource( 70 ), SubResource( 70 ), SubResource( 70 ) ],
@@ -154,29 +153,24 @@ animations = [ {
 "name": "attack",
 "speed": 15.0
 }, {
-"frames": [ SubResource( 81 ), SubResource( 82 ), SubResource( 83 ) ],
-"loop": true,
-"name": "run_right",
-"speed": 6.0
-}, {
 "frames": [ SubResource( 93 ), SubResource( 94 ), SubResource( 95 ) ],
 "loop": true,
 "name": "walk_up",
 "speed": 6.0
 }, {
-"frames": [ SubResource( 74 ), SubResource( 75 ), SubResource( 76 ) ],
+"frames": [ SubResource( 81 ), SubResource( 82 ), SubResource( 83 ) ],
 "loop": true,
-"name": "walk_down",
+"name": "run_right",
+"speed": 6.0
+}, {
+"frames": [ SubResource( 87 ), SubResource( 88 ), SubResource( 89 ) ],
+"loop": true,
+"name": "run_left",
 "speed": 6.0
 }, {
 "frames": [ SubResource( 84 ), SubResource( 85 ), SubResource( 86 ) ],
 "loop": true,
 "name": "run_down",
-"speed": 6.0
-}, {
-"frames": [ SubResource( 90 ), SubResource( 91 ), SubResource( 92 ) ],
-"loop": true,
-"name": "run_up",
 "speed": 6.0
 }, {
 "frames": [ SubResource( 77 ), SubResource( 78 ), SubResource( 79 ) ],
@@ -187,6 +181,11 @@ animations = [ {
 "frames": [ SubResource( 36 ), SubResource( 37 ), SubResource( 38 ) ],
 "loop": true,
 "name": "walk_right",
+"speed": 6.0
+}, {
+"frames": [ SubResource( 90 ), SubResource( 91 ), SubResource( 92 ) ],
+"loop": true,
+"name": "run_up",
 "speed": 6.0
 } ]
 
@@ -317,8 +316,6 @@ NodePathSwordSlashSprite = NodePath("Sword/SlashSprite")
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
 zoom = Vector2( 0.5, 0.5 )
-
-[node name="ScreenShake" parent="Camera2D" instance=ExtResource( 3 )]
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 4 )
