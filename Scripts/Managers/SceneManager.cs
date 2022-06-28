@@ -6,8 +6,8 @@ namespace GodotModules
 
         public GameScene CurScene { get; private set; }
         public GameScene PrevScene { get; private set; }
+        public Node ActiveScene { get; private set; }
 
-        private Node _activeScene;
         private Dictionary<GameScene, PackedScene> _scenes = new();
         private GodotFileManager _godotFileManager;
         private HotkeyManager _hotkeyManager;
@@ -56,15 +56,15 @@ namespace GodotModules
             if (!instant)
                 await Task.Delay(1);
 
-            _activeScene = _scenes[scene].Instance();
+            ActiveScene = _scenes[scene].Instance();
 
             if (PreInit.ContainsKey(scene))
-                PreInit[scene](_activeScene);
+                PreInit[scene](ActiveScene);
 
-            if (_activeScene is AScene ascene)
+            if (ActiveScene is AScene ascene)
                 ascene.PreInitManagers(_managers);
 
-            _sceneList.AddChild(_activeScene);
+            _sceneList.AddChild(ActiveScene);
 
             await Task.Delay(1); // wait for listeners to become invalid
 

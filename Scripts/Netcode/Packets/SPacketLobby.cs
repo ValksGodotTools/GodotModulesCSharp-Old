@@ -160,7 +160,7 @@ namespace GodotModules.Netcode
                     break;
 
                 case LobbyOpcode.LobbyJoin:
-                    HandleJoin();
+                    HandleJoin(managers);
                     break;
 
                 case LobbyOpcode.LobbyChatMessage:
@@ -240,8 +240,11 @@ namespace GodotModules.Netcode
             await Task.FromResult(1);
         }
 
-        private void HandleJoin()
+        private void HandleJoin(Managers managers)
         {
+            var lobbyScene = (SceneLobby)managers.ManagerScene.ActiveScene;
+            lobbyScene.AddPlayerListing("Bob");
+
             /*if (SceneManager.InLobby())
                 SceneManager.GetActiveSceneScript<SceneLobby>().AddPlayer(Id, Username);
             Client.Players[Id] = Username;
