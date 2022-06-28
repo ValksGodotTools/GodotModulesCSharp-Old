@@ -1,3 +1,9 @@
+## Export settings not setup properly
+![image](https://user-images.githubusercontent.com/6277739/176059155-de5edd40-3529-4e39-9769-aff75832ad7b.png)
+
+Make sure export resource settings look exactly like this or you may run into the error  
+`[Warning]: Failed to open res://Scripts/Lua, Error: 'InvalidParameter'`  
+
 ## Copying `enet.dll` to the release folder
 Do not forget to copy `enet.dll` next to the games executable when exporting the game or the netcode will not function properly.
 
