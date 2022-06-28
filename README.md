@@ -28,9 +28,23 @@ I was thinking to myself, *I want to make a bullet hell game, but I am also goin
 
 I do not want to redo the same things over again. If I want multiplayer, I can just grab it from here. If I want a modloader, I can find it here. That is the motivation behind this project.
 
+![Menu](https://user-images.githubusercontent.com/6277739/176084227-c1f748bf-2cc0-4492-b132-b68f49ea1301.gif)  
+Quick look at the menus  
+
+![Cat with sword](https://user-images.githubusercontent.com/6277739/176084038-5483a55f-5698-4dc3-8a9c-0d08b7257d7c.gif)  
+Attack animation  
+
+![2DDungeon](https://user-images.githubusercontent.com/6277739/176084389-33209fb7-b793-47ba-827c-33aeff9a9381.gif)  
+Dungeon environment  
+
+![inv](https://user-images.githubusercontent.com/6277739/176084833-ea29cf7b-f7ef-46ec-8b56-5531ec735b7c.gif)  
+Working on a inventory  
+
+https://user-images.githubusercontent.com/6277739/176085117-7e61e96a-02ef-4f62-9aa0-c185abd94e90.mp4  
+
+Attempting to make a FPS  
 
 ## Modules
-
 
 ### Core
 There is an in-game console (shown by pressing F12) that supports custom commands, useful for in-game testing and debugging.
@@ -42,12 +56,14 @@ There are also popup error and message windows. The bottom right corner of the s
 
 ### [ModLoader](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/MOD_LOADER.md)
 
-![image](https://user-images.githubusercontent.com/6277739/162651881-b8f98aa5-da2a-4499-b4dd-737a64dec4a9.png)  
+![image](https://user-images.githubusercontent.com/6277739/176084658-e5bbdf50-3569-484c-a3b1-3f123969b306.png)
+
 
 
 ### [Netcode](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/NETCODE.md)
 
 ![image](https://user-images.githubusercontent.com/6277739/164528687-8ce3891f-2aa2-4c43-b9d2-404620aefad2.png)
+![image](https://user-images.githubusercontent.com/6277739/176084492-d642fac2-569b-4f0e-a14e-a02a6e95bd38.png)
 ![image](https://user-images.githubusercontent.com/6277739/164519290-fcd96048-3267-4278-bbd9-34bd7c0a86c0.png)
 ![image](https://user-images.githubusercontent.com/6277739/164519339-a23cc3be-29dd-4df8-ad3b-e975508f5ec8.png)
 
