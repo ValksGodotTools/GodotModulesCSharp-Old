@@ -48,5 +48,7 @@ VSCode is a UI friendly text editor for developers
 
 > You can have a look at the projects roadmap [here](https://github.com/GodotModules/GodotModulesCSharp/issues/124).
 
-### Common Mistakes
-Some common mistakes are listed in [this](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/COMMON_MISTAKES.md) page.
+
+### [Useful Tips](https://github.com/GodotModules/GodotModulesCSharp/blob/main/.github/USEFUL_TIPS.md)
+
+### [Common Mistakes](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/COMMON_MISTAKES.md)
