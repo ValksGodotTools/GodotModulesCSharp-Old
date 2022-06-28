@@ -16,7 +16,6 @@
     - [ModLoader](#modloader)
     - [Netcode](#netcode)
     - [Tech Tree (coming soon)](#tech-tree-coming-soon)
-    - [Options](#options)
     - [Helper Scripts](#helper-scripts)
   - [Contributing](#contributing)
   - [Credit](#credit)
