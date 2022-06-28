@@ -26,7 +26,7 @@
 ## Why make this?
 I was thinking to myself, *I want to make a bullet hell game, but I am also going to be making more then just one game in the future*.
 
-I do not want to redo the same things over again. If I want multiplayer, I can just grab it from here. If I want a modloader, I can find it here. That is the motivation behind this project.
+I do not want to redo the same things over again. If I want multiplayer, I can just grab it from here. If I want a modloader, I can find it here. If I want hotkeys, I can just get it from here. And so on.. That is the motivation behind this project!
 
 ![Menu](https://user-images.githubusercontent.com/6277739/176084227-c1f748bf-2cc0-4492-b132-b68f49ea1301.gif)  
 Quick look at the menus  
