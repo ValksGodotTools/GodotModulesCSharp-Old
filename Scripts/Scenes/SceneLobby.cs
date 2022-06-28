@@ -35,6 +35,18 @@ namespace GodotModules
             });
         }
 
+        public void AddPlayerListing(string name)
+        {
+            var playerListing = Prefabs.UIPlayerListing.Instance<UIPlayerListing>();
+            _playerList.AddChild(playerListing);
+            playerListing.SetPlayerName(name);
+        }
+
+        public void RemovePlayerListing()
+        {
+
+        }
+
         private void _on_Chat_Input_text_entered(string text)
         {
 

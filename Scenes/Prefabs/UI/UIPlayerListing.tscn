@@ -1,0 +1,24 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/UI/UIPlayerListing.cs" type="Script" id=1]
+
+[node name="UIPlayerListing" type="HBoxContainer"]
+margin_right = 83.0
+margin_bottom = 23.0
+script = ExtResource( 1 )
+NodePathName = NodePath("Player Name")
+NodePathKick = NodePath("Kick")
+
+[node name="Player Name" type="Label" parent="."]
+margin_top = 4.0
+margin_right = 47.0
+margin_bottom = 18.0
+text = "Player1"
+
+[node name="Kick" type="Button" parent="."]
+margin_left = 51.0
+margin_right = 89.0
+margin_bottom = 23.0
+text = "Kick"
+
+[connection signal="pressed" from="Kick" to="." method="_on_Kick_pressed"]
