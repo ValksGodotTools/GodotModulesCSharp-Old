@@ -100,7 +100,7 @@ namespace GodotModules.Netcode.Server
 
         protected override void Received(Peer peer, PacketReader packetReader, ClientPacketOpcode opcode)
         {
-            Log($"Received packet: {opcode}");
+            Log($"Received: {opcode}");
 
             if (!HandlePacket.ContainsKey(opcode))
             {
