@@ -76,10 +76,6 @@ https://user-images.githubusercontent.com/6277739/165597959-cb42938a-d680-45ec-9
 Tech tree where nodes in tree are positioned automatically via script
 
 
-### Options
-![image](https://user-images.githubusercontent.com/6277739/163117944-e350b70c-aaaa-426f-8719-3c28648d5747.png)  
-
-
 ### [Helper Scripts](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/UTILITY_SCRIPTS.md)
 
 
