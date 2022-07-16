@@ -15,7 +15,7 @@
     - [Core](#core)
     - [ModLoader](#modloader)
     - [Netcode](#netcode)
-    - [Tech Tree (coming soon)](#tech-tree-coming-soon)
+    - [Tech Tree](#tech-tree)
     - [Helper Scripts](#helper-scripts)
   - [Contributing](#contributing)
   - [Credit](#credit)
@@ -71,8 +71,10 @@ https://user-images.githubusercontent.com/6277739/165597959-cb42938a-d680-45ec-9
 [Click here to see an attempt at trying to sync enemy physics with server and client](https://www.reddit.com/r/opensourcegames/comments/umbqn1/my_first_time_with_server_simulated_enemies_what/)
 
 
-### Tech Tree (coming soon)
+### Tech Tree
 Tech tree where nodes in tree are positioned automatically via script
+
+The code for this has not been merged to this repository yet and can be found [here](https://github.com/Raccoons-Rise-Up/client-godot/blob/main/Scripts/UI/UITechTreeResearch.cs)
 
 
 ### [Helper Scripts](https://github.com/valkyrienyanko/GodotModules/blob/main/.github/UTILITY_SCRIPTS.md)
