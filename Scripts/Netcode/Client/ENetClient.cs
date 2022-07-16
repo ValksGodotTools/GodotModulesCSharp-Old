@@ -1,4 +1,7 @@
 using ENet;
+using LiteNetLib;
+using LiteNetLib.Utils;
+using Thread = System.Threading.Thread;
 
 namespace GodotModules.Netcode.Client 
 {
@@ -87,9 +90,32 @@ namespace GodotModules.Netcode.Client
         protected virtual void Sent(ClientPacketOpcode opcode) {}
         protected virtual void Stopped() {}
 
+        protected void Log(object v) => Logger.Log($"[Client]: {v}", ConsoleColor.DarkGreen);
+
         private Task ENetThreadWorker(string ip, ushort port)
         {
-            using var client = new Host();
+            Log("Starting client");
+            EventBasedNetListener listener = new EventBasedNetListener();
+            NetManager client = new NetManager(listener) {
+                IPv6Enabled = IPv6Mode.Disabled
+            };
+            client.Start();
+            client.Connect("localhost", port, "SomeConnectionKey");
+            listener.NetworkReceiveEvent += (fromPeer, dataReader, deliveryMethod) =>
+            {
+                Log($"We got: {dataReader.GetString(100)}");
+                dataReader.Recycle();
+            };
+
+            while (true)
+            {
+                client.PollEvents();
+                Thread.Sleep(15);
+            }
+
+            //client.Stop();
+
+            /*using var client = new Host();
             var address = new Address();
             address.SetHost(ip);
             address.Port = port;
@@ -190,7 +216,7 @@ namespace GodotModules.Netcode.Client
 
             Stopped();
 
-            return Task.FromResult(1);
+            return Task.FromResult(1);*/
         }
     }
 

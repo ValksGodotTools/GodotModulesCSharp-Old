@@ -1,5 +1,7 @@
 using ENet;
-using System.Threading;
+using LiteNetLib;
+using LiteNetLib.Utils;
+using Thread = System.Threading.Thread;
 
 namespace GodotModules.Netcode.Server
 {
@@ -94,7 +96,39 @@ namespace GodotModules.Netcode.Server
 
         private Task ENetThreadWorker(ushort port, int maxClients)
         {
-            using var server = new Host();
+            Log("Starting server");
+            EventBasedNetListener listener = new EventBasedNetListener();
+            NetManager server = new NetManager(listener)
+            {
+                IPv6Enabled = IPv6Mode.Disabled
+            };
+            server.Start(port /* port */);
+
+            listener.ConnectionRequestEvent += request =>
+            {
+                if (server.ConnectedPeersCount < maxClients)
+                    request.AcceptIfKey("SomeConnectionKey");
+                else
+                    request.Reject();
+            };
+
+            listener.PeerConnectedEvent += peer =>
+            {
+                Log($"We got connection: {peer.EndPoint}");
+                NetDataWriter writer = new NetDataWriter();
+                writer.Put("Hello client!");
+                peer.Send(writer, DeliveryMethod.ReliableOrdered);
+            };
+
+            while (true)
+            {
+                server.PollEvents();
+                Thread.Sleep(15);
+            }
+            //server.Stop();
+            
+            
+            /*using var server = new Host();
             var address = new Address
             {
                 Port = port
@@ -186,8 +220,10 @@ namespace GodotModules.Netcode.Server
                 _networkManager.StartServer(port, maxClients, CancellationTokenSource);
             }
 
-            return Task.FromResult(1);
+            return Task.FromResult(1);*/
         }
+
+        public void Log(object obj) => Logger.Log($"[Server]: {obj}", ConsoleColor.Green);
 
         private void Send(ServerPacket gamePacket, Peer peer)
         {

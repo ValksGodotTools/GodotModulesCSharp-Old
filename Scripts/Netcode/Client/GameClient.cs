@@ -35,7 +35,5 @@ namespace GodotModules.Netcode.Client
         {
             Log("Client stopped");
         }
-
-        private void Log(object v) => Logger.Log($"[Client]: {v}", ConsoleColor.DarkGreen);
     }
 }
