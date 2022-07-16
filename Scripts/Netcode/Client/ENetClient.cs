@@ -110,6 +110,7 @@ namespace GodotModules.Netcode.Client
             while (true)
             {
                 client.PollEvents();
+                //await Task.Delay(15);
                 Thread.Sleep(15);
             }
 

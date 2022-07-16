@@ -102,7 +102,7 @@ namespace GodotModules.Netcode.Server
             {
                 IPv6Enabled = IPv6Mode.Disabled
             };
-            server.Start(port /* port */);
+            server.Start(port);
 
             listener.ConnectionRequestEvent += request =>
             {
@@ -123,6 +123,7 @@ namespace GodotModules.Netcode.Server
             while (true)
             {
                 server.PollEvents();
+                //await Task.Delay(15);
                 Thread.Sleep(15);
             }
             //server.Stop();
