@@ -1,12 +1,11 @@
-using ENet;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using Thread = System.Threading.Thread;
 
-namespace GodotModules.Netcode.Client 
+namespace GodotModules.Netcode.Client
 {
     using Event = ENet.Event;
-    
+
     public abstract class ENetClient
     {
         public static readonly Dictionary<ServerPacketOpcode, APacketServer> HandlePacket = ReflectionUtils.LoadInstances<ServerPacketOpcode, APacketServer>("SPacket");
@@ -24,7 +23,7 @@ namespace GodotModules.Netcode.Client
         private long _running;
         private int _outgoingId;
         private CancellationTokenSource _cancellationTokenSource = new();
-        
+
         public ENetClient(Net networkManager)
         {
             _networkManager = networkManager;
@@ -64,7 +63,7 @@ namespace GodotModules.Netcode.Client
                 await Task.Delay(1);
         }
 
-        public void Send(ClientPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable) 
+        public void Send(ClientPacketOpcode opcode, APacket data = null, DeliveryMethod flags = DeliveryMethod.ReliableOrdered)
         {
             _outgoingId++;
             var success = _outgoing.TryAdd(_outgoingId, new ClientPacket((byte)opcode, flags, data));
@@ -73,7 +72,7 @@ namespace GodotModules.Netcode.Client
                 Logger.LogWarning($"Failed to add {opcode} to Outgoing queue because of duplicate key");
         }
 
-        public async Task SendAsync(ClientPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
+        public async Task SendAsync(ClientPacketOpcode opcode, APacket data = null, DeliveryMethod flags = DeliveryMethod.ReliableOrdered)
         {
             Send(opcode, data, flags);
 
@@ -81,29 +80,33 @@ namespace GodotModules.Netcode.Client
                 await Task.Delay(1);
         }
 
-        protected virtual void Connecting() {}
-        protected virtual void Connect(ref Event netEvent) {}
-        protected virtual void Disconnect(ref Event netEvent) {}
-        protected virtual void Receive(PacketReader reader){}
-        protected virtual void Timeout(ref Event netEvent) {}
-        protected virtual void Leave(ref Event netEvent) {}
-        protected virtual void Sent(ClientPacketOpcode opcode) {}
-        protected virtual void Stopped() {}
+        protected virtual void Connecting() { }
+        protected virtual void Connect(ref Event netEvent) { }
+        protected virtual void Disconnect(ref Event netEvent) { }
+        protected virtual void Receive(PacketReader reader) { }
+        protected virtual void Timeout(ref Event netEvent) { }
+        protected virtual void Leave(ref Event netEvent) { }
+        protected virtual void Sent(ClientPacketOpcode opcode) { }
+        protected virtual void Stopped() { }
 
         protected void Log(object v) => Logger.Log($"[Client]: {v}", ConsoleColor.DarkGreen);
 
         private Task ENetThreadWorker(string ip, ushort port)
         {
             Log("Starting client");
-            EventBasedNetListener listener = new EventBasedNetListener();
-            NetManager client = new NetManager(listener) {
+
+            var listener = new EventBasedNetListener();
+            var client = new NetManager(listener)
+            {
                 IPv6Enabled = IPv6Mode.Disabled
             };
+
             client.Start();
             client.Connect("localhost", port, "SomeConnectionKey");
+
             listener.NetworkReceiveEvent += (fromPeer, dataReader, deliveryMethod) =>
             {
-                Log($"We got: {dataReader.GetString(100)}");
+                Log($"We got: {dataReader.GetByte()}");
                 dataReader.Recycle();
             };
 
@@ -242,7 +245,7 @@ namespace GodotModules.Netcode.Client
         }
     }
 
-    public class PacketInfo 
+    public class PacketInfo
     {
         public PacketReader PacketReader { get; set; }
         public GameClient GameClient { get; set; }
@@ -254,7 +257,7 @@ namespace GodotModules.Netcode.Client
         }
     }
 
-    public class ENetClientCmd 
+    public class ENetClientCmd
     {
         public ENetClientOpcode Opcode { get; set; }
         public object Data { get; set; }
@@ -266,7 +269,7 @@ namespace GodotModules.Netcode.Client
         }
     }
 
-    public enum ENetClientOpcode 
+    public enum ENetClientOpcode
     {
         Disconnect
     }
