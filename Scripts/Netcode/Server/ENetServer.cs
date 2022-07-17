@@ -1,12 +1,14 @@
 using LiteNetLib;
 using LiteNetLib.Utils;
 using Thread = System.Threading.Thread;
+using System.Net;
+using System.Net.Sockets;
 
 namespace GodotModules.Netcode.Server
 {
     using Event = ENet.Event;
 
-    public abstract class ENetServer
+    public abstract class ENetServer : INetEventListener
     {
         protected static readonly Dictionary<ClientPacketOpcode, APacketClient> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, APacketClient>("CPacket");
 
@@ -94,31 +96,59 @@ namespace GodotModules.Netcode.Server
         protected virtual void Stopped() { }
         protected virtual void ServerCmds() { }
 
+        public void OnConnectionRequest(ConnectionRequest request) 
+        {
+            if (_server.ConnectedPeersCount < _maxClients)
+                    request.AcceptIfKey("SomeConnectionKey");
+                else
+                    request.Reject();
+        }
+
+        public void OnNetworkError(IPEndPoint endPoint, SocketError socketError) 
+        {
+            Log($"Network error: {socketError}");
+        }
+
+        public void OnNetworkLatencyUpdate(NetPeer peer, int latency) 
+        {
+            //Log($"Latency update from peer {peer.Id} with latency: {latency}");
+        }
+
+        public void OnNetworkReceive(NetPeer peer, NetPacketReader dataReader, DeliveryMethod deliveryMethod)
+        {
+            // received packet from the server
+            //Receive(new PacketReader(dataReader));
+        }
+
+        public void OnNetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType) 
+        {
+            Log("Receive unconnected");
+        }
+
+        public void OnPeerConnected(NetPeer peer) 
+        {
+            Log($"We got connection: {peer.EndPoint}");
+        }
+
+        public void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo) 
+        {
+            Log($"Disconnected because {disconnectInfo.Reason}");
+        }
+
+        private NetManager _server;
+        private int _maxClients;
+
         private Task ENetThreadWorker(ushort port, int maxClients)
         {
             Log("Starting server");
 
-            var listener = new EventBasedNetListener();
-            var server = new NetManager(listener)
+            _maxClients = maxClients;
+            _server = new NetManager(this)
             {
                 IPv6Enabled = IPv6Mode.Disabled
             };
 
-            server.Start(port);
-
-            listener.ConnectionRequestEvent += request =>
-            {
-                if (server.ConnectedPeersCount < maxClients)
-                    request.AcceptIfKey("SomeConnectionKey");
-                else
-                    request.Reject();
-            };
-
-            listener.PeerConnectedEvent += peer =>
-            {
-                Log($"We got connection: {peer.EndPoint}");
-                //Send(ServerPacketOpcode.Lobby, new SPacketLobby {}, DeliveryMethod.ReliableOrdered, peer);
-            };
+            _server.Start(port);
 
             while (!CancellationTokenSource.IsCancellationRequested)
             {
@@ -161,11 +191,11 @@ namespace GodotModules.Netcode.Server
                     }
                 }
 
-                server.PollEvents();
+                _server.PollEvents();
                 Thread.Sleep(15);
             }
             
-            server.Stop();
+            _server.Stop();
             _running = 0;
             Log("Server stopped");
 
