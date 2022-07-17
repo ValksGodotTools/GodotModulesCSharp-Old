@@ -103,50 +103,35 @@ namespace GodotModules.Netcode.Client
 
         public void OnNetworkLatencyUpdate(NetPeer peer, int latency) {}
 
-        public void OnNetworkReceive(NetPeer peer, NetPacketReader reader, DeliveryMethod deliveryMethod)
+        public void OnNetworkReceive(NetPeer peer, NetPacketReader dataReader, DeliveryMethod deliveryMethod)
         {
-
+            // received packet from the server
+            Receive(new PacketReader(dataReader));
         }
 
         public void OnNetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType) {}
 
         public void OnPeerConnected(NetPeer peer) 
         {
-            Log("CONNECTED");
+            Log("Connected to server");
         }
 
-        public void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo) {}
+        public void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo) 
+        {
+            Log($"Disconnected because {disconnectInfo.Reason}");
+        }
 
         private Task ENetThreadWorker(string ip, ushort port)
         {
             Log("Starting client");
 
-            var listener = new EventBasedNetListener();
-            var client = new NetManager(listener)
+            var client = new NetManager(this)
             {
                 IPv6Enabled = IPv6Mode.Disabled
             };
 
             client.Start();
-            var peer = client.Connect("localhost", port, "SomeConnectionKey");
-
-            listener.NetworkReceiveEvent += (fromPeer, dataReader, deliveryMethod) =>
-            {
-                // received packet from the server
-                Receive(new PacketReader(dataReader));
-            };
-
-            listener.PeerConnectedEvent += (peer) => {
-                Log("Connected to server");
-            };
-
-            listener.PeerDisconnectedEvent += (peer, disconnectInfo) => {
-                Log($"Disconnected because {disconnectInfo.Reason}");
-            };
-
-            listener.NetworkErrorEvent += (endPoint, socketError) => {
-                
-            };
+            client.Connect("localhost", port, "SomeConnectionKey");
 
             while (!_cancellationTokenSource.IsCancellationRequested)
             {
