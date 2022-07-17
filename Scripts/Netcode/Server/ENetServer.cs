@@ -117,7 +117,7 @@ namespace GodotModules.Netcode.Server
             listener.PeerConnectedEvent += peer =>
             {
                 Log($"We got connection: {peer.EndPoint}");
-                Send(ServerPacketOpcode.Lobby, new SPacketLobby {}, DeliveryMethod.ReliableOrdered, peer);
+                //Send(ServerPacketOpcode.Lobby, new SPacketLobby {}, DeliveryMethod.ReliableOrdered, peer);
             };
 
             while (!CancellationTokenSource.IsCancellationRequested)

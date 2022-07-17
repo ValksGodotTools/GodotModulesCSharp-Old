@@ -1,12 +1,16 @@
 using LiteNetLib;
 using LiteNetLib.Utils;
+using LiteNetLib.Layers;
 using Thread = System.Threading.Thread;
+using System.Threading;
+using System.Net;
+using System.Net.Sockets;
 
 namespace GodotModules.Netcode.Client
 {
     using Event = ENet.Event;
 
-    public abstract class ENetClient
+    public abstract class ENetClient : INetEventListener
     {
         public static readonly Dictionary<ServerPacketOpcode, APacketServer> HandlePacket = ReflectionUtils.LoadInstances<ServerPacketOpcode, APacketServer>("SPacket");
 
@@ -93,6 +97,26 @@ namespace GodotModules.Netcode.Client
 
         protected void Log(object v) => Logger.Log($"[Client]: {v}", ConsoleColor.DarkGreen);
 
+        public void OnConnectionRequest(ConnectionRequest request) {}
+
+        public void OnNetworkError(IPEndPoint endPoint, SocketError socketError) {}
+
+        public void OnNetworkLatencyUpdate(NetPeer peer, int latency) {}
+
+        public void OnNetworkReceive(NetPeer peer, NetPacketReader reader, DeliveryMethod deliveryMethod)
+        {
+
+        }
+
+        public void OnNetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType) {}
+
+        public void OnPeerConnected(NetPeer peer) 
+        {
+            Log("CONNECTED");
+        }
+
+        public void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo) {}
+
         private Task ENetThreadWorker(string ip, ushort port)
         {
             Log("Starting client");
@@ -104,11 +128,24 @@ namespace GodotModules.Netcode.Client
             };
 
             client.Start();
-            client.Connect("localhost", port, "SomeConnectionKey");
+            var peer = client.Connect("localhost", port, "SomeConnectionKey");
 
             listener.NetworkReceiveEvent += (fromPeer, dataReader, deliveryMethod) =>
             {
+                // received packet from the server
                 Receive(new PacketReader(dataReader));
+            };
+
+            listener.PeerConnectedEvent += (peer) => {
+                Log("Connected to server");
+            };
+
+            listener.PeerDisconnectedEvent += (peer, disconnectInfo) => {
+                Log($"Disconnected because {disconnectInfo.Reason}");
+            };
+
+            listener.NetworkErrorEvent += (endPoint, socketError) => {
+                
             };
 
             while (!_cancellationTokenSource.IsCancellationRequested)
