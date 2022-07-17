@@ -22,7 +22,7 @@ namespace GodotModules.Netcode
             Client = new GameClient(_managers, _godotCmds);
             Server = new GameServer(this);
 
-            try 
+            /*try 
             {
                 EnetInitialized = ENet.Library.Initialize();
             }
@@ -35,7 +35,7 @@ namespace GodotModules.Netcode
             }
 
             if (!EnetInitialized) // probably won't get logged but lets keep it here because why not
-                Logger.LogWarning("Failed to initialize ENet! Remember ENet-CSharp.dll and enet.dll are required in order for ENet to run properly!");
+                Logger.LogWarning("Failed to initialize ENet! Remember ENet-CSharp.dll and enet.dll are required in order for ENet to run properly!");*/
         }
 
         public async Task Update()
@@ -47,8 +47,8 @@ namespace GodotModules.Netcode
         {
             if (!EnetInitialized) 
             {
-                Logger.LogWarning("Tried to start client but ENet was not initialized properly");
-                return;
+                /*Logger.LogWarning("Tried to start client but ENet was not initialized properly");
+                return;*/
             }
             
             Client = new GameClient(_managers, _godotCmds);
@@ -59,8 +59,8 @@ namespace GodotModules.Netcode
         {
             if (!EnetInitialized) 
             {
-                Logger.LogWarning("Tried to start server but ENet was not initialized properly");
-                return;
+                /*Logger.LogWarning("Tried to start server but ENet was not initialized properly");
+                return;*/
             }
 
             Server = new GameServer(this);
@@ -78,8 +78,8 @@ namespace GodotModules.Netcode
             if (Server.IsRunning)
                 await Server.StopAsync();
 
-            if (EnetInitialized)
-                ENet.Library.Deinitialize();
+            //if (EnetInitialized)
+                //ENet.Library.Deinitialize();
         }
     }
 }

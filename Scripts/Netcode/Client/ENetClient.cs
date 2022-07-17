@@ -8,8 +8,6 @@ using System.Net.Sockets;
 
 namespace GodotModules.Netcode.Client
 {
-    using Event = ENet.Event;
-
     public abstract class ENetClient : INetEventListener
     {
         public static readonly Dictionary<ServerPacketOpcode, APacketServer> HandlePacket = ReflectionUtils.LoadInstances<ServerPacketOpcode, APacketServer>("SPacket");

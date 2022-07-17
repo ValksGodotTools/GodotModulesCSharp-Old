@@ -3,8 +3,6 @@ using LiteNetLib.Utils;
 
 namespace GodotModules.Netcode.Server
 {
-    using Event = ENet.Event;
-    
     public class GameServer : ENetServer
     {
         public Dictionary<byte, DataPlayer> Players = new();
@@ -96,7 +94,7 @@ namespace GodotModules.Netcode.Server
 
         protected override void Connect(ref Event netEvent)
         {
-            Log($"Client connected with id: {netEvent.Peer.ID}");
+            //Log($"Client connected with id: {netEvent.Peer.ID}");
         }
 
         protected override void Received(NetPeer peer, PacketReader packetReader, ClientPacketOpcode opcode)
@@ -124,17 +122,17 @@ namespace GodotModules.Netcode.Server
 
         protected override void Disconnect(ref Event netEvent)
         {
-            Log($"Client disconnected with id: {netEvent.Peer.ID}");
+            //Log($"Client disconnected with id: {netEvent.Peer.ID}");
         }
 
         protected override void Timeout(ref Event netEvent)
         {
-            Log($"Client timed out with id: {netEvent.Peer.ID}");
+            //Log($"Client timed out with id: {netEvent.Peer.ID}");
         }
 
         protected override void Leave(ref Event netEvent)
         {
-            Players.Remove((byte)netEvent.Peer.ID);
+            //Players.Remove((byte)netEvent.Peer.ID);
         }
 
         protected override void Stopped()
