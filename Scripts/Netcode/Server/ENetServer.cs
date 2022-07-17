@@ -6,7 +6,7 @@ using Thread = System.Threading.Thread;
 namespace GodotModules.Netcode.Server
 {
     using Event = ENet.Event;
-    
+
     public abstract class ENetServer
     {
         protected static readonly Dictionary<ClientPacketOpcode, APacketClient> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, APacketClient>("CPacket");
@@ -25,7 +25,7 @@ namespace GodotModules.Netcode.Server
         private long _running = 0;
         private readonly Net _networkManager;
 
-        public ENetServer(Net networkManager) 
+        public ENetServer(Net networkManager)
         {
             _networkManager = networkManager;
         }
@@ -120,15 +120,48 @@ namespace GodotModules.Netcode.Server
                 peer.Send(writer, DeliveryMethod.ReliableOrdered);
             };
 
-            while (true)
+            while (!CancellationTokenSource.IsCancellationRequested)
             {
+                while (ENetCmds.TryDequeue(out ENetServerCmd cmd))
+                {
+                    switch (cmd.Opcode)
+                    {
+                        case ENetServerOpcode.Stop:
+                            if (CancellationTokenSource.IsCancellationRequested)
+                            {
+                                Log("Server is in the middle of stopping");
+                                break;
+                            }
+
+                            KickAll(DisconnectOpcode.Stopping);
+                            CancellationTokenSource.Cancel();
+                            break;
+
+                        case ENetServerOpcode.Restart:
+                            if (CancellationTokenSource.IsCancellationRequested)
+                            {
+                                Log("Server is in the middle of restarting");
+                                break;
+                            }
+
+                            KickAll(DisconnectOpcode.Restarting);
+                            CancellationTokenSource.Cancel();
+                            _queueRestart = true;
+                            break;
+                    }
+                }
+
                 server.PollEvents();
                 //await Task.Delay(15);
                 Thread.Sleep(15);
             }
-            //server.Stop();
             
-            
+            server.Stop();
+            _running = 0;
+            Log("Server stopped");
+
+            return Task.FromResult(1);
+
             /*using var server = new Host();
             var address = new Address
             {

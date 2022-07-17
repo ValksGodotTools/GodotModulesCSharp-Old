@@ -107,14 +107,35 @@ namespace GodotModules.Netcode.Client
                 dataReader.Recycle();
             };
 
-            while (true)
+            while (!_cancellationTokenSource.IsCancellationRequested)
             {
+                // ENet Cmds from Godot Thread
+                while (_enetCmds.TryDequeue(out ENetClientCmd cmd))
+                {
+                    switch (cmd.Opcode)
+                    {
+                        case ENetClientOpcode.Disconnect:
+                            if (_cancellationTokenSource.IsCancellationRequested)
+                            {
+                                Logger.LogWarning("Client is in the middle of stopping");
+                                break;
+                            }
+
+                            _cancellationTokenSource.Cancel();
+                            client.DisconnectAll();
+                            break;
+                    }
+                }
+
                 client.PollEvents();
-                //await Task.Delay(15);
                 Thread.Sleep(15);
             }
 
-            //client.Stop();
+            client.Stop();
+            _running = 0;
+            Log("Client stopped");
+
+            return Task.FromResult(1);
 
             /*using var client = new Host();
             var address = new Address();
