@@ -106,7 +106,7 @@ namespace GodotModules.Netcode.Client
 
             listener.NetworkReceiveEvent += (fromPeer, dataReader, deliveryMethod) =>
             {
-                Log($"We got: {dataReader.GetString(100)}");
+                Log($"We got: {dataReader.GetByte()}");
                 dataReader.Recycle();
             };
 

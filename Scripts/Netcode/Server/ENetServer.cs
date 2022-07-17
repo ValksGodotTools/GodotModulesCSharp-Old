@@ -119,9 +119,9 @@ namespace GodotModules.Netcode.Server
                 Log($"We got connection: {peer.EndPoint}");
                 Send(ServerPacketOpcode.Lobby, new SPacketLobby {}, DeliveryMethod.ReliableOrdered, peer);
 
-                var writer = new NetDataWriter();
-                writer.Put("Hello client!");
-                peer.Send(writer, DeliveryMethod.ReliableOrdered);
+                //var writer = new NetDataWriter();
+                //writer.Put("Hello client!");
+                //peer.Send(writer, DeliveryMethod.ReliableOrdered);
             };
 
             while (!CancellationTokenSource.IsCancellationRequested)
