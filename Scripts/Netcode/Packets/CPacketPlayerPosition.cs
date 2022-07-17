@@ -1,4 +1,4 @@
-
+using LiteNetLib;
 using GodotModules.Netcode.Server;
 
 namespace GodotModules.Netcode
@@ -17,9 +17,9 @@ namespace GodotModules.Netcode
             Position = reader.ReadVector2();
         }
 
-        public override void Handle(GameServer server, ENet.Peer peer)
+        public override void Handle(GameServer server, NetPeer peer)
         {
-            server.Players[(byte)peer.ID].Position = Position;
+            server.Players[(byte)peer.Id].Position = Position;
         }
     }
 }

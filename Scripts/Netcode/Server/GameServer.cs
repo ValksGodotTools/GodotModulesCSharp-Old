@@ -19,7 +19,7 @@ namespace GodotModules.Netcode.Server
             return otherPlayers;
         }
 
-        public NetPeer[] GetOtherPlayerPeers(uint id) => Players.Keys.Where(x => x != id).Select(x => Peers[x]).ToArray();
+        public NetPeer[] GetOtherPlayerPeers(int id) => Players.Keys.Where(x => x != id).Select(x => Peers[x]).ToArray();
 
         public NetPeer[] GetAllPlayerPeers() => Players.Keys.Select(x => Peers[x]).ToArray();
 
@@ -33,7 +33,7 @@ namespace GodotModules.Netcode.Server
                 Send(opcode, data, flags, allPlayers);
         }
 
-        public void SendToOtherPeers(uint id, ServerPacketOpcode opcode, APacket data = null, DeliveryMethod flags = DeliveryMethod.ReliableOrdered)
+        public void SendToOtherPeers(int id, ServerPacketOpcode opcode, APacket data = null, DeliveryMethod flags = DeliveryMethod.ReliableOrdered)
         {
             var otherPeers = GetOtherPeers(id);
             if (otherPeers.Length == 0)
@@ -45,7 +45,7 @@ namespace GodotModules.Netcode.Server
                 Send(opcode, data, flags, otherPeers);
         }
 
-        public void SendToOtherPlayers(uint id, ServerPacketOpcode opcode, APacket data = null, DeliveryMethod flags = DeliveryMethod.ReliableOrdered)
+        public void SendToOtherPlayers(int id, ServerPacketOpcode opcode, APacket data = null, DeliveryMethod flags = DeliveryMethod.ReliableOrdered)
         {
             var otherPlayers = GetOtherPlayerPeers(id);
             if (otherPlayers.Length == 0)

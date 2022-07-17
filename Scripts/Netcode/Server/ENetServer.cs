@@ -16,7 +16,7 @@ namespace GodotModules.Netcode.Server
         public readonly ConcurrentQueue<ENetServerCmd> ENetCmds = new();
         private readonly ConcurrentQueue<ServerPacket> _outgoing = new();
 
-        protected readonly Dictionary<uint, NetPeer> Peers = new();
+        protected readonly Dictionary<int, NetPeer> Peers = new();
         protected CancellationTokenSource CancellationTokenSource = new();
         protected bool _queueRestart { get; set; }
 
@@ -57,7 +57,7 @@ namespace GodotModules.Netcode.Server
             Peers.Clear();
         }
 
-        public void Kick(uint id, DisconnectOpcode opcode)
+        public void Kick(int id, DisconnectOpcode opcode)
         {
             Peers[id].Disconnect();
             Peers.Remove(id);
@@ -78,9 +78,9 @@ namespace GodotModules.Netcode.Server
         public void Send(ServerPacketOpcode opcode, DeliveryMethod flags = DeliveryMethod.ReliableOrdered, params NetPeer[] peers) => Send(opcode, null, flags, peers);
         public void Send(ServerPacketOpcode opcode, APacket data, DeliveryMethod flags = DeliveryMethod.ReliableOrdered, params NetPeer[] peers) => _outgoing.Enqueue(new ServerPacket((byte)opcode, flags, data, peers));
 
-        protected NetPeer[] GetOtherPeers(uint id)
+        protected NetPeer[] GetOtherPeers(int id)
         {
-            var otherPeers = new Dictionary<uint, NetPeer>(Peers);
+            var otherPeers = new Dictionary<int, NetPeer>(Peers);
             otherPeers.Remove(id);
             return otherPeers.Values.ToArray();
         }

@@ -1,3 +1,5 @@
+using LiteNetLib.Utils;
+
 namespace GodotModules.Netcode
 {
     public abstract class APacket

@@ -11,7 +11,7 @@ namespace GodotModules.Netcode
         {
             NetDataWriter = new NetDataWriter();
             NetDataWriter.Put(opcode);
-            writable?.Write(NetDataWriter);
+            writable?.Write(new PacketWriter(NetDataWriter));
 
             Opcode = opcode;
             DeliveryMethod = deliveryMethod;
