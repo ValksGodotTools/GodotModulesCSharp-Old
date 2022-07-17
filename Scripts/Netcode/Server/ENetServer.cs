@@ -1,4 +1,3 @@
-using ENet;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using Thread = System.Threading.Thread;
@@ -17,7 +16,7 @@ namespace GodotModules.Netcode.Server
         public readonly ConcurrentQueue<ENetServerCmd> ENetCmds = new();
         private readonly ConcurrentQueue<ServerPacket> _outgoing = new();
 
-        protected readonly Dictionary<uint, Peer> Peers = new();
+        protected readonly Dictionary<uint, NetPeer> Peers = new();
         protected CancellationTokenSource CancellationTokenSource = new();
         protected bool _queueRestart { get; set; }
 
@@ -54,13 +53,13 @@ namespace GodotModules.Netcode.Server
 
         public void KickAll(DisconnectOpcode opcode)
         {
-            Peers.Values.ForEach(peer => peer.DisconnectNow((uint)opcode));
+            Peers.Values.ForEach(peer => peer.Disconnect());
             Peers.Clear();
         }
 
         public void Kick(uint id, DisconnectOpcode opcode)
         {
-            Peers[id].DisconnectNow((uint)opcode);
+            Peers[id].Disconnect();
             Peers.Remove(id);
         }
 
@@ -73,21 +72,22 @@ namespace GodotModules.Netcode.Server
                 await Task.Delay(1);
         }
         public void Restart() => ENetCmds.Enqueue(new ENetServerCmd(ENetServerOpcode.Restart));
-        public void Send(ServerPacketOpcode opcode, params Peer[] peers) => Send(opcode, null, PacketFlags.Reliable, peers);
-        public void Send(ServerPacketOpcode opcode, APacket data, params Peer[] peers) => Send(opcode, data, PacketFlags.Reliable, peers);
-        public void Send(ServerPacketOpcode opcode, PacketFlags flags = PacketFlags.Reliable, params Peer[] peers) => Send(opcode, null, flags, peers);
-        public void Send(ServerPacketOpcode opcode, APacket data, PacketFlags flags = PacketFlags.Reliable, params Peer[] peers) => _outgoing.Enqueue(new ServerPacket((byte)opcode, flags, data, peers));
 
-        protected Peer[] GetOtherPeers(uint id)
+        public void Send(ServerPacketOpcode opcode, params NetPeer[] peers) => Send(opcode, null, DeliveryMethod.ReliableOrdered, peers);
+        public void Send(ServerPacketOpcode opcode, APacket data, params NetPeer[] peers) => Send(opcode, data, DeliveryMethod.ReliableOrdered, peers);
+        public void Send(ServerPacketOpcode opcode, DeliveryMethod flags = DeliveryMethod.ReliableOrdered, params NetPeer[] peers) => Send(opcode, null, flags, peers);
+        public void Send(ServerPacketOpcode opcode, APacket data, DeliveryMethod flags = DeliveryMethod.ReliableOrdered, params NetPeer[] peers) => _outgoing.Enqueue(new ServerPacket((byte)opcode, flags, data, peers));
+
+        protected NetPeer[] GetOtherPeers(uint id)
         {
-            var otherPeers = new Dictionary<uint, Peer>(Peers);
+            var otherPeers = new Dictionary<uint, NetPeer>(Peers);
             otherPeers.Remove(id);
             return otherPeers.Values.ToArray();
         }
 
         protected virtual void Started(ushort port, int maxClients) { }
         protected virtual void Connect(ref Event netEvent) { }
-        protected virtual void Received(Peer peer, PacketReader packetReader, ClientPacketOpcode opcode) { }
+        protected virtual void Received(NetPeer peer, PacketReader packetReader, ClientPacketOpcode opcode) { }
         protected virtual void Disconnect(ref Event netEvent) { }
         protected virtual void Timeout(ref Event netEvent) { }
         protected virtual void Leave(ref Event netEvent) { }
@@ -97,11 +97,13 @@ namespace GodotModules.Netcode.Server
         private Task ENetThreadWorker(ushort port, int maxClients)
         {
             Log("Starting server");
-            EventBasedNetListener listener = new EventBasedNetListener();
-            NetManager server = new NetManager(listener)
+
+            var listener = new EventBasedNetListener();
+            var server = new NetManager(listener)
             {
                 IPv6Enabled = IPv6Mode.Disabled
             };
+
             server.Start(port);
 
             listener.ConnectionRequestEvent += request =>
@@ -115,13 +117,16 @@ namespace GodotModules.Netcode.Server
             listener.PeerConnectedEvent += peer =>
             {
                 Log($"We got connection: {peer.EndPoint}");
-                NetDataWriter writer = new NetDataWriter();
+                Send(ServerPacketOpcode.Lobby, new SPacketLobby {}, DeliveryMethod.ReliableOrdered, peer);
+
+                var writer = new NetDataWriter();
                 writer.Put("Hello client!");
                 peer.Send(writer, DeliveryMethod.ReliableOrdered);
             };
 
             while (!CancellationTokenSource.IsCancellationRequested)
             {
+                // Server cmds from Godot
                 while (ENetCmds.TryDequeue(out ENetServerCmd cmd))
                 {
                     switch (cmd.Opcode)
@@ -151,8 +156,16 @@ namespace GodotModules.Netcode.Server
                     }
                 }
 
+                // Outgoing packets to clients
+                while (_outgoing.TryDequeue(out ServerPacket packet))
+                {
+                    foreach (var peer in packet.Peers)
+                    {
+                        peer.Send(packet.NetDataWriter, packet.DeliveryMethod);
+                    }
+                }
+
                 server.PollEvents();
-                //await Task.Delay(15);
                 Thread.Sleep(15);
             }
             
@@ -258,14 +271,6 @@ namespace GodotModules.Netcode.Server
         }
 
         public void Log(object obj) => Logger.Log($"[Server]: {obj}", ConsoleColor.Green);
-
-        private void Send(ServerPacket gamePacket, Peer peer)
-        {
-            var packet = default(Packet);
-            packet.Create(gamePacket.Data, gamePacket.PacketFlags);
-            byte channelID = 0;
-            peer.Send(channelID, ref packet);
-        }
 
         private void Cleanup()
         {

@@ -1,4 +1,4 @@
-using ENet;
+using LiteNetLib;
 
 using System.IO;
 using System.Reflection;
@@ -7,33 +7,26 @@ namespace GodotModules.Netcode
 {
     public class PacketReader : IDisposable
     {
-        private readonly MemoryStream _stream;
-        private readonly BinaryReader _reader;
-        private readonly byte[] ReadBuffer = new byte[GamePacket.MaxSize];
+        private readonly NetPacketReader _reader;
 
-        public PacketReader(Packet packet)
+        public PacketReader(NetPacketReader reader)
         {
-            _stream = new MemoryStream(ReadBuffer);
-            _reader = new BinaryReader(_stream);
-            packet.CopyTo(ReadBuffer);
-            packet.Dispose();
+            _reader = reader;
         }
 
-        public byte ReadByte() => _reader.ReadByte();
-        public sbyte ReadSByte() => _reader.ReadSByte();
-        public char ReadChar() => _reader.ReadChar();
-        public string ReadString() => _reader.ReadString();
-        public bool ReadBool() => _reader.ReadBoolean();
-        public short ReadShort() => _reader.ReadInt16();
-        public ushort ReadUShort() => _reader.ReadUInt16();
-        public int ReadInt() => _reader.ReadInt32();
-        public uint ReadUInt() => _reader.ReadUInt32();
-        public float ReadFloat() => _reader.ReadSingle();
-        public double ReadDouble() => _reader.ReadDouble();
-        public long ReadLong() => _reader.ReadInt64();
-        public ulong ReadULong() => _reader.ReadUInt64();
-        public byte[] ReadBytes(int count) => _reader.ReadBytes(count);
-        public byte[] ReadBytes() => ReadBytes(ReadInt());
+        public byte ReadByte() => _reader.GetByte();
+        public sbyte ReadSByte() => _reader.GetSByte();
+        public char ReadChar() => _reader.GetChar();
+        public string ReadString() => _reader.GetString();
+        public bool ReadBool() => _reader.GetBool();
+        public short ReadShort() => _reader.GetShort();
+        public ushort ReadUShort() => _reader.GetUShort();
+        public int ReadInt() => _reader.GetInt();
+        public uint ReadUInt() => _reader.GetUInt();
+        public float ReadFloat() => _reader.GetFloat();
+        public double ReadDouble() => _reader.GetDouble();
+        public long ReadLong() => _reader.GetLong();
+        public ulong ReadULong() => _reader.GetULong();
 
         public Vector2 ReadVector2() =>
             new(ReadFloat(), ReadFloat());
@@ -53,7 +46,6 @@ namespace GodotModules.Netcode
             if (t == typeof(double))  return ReadDouble();
             if (t == typeof(long))    return ReadLong();
             if (t == typeof(ulong))   return ReadULong();
-            if (t == typeof(byte[]))  return ReadBytes();
             if (t == typeof(Vector2)) return ReadVector2();
 
             if (t.IsGenericType)
@@ -122,8 +114,7 @@ namespace GodotModules.Netcode
 
         public void Dispose()
         {
-            _stream.Dispose();
-            _reader.Dispose();
+            _reader.Recycle();
         }
     }
 }
