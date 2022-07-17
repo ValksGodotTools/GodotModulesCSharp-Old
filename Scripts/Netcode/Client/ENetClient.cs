@@ -97,11 +97,20 @@ namespace GodotModules.Netcode.Client
 
         protected void Log(object v) => Logger.Log($"[Client]: {v}", ConsoleColor.DarkGreen);
 
-        public void OnConnectionRequest(ConnectionRequest request) {}
+        public void OnConnectionRequest(ConnectionRequest request) 
+        {
+            Log($"Connection request from {request}");
+        }
 
-        public void OnNetworkError(IPEndPoint endPoint, SocketError socketError) {}
+        public void OnNetworkError(IPEndPoint endPoint, SocketError socketError) 
+        {
+            Log($"Network error: {socketError}");
+        }
 
-        public void OnNetworkLatencyUpdate(NetPeer peer, int latency) {}
+        public void OnNetworkLatencyUpdate(NetPeer peer, int latency) 
+        {
+            //Log($"Latency update from peer {peer.Id} with latency: {latency}");
+        }
 
         public void OnNetworkReceive(NetPeer peer, NetPacketReader dataReader, DeliveryMethod deliveryMethod)
         {
@@ -109,7 +118,10 @@ namespace GodotModules.Netcode.Client
             Receive(new PacketReader(dataReader));
         }
 
-        public void OnNetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType) {}
+        public void OnNetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType) 
+        {
+            Log("Receive unconnected");
+        }
 
         public void OnPeerConnected(NetPeer peer) 
         {
