@@ -18,15 +18,17 @@ namespace GodotModules.Netcode.Client
 
         protected GodotCommands _godotCmds;
         protected readonly Net _networkManager;
+        private readonly Managers _managers;
 
         private long _connected;
         private long _running;
         private int _outgoingId;
         private CancellationTokenSource _cancellationTokenSource = new();
 
-        public ENetClient(Net networkManager)
+        public ENetClient(Managers managers)
         {
-            _networkManager = networkManager;
+            _managers = managers;
+            _networkManager = managers.Net;
         }
 
         public async void Start(string ip, ushort port) => await StartAsync(ip, port, _cancellationTokenSource);
@@ -106,8 +108,7 @@ namespace GodotModules.Netcode.Client
 
             listener.NetworkReceiveEvent += (fromPeer, dataReader, deliveryMethod) =>
             {
-                Log($"We got: {dataReader.GetByte()}");
-                dataReader.Recycle();
+                Receive(new PacketReader(dataReader));
             };
 
             while (!_cancellationTokenSource.IsCancellationRequested)
