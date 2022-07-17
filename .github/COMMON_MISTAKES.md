@@ -4,9 +4,6 @@
 Make sure export resource settings look exactly like this or you may run into the error  
 `[Warning]: Failed to open res://Scripts/Lua, Error: 'InvalidParameter'`  
 
-## Copying `enet.dll` to the release folder
-Do not forget to copy `enet.dll` next to the games executable when exporting the game or the netcode will not function properly.
-
 ## Thread Safety
 The netcode uses a while loop that runs constantly and thus needs to be on a separate thread from the Godot thread. Two methods are used to safely send data between threads, ConcurrentQueue<T> and Interlocked.Read(). ConcurrentQueue<T> allows any kind of data to be enqueued on one thread and dequeued on another. Interlocked.Read() is a nice and easy way to read a bool from any thread. If data is not accessed through one of these methods, then the rules of thread safety are being violated and will vastly increase the chances of the program crashing with no errors. Trying to debug errors that do not appear in the console is a nightmare, please be mindful when sending data between threads.
 
