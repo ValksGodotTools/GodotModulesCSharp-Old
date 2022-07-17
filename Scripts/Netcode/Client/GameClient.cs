@@ -1,4 +1,4 @@
-using ENet;
+
 
 namespace GodotModules.Netcode.Client 
 {
@@ -6,7 +6,7 @@ namespace GodotModules.Netcode.Client
     
     public class GameClient : ENetClient
     {
-        public GameClient(Net networkManager, GodotCommands godotCmds) : base(networkManager)
+        public GameClient(Managers managers, GodotCommands godotCmds) : base(managers)
         {
             _godotCmds = godotCmds;
         }
@@ -35,7 +35,5 @@ namespace GodotModules.Netcode.Client
         {
             Log("Client stopped");
         }
-
-        private void Log(object v) => Logger.Log($"[Client]: {v}", ConsoleColor.DarkGreen);
     }
 }

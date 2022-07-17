@@ -1,24 +1,20 @@
-using ENet;
+using LiteNetLib;
+using LiteNetLib.Utils;
 
 namespace GodotModules.Netcode
 {
     public class ServerPacket : GamePacket
     {
-        public Peer[] Peers { get; private set; }
+        public NetPeer[] Peers { get; private set; }
 
-        public ServerPacket(byte opcode, PacketFlags packetFlags, APacket writable = null, params Peer[] peers)
+        public ServerPacket(byte opcode, DeliveryMethod deliveryMethod, APacket writable = null, params NetPeer[] peers)
         {
-            using (var writer = new PacketWriter())
-            {
-                writer.Write(opcode);
-                writable?.Write(writer);
-
-                Data = writer.Stream.ToArray();
-                Size = writer.Stream.Length;
-            }
+            NetDataWriter = new NetDataWriter();
+            NetDataWriter.Put(opcode);
+            writable?.Write(new PacketWriter(NetDataWriter));
 
             Opcode = opcode;
-            PacketFlags = packetFlags;
+            DeliveryMethod = deliveryMethod;
             Peers = peers;
         }
     }
