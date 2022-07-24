@@ -66,7 +66,7 @@ namespace GodotModules
             if (!_listeners.ContainsKey(eventType))
                 return;
 
-            foreach (var listener in _listeners[eventType])
+            foreach (var listener in _listeners[eventType].ToList())
                 listener.Action(sender, args);
         }
 
