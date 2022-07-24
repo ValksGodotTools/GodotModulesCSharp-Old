@@ -1,5 +1,9 @@
+
+
 namespace GodotModules.Netcode.Client 
 {
+    using Event = ENet.Event;
+    
     public class GameClient : ENetClient
     {
         public GameClient(Managers managers, GodotCommands godotCmds) : base(managers)
