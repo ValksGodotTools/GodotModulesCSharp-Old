@@ -12,14 +12,12 @@ namespace GodotModules.Netcode
         public bool EnetInitialized { get; }
 
         private readonly GodotCommands _godotCmds;
-        private readonly Managers _managers;
         
         public Net(Managers managers)
         {
-            _managers = managers;
             _godotCmds = new GodotCommands(this, managers);
 
-            Client = new GameClient(_managers, _godotCmds);
+            Client = new GameClient(this, _godotCmds);
             Server = new GameServer(this);
 
             try 
@@ -51,7 +49,7 @@ namespace GodotModules.Netcode
                 return;
             }
             
-            Client = new GameClient(_managers, _godotCmds);
+            Client = new GameClient(this, _godotCmds);
             await Client.StartAsync(ip, port, cts);
         }
 

@@ -2,7 +2,7 @@ namespace GodotModules.Netcode.Client
 {
     public class DummyClient : ENetClient 
     {
-        public DummyClient(Managers managers) : base(managers) 
+        public DummyClient(Net networkManager) : base(networkManager) 
         {}
 
         protected override void Sent(ClientPacketOpcode opcode)

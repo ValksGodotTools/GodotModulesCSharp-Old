@@ -1,45 +1,45 @@
-using LiteNetLib;
-using LiteNetLib.Utils;
+
 using System.IO;
 using System.Reflection;
 
 namespace GodotModules.Netcode
 {
-    public class PacketWriter
+    public class PacketWriter : IDisposable
     {
-        private readonly NetDataWriter _writer;
+        public MemoryStream Stream { get; } = new();
+        private readonly BinaryWriter _writer;
 
-        public PacketWriter(NetDataWriter writer)
+        public PacketWriter()
         {
-            _writer = writer;
+            _writer = new BinaryWriter(Stream);
         }
 
-        public void Write(byte v) => _writer.Put(v);
-        public void Write(sbyte v) => _writer.Put(v);
-        public void Write(char v) => _writer.Put(v);
-        public void Write(string v) => _writer.Put(v);
-        public void Write(bool v) => _writer.Put(v);
-        public void Write(short v) => _writer.Put(v);
-        public void Write(ushort v) => _writer.Put(v);
-        public void Write(int v) => _writer.Put(v);
-        public void Write(uint v) => _writer.Put(v);
-        public void Write(float v) => _writer.Put(v);
-        public void Write(double v) => _writer.Put(v);
-        public void Write(long v) => _writer.Put(v);
-        public void Write(ulong v) => _writer.Put(v);
+        public void Write(byte v) => _writer.Write(v);
+        public void Write(sbyte v) => _writer.Write(v);
+        public void Write(char v) => _writer.Write(v);
+        public void Write(string v) => _writer.Write(v);
+        public void Write(bool v) => _writer.Write(v);
+        public void Write(short v) => _writer.Write(v);
+        public void Write(ushort v) => _writer.Write(v);
+        public void Write(int v) => _writer.Write(v);
+        public void Write(uint v) => _writer.Write(v);
+        public void Write(float v) => _writer.Write(v);
+        public void Write(double v) => _writer.Write(v);
+        public void Write(long v) => _writer.Write(v);
+        public void Write(ulong v) => _writer.Write(v);
 
         public void Write(byte[] v, bool header = true)
         {
             if (header)
                 Write(v.Length);
 
-            _writer.Put(v);
+            _writer.Write(v);
         }
 
         public void Write(Vector2 v)
         {
-            _writer.Put(v.x);
-            _writer.Put(v.y);
+            _writer.Write(v.x);
+            _writer.Write(v.y);
         }
 
         public void Write<T>(T v)
@@ -119,6 +119,12 @@ namespace GodotModules.Netcode
         {
             foreach (var value in values)
                 Write<dynamic>(value);
+        }
+
+        public void Dispose()
+        {
+            Stream.Dispose();
+            _writer.Dispose();
         }
     }
 }

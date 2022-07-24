@@ -1,4 +1,4 @@
-using LiteNetLib;
+using ENet;
 using GodotModules.Netcode.Server;
 
 namespace GodotModules.Netcode
@@ -106,7 +106,7 @@ namespace GodotModules.Netcode
 
         private GameServer _server;
 
-        public override void Handle(GameServer server, NetPeer peer)
+        public override void Handle(GameServer server, Peer peer)
         {
             _server = server;
             switch (LobbyOpcode)
@@ -141,23 +141,23 @@ namespace GodotModules.Netcode
             }
         }
 
-        private void HandleKick(NetPeer peer)
+        private void HandleKick(Peer peer)
         {
-            if (!_server.Players[(byte)peer.Id].Host)
+            if (!_server.Players[(byte)peer.ID].Host)
                 return;
 
             _server.Kick(Id, DisconnectOpcode.Kicked);
         }
 
-        private void HandleCreate(NetPeer peer)
+        private void HandleCreate(Peer peer)
         {
             _server.Lobby = new DataLobby {
                 Name = LobbyName,
                 Description = LobbyDescription,
-                HostId = (byte)peer.Id
+                HostId = (byte)peer.ID
             };
 
-            _server.Players[(byte)peer.Id] = new DataPlayer
+            _server.Players[(byte)peer.ID] = new DataPlayer
             {
                 Username = Username,
                 Ready = false,
@@ -165,59 +165,59 @@ namespace GodotModules.Netcode
             };
 
             _server.Send(ServerPacketOpcode.Lobby, new SPacketLobby(LobbyOpcode.LobbyCreate) {
-                Id = (byte)peer.Id
+                Id = (byte)peer.ID
             }, peer);
         }
 
-        private void HandleChatMessage(NetPeer peer)
+        private void HandleChatMessage(Peer peer)
         {
             _server.SendToAllPlayers(ServerPacketOpcode.Lobby, new SPacketLobby(LobbyOpcode.LobbyChatMessage)
             {
-                Id = (byte)peer.Id,
+                Id = (byte)peer.ID,
                 Message = Message
             });
         }
 
-        private void HandleCountdownChange(NetPeer peer)
+        private void HandleCountdownChange(Peer peer)
         {
-            if (!_server.Players[(byte)peer.Id].Host)
+            if (!_server.Players[(byte)peer.ID].Host)
                 return;
 
-            _server.SendToOtherPlayers(peer.Id, ServerPacketOpcode.Lobby, new SPacketLobby(LobbyOpcode.LobbyCountdownChange)
+            _server.SendToOtherPlayers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby(LobbyOpcode.LobbyCountdownChange)
             {
                 CountdownRunning = CountdownRunning
             });
         }
 
-        private void HandleGameStart(NetPeer peer)
+        private void HandleGameStart(Peer peer)
         {
-            if (!_server.Players[(byte)peer.Id].Host)
+            if (!_server.Players[(byte)peer.ID].Host)
                 return;
 
             _server.Lobby.AllowJoining = false;
             _server.SendToAllPlayers(ServerPacketOpcode.Lobby, new SPacketLobby(LobbyOpcode.LobbyGameStart));
         }
 
-        private void HandleJoin(NetPeer peer)
+        private void HandleJoin(Peer peer)
         {
             // Check if data.Username is appropriate username
             // TODO
 
             // Keep track of joining player server side
-            if (_server.Players.ContainsKey((byte)peer.Id))
+            if (_server.Players.ContainsKey((byte)peer.ID))
             {
-                _server.Log($"Received LobbyJoin packet from peer with id {peer.Id}. Tried to add id {peer.Id} to Players but exists already");
+                _server.Log($"Received LobbyJoin packet from peer with id {peer.ID}. Tried to add id {peer.ID} to Players but exists already");
                 return;
             }
 
             if (!_server.Lobby.AllowJoining) 
             {
-                _server.Kick(peer.Id, DisconnectOpcode.Disconnected);
-                _server.Log($"Peer with id {peer.Id} tried to join lobby but game is running already");
+                _server.Kick(peer.ID, DisconnectOpcode.Disconnected);
+                _server.Log($"Peer with id {peer.ID} tried to join lobby but game is running already");
                 return;
             }
 
-            _server.Players[(byte)peer.Id] = new DataPlayer
+            _server.Players[(byte)peer.ID] = new DataPlayer
             {
                 Username = Username,
                 Ready = false,
@@ -227,8 +227,8 @@ namespace GodotModules.Netcode
             // tell joining player their Id and tell them about other players in lobby
             _server.Send(ServerPacketOpcode.Lobby, new SPacketLobby(LobbyOpcode.LobbyInfo)
             {
-                Id = (byte)peer.Id,
-                Players = _server.GetOtherPlayers((byte)peer.Id),
+                Id = (byte)peer.ID,
+                Players = _server.GetOtherPlayers((byte)peer.ID),
                 DirectConnect = DirectConnect,
                 LobbyName = _server.Lobby.Name,
                 LobbyDescription = _server.Lobby.Description,
@@ -237,21 +237,21 @@ namespace GodotModules.Netcode
             }, peer);
 
             // tell other players about new player that joined
-            _server.SendToOtherPlayers(peer.Id, ServerPacketOpcode.Lobby, new SPacketLobby(LobbyOpcode.LobbyJoin)
+            _server.SendToOtherPlayers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby(LobbyOpcode.LobbyJoin)
             {
-                Id = (byte)peer.Id,
+                Id = (byte)peer.ID,
                 Username = Username
             });
         }
 
-        private void HandleReady(NetPeer peer)
+        private void HandleReady(Peer peer)
         {
-            var player = _server.Players[(byte)peer.Id];
+            var player = _server.Players[(byte)peer.ID];
             player.Ready = Ready;
 
-            _server.SendToOtherPlayers(peer.Id, ServerPacketOpcode.Lobby, new SPacketLobby(LobbyOpcode.LobbyReady)
+            _server.SendToOtherPlayers(peer.ID, ServerPacketOpcode.Lobby, new SPacketLobby(LobbyOpcode.LobbyReady)
             {
-                Id = (byte)peer.Id,
+                Id = (byte)peer.ID,
                 Ready = Ready
             });
         }

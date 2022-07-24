@@ -1,16 +1,10 @@
-using LiteNetLib;
-using LiteNetLib.Utils;
-using LiteNetLib.Layers;
-using Thread = System.Threading.Thread;
-using System.Threading;
-using System.Net;
-using System.Net.Sockets;
+using ENet;
 
-namespace GodotModules.Netcode.Client
+namespace GodotModules.Netcode.Client 
 {
     using Event = ENet.Event;
-
-    public abstract class ENetClient : INetEventListener
+    
+    public abstract class ENetClient
     {
         public static readonly Dictionary<ServerPacketOpcode, APacketServer> HandlePacket = ReflectionUtils.LoadInstances<ServerPacketOpcode, APacketServer>("SPacket");
 
@@ -22,17 +16,15 @@ namespace GodotModules.Netcode.Client
 
         protected GodotCommands _godotCmds;
         protected readonly Net _networkManager;
-        private readonly Managers _managers;
 
         private long _connected;
         private long _running;
         private int _outgoingId;
         private CancellationTokenSource _cancellationTokenSource = new();
-
-        public ENetClient(Managers managers)
+        
+        public ENetClient(Net networkManager)
         {
-            _managers = managers;
-            _networkManager = managers.Net;
+            _networkManager = networkManager;
         }
 
         public async void Start(string ip, ushort port) => await StartAsync(ip, port, _cancellationTokenSource);
@@ -69,7 +61,7 @@ namespace GodotModules.Netcode.Client
                 await Task.Delay(1);
         }
 
-        public void Send(ClientPacketOpcode opcode, APacket data = null, DeliveryMethod flags = DeliveryMethod.ReliableOrdered)
+        public void Send(ClientPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable) 
         {
             _outgoingId++;
             var success = _outgoing.TryAdd(_outgoingId, new ClientPacket((byte)opcode, flags, data));
@@ -78,7 +70,7 @@ namespace GodotModules.Netcode.Client
                 Logger.LogWarning($"Failed to add {opcode} to Outgoing queue because of duplicate key");
         }
 
-        public async Task SendAsync(ClientPacketOpcode opcode, APacket data = null, DeliveryMethod flags = DeliveryMethod.ReliableOrdered)
+        public async Task SendAsync(ClientPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
         {
             Send(opcode, data, flags);
 
@@ -86,96 +78,18 @@ namespace GodotModules.Netcode.Client
                 await Task.Delay(1);
         }
 
-        protected virtual void Connecting() { }
-        protected virtual void Connect(ref Event netEvent) { }
-        protected virtual void Disconnect(ref Event netEvent) { }
-        protected virtual void Receive(PacketReader reader) { }
-        protected virtual void Timeout(ref Event netEvent) { }
-        protected virtual void Leave(ref Event netEvent) { }
-        protected virtual void Sent(ClientPacketOpcode opcode) { }
-        protected virtual void Stopped() { }
-
-        protected void Log(object v) => Logger.Log($"[Client]: {v}", ConsoleColor.DarkGreen);
-
-        public void OnConnectionRequest(ConnectionRequest request) 
-        {
-            Log($"Connection request from {request}");
-        }
-
-        public void OnNetworkError(IPEndPoint endPoint, SocketError socketError) 
-        {
-            Log($"Network error: {socketError}");
-        }
-
-        public void OnNetworkLatencyUpdate(NetPeer peer, int latency) 
-        {
-            //Log($"Latency update from peer {peer.Id} with latency: {latency}");
-        }
-
-        public void OnNetworkReceive(NetPeer peer, NetPacketReader dataReader, DeliveryMethod deliveryMethod)
-        {
-            // received packet from the server
-            Receive(new PacketReader(dataReader));
-        }
-
-        public void OnNetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType) 
-        {
-            Log("Receive unconnected");
-        }
-
-        public void OnPeerConnected(NetPeer peer) 
-        {
-            Log("Connected to server");
-        }
-
-        public void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo) 
-        {
-            Log($"Disconnected because {disconnectInfo.Reason}");
-        }
+        protected virtual void Connecting() {}
+        protected virtual void Connect(ref Event netEvent) {}
+        protected virtual void Disconnect(ref Event netEvent) {}
+        protected virtual void Receive(PacketReader reader){}
+        protected virtual void Timeout(ref Event netEvent) {}
+        protected virtual void Leave(ref Event netEvent) {}
+        protected virtual void Sent(ClientPacketOpcode opcode) {}
+        protected virtual void Stopped() {}
 
         private Task ENetThreadWorker(string ip, ushort port)
         {
-            Log("Starting client");
-
-            var client = new NetManager(this)
-            {
-                IPv6Enabled = IPv6Mode.Disabled
-            };
-
-            client.Start();
-            client.Connect("localhost", port, "SomeConnectionKey");
-
-            while (!_cancellationTokenSource.IsCancellationRequested)
-            {
-                // ENet Cmds from Godot Thread
-                while (_enetCmds.TryDequeue(out ENetClientCmd cmd))
-                {
-                    switch (cmd.Opcode)
-                    {
-                        case ENetClientOpcode.Disconnect:
-                            if (_cancellationTokenSource.IsCancellationRequested)
-                            {
-                                Logger.LogWarning("Client is in the middle of stopping");
-                                break;
-                            }
-
-                            _cancellationTokenSource.Cancel();
-                            client.DisconnectAll();
-                            break;
-                    }
-                }
-
-                client.PollEvents();
-                Thread.Sleep(15);
-            }
-
-            client.Stop();
-            _running = 0;
-            Log("Client stopped");
-
-            return Task.FromResult(1);
-
-            /*using var client = new Host();
+            using var client = new Host();
             var address = new Address();
             address.SetHost(ip);
             address.Port = port;
@@ -276,11 +190,11 @@ namespace GodotModules.Netcode.Client
 
             Stopped();
 
-            return Task.FromResult(1);*/
+            return Task.FromResult(1);
         }
     }
 
-    public class PacketInfo
+    public class PacketInfo 
     {
         public PacketReader PacketReader { get; set; }
         public GameClient GameClient { get; set; }
@@ -292,7 +206,7 @@ namespace GodotModules.Netcode.Client
         }
     }
 
-    public class ENetClientCmd
+    public class ENetClientCmd 
     {
         public ENetClientOpcode Opcode { get; set; }
         public object Data { get; set; }
@@ -304,7 +218,7 @@ namespace GodotModules.Netcode.Client
         }
     }
 
-    public enum ENetClientOpcode
+    public enum ENetClientOpcode 
     {
         Disconnect
     }

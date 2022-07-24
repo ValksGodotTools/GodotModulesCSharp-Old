@@ -1,5 +1,4 @@
-using LiteNetLib;
-using LiteNetLib.Utils;
+using ENet;
 
 namespace GodotModules.Netcode.Server
 {
@@ -19,11 +18,11 @@ namespace GodotModules.Netcode.Server
             return otherPlayers;
         }
 
-        public NetPeer[] GetOtherPlayerPeers(int id) => Players.Keys.Where(x => x != id).Select(x => Peers[x]).ToArray();
+        public Peer[] GetOtherPlayerPeers(uint id) => Players.Keys.Where(x => x != id).Select(x => Peers[x]).ToArray();
 
-        public NetPeer[] GetAllPlayerPeers() => Players.Keys.Select(x => Peers[x]).ToArray();
+        public Peer[] GetAllPlayerPeers() => Players.Keys.Select(x => Peers[x]).ToArray();
 
-        public void SendToAllPlayers(ServerPacketOpcode opcode, APacket data = null, DeliveryMethod flags = DeliveryMethod.ReliableOrdered)
+        public void SendToAllPlayers(ServerPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
         {
             var allPlayers = GetAllPlayerPeers();
 
@@ -33,7 +32,7 @@ namespace GodotModules.Netcode.Server
                 Send(opcode, data, flags, allPlayers);
         }
 
-        public void SendToOtherPeers(int id, ServerPacketOpcode opcode, APacket data = null, DeliveryMethod flags = DeliveryMethod.ReliableOrdered)
+        public void SendToOtherPeers(uint id, ServerPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
         {
             var otherPeers = GetOtherPeers(id);
             if (otherPeers.Length == 0)
@@ -45,7 +44,7 @@ namespace GodotModules.Netcode.Server
                 Send(opcode, data, flags, otherPeers);
         }
 
-        public void SendToOtherPlayers(int id, ServerPacketOpcode opcode, APacket data = null, DeliveryMethod flags = DeliveryMethod.ReliableOrdered)
+        public void SendToOtherPlayers(uint id, ServerPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
         {
             var otherPlayers = GetOtherPlayerPeers(id);
             if (otherPlayers.Length == 0)
@@ -99,9 +98,9 @@ namespace GodotModules.Netcode.Server
             Log($"Client connected with id: {netEvent.Peer.ID}");
         }
 
-        protected override void Received(NetPeer peer, PacketReader packetReader, ClientPacketOpcode opcode)
+        protected override void Received(Peer peer, PacketReader packetReader, ClientPacketOpcode opcode)
         {
-            /*Log($"Received: {opcode}");
+            Log($"Received: {opcode}");
 
             if (!HandlePacket.ContainsKey(opcode))
             {
@@ -119,7 +118,7 @@ namespace GodotModules.Netcode.Server
                 Logger.LogWarning($"[Server]: Received malformed opcode: {opcode} {e.Message} (Ignoring)");
                 return;
             }
-            handlePacket.Handle(this, peer);*/
+            handlePacket.Handle(this, peer);
         }
 
         protected override void Disconnect(ref Event netEvent)
@@ -141,5 +140,7 @@ namespace GodotModules.Netcode.Server
         {
             Log("Server stopped");
         }
+
+        public void Log(object obj) => Logger.Log($"[Server]: {obj}", ConsoleColor.Green);
     }
 }
