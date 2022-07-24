@@ -90,5 +90,3 @@ namespace GodotModules.Netcode
 Have a look at the other packets for more examples.
 
 Consider size of data types when sending them over the network https://condor.depaul.edu/sjost/nwdp/notes/cs1/CSDatatypes.htm (the smaller the better but keep it practical)
-
-- [x] Post created servers to [NodeJS web server](https://github.com/valkyrienyanko/GodotListServers) / fetch all servers
