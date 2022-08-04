@@ -3,6 +3,7 @@
 ## Generic
 
 - Do not commit all your work in one commit, create commits with meaningful messages describing small things you add here and there. Or at least create a commit for each separate file.
+- Try to add comments to all the new things you add, not everyone will understand what you did!
 - Favor readability over everything else, space out the code, consider using `=>`, and do not use `new()` if it makes the code look cryptic
 - Dependency injection is the "better" way of doing things but if it is a major annoyance, use `static` but just keep track of when the static variables are no longer being used
 - Please set `Tab Size` to `4` and `End of Line Sequence` to `CRLF`
