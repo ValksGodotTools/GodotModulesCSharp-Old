@@ -48,6 +48,7 @@ VSCode is a UI friendly text editor for developers
 
 > You can have a look at the projects roadmap [here](https://github.com/GodotModules/GodotModulesCSharp/issues/124).
 
+### [Formatting Guidelines](https://github.com/GodotModules/GodotModulesCSharp/blob/main/.github/FORMATTING_GUIDELINES.md)  
 
 ### [Useful Tips](https://github.com/GodotModules/GodotModulesCSharp/blob/main/.github/USEFUL_TIPS.md)
 
