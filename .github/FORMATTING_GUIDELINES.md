@@ -2,7 +2,8 @@
 
 ## Generic
 
-- Favor readability over everything else, space out the code, and do not use `new()` if it makes the code look cryptic
+- Favor readability over everything else, space out the code, consider using `=>`, and do not use `new()` if it makes the code look cryptic
+- Dependency injection is the "better" way of doing things but if it is a major annoyance, use `static` but just keep track of when the static variables are no longer being used
 - Please set `Tab Size` to `4` and `End of Line Sequence` to `CRLF`
 - Please make sure all classes are wrapped with a namespace
 - If a `using` is used across several scripts, consider making it `global` if there are no conflicts
