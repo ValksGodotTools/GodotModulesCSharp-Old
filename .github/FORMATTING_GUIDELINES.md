@@ -8,7 +8,7 @@
 - Please make sure all classes are wrapped with a namespace
 - If a `using` is used across several scripts, consider making it `global` if there are no conflicts
 - Class and method and public variables are `PascalCase` format
-- Private and protected variables are `_camelCase` format
+- Private and protected variables are `_camelCase` format *(this is a habbit I've gotten into, not everyone may like doing it this way, please talk to me if you want to do it another way)*
 
 ## Code Snippets
 
