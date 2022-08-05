@@ -1,4 +1,4 @@
-using MouseMode = Godot.Input.MouseMode;
+using MouseMode = Godot.Input.MouseModeEnum;
 
 namespace GodotModules
 {
@@ -18,7 +18,7 @@ namespace GodotModules
             _head = GetNode<Spatial>(NodePathHead);
             _hand = GetNode<Spatial>(NodePathHand);
 
-            Input.SetMouseMode(MouseMode.Captured);
+            Input.MouseMode = MouseMode.Captured;
 
             Notifications.AddListener(this, Event.OnMouseMotionInput, OnMouseMotionInput);
             Notifications.AddListener(this, Event.OnMouseButtonInput, OnMouseButtonInput);
@@ -29,7 +29,7 @@ namespace GodotModules
         {
             var motion = (InputEventMouseMotion)args[0];
 
-            if (Input.GetMouseMode() == MouseMode.Captured)
+            if (Input.MouseMode == MouseMode.Captured)
             {
                 RotateY((-motion.Relative.x * _mouseSensitivity).ToRadians());
                 _head.RotateX((motion.Relative.y * _mouseSensitivity).ToRadians());
@@ -40,14 +40,14 @@ namespace GodotModules
         {
             var button = (InputEventMouseButton)args[0];
 
-            if (button.ButtonIndex == (int)ButtonList.Left && Input.GetMouseMode() == MouseMode.Visible)
-                Input.SetMouseMode(MouseMode.Captured);
+            if (button.ButtonIndex == (int)ButtonList.Left && Input.MouseMode == MouseMode.Visible)
+                Input.MouseMode = MouseMode.Captured;
         }
 
         private void OnKeyboardInput(Node sender, object[] args) 
         {
             if (Input.IsActionJustPressed("ui_cancel"))
-                Input.SetMouseMode(MouseMode.Visible);
+                Input.MouseMode = MouseMode.Visible;
         }
     }
 }

@@ -119,7 +119,7 @@ namespace GodotModules
 		{
 			if (what == MainLoop.NotificationWmQuitRequest)
 			{
-				GetTree().SetAutoAcceptQuit(false);
+				GetTree().AutoAcceptQuit = false;
 				await Cleanup();
 			}
 		}
