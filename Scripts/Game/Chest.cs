@@ -1,38 +1,37 @@
-namespace GodotModules
+namespace GodotModules;
+
+public class Chest : Node2D
 {
-    public class Chest : Node2D
+    [Export] protected readonly NodePath NodePathAnimatedSprite;
+
+    private AnimatedSprite _animatedSprite;
+    private bool _opened;
+    private SceneGame _game;
+
+    public void PreInit(SceneGame game) => _game = game;
+
+    public override void _Ready()
     {
-        [Export] protected readonly NodePath NodePathAnimatedSprite;
+        _animatedSprite = GetNode<AnimatedSprite>(NodePathAnimatedSprite);
+    }
 
-        private AnimatedSprite _animatedSprite;
-        private bool _opened;
-        private SceneGame _game;
+    public void Open()
+    {
+        if (_opened)
+            return;
 
-        public void PreInit(SceneGame game) => _game = game;
+        _opened = true;
+        _animatedSprite.Play();
+    }
 
-        public override void _Ready()
+    private void _on_AnimatedSprite_animation_finished()
+    {
+        for (int i = 0; i < 10; i++)
         {
-            _animatedSprite = GetNode<AnimatedSprite>(NodePathAnimatedSprite);
-        }
-
-        public void Open()
-        {
-            if (_opened)
-                return;
-
-            _opened = true;
-            _animatedSprite.Play();
-        }
-
-        private void _on_AnimatedSprite_animation_finished()
-        {
-            for (int i = 0; i < 10; i++)
-            {
-                var coin = Prefabs.Coin.Instance<Coin>();
-                var pos = GlobalPosition + new Vector2(0, 50) + (Utils.RandomDir() * 25) * GD.Randf();
-                coin.JumpOutOfChest(GlobalPosition, pos);
-                _game.CoinList.AddChild(coin);
-            }
+            var coin = Prefabs.Coin.Instance<Coin>();
+            var pos = GlobalPosition + new Vector2(0, 50) + (Utils.RandomDir() * 25) * GD.Randf();
+            coin.JumpOutOfChest(GlobalPosition, pos);
+            _game.CoinList.AddChild(coin);
         }
     }
 }

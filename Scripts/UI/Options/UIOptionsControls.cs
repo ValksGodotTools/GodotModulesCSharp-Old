@@ -1,72 +1,71 @@
-namespace GodotModules
+namespace GodotModules;
+
+public class UIOptionsControls : Control
 {
-    public class UIOptionsControls : Control
+    [Export] protected readonly NodePath NodePathTabContainer;
+    private TabContainer _tabContainer;
+
+    private HotkeyManager _hotkeyManager;
+    private Dictionary<string, VBoxContainer> _vboxs;
+
+    public void PreInit(HotkeyManager hotkeyManager)
     {
-        [Export] protected readonly NodePath NodePathTabContainer;
-        private TabContainer _tabContainer;
+        _hotkeyManager = hotkeyManager;
+    }
 
-        private HotkeyManager _hotkeyManager;
-        private Dictionary<string, VBoxContainer> _vboxs;
+    public override void _Ready()
+    {
+        _tabContainer = GetNode<TabContainer>(NodePathTabContainer);
 
-        public void PreInit(HotkeyManager hotkeyManager)
+        _vboxs = new Dictionary<string, VBoxContainer>();
+
+        foreach (var category in _hotkeyManager.Categories)
         {
-            _hotkeyManager = hotkeyManager;
+            var panelContainer = new PanelContainer();
+            panelContainer.Name = "" + category.ToTitleCase().SmallWordsToUpper();
+
+            var scrollContainer = new ScrollContainer();
+            panelContainer.AddChild(scrollContainer);
+
+            var vboxContainer = new VBoxContainer();
+            vboxContainer.SizeFlagsHorizontal = (int)SizeFlags.ExpandFill;
+            vboxContainer.SizeFlagsVertical = (int)SizeFlags.ExpandFill;
+            scrollContainer.AddChild(vboxContainer);
+
+            _vboxs.Add(category, vboxContainer);
+            _tabContainer.AddChild(panelContainer);
         }
 
-        public override void _Ready()
+        foreach (var category in _hotkeyManager.Categories)
         {
-            _tabContainer = GetNode<TabContainer>(NodePathTabContainer);
+            var inputEventsCategory = _hotkeyManager.PersistentHotkeys.Where(x => x.Value.Category == category).OrderBy(x => x.Key);
 
-            _vboxs = new Dictionary<string, VBoxContainer>();
-
-            foreach (var category in _hotkeyManager.Categories)
+            foreach (var pair in inputEventsCategory)
             {
-                var panelContainer = new PanelContainer();
-                panelContainer.Name = "" + category.ToTitleCase().SmallWordsToUpper();
-
-                var scrollContainer = new ScrollContainer();
-                panelContainer.AddChild(scrollContainer);
-
-                var vboxContainer = new VBoxContainer();
-                vboxContainer.SizeFlagsHorizontal = (int)SizeFlags.ExpandFill;
-                vboxContainer.SizeFlagsVertical = (int)SizeFlags.ExpandFill;
-                scrollContainer.AddChild(vboxContainer);
-
-                _vboxs.Add(category, vboxContainer);
-                _tabContainer.AddChild(panelContainer);
-            }
-
-            foreach (var category in _hotkeyManager.Categories)
-            {
-                var inputEventsCategory = _hotkeyManager.PersistentHotkeys.Where(x => x.Value.Category == category).OrderBy(x => x.Key);
-
-                foreach (var pair in inputEventsCategory)
-                {
-                    var uiHotkey = Prefabs.UIHotkey.Instance<UIHotkey>();
-                    uiHotkey.Init(_hotkeyManager, pair.Key, pair.Value.InputEventInfo[0].Display());
-                    _vboxs[category].AddChild(uiHotkey);
-                }
+                var uiHotkey = Prefabs.UIHotkey.Instance<UIHotkey>();
+                uiHotkey.Init(_hotkeyManager, pair.Key, pair.Value.InputEventInfo[0].Display());
+                _vboxs[category].AddChild(uiHotkey);
             }
         }
+    }
 
-        private void _on_Reset_Hotkeys_pressed()
+    private void _on_Reset_Hotkeys_pressed()
+    {
+        _hotkeyManager.ResetAllHotkeysToDefaults();
+
+        foreach (var vbox in _vboxs.Values)
+            foreach (Node child in vbox.GetChildren())
+                child.QueueFree();
+
+        foreach (var category in _hotkeyManager.Categories)
         {
-            _hotkeyManager.ResetAllHotkeysToDefaults();
+            var inputEventsCategory = _hotkeyManager.DefaultHotkeys.Where(x => x.Value.Category == category).OrderBy(x => x.Key);
 
-            foreach (var vbox in _vboxs.Values)
-                foreach (Node child in vbox.GetChildren())
-                    child.QueueFree();
-
-            foreach (var category in _hotkeyManager.Categories)
+            foreach (var pair in inputEventsCategory)
             {
-                var inputEventsCategory = _hotkeyManager.DefaultHotkeys.Where(x => x.Value.Category == category).OrderBy(x => x.Key);
-
-                foreach (var pair in inputEventsCategory)
-                {
-                    var uiHotkey = Prefabs.UIHotkey.Instance<UIHotkey>();
-                    uiHotkey.Init(_hotkeyManager, pair.Key, pair.Value.InputEventInfo[0].Display());
-                    _vboxs[category].AddChild(uiHotkey);
-                }
+                var uiHotkey = Prefabs.UIHotkey.Instance<UIHotkey>();
+                uiHotkey.Init(_hotkeyManager, pair.Key, pair.Value.InputEventInfo[0].Display());
+                _vboxs[category].AddChild(uiHotkey);
             }
         }
     }

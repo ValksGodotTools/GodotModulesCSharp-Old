@@ -1,11 +1,10 @@
-namespace GodotModules
+namespace GodotModules;
+
+public class ControlInventoryItemCursor : Node2D
 {
-    public class ControlInventoryItemCursor : Node2D
+    public override void _PhysicsProcess(float delta)
     {
-        public override void _PhysicsProcess(float delta)
-        {
-            var parent = (Node2D)GetParent();
-            parent.GlobalPosition = GetGlobalMousePosition();
-        }
+        var parent = (Node2D)GetParent();
+        parent.GlobalPosition = GetGlobalMousePosition();
     }
 }

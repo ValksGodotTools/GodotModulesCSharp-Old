@@ -1,53 +1,52 @@
 using MouseMode = Godot.Input.MouseModeEnum;
 
-namespace GodotModules
+namespace GodotModules;
+
+public class FPSController : KinematicBody
 {
-    public class FPSController : KinematicBody
+    [Export] protected readonly NodePath NodePathHead;
+    [Export] protected readonly NodePath NodePathHand;
+    [Export] protected readonly NodePath NodePathSkeleton;
+
+    private Spatial _head;
+    private Spatial _hand;
+
+    private float _mouseSensitivity = 0.10f;
+
+    public override void _Ready()
     {
-        [Export] protected readonly NodePath NodePathHead;
-        [Export] protected readonly NodePath NodePathHand;
-        [Export] protected readonly NodePath NodePathSkeleton;
+        _head = GetNode<Spatial>(NodePathHead);
+        _hand = GetNode<Spatial>(NodePathHand);
 
-        private Spatial _head;
-        private Spatial _hand;
+        Input.MouseMode = MouseMode.Captured;
 
-        private float _mouseSensitivity = 0.10f;
+        Notifications.AddListener(this, Event.OnMouseMotionInput, OnMouseMotionInput);
+        Notifications.AddListener(this, Event.OnMouseButtonInput, OnMouseButtonInput);
+        Notifications.AddListener(this, Event.OnKeyboardInput, OnKeyboardInput);
+    }
 
-        public override void _Ready()
+    private void OnMouseMotionInput(Node sender, object[] args)
+    {
+        var motion = (InputEventMouseMotion)args[0];
+
+        if (Input.MouseMode == MouseMode.Captured)
         {
-            _head = GetNode<Spatial>(NodePathHead);
-            _hand = GetNode<Spatial>(NodePathHand);
+            RotateY((-motion.Relative.x * _mouseSensitivity).ToRadians());
+            _head.RotateX((motion.Relative.y * _mouseSensitivity).ToRadians());
+        }
+    }
 
+    private void OnMouseButtonInput(Node sender, object[] args)
+    {
+        var button = (InputEventMouseButton)args[0];
+
+        if (button.ButtonIndex == (int)ButtonList.Left && Input.MouseMode == MouseMode.Visible)
             Input.MouseMode = MouseMode.Captured;
+    }
 
-            Notifications.AddListener(this, Event.OnMouseMotionInput, OnMouseMotionInput);
-            Notifications.AddListener(this, Event.OnMouseButtonInput, OnMouseButtonInput);
-            Notifications.AddListener(this, Event.OnKeyboardInput, OnKeyboardInput);
-        }
-
-        private void OnMouseMotionInput(Node sender, object[] args)
-        {
-            var motion = (InputEventMouseMotion)args[0];
-
-            if (Input.MouseMode == MouseMode.Captured)
-            {
-                RotateY((-motion.Relative.x * _mouseSensitivity).ToRadians());
-                _head.RotateX((motion.Relative.y * _mouseSensitivity).ToRadians());
-            }
-        }
-
-        private void OnMouseButtonInput(Node sender, object[] args)
-        {
-            var button = (InputEventMouseButton)args[0];
-
-            if (button.ButtonIndex == (int)ButtonList.Left && Input.MouseMode == MouseMode.Visible)
-                Input.MouseMode = MouseMode.Captured;
-        }
-
-        private void OnKeyboardInput(Node sender, object[] args) 
-        {
-            if (Input.IsActionJustPressed("ui_cancel"))
-                Input.MouseMode = MouseMode.Visible;
-        }
+    private void OnKeyboardInput(Node sender, object[] args)
+    {
+        if (Input.IsActionJustPressed("ui_cancel"))
+            Input.MouseMode = MouseMode.Visible;
     }
 }

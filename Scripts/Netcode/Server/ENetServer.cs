@@ -1,224 +1,223 @@
 using ENet;
 using System.Threading;
 
-namespace GodotModules.Netcode.Server
+namespace GodotModules.Netcode.Server;
+
+using Event = ENet.Event;
+
+public abstract class ENetServer
 {
-    using Event = ENet.Event;
-    
-    public abstract class ENetServer
+    protected static readonly Dictionary<ClientPacketOpcode, APacketClient> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, APacketClient>("CPacket");
+
+    // thread safe props
+    public bool HasSomeoneConnected => Interlocked.Read(ref _someoneConnected) == 1;
+    public bool IsRunning => Interlocked.Read(ref _running) == 1;
+    public readonly ConcurrentQueue<ENetServerCmd> ENetCmds = new();
+    private readonly ConcurrentQueue<ServerPacket> _outgoing = new();
+
+    protected readonly Dictionary<uint, Peer> Peers = new();
+    protected CancellationTokenSource CancellationTokenSource = new();
+    protected bool _queueRestart { get; set; }
+
+    private long _someoneConnected = 0;
+    private long _running = 0;
+    private readonly Net _networkManager;
+
+    public ENetServer(Net networkManager)
     {
-        protected static readonly Dictionary<ClientPacketOpcode, APacketClient> HandlePacket = ReflectionUtils.LoadInstances<ClientPacketOpcode, APacketClient>("CPacket");
+        _networkManager = networkManager;
+    }
 
-        // thread safe props
-        public bool HasSomeoneConnected => Interlocked.Read(ref _someoneConnected) == 1;
-        public bool IsRunning => Interlocked.Read(ref _running) == 1;
-        public readonly ConcurrentQueue<ENetServerCmd> ENetCmds = new();
-        private readonly ConcurrentQueue<ServerPacket> _outgoing = new();
-
-        protected readonly Dictionary<uint, Peer> Peers = new();
-        protected CancellationTokenSource CancellationTokenSource = new();
-        protected bool _queueRestart { get; set; }
-
-        private long _someoneConnected = 0;
-        private long _running = 0;
-        private readonly Net _networkManager;
-
-        public ENetServer(Net networkManager) 
+    public async Task StartAsync(ushort port, int maxClients, CancellationTokenSource cts)
+    {
+        try
         {
-            _networkManager = networkManager;
-        }
-
-        public async Task StartAsync(ushort port, int maxClients, CancellationTokenSource cts)
-        {
-            try
+            if (IsRunning)
             {
-                if (IsRunning)
-                {
-                    Logger.Log("Server is running already");
-                    return;
-                }
-
-                _running = 1;
-                CancellationTokenSource = cts;
-
-                using var task = Task.Run(() => ENetThreadWorker(port, maxClients), CancellationTokenSource.Token);
-                await task;
-            }
-            catch (Exception e)
-            {
-                Logger.LogErr(e, "Server");
-            }
-        }
-
-        public void KickAll(DisconnectOpcode opcode)
-        {
-            Peers.Values.ForEach(peer => peer.DisconnectNow((uint)opcode));
-            Peers.Clear();
-        }
-
-        public void Kick(uint id, DisconnectOpcode opcode)
-        {
-            Peers[id].DisconnectNow((uint)opcode);
-            Peers.Remove(id);
-        }
-
-        public void Stop() => ENetCmds.Enqueue(new ENetServerCmd(ENetServerOpcode.Stop));
-        public async Task StopAsync()
-        {
-            Stop();
-
-            while (IsRunning)
-                await Task.Delay(1);
-        }
-        public void Restart() => ENetCmds.Enqueue(new ENetServerCmd(ENetServerOpcode.Restart));
-        public void Send(ServerPacketOpcode opcode, params Peer[] peers) => Send(opcode, null, PacketFlags.Reliable, peers);
-        public void Send(ServerPacketOpcode opcode, APacket data, params Peer[] peers) => Send(opcode, data, PacketFlags.Reliable, peers);
-        public void Send(ServerPacketOpcode opcode, PacketFlags flags = PacketFlags.Reliable, params Peer[] peers) => Send(opcode, null, flags, peers);
-        public void Send(ServerPacketOpcode opcode, APacket data, PacketFlags flags = PacketFlags.Reliable, params Peer[] peers) => _outgoing.Enqueue(new ServerPacket((byte)opcode, flags, data, peers));
-
-        protected Peer[] GetOtherPeers(uint id)
-        {
-            var otherPeers = new Dictionary<uint, Peer>(Peers);
-            otherPeers.Remove(id);
-            return otherPeers.Values.ToArray();
-        }
-
-        protected virtual void Started(ushort port, int maxClients) { }
-        protected virtual void Connect(ref Event netEvent) { }
-        protected virtual void Received(Peer peer, PacketReader packetReader, ClientPacketOpcode opcode) { }
-        protected virtual void Disconnect(ref Event netEvent) { }
-        protected virtual void Timeout(ref Event netEvent) { }
-        protected virtual void Leave(ref Event netEvent) { }
-        protected virtual void Stopped() { }
-        protected virtual void ServerCmds() { }
-
-        private Task ENetThreadWorker(ushort port, int maxClients)
-        {
-            using var server = new Host();
-            var address = new Address
-            {
-                Port = port
-            };
-
-            try
-            {
-                server.Create(address, maxClients);
-            }
-            catch (InvalidOperationException e)
-            {
-                var message = $"A server is running on port {port} already! {e.Message}";
-                Logger.LogWarning(message);
-                Cleanup();
-                return Task.FromResult(1);
+                Logger.Log("Server is running already");
+                return;
             }
 
-            Started(port, maxClients);
+            _running = 1;
+            CancellationTokenSource = cts;
 
-            while (!CancellationTokenSource.IsCancellationRequested)
-            {
-                var polled = false;
+            using var task = Task.Run(() => ENetThreadWorker(port, maxClients), CancellationTokenSource.Token);
+            await task;
+        }
+        catch (Exception e)
+        {
+            Logger.LogErr(e, "Server");
+        }
+    }
 
-                // ENet Cmds
-                ServerCmds();
+    public void KickAll(DisconnectOpcode opcode)
+    {
+        Peers.Values.ForEach(peer => peer.DisconnectNow((uint)opcode));
+        Peers.Clear();
+    }
 
-                // Outgoing
-                while (_outgoing.TryDequeue(out ServerPacket packet))
-                    packet.Peers.ForEach(peer => Send(packet, peer));
+    public void Kick(uint id, DisconnectOpcode opcode)
+    {
+        Peers[id].DisconnectNow((uint)opcode);
+        Peers.Remove(id);
+    }
 
-                while (!polled)
-                {
-                    if (server.CheckEvents(out Event netEvent) <= 0)
-                    {
-                        if (server.Service(15, out netEvent) <= 0)
-                            break;
+    public void Stop() => ENetCmds.Enqueue(new ENetServerCmd(ENetServerOpcode.Stop));
+    public async Task StopAsync()
+    {
+        Stop();
 
-                        polled = true;
-                    }
+        while (IsRunning)
+            await Task.Delay(1);
+    }
+    public void Restart() => ENetCmds.Enqueue(new ENetServerCmd(ENetServerOpcode.Restart));
+    public void Send(ServerPacketOpcode opcode, params Peer[] peers) => Send(opcode, null, PacketFlags.Reliable, peers);
+    public void Send(ServerPacketOpcode opcode, APacket data, params Peer[] peers) => Send(opcode, data, PacketFlags.Reliable, peers);
+    public void Send(ServerPacketOpcode opcode, PacketFlags flags = PacketFlags.Reliable, params Peer[] peers) => Send(opcode, null, flags, peers);
+    public void Send(ServerPacketOpcode opcode, APacket data, PacketFlags flags = PacketFlags.Reliable, params Peer[] peers) => _outgoing.Enqueue(new ServerPacket((byte)opcode, flags, data, peers));
 
-                    var peer = netEvent.Peer;
-                    var eventType = netEvent.Type;
+    protected Peer[] GetOtherPeers(uint id)
+    {
+        var otherPeers = new Dictionary<uint, Peer>(Peers);
+        otherPeers.Remove(id);
+        return otherPeers.Values.ToArray();
+    }
 
-                    switch (eventType)
-                    {
-                        case EventType.Receive:
-                            var packet = netEvent.Packet;
-                            if (packet.Length > GamePacket.MaxSize)
-                            {
-                                Logger.LogWarning($"Tried to read packet from client of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
-                                packet.Dispose();
-                                continue;
-                            }
+    protected virtual void Started(ushort port, int maxClients) { }
+    protected virtual void Connect(ref Event netEvent) { }
+    protected virtual void Received(Peer peer, PacketReader packetReader, ClientPacketOpcode opcode) { }
+    protected virtual void Disconnect(ref Event netEvent) { }
+    protected virtual void Timeout(ref Event netEvent) { }
+    protected virtual void Leave(ref Event netEvent) { }
+    protected virtual void Stopped() { }
+    protected virtual void ServerCmds() { }
 
-                            var packetReader = new PacketReader(packet);
-                            var opcode = (ClientPacketOpcode)packetReader.ReadByte();
-                            Received(netEvent.Peer, packetReader, opcode);
+    private Task ENetThreadWorker(ushort port, int maxClients)
+    {
+        using var server = new Host();
+        var address = new Address
+        {
+            Port = port
+        };
 
-                            packetReader.Dispose();
-                            break;
-
-                        case EventType.Connect:
-                            _someoneConnected = 1;
-                            Peers[netEvent.Peer.ID] = netEvent.Peer;
-                            Connect(ref netEvent);
-                            break;
-
-                        case EventType.Disconnect:
-                            Peers.Remove(netEvent.Peer.ID);
-                            Disconnect(ref netEvent);
-                            Leave(ref netEvent);
-                            break;
-
-                        case EventType.Timeout:
-                            Peers.Remove(netEvent.Peer.ID);
-                            Timeout(ref netEvent);
-                            Leave(ref netEvent);
-                            break;
-                    }
-                }
-            }
-
-            server.Flush();
+        try
+        {
+            server.Create(address, maxClients);
+        }
+        catch (InvalidOperationException e)
+        {
+            var message = $"A server is running on port {port} already! {e.Message}";
+            Logger.LogWarning(message);
             Cleanup();
-
-            if (_queueRestart)
-            {
-                _queueRestart = false;
-                _networkManager.StartServer(port, maxClients, CancellationTokenSource);
-            }
-
             return Task.FromResult(1);
         }
 
-        private void Send(ServerPacket gamePacket, Peer peer)
+        Started(port, maxClients);
+
+        while (!CancellationTokenSource.IsCancellationRequested)
         {
-            var packet = default(Packet);
-            packet.Create(gamePacket.Data, gamePacket.PacketFlags);
-            byte channelID = 0;
-            peer.Send(channelID, ref packet);
+            var polled = false;
+
+            // ENet Cmds
+            ServerCmds();
+
+            // Outgoing
+            while (_outgoing.TryDequeue(out ServerPacket packet))
+                packet.Peers.ForEach(peer => Send(packet, peer));
+
+            while (!polled)
+            {
+                if (server.CheckEvents(out Event netEvent) <= 0)
+                {
+                    if (server.Service(15, out netEvent) <= 0)
+                        break;
+
+                    polled = true;
+                }
+
+                var peer = netEvent.Peer;
+                var eventType = netEvent.Type;
+
+                switch (eventType)
+                {
+                    case EventType.Receive:
+                        var packet = netEvent.Packet;
+                        if (packet.Length > GamePacket.MaxSize)
+                        {
+                            Logger.LogWarning($"Tried to read packet from client of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
+                            packet.Dispose();
+                            continue;
+                        }
+
+                        var packetReader = new PacketReader(packet);
+                        var opcode = (ClientPacketOpcode)packetReader.ReadByte();
+                        Received(netEvent.Peer, packetReader, opcode);
+
+                        packetReader.Dispose();
+                        break;
+
+                    case EventType.Connect:
+                        _someoneConnected = 1;
+                        Peers[netEvent.Peer.ID] = netEvent.Peer;
+                        Connect(ref netEvent);
+                        break;
+
+                    case EventType.Disconnect:
+                        Peers.Remove(netEvent.Peer.ID);
+                        Disconnect(ref netEvent);
+                        Leave(ref netEvent);
+                        break;
+
+                    case EventType.Timeout:
+                        Peers.Remove(netEvent.Peer.ID);
+                        Timeout(ref netEvent);
+                        Leave(ref netEvent);
+                        break;
+                }
+            }
         }
 
-        private void Cleanup()
+        server.Flush();
+        Cleanup();
+
+        if (_queueRestart)
         {
-            _running = 0;
-            Stopped();
+            _queueRestart = false;
+            _networkManager.StartServer(port, maxClients, CancellationTokenSource);
         }
+
+        return Task.FromResult(1);
     }
 
-    public class ENetServerCmd
+    private void Send(ServerPacket gamePacket, Peer peer)
     {
-        public ENetServerOpcode Opcode { get; set; }
-        public object Data { get; set; }
-
-        public ENetServerCmd(ENetServerOpcode opcode, object data = null)
-        {
-            Opcode = opcode;
-            Data = data;
-        }
+        var packet = default(Packet);
+        packet.Create(gamePacket.Data, gamePacket.PacketFlags);
+        byte channelID = 0;
+        peer.Send(channelID, ref packet);
     }
 
-    public enum ENetServerOpcode
+    private void Cleanup()
     {
-        Stop,
-        Restart
+        _running = 0;
+        Stopped();
     }
+}
+
+public class ENetServerCmd
+{
+    public ENetServerOpcode Opcode { get; set; }
+    public object Data { get; set; }
+
+    public ENetServerCmd(ENetServerOpcode opcode, object data = null)
+    {
+        Opcode = opcode;
+        Data = data;
+    }
+}
+
+public enum ENetServerOpcode
+{
+    Stop,
+    Restart
 }

@@ -1,72 +1,70 @@
-namespace GodotModules
+namespace GodotModules;
+
+public class UIOptionsDisplay : Control
 {
-    public class UIOptionsDisplay : Control
+    [Export] protected readonly NodePath NodePathFullscreen;
+    [Export] protected readonly NodePath NodePathVSync;
+    [Export] protected readonly NodePath NodePathWindowSizeWidth;
+    [Export] protected readonly NodePath NotePathWindowSizeHeight;
+    private LineEdit _windowSizeWidth;
+    private LineEdit _windowSizeHeight;
+    private Vector2 _windowSize;
+
+    private Options _optionsManager;
+
+    public void PreInit(Options optionsManager)
     {
-        [Export] protected readonly NodePath NodePathFullscreen;
-        [Export] protected readonly NodePath NodePathVSync;
-        [Export] protected readonly NodePath NodePathWindowSizeWidth;
-        [Export] protected readonly NodePath NotePathWindowSizeHeight;
-        private LineEdit _windowSizeWidth;
-        private LineEdit _windowSizeHeight;
-        private Vector2 _windowSize;
+        _optionsManager = optionsManager;
+    }
 
-        private Options _optionsManager;
+    public override void _Ready()
+    {
+        var options = _optionsManager.Data;
 
-        public void PreInit(Options optionsManager)
-        {
-            _optionsManager = optionsManager;
-        }
+        var fullscreen = GetNode<OptionButton>(NodePathFullscreen);
+        fullscreen.AddItem("Windowed");
+        fullscreen.AddItem("Borderless");
+        fullscreen.AddItem("Exclusive Fullscreen");
+        fullscreen.Selected = (int)options.FullscreenMode;
 
-        public override void _Ready()
-        {
-            var options = _optionsManager.Data;
+        _windowSizeWidth = GetNode<LineEdit>(NodePathWindowSizeWidth);
+        _windowSizeHeight = GetNode<LineEdit>(NotePathWindowSizeHeight);
 
-            var fullscreen = GetNode<OptionButton>(NodePathFullscreen);
-            fullscreen.AddItem("Windowed");
-            fullscreen.AddItem("Borderless");
-            fullscreen.AddItem("Exclusive Fullscreen");
-            fullscreen.Selected = (int)options.FullscreenMode;
+        var windowWidth = options.WindowSize.x;
+        var windowHeight = options.WindowSize.y;
 
-            _windowSizeWidth = GetNode<LineEdit>(NodePathWindowSizeWidth);
-            _windowSizeHeight = GetNode<LineEdit>(NotePathWindowSizeHeight);
+        GetNode<CheckBox>(NodePathVSync).Pressed = options.VSync;
+        _windowSizeWidth.Text = "" + windowWidth;
+        _windowSizeHeight.Text = "" + windowHeight;
+        _windowSize = new Vector2(windowWidth, windowHeight);
+    }
 
-            var windowWidth = options.WindowSize.x;
-            var windowHeight = options.WindowSize.y;
+    private void _on_VSync_toggled(bool v)
+    {
+        _optionsManager.SetVSync(v);
+    }
 
-            GetNode<CheckBox>(NodePathVSync).Pressed = options.VSync;
-            _windowSizeWidth.Text = "" + windowWidth;
-            _windowSizeHeight.Text = "" + windowHeight;
-            _windowSize = new Vector2(windowWidth, windowHeight);
-        }
+    private void _on_Fullscreen_item_selected(int v)
+    {
+        _optionsManager.SetFullscreenMode((FullscreenMode)v);
+    }
 
-        private void _on_VSync_toggled(bool v)
-        {
-            _optionsManager.SetVSync(v);
-        }
+    private void _on_Window_Size_Width_text_changed(string text)
+    {
+        _windowSize.x = _windowSizeWidth.FilterRange((int)OS.GetScreenSize().x);
+    }
 
-        private void _on_Fullscreen_item_selected(int v)
-        {
-            _optionsManager.SetFullscreenMode((FullscreenMode)v);
-        }
+    private void _on_Window_Size_Height_text_changed(string text)
+    {
+        _windowSize.y = _windowSizeHeight.FilterRange((int)OS.GetScreenSize().y);
+    }
 
-        private void _on_Window_Size_Width_text_changed(string text) 
-        {
-            _windowSize.x = _windowSizeWidth.FilterRange((int)OS.GetScreenSize().x);
-        }
+    private void _on_Set_Window_Size_pressed()
+    {
+        if (_optionsManager.Data.FullscreenMode != FullscreenMode.Windowed)
+            _optionsManager.SetFullscreenMode(FullscreenMode.Windowed);
 
-        private void _on_Window_Size_Height_text_changed(string text)
-        {
-            _windowSize.y = _windowSizeHeight.FilterRange((int)OS.GetScreenSize().y);
-        }
-
-        private void _on_Set_Window_Size_pressed()
-        {
-            if (_optionsManager.Data.FullscreenMode != FullscreenMode.Windowed)
-                _optionsManager.SetFullscreenMode(FullscreenMode.Windowed);
-            
-            OS.WindowSize = _windowSize;
-            _optionsManager.CenterWindow();
-        }
+        OS.WindowSize = _windowSize;
+        _optionsManager.CenterWindow();
     }
 }
-
