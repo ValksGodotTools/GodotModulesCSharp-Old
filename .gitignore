@@ -9,5 +9,6 @@ export_presets.cfg
 data_*/
 
 # User-specific ignores
+.vscode/settings.json
 .idea/
 GodotModulesCSharp.sln.DotSettings.user
