@@ -12,6 +12,8 @@
 - Class, struct, methods and public variables are `PascalCase` format
 - Use `var` wherever you can, if something looks too cryptic just add a comment
 - Private and protected variables are `_camelCase` format *(this is a habbit I've gotten into, not everyone may like doing it this way, please talk to me if you want to do it another way)*
+- All `static` members should go to the very top of the class
+- All Godot signal methods should go to the very bottom of the class
 
 ## Code Snippets
 
