@@ -1,6 +1,5 @@
 # Formatting Guidelines
 
-## C#
 ### Case Format
 - Class, struct, methods and public variables are `PascalCase` format
 - Private and protected variables are `_camelCase` format
@@ -14,20 +13,20 @@
 - Favor readability over everything else, space out the code, consider using `=>`, and do not use `new()` if it makes the code look cryptic
 - Use `var` wherever you can, if something looks too cryptic just add a comment
 
-## VSCode
+### VSCode
 - Please set `Tab Size` to `4` and `End of Line Sequence` to `CRLF`
 
-## The Order of Things
+### The Order of Things
 - All `static` members should go to the very top of the class as using `static` is mostly frowned upon
 - `void Preinit(GameManager gameManager)` should go just above `override void _Ready()`
 - `_Ready()` `_Process()` functions should be at the top, all user-defined functions go below
 - All private methods should go below public methods
 - All Godot signal methods should go to the very bottom of the class
 
-## GitHub
+### GitHub
 - Do not commit all your work in one commit, create commits with meaningful messages describing small things you add here and there. Or at least create a commit for each separate file.
 
-## Code Snippets
+### Code Snippets
 Please make use of the following snippets
 
 - `nodepath` -> `"[Export] protected readonly NodePath NodePath"`
