@@ -13,15 +13,16 @@
 - Try to add comments to all the new things you add, not everyone will understand what you did!
 - Favor readability over everything else, space out the code, consider using `=>`, and do not use `new()` if it makes the code look cryptic
 - Use `var` wherever you can, if something looks too cryptic just add a comment
-- All `static` members should go to the very top of the class as using `static` is mostly frowned upon
 
 ## VSCode
 - Please set `Tab Size` to `4` and `End of Line Sequence` to `CRLF`
 
-## Godot
-- All Godot signal methods should go to the very bottom of the class
+## The Order of Things
+- All `static` members should go to the very top of the class as using `static` is mostly frowned upon
 - `void Preinit(GameManager gameManager)` should go just above `override void _Ready()`
 - `_Ready()` `_Process()` functions should be at the top, all user-defined functions go below
+- All private methods should go below public methods
+- All Godot signal methods should go to the very bottom of the class
 
 ## GitHub
 - Do not commit all your work in one commit, create commits with meaningful messages describing small things you add here and there. Or at least create a commit for each separate file.
