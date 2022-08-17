@@ -25,7 +25,7 @@
 - All Godot signal methods should go to the very bottom of the class
 
 ### GitHub
-- Do not commit all your work in one commit, create commits with meaningful messages describing small things you add here and there. Or at least create a commit for each separate file.
+- Try not to commit all your work in one commit, create commits with meaningful messages describing small things you add here and there. Or at least create a commit for each separate file.
 
 ### Code Snippets
 Please make use of the following snippets
