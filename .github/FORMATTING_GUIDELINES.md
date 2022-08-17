@@ -18,7 +18,7 @@
 - Please set `Tab Size` to `4` and `End of Line Sequence` to `CRLF`
 
 ### The Order of Things
-- All `static` members should go to the very top of the class as using `static` is mostly frowned upon
+- All `static` members should go to the very top of the class  
 - `void Preinit(GameManager gameManager)` should go just above `override void _Ready()`
 - `_Ready()` `_Process()` functions should be at the top, all user-defined functions go below
 - All private methods should go below public methods
