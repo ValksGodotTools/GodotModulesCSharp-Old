@@ -3,6 +3,7 @@
 ### Case Format
 - Class, struct, methods and public variables are `PascalCase` format
 - Private and protected variables are `_camelCase` format
+- Variables that do not change are `UPPER_CASE` format
 
 ### Namespaces / usings
 - Please make sure all classes have file scoped namespaces
