@@ -1,5 +1,3 @@
-# Formatting Guidelines
-
 ### Case Format
 - Class, struct, methods and public variables are `PascalCase` format
 - Private and protected variables are `_camelCase` format
