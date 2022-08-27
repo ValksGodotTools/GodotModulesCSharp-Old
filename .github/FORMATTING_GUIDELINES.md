@@ -12,6 +12,7 @@
 - Favor readability over everything else, space out the code, consider using `=>`, and do not use `new()` if it makes the code look cryptic
 - Use `var` wherever you can, if something looks too cryptic just add a comment
 - Try not to squash every piece of logic into one class, if code is related to a cat put it in a cat class, don't just stuff it all in animals class
+- All abstract classes should start with a capital `A`
 
 ### VSCode
 - Please set `Tab Size` to `4` and `End of Line Sequence` to `CRLF`
