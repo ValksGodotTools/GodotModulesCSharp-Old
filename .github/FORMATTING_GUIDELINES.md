@@ -1,6 +1,10 @@
+### Project Specific
+- Please always use `Logger.Log()` over `GD.Print()`
+- `void Preinit(GameManager gameManager)` should go just above `override void _Ready()`
+
 ### Case Format
 - Class, struct, methods and public variables are `PascalCase` format
-- Private and protected variables are `_camelCase` format
+- Private and protected variables are `camelCase` format
 - Variables that do not change are `UPPER_CASE` format
 
 ### Namespaces / usings
@@ -19,7 +23,6 @@
 
 ### The Order of Things
 - All `static` members should go to the very top of the class  
-- `void Preinit(GameManager gameManager)` should go just above `override void _Ready()`
 - `_Ready()` `_Process()` functions should be at the top, all user-defined functions go below
 - All private methods should go below public methods
 - All Godot signal methods should go to the very bottom of the class
