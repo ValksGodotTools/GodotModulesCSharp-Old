@@ -19,7 +19,7 @@
 - All abstract classes should start with a capital `A`
 
 ### VSCode
-- Please set `Tab Size` to `4` and `End of Line Sequence` to `CRLF`
+- Please set `Tab Size` to `4` and `End of Line Sequence` to `CRLF` *(if you do not do this then you may accidentially change every single line in the project making it extremely difficult to find what you changed and solve merge conflicts)*
 
 ### The Order of Things
 - All `static` members should go to the very top of the class  
