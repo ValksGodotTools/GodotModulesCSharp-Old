@@ -5,6 +5,8 @@
 
 [Godot Modules](https://github.com/GodotModules/GodotModulesCSharp) is a collection of useful modules and scripts writing [Godot](https://godotengine.org/) games in C#.
 
+## Notice
+Development of Godot Modules has been put on hold because I am currently working on a new non-profit open source 2D platfomer called [Sankari](https://github.com/Valks-Games/sankari) licensed under the MIT license which makes use of all the Godot Module scripts and more. Development of Sankari has really helped fix a lot of issues in the Godot Module scripts. I will make the effort sometimes to merge the better code from Sankari into Godot Modules dev branch but as of right now Sankari is basically a better version of the Godot Modules project. If you want to help contribute to the Godot Modules project, I encourage you to check out Sankari and contribute there.
 
 ## Table of Contents
 
