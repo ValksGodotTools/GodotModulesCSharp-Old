@@ -3,7 +3,7 @@
 - `void Preinit(GameManager gameManager)` should go just above `override void _Ready()`
 
 ### Case Format
-- Class, struct, methods, protected and public variables are `PascalCase` format
+- Class, struct, methods, protected and public variables and properties are `PascalCase` format
 - Private variables are `camelCase` format
 - Variables that do not change are `UPPER_CASE` format
 
