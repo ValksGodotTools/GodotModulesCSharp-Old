@@ -1,3 +1,5 @@
+# No longer being updated, moved to Sankari project
+
 ### Project Specific
 - Please always use `Logger.Log()` over `GD.Print()`
 - `void Preinit(GameManager gameManager)` should go just above `override void _Ready()`
