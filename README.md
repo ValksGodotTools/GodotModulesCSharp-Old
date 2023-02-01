@@ -8,7 +8,7 @@
 ## Notice
 Development of Godot Modules has come to a halt. This project will be used as a reference for future projects. I've recently tried upgrading this project to Godot 4.x but after seeing what I would have to do to the hotkey manager scripts I just decided no lets not do that lol (not to mention the other scripts that have to be converted)
 
-Some things I learned from this that I thought I should highlight here
+Some things I learned from this project that I thought I should highlight here
 - [Dependency Injection](https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection) can get really messy and you may be better off having a all-in-one static GameManager class where everything is linked through your GameManager script. GameManager should not extend from Godot.Node as then you will see all the properties and functions from Godot.Node, rather all the linking should be done in a separate script called Linker or MainLinker
 - All of these "modules" don't really feel modular at all, you can't just copy out a folder and plop it in your own project without getting several other dependent nodes and scripts. I'm still not sure how to tackle this problem without creating duplicate assets
 - Multiplayer can make the codebase a confusing mess and it's best to really take your time when implementing it
